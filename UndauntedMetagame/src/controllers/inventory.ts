@@ -598,6 +598,8 @@ function ApplyPreparedInventoryTransaction(tx: Tx, Prepared: PreparedInventoryTr
     let TouchedStackedItems: any[] = [];
     let Overspent: string[] = [];
 
+    let SkippedAdds = 0;
+
     if(Prepared.ShouldTouchInstancedItems){
         const InstancedItems: any[] = JSON.parse(CurrentInventory.instancedItems);
         let DidUpdateInstancedItems = false;
@@ -645,6 +647,7 @@ function ApplyPreparedInventoryTransaction(tx: Tx, Prepared: PreparedInventoryTr
 
             if(ItemIndex >= 0){
                 if(AssertExistingInstancedItemWrite(InstancedItems[ItemIndex], ItemToAdd, "add") === "skip"){
+                    SkippedAdds++;
                     continue;
                 }
 
@@ -663,6 +666,18 @@ function ApplyPreparedInventoryTransaction(tx: Tx, Prepared: PreparedInventoryTr
         if(DidUpdateInstancedItems){
             Update.instancedItems = JSON.stringify(InstancedItems);
         }
+    }
+
+    // An add skipped because the character already holds that exact instance delivered nothing: the
+    // grant happened in an earlier transaction. When the same request also takes payment, it is a
+    // repeat of a purchase that already succeeded -- a retry under a fresh transactionId, which the
+    // ledger above cannot recognise -- and letting it through debits a second time for one delivery.
+    // Refuse it, so nothing is written and the player keeps both the item and their currency. A
+    // retry that repeats the transactionId and body never reaches here; it is answered from the ledger.
+    if(SkippedAdds > 0 && SkippedAdds === InstancedItemsToAdd.length && (StackedItemsToRemove.length > 0 || InstancedItemsToRemove.length > 0)){
+        logger.warn({event: "inventory_duplicate_delivery", userId: UserId, characterId: CharacterId, transactionId: TransactionId, caller: Context.Caller, skipped: SkippedAdds},
+            "Refusing a transaction that pays for instanced items the character already holds");
+        throw new InventoryConflictError(`Refusing payment for ${SkippedAdds} instanced item(s) characterId ${CharacterId} already holds`);
     }
 
     if(Prepared.ShouldTouchStackedItems){

@@ -23,6 +23,17 @@ export class AllowlistFeed {
     private readonly Others: AllowlistFeed[];
     // Requests sent to the helper, for tests and the status log.
     public Sent = 0;
+    // A helper that is not answering must not be asked again on every single login. One live
+    // host logged 222,875 suppressed warnings in four hours against two endpoints that were
+    // never going to answer (workers that host is not running). After a failure this feed is
+    // left alone for a doubling interval, and the first answer of any kind clears it.
+    private Failures = 0;
+    private SkipUntil = 0;
+    // A single failure still retries at once: a worker that blips must recover on the next
+    // login. Only a helper that has failed this many times running is one worth leaving alone.
+    private static readonly BackoffAfter = 3;
+    private static readonly BackoffBaseMs = 2_000;
+    private static readonly BackoffMaxMs = 60_000;
 
     constructor(private readonly Options: FeedOptions, private readonly Now: () => number = Date.now){
         this.Target = new URL("/allow", Options.url);
@@ -35,6 +46,11 @@ export class AllowlistFeed {
             return;
         }
         const Now = this.Now();
+        // Backing off from a helper that is down. The address is deliberately not recorded in
+        // LastSent, so it is offered again as soon as the interval passes.
+        if(Now < this.SkipUntil){
+            return;
+        }
         const Last = this.LastSent.get(Ip);
         if(Last !== undefined && Now - Last < this.Options.refreshMs){
             return;
@@ -53,11 +69,13 @@ export class AllowlistFeed {
 
         const Work = this.Post(Ip).then((Status) => {
             if(Status === 200){
+                this.Answered();
                 this.LastSent.set(Ip, this.Now());
                 logger.debug("allowlist refreshed", { ip: Ip });
                 return;
             }
             if(Status === 400){
+                this.Answered();
                 // The helper refused this address (a private one, say). Asking again every
                 // heartbeat would not change that, so wait like after a success.
                 this.LastSent.set(Ip, this.Now());
@@ -66,13 +84,30 @@ export class AllowlistFeed {
                 }
                 return;
             }
-            this.WarnDown(`status ${Status}`);
+            this.Failed(`status ${Status}`);
         }).catch((error: Error) => {
-            this.WarnDown(error.message);
+            this.Failed(error.message);
         }).finally(() => {
             this.Pending.delete(Ip);
         });
         this.Pending.set(Ip, Work);
+    }
+
+    // Any answer, including a refusal, proves the helper is up.
+    private Answered(){
+        this.Failures = 0;
+        this.SkipUntil = 0;
+    }
+
+    private Failed(Detail: string){
+        this.Failures++;
+        if(this.Failures >= AllowlistFeed.BackoffAfter){
+            this.SkipUntil = this.Now() + Math.min(
+                AllowlistFeed.BackoffMaxMs,
+                AllowlistFeed.BackoffBaseMs * 2 ** (this.Failures - AllowlistFeed.BackoffAfter),
+            );
+        }
+        this.WarnDown(Detail);
     }
 
     private WarnDown(Detail: string){
