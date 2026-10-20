@@ -20,6 +20,9 @@ Done so far:
   lines; `fatal!` for level 60), M25 (`Env` from `--env-file` only, process environment wins) and the serving half
   of M5, M10 and X7 (`ConnectionInfo` with both addresses; stop on `shutdown` on stdin, Ctrl+C/Ctrl+Break or
   SIGTERM, then a drain deadline).
+- Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
+  metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
+  audience, `alg: none`, HS256 with the public key and bad signatures are refused.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite
@@ -166,7 +169,7 @@ outside the repository.
 | Transaction cancellation | M16 | A timeout drops the future mid-transaction | `diesel-async`'s `immediate_transaction`: the transaction stays open; other connections get `database is locked`, the same connection `AlreadyInTransaction`. A synchronous transaction in `spawn_blocking` runs to its end, and the next one works | Same as above (M16) |
 | One SQLite per binary | M17 | `cargo tree` | Diesel 2.3.14 and `rusqlite` 0.40.2 share `libsqlite3-sys` 0.38.2 | None |
 | `diesel-async` and Postgres | D21 | `diesel-async` 0.9.2 source | No `MultiConnection` support | `MultiConnection` only once Postgres is wanted (D21) |
-| TLS provider | D10 | `rustls` 0.23 with `aws-lc-rs` on Windows, no NASM or CMake on `PATH` | Builds (`aws-lc-sys` 0.46); the default key exchange starts with X25519MLKEM768 | No NASM step in CI (D10) |
+| TLS provider | D10 | `rustls` 0.23 with `aws-lc-rs` on Windows, no NASM or CMake on `PATH` | Builds (`aws-lc-sys` 0.46); the default key exchange starts with X25519MLKEM768 | No NASM step in CI (D10). rustls turns on `aws-lc-sys`'s prebuilt NASM objects through a feature; `jsonwebtoken`'s `aws_lc_rs` feature doesn't, so `rust/.cargo/config.toml` sets `AWS_LC_SYS_PREBUILT_NASM=1` |
 | Bun | T1, T5, T8 | Bun 1.4.3 | `Bun.hash.crc32` and a streaming `Bun.CryptoHasher` give the same values as Node's `zlib.crc32` and `crypto`. `bun run` and compiled executables load `.env` from the working directory unless run with `--no-env-file` or built with `--no-compile-autoload-dotenv`. A compiled Windows executable is about 92 MB | One `dr-tools.exe` instead of three (T8) |
 
 Still to run: L1 on Ubuntu 22.04 and 24.04, Fedora, SteamOS and NVIDIA + Wayland, on real hardware; L2 on KWallet

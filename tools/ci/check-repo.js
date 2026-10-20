@@ -40,6 +40,9 @@ const ALLOWED_CONTENT = {
     "UndauntedGateway/test/gateway.test.ts": ["jwt"],
     "UndauntedGateway/test/redact-ratelimit-config.test.ts": ["jwt"],
     "UndauntedLauncher/scripts/portable-save-smoke.cjs": ["private-key"],
+    // Throwaway key pair, tokens and recovery blob made by make-node-crypto.cjs for the Rust metagame's
+    // compatibility tests; nothing in it is used by a server.
+    "rust/services/metagame/tests/fixtures/node-crypto.json": ["private-key-b64", "jwt", "account-key"],
 };
 
 // The only DLLs the repository may hold: Undaunted's prebuilt server DLLs, which the launcher ships and the
