@@ -1,0 +1,4 @@
+# Release binaries are one file per platform with no runtime to install (M38): link the C runtime
+# statically on Windows so servers and the launcher don't need the Visual C++ redistributable.
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]

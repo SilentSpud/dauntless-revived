@@ -1,0 +1,38 @@
+# One cargo workspace for every Rust component (MIGRATION_PLAN.md, section 2 and D9): the shared
+# crates, the services and, from R5, the launcher backend.
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.99"
+license = "AGPL-3.0-only"
+repository = "https://github.com/mixutin/dauntless-revived"
+publish = false
+
+[workspace.dependencies]
+protocol = { path = "crates/protocol" }
+
+percent-encoding = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+# A panic in a request handler is caught (CatchPanicLayer), but it still drops the request.
+unwrap_used = "deny"
+expect_used = "deny"
+dbg_macro = "deny"
+todo = "deny"
+
+# Section 2: servers catch a panicking request instead of dying, so panics unwind.
+[profile.release]
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+panic = "unwind"
