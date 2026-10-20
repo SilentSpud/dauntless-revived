@@ -49,6 +49,7 @@ pub struct App {
     /// `ENTITLEMENTS_DEFAULT`.
     pub entitlement_defaults: Vec<String>,
     pub history: crate::characters::HistorySettings,
+    pub inventory: crate::inventory::Settings,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,

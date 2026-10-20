@@ -1,0 +1,268 @@
+{
+  "about": "Inventories with every switch off its default: fusion guards, refused overspends, additions-only replies, a patrol bonus of 12.",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "REGISTRATION_MODE": "OPEN",
+    "NODE_ENV": "production",
+    "MIDDLEMAN_FUSION_GUARDS": "on",
+    "INVENTORY_REFUSE_OVERSPEND": "1",
+    "INVENTORY_REPORT_REMOVALS": "0",
+    "PATROL_BONUS_DAILY": "12"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Oct 1, 2026', 'Ada', 3, '{}'), ('char-a2', 'UID-a', 'Sep 21, 2026', 'Sep 21, 2026', 'Ada2', 0, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')",
+    "INSERT INTO inventories (characterId, instancedItems, stackedItems) VALUES ('char-a1', '[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":1}\",\"updateVersion\":2},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0}]', '[{\"catalogId\":\"ORE\",\"quantity\":5},{\"catalogId\":\"WOOD\",\"quantity\":1},{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":4}]'), ('char-b1', 'not json', '[oops')"
+  ],
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-1",
+        "removeStackedItems": [
+          {
+            "catalogId": "ORE",
+            "quantity": 30
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-2",
+        "addStackedItems": [
+          {
+            "catalogId": "ORE",
+            "quantity": 1
+          }
+        ],
+        "removeStackedItems": [
+          {
+            "catalogId": "WOOD",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-3",
+        "source": "PERIODIC_REWARD",
+        "addStackedItems": [
+          {
+            "catalogId": "TOKEN_DAILY_PATROL_BONUS",
+            "quantity": 6
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-4",
+        "addInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":1,\"EndTime\":\"2026-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_X\",\"ExchangeID\":\"ex1\"}",
+            "updateVersion": 1
+          },
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":2,\"EndTime\":\"2099-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_X\",\"ExchangeID\":\"ex2\"}",
+            "updateVersion": 1
+          },
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":3,\"EndTime\":\"2026-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_Y\",\"ExchangeID\":\"ex3\"}",
+            "updateVersion": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-5",
+        "removeInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":2,\"EndTime\":\"2099-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_X\",\"ExchangeID\":\"ex2\"}",
+            "updateVersion": 1
+          }
+        ],
+        "addStackedItems": [
+          {
+            "catalogId": "CELL_X",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-6",
+        "removeInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":1,\"EndTime\":\"2026-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_X\",\"ExchangeID\":\"ex1\"}",
+            "updateVersion": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-7",
+        "removeInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":1,\"EndTime\":\"2026-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_X\",\"ExchangeID\":\"ex1\"}",
+            "updateVersion": 1
+          }
+        ],
+        "addStackedItems": [
+          {
+            "catalogId": "CELL_X",
+            "quantity": 1
+          },
+          {
+            "catalogId": "CELL_Z",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-8",
+        "removeInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":1,\"EndTime\":\"2026-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_X\",\"ExchangeID\":\"ex1\"}",
+            "updateVersion": 1
+          }
+        ],
+        "addStackedItems": [
+          {
+            "catalogId": "CELL_X",
+            "quantity": "1"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-9",
+        "removeInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE:9"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inventory",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "accountId": "UID-a",
+        "characterId": "char-a1",
+        "transactionId": "s-10",
+        "removeInstancedItems": [
+          {
+            "catalogId": "TOKEN_CELL_EXCHANGE",
+            "instanceId": "TOKEN_CELL_EXCHANGE",
+            "itemData": "{\"SlotID\":3,\"EndTime\":\"2026-01-01T00:00:00.000Z\",\"ResultCell\":\"CELL_Y\",\"ExchangeID\":\"ex3\"}",
+            "updateVersion": 1
+          }
+        ],
+        "addStackedItems": [
+          {
+            "catalogId": "CELL_Y",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/UID-a/char-a1",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    }
+  ]
+}

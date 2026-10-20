@@ -59,6 +59,7 @@ pub struct Config {
     pub progression: crate::progression::ProgressionMode,
     pub entitlement_defaults: Vec<String>,
     pub history: crate::characters::HistorySettings,
+    pub inventory: crate::inventory::Settings,
     pub features: Features,
 }
 
@@ -139,6 +140,7 @@ impl Config {
             ),
             entitlement_defaults: crate::entitlements::defaults_from(env.raw("ENTITLEMENTS_DEFAULT")),
             history: crate::characters::HistorySettings::from_env(env),
+            inventory: crate::inventory::Settings::from_env(env, on_off(env, "MIDDLEMAN_FUSION_GUARDS", false)),
             features: Features {
                 accountinfo_public_legacy: env.get("ACCOUNTINFO_PUBLIC_LEGACY") == Some("1"),
                 account_display_name: env.get("ACCOUNT_DISPLAY_NAME") != Some("0"),

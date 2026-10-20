@@ -68,6 +68,7 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         progression: metagame::progression::ProgressionMode::default(),
         entitlement_defaults: vec![],
         history: metagame::characters::HistorySettings::default(),
+        inventory: Default::default(),
         health: Arc::new(metagame::health::Health::new(false)),
         key_revocations: tokio::sync::broadcast::channel(64).0,
     });

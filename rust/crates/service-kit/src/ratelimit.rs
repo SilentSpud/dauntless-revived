@@ -242,11 +242,17 @@ impl Limited {
 
 /// Applies a [`Limited`] to a route: `axum::middleware::from_fn_with_state(limited, enforce)`.
 pub async fn enforce(State(limited): State<Limited>, request: Request, next: Next) -> Response {
-    let Some(key) = (limited.key)(&request) else {
-        return next.run(request).await;
+    let key = (limited.key)(&request);
+    around(&limited.limiter, key.as_deref(), next.run(request)).await
+}
+
+/// Counts one request for `key` and runs `handler` unless the key is over its limit; `None` runs it
+/// uncounted. For a limit applied after something the handler does first (authentication).
+pub async fn around(limiter: &Limiter, key: Option<&str>, handler: impl Future<Output = Response>) -> Response {
+    let Some(key) = key else {
+        return handler.await;
     };
-    let limiter = &limited.limiter;
-    let decision = limiter.hit(&key, Instant::now());
+    let decision = limiter.hit(key, Instant::now());
     let mut response = if decision.limited {
         let mut response = (StatusCode::TOO_MANY_REQUESTS, Json(&limiter.reply)).into_response();
         if let Ok(value) = HeaderValue::from_str(&decision.reset_secs.to_string()) {
@@ -254,15 +260,15 @@ pub async fn enforce(State(limited): State<Limited>, request: Request, next: Nex
         }
         response
     } else {
-        next.run(request).await
+        handler.await
     };
-    for (name, value) in limiter.headers(&key, &decision) {
+    for (name, value) in limiter.headers(key, &decision) {
         if let Ok(value) = HeaderValue::from_str(&value) {
             response.headers_mut().append(name, value);
         }
     }
     if !decision.limited && limiter.skip_successful && response.status().as_u16() < 400 {
-        limiter.undo(&key, &decision, Instant::now());
+        limiter.undo(key, &decision, Instant::now());
     }
     response
 }

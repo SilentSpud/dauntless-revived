@@ -1,0 +1,501 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":1}\",\"updateVersion\":2},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0}],\"stackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":5},{\"catalogId\":\"WOOD\",\"quantity\":1},{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":4}]}"
+    },
+    {
+      "request": "GET /inventory/UID-x/char-a2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a2\",\"instancedItems\":[],\"stackedItems\":[]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-b1",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /inventory/UID-b/char-b1",
+      "status": 500,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/char-a1/changes",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"\"}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=59; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=58; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=57; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":10},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"WOOD\",\"quantity\":0}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":10},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"WOOD\",\"quantity\":0}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":11}]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":1}\",\"updateVersion\":2},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0}],\"stackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":11},{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":4},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":0},{\"catalogId\":\"GHOST\",\"quantity\":0}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"NEW2\",\"quantity\":2}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":7}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":1}\",\"updateVersion\":2},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0}],\"stackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":4},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"NEW2\",\"quantity\":2},{\"catalogId\":\"ORE\",\"quantity\":7}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"createdInstancedItems\":[{\"catalogId\":\"COSMETIC_B\",\"instanceId\":\"inst-3\",\"updateVersion\":0}],\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"createdInstancedItems\":[{\"catalogId\":\"WEAPON_C\",\"instanceId\":\"inst-5\",\"itemData\":{\"nested\":[1,2]},\"updateVersion\":1}],\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":8}]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":2}\",\"updateVersion\":3},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0},{\"catalogId\":\"COSMETIC_B\",\"instanceId\":\"inst-3\",\"updateVersion\":0},{\"catalogId\":\"WEAPON_C\",\"instanceId\":\"inst-5\",\"itemData\":{\"nested\":[1,2]},\"updateVersion\":1}],\"stackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":4},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"NEW2\",\"quantity\":2},{\"catalogId\":\"ORE\",\"quantity\":8}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"createdInstancedItems\":[{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:1\",\"itemData\":\"{\\\"SlotID\\\":1,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex1\\\"}\",\"updateVersion\":1},{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:2\",\"itemData\":\"{\\\"SlotID\\\":2,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex2\\\"}\",\"updateVersion\":1}],\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"CELL_X\",\"quantity\":1}],\"removedInstancedItems\":[{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:1\",\"itemData\":\"{\\\"SlotID\\\":1,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex1\\\"}\",\"updateVersion\":0}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[],\"removedInstancedItems\":[{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE\",\"itemData\":\"broken\"}]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":2}\",\"updateVersion\":3},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0},{\"catalogId\":\"COSMETIC_B\",\"instanceId\":\"inst-3\",\"updateVersion\":0},{\"catalogId\":\"WEAPON_C\",\"instanceId\":\"inst-5\",\"itemData\":{\"nested\":[1,2]},\"updateVersion\":1}],\"stackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":4},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"NEW2\",\"quantity\":2},{\"catalogId\":\"ORE\",\"quantity\":8},{\"catalogId\":\"CELL_X\",\"quantity\":1}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":10}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"TOKEN_BOUNTY_DRAFT\",\"quantity\":6}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":10}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=56; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":2}\",\"updateVersion\":3},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0},{\"catalogId\":\"COSMETIC_B\",\"instanceId\":\"inst-3\",\"updateVersion\":0},{\"catalogId\":\"WEAPON_C\",\"instanceId\":\"inst-5\",\"itemData\":{\"nested\":[1,2]},\"updateVersion\":1}],\"stackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":10},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"NEW2\",\"quantity\":2},{\"catalogId\":\"ORE\",\"quantity\":8},{\"catalogId\":\"CELL_X\",\"quantity\":1},{\"catalogId\":\"TOKEN_BOUNTY_DRAFT\",\"quantity\":6}]}"
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=55; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":9}\",\"updateVersion\":9}"
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0}"
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory/instanceditem",
+      "status": 500,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":9}\",\"updateVersion\":9},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0},{\"catalogId\":\"COSMETIC_B\",\"instanceId\":\"inst-3\",\"updateVersion\":0},{\"catalogId\":\"WEAPON_C\",\"instanceId\":\"inst-5\",\"itemData\":{\"nested\":[1,2]},\"updateVersion\":1}],\"stackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":10},{\"catalogId\":\"NEW\",\"quantity\":5,\"extra\":true},{\"catalogId\":\"NEW2\",\"quantity\":2},{\"catalogId\":\"ORE\",\"quantity\":8},{\"catalogId\":\"CELL_X\",\"quantity\":1},{\"catalogId\":\"TOKEN_BOUNTY_DRAFT\",\"quantity\":6}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 500,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":1}]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a2\",\"instancedItems\":[],\"stackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":1}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=59; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:NWJmYzI0MTliMTkw:"
+      },
+      "body": "{\"error\":\"forbidden\"}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=59; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YzU1YjhmYjE4NmI1:"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=58; t=60",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YzU1YjhmYjE4NmI1:"
+      },
+      "body": "{\"error\":\"account_banned\"}"
+    }
+  ]
+}

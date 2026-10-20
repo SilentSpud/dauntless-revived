@@ -1,0 +1,83 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":6}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":12}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"createdInstancedItems\":[{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:1\",\"itemData\":\"{\\\"SlotID\\\":1,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex1\\\"}\",\"updateVersion\":1},{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:2\",\"itemData\":\"{\\\"SlotID\\\":2,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex2\\\"}\",\"updateVersion\":1},{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:3\",\"itemData\":\"{\\\"SlotID\\\":3,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_Y\\\",\\\"ExchangeID\\\":\\\"ex3\\\"}\",\"updateVersion\":1}],\"updatedInstancedItems\":[],\"updatedStackedItems\":[]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"CELL_X\",\"quantity\":1}],\"removedInstancedItems\":[{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:1\",\"itemData\":\"{\\\"SlotID\\\":1,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex1\\\"}\",\"updateVersion\":1}]}"
+    },
+    {
+      "request": "POST /inventory",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /inventory",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"updatedInstancedItems\":[],\"updatedStackedItems\":[{\"catalogId\":\"CELL_Y\",\"quantity\":2}],\"removedInstancedItems\":[{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:3\",\"itemData\":\"{\\\"SlotID\\\":3,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_Y\\\",\\\"ExchangeID\\\":\\\"ex3\\\"}\",\"updateVersion\":1}]}"
+    },
+    {
+      "request": "GET /inventory/UID-a/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-a1\",\"instancedItems\":[{\"catalogId\":\"WEAPON_A\",\"instanceId\":\"inst-1\",\"itemData\":\"{\\\"lvl\\\":1}\",\"updateVersion\":2},{\"catalogId\":\"COSMETIC_A\",\"instanceId\":\"inst-2\",\"updateVersion\":0},{\"catalogId\":\"TOKEN_CELL_EXCHANGE\",\"instanceId\":\"TOKEN_CELL_EXCHANGE:2\",\"itemData\":\"{\\\"SlotID\\\":2,\\\"EndTime\\\":\\\"<date>\\\",\\\"ResultCell\\\":\\\"CELL_X\\\",\\\"ExchangeID\\\":\\\"ex2\\\"}\",\"updateVersion\":1}],\"stackedItems\":[{\"catalogId\":\"ORE\",\"quantity\":6},{\"catalogId\":\"TOKEN_DAILY_PATROL_BONUS\",\"quantity\":12},{\"catalogId\":\"CELL_X\",\"quantity\":1},{\"catalogId\":\"CELL_Y\",\"quantity\":2}]}"
+    }
+  ]
+}

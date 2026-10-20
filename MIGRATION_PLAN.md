@@ -67,7 +67,13 @@ Done so far:
   `JSON.stringify` writes it (`service_kit::jsjson`) and names sort in ICU's `localeCompare` order
   (`service_kit::collate`). Loadouts followed: the default loadout, real-mode slots (unlock, active slot, slot
   count) and slot saves, and stub mode's slot 0 through SQLite's own `json_set` with its 404 fall-throughs, in two
-  more parity scripts (46 replies). Left of the area: inventory.
+  more parity scripts (46 replies). Inventory closed the area: the read, the transaction (stacks with removals
+  that spend the same transaction's additions, instanced items with their version rules, Middleman tokens, the
+  daily token top-ups, retries answered from the stored reply), the single instanced item update, the unlocker
+  check that bans a known editor's writes, the per-account `PlayerMutation` limit and the one-time daily token
+  job at start. Node's request objects are shared with the stored stacks and the reply, so stacks live in an
+  arena of indexes to give the same sharing. Two parity scripts (`inventory`, `inventory-switches` with every
+  switch off its default, 78 replies) match Node.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

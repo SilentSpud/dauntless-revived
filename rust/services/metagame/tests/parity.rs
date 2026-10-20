@@ -241,3 +241,13 @@ async fn loadouts() {
 async fn loadouts_stub() {
     run_area("loadouts-stub").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn inventory() {
+    run_area("inventory").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn inventory_switches() {
+    run_area("inventory-switches").await;
+}

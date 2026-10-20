@@ -153,6 +153,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         progression: config.progression.clone(),
         entitlement_defaults: config.entitlement_defaults.clone(),
         history: config.history,
+        inventory: config.inventory,
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });
@@ -169,6 +170,21 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
         return Err(error.clone());
     }
     let Prepared { state, progression } = prepare(&config, progression)?;
+
+    // Daily token stacks set to the daily amounts once (`SetDailyTokensOnce`)
+    let settings = state.inventory;
+    match state
+        .store
+        .write(move |conn| crate::inventory::set_daily_tokens_once(conn, &settings).map_err(store::Error::from))
+        .await
+    {
+        Ok(Some(changed)) => tracing::info!("Daily tokens: set {changed} character(s) to the daily amounts (one time)"),
+        Ok(None) => {}
+        Err(error) => tracing::warn!(
+            err = &error as &dyn std::error::Error,
+            "Could not set the daily token stacks"
+        ),
+    }
 
     let (servers, users) = state
         .store
