@@ -43,6 +43,11 @@ impl ProgressionMode {
         }
     }
 
+    /// `IsProgressionModeStub`.
+    pub fn is_stub(&self) -> bool {
+        self.stub
+    }
+
     /// `IsRealProgressionAccount`.
     pub fn is_real(&self, account: Option<&str>) -> bool {
         match account {

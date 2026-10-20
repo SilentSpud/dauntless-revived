@@ -66,6 +66,10 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         limits: metagame::limits::Limits::default(),
         store_images: metagame::storeimages::StoreImages::load(dir.path()),
         progression: metagame::progression::ProgressionMode::default(),
+        progression_config: Arc::new(
+            metagame::progression_config::from_env(&service_kit::env::Env::from_pairs([])).unwrap(),
+        ),
+        real_progression: Default::default(),
         entitlement_defaults: vec![],
         history: metagame::characters::HistorySettings::default(),
         inventory: Default::default(),

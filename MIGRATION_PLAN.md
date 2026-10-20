@@ -85,6 +85,15 @@ Done so far:
   (`store`, `store-off`, `store-rams`, 75 replies) match Node; the harness gained `capture` / `{{saved:…}}` to
   carry a purchase token into the next request. What depends on the week (the Middleman's cells, the weekly
   shop) is checked against Node's output at fixed times instead (`tests/fixtures/store-weekly.json`).
+- Metagame B2, area 4 of M29, first part: `routes/progression.ts`. Real-mode tracks and objectives (reads, the
+  grant with its per-request cap and its retry guard, grants in one track, rank confirms clamped to the earned
+  rank with the premium gate and the optional rank entitlements, resets by an admin key or an allowed game
+  server), upstream's stub for stub-mode accounts with the configured max ranks, encountered content and
+  breadcrumbs, the "unhandled progression request" note before the 404, and the start notice about accounts
+  without stored progression. The seed (`SeedProgression`) is in place for the admin route. Two parity scripts
+  (`progression`, `progression-stub`, 77 replies) match Node. Deliberate difference: a breadcrumbs
+  `updateVersion` that is neither an integer nor a string of digits is refused (500) instead of stored as sent.
+  Left of the area: Hunt Pass selection, cooldowns, bounties, the admin progression routes, and Trials.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

@@ -1,0 +1,119 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":99999999,\"confirmed_fremium_rank\":99999999,\"confirmed_premium_rank\":99999999,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"}]}"
+    },
+    {
+      "request": "GET /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":[{\"progression_id\":\"season09b\",\"progress\":99999999,\"confirmed_fremium_rank\":99999999,\"confirmed_premium_rank\":99999999,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"}]}"
+    },
+    {
+      "request": "GET /progression/objectives/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"objectives\":[],\"progress_tracks\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"}]}}"
+    },
+    {
+      "request": "GET /progression/objectives/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"objectives\":[],\"progress_tracks\":[{\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":99999999,\"confirmed_fremium_rank\":50,\"confirmed_premium_rank\":50,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"},{\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":99999999,\"confirmed_fremium_rank\":20,\"confirmed_premium_rank\":20,\"confirmed_date\":\"<date>\"}]}}"
+    },
+    {
+      "request": "GET /progression/objectives/UID-a/Obj_A",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_A\",\"progress\":9999999,\"completed_count\":9999999,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/5",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /progression/UID-a/season09b",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /progression/UID-a/season09b",
+      "status": 404,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/1/confirm/public",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-b/season09b/1/confirm/public",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-b/season09b/400",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-b\",\"progression_id\":\"season09b\",\"progress\":400,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "DELETE /progression/UID-b/season09b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-b\",\"progression_id\":\"season09b\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "DELETE /progression/UID-b/season09b",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /progression/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":[{\"phx_account_id\":\"UID-b\",\"progression_id\":\"season09b\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-b\",\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}]}"
+    }
+  ]
+}

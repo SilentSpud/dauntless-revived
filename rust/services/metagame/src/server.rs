@@ -89,6 +89,7 @@ async fn request_log(State(state): State<AppState>, request: Request, next: Next
 }
 
 fn unstubbed(request: &Request) -> Response {
+    crate::routes::note_unhandled_progression(request.method(), request.uri(), request.headers());
     tracing::warn!("Unstubbed route {} {}", request.method(), request.uri().path());
     StatusCode::NOT_FOUND.into_response()
 }
@@ -151,6 +152,8 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         limits: Limits::default(),
         store_images: StoreImages::load(&config.store_images_dir),
         progression: config.progression.clone(),
+        progression_config: Arc::new(progression.clone()),
+        real_progression: config.real_progression.clone(),
         entitlement_defaults: config.entitlement_defaults.clone(),
         history: config.history,
         inventory: config.inventory,
@@ -224,6 +227,19 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
     }
     tracing::info!("Progression mode: {}", config.progression.describe());
     tracing::info!("Progression config: {}", progression.description);
+    let stub = config.progression.is_stub();
+    match state
+        .store
+        .read(move |conn| crate::realprogression::upgrade_notice(conn, stub).map_err(store::Error::from))
+        .await
+    {
+        Ok(Some(notice)) => tracing::warn!("{notice}"),
+        Ok(None) => {}
+        Err(error) => tracing::warn!(
+            err = &error as &dyn std::error::Error,
+            "Could not count the accounts without stored progression"
+        ),
+    }
     if config.origin.gateway_secret.is_some() {
         tracing::info!(
             "Public mode: behind the gateway (player addresses from loopback callers that carry the gateway secret)"

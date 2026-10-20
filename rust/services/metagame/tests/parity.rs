@@ -295,3 +295,13 @@ async fn store_off() {
 async fn store_rams() {
     run_area("store-rams").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn progression() {
+    run_area("progression").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn progression_stub() {
+    run_area("progression-stub").await;
+}

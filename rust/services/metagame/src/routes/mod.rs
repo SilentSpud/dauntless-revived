@@ -7,6 +7,7 @@ pub mod eos;
 pub mod inventory;
 pub mod loadout;
 pub mod login;
+pub mod progression;
 pub mod store;
 pub mod system;
 
@@ -48,8 +49,30 @@ pub fn query(raw: Option<&str>) -> serde_json::Map<String, Value> {
 /// What Express does when a route passes the request on (`next("route")`) and nothing else matches:
 /// the catch-all "Unstubbed route" 404.
 pub fn fall_through(parts: &axum::http::request::Parts) -> Response {
+    note_unhandled_progression(&parts.method, &parts.uri, &parts.headers);
     tracing::warn!("Unstubbed route {} {}", parts.method, parts.uri.path());
     empty(StatusCode::NOT_FOUND)
+}
+
+/// `progressionRouter.use("/progression", …)`: anything under /progression no route answered is
+/// named before the catch-all 404 (several progression endpoints of the client are still
+/// unanswered, and stub-mode accounts get 404 on the real-mode-only routes). From Harmonic's fork
+/// (github.com/Harmonicrain/Undaunted 895f7c7).
+pub fn note_unhandled_progression(method: &axum::http::Method, uri: &axum::http::Uri, headers: &axum::http::HeaderMap) {
+    let path = uri.path().to_ascii_lowercase();
+    if path != "/progression" && !path.starts_with("/progression/") {
+        return;
+    }
+    let shown = uri.path_and_query().map_or(uri.path(), |p| p.as_str());
+    tracing::warn!(
+        "Unhandled progression request {method} {} from a {}",
+        crate::redact::redact(shown),
+        if headers.contains_key("x-undaunted-gameserver-apikey") {
+            "game server"
+        } else {
+            "player"
+        }
+    );
 }
 
 /// Every route of the metagame ported so far, in Node's mount order.
@@ -61,6 +84,7 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
         .merge(character::routes())
         .merge(inventory::routes())
         .merge(store::routes(state))
+        .merge(progression::routes(state))
         .merge(loadout::routes())
         .merge(admin_accounts::routes(state))
         .merge(admin_history::routes())

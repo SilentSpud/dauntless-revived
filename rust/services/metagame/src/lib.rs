@@ -4,6 +4,7 @@
 pub mod accounts;
 pub mod app;
 pub mod auth;
+pub mod characterprogress;
 pub mod characters;
 pub mod config;
 pub mod creator;
@@ -20,6 +21,7 @@ pub mod middleman;
 pub mod origin;
 pub mod progression;
 pub mod progression_config;
+pub mod realprogression;
 pub mod redact;
 pub mod routes;
 #[allow(non_snake_case)]

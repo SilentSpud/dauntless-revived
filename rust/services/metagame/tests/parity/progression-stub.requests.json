@@ -1,0 +1,171 @@
+{
+  "about": "Stub-mode progression (PROGRESSION_MODE=stub, UID-b real) and PROGRESSION_CONFIRM=off (MIGRATION_PLAN.md M29, area 4, first part).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "PROGRESSION_MODE": "stub",
+    "PROGRESSION_REAL_ACCOUNTS": "UID-b",
+    "PROGRESSION_CONFIRM": "off",
+    "PROGRESSION_ALLOW_DELETE": "1"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Sep 21, 2026', 'Ada', 0, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')",
+    "INSERT INTO encounteredcontent (characterId, userId, encounteredcontent) VALUES ('char-b1', 'UID-b', 'not json')",
+    "INSERT INTO breadcrumbs (characterId, userId, breadcrumbs, updateVersion) VALUES ('char-b1', 'UID-b', '[\"old\"]', 4)",
+    "INSERT INTO objectives (accountId, objectiveId, progress, completedCount, createdDate, lastModifiedDate) VALUES ('UID-a', 'Obj_C', 9, 0, '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/progression/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/progression/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/progression/objectives/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/progression/objectives/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/progression/objectives/UID-a/Obj_A",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/progression/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "progress_tracks": [
+          {
+            "progression_id": "season09b",
+            "progress": 1200
+          },
+          {
+            "progressionId": "MasteryTrack_PlayerLevel",
+            "amount": "300"
+          },
+          {
+            "progression_id": "season09b",
+            "progress": 100
+          },
+          {
+            "progression_id": "",
+            "progress": 5
+          },
+          {
+            "progression_id": "Unknown_Track",
+            "progress": -4
+          }
+        ],
+        "objectives": [
+          {
+            "objective_id": "Obj_A",
+            "value": 5,
+            "completed_count": 1
+          },
+          {
+            "objective_id": "Obj_B",
+            "value": 2.5
+          },
+          {
+            "objective_id": "Obj_C",
+            "value": 3,
+            "completed_count": 0
+          },
+          {
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/progression/UID-a/season09b/5",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/progression/UID-a/season09b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/progression/UID-a/season09b",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/progression/UID-a/season09b/1/confirm/public",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/progression/UID-b/season09b/1/confirm/public",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/progression/UID-b/season09b/400",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/progression/UID-b/season09b",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/progression/UID-b/season09b",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/progression/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    }
+  ]
+}

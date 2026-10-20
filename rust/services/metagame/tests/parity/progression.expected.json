@@ -1,0 +1,467 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}]}"
+    },
+    {
+      "request": "GET /progression/UID-b",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"progress_tracks\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":1300,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":300,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"Unknown_Track\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}],\"objectives\":[{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_A\",\"progress\":5,\"completed_count\":1,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_B\",\"progress\":2,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_C\",\"progress\":3,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}]}}"
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"progress_tracks\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":1300,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":300,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"Unknown_Track\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}],\"objectives\":[{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_A\",\"progress\":5,\"completed_count\":1,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_B\",\"progress\":2,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_C\",\"progress\":3,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}]}}"
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"progress_tracks\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":1301,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}],\"objectives\":[]}}"
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"progress_tracks\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2601,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":600,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"Unknown_Track\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}],\"objectives\":[{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_A\",\"progress\":5,\"completed_count\":1,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_B\",\"progress\":2,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_C\",\"progress\":3,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}]}}"
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-zzz",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/250",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/abc",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/-5",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/MasteryTrack_Behemoth/999999",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":4000,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/250",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/3/confirm/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":3,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/99/confirm/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":28,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/99/confirm/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":28,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/2/confirm/premium",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":28,\"confirmed_premium_rank\":2,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/2/confirm/bogus",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/-1/confirm/public",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/Unknown_Track/1/confirm/public",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-zzz/season09b/1/confirm/public",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /progression/UID-a/season09b/1/confirm/public",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /progression/UID-a/season09b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":2851,\"confirmed_fremium_rank\":28,\"confirmed_premium_rank\":2,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "GET /progression/UID-a/Unknown_Track",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"Unknown_Track\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "GET /progression/UID-a/Nope",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /progression/UID-b/season09b",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /progression/objectives/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":[{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_A\",\"progress\":5,\"completed_count\":1,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_B\",\"progress\":2,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_C\",\"progress\":3,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}]}"
+    },
+    {
+      "request": "GET /progression/objectives/UID-a/Obj_A",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"objective_id\":\"Obj_A\",\"progress\":5,\"completed_count\":1,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}}"
+    },
+    {
+      "request": "GET /progression/objectives/UID-b",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /progression/objectives/UID-b/Obj_A",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-b\",\"objective_id\":\"Obj_A\",\"progress\":0,\"completed_count\":0,\"created_date\":\"<date>\",\"last_modified_date\":\"<date>\"}}"
+    },
+    {
+      "request": "DELETE /progression/UID-a/season09b",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "DELETE /progression/UID-a/season09b",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "DELETE /progression/UID-a/season09b",
+      "status": 401,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "DELETE /progression/UID-a/season09b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=116; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"OK\",\"payload\":{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}}"
+    },
+    {
+      "request": "DELETE /progression/UID-a/Nope",
+      "status": 404,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=115; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /progression/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":[{\"phx_account_id\":\"UID-a\",\"progression_id\":\"season09b\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Behemoth\",\"progress\":4000,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_PlayerLevel\",\"progress\":600,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Axe\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_ChainBlades\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Hammer\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Repeaters\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Spear\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Sword\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"MasteryTrack_Weapon_Strikers\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"},{\"phx_account_id\":\"UID-a\",\"progression_id\":\"Unknown_Track\",\"progress\":0,\"confirmed_fremium_rank\":0,\"confirmed_premium_rank\":0,\"confirmed_date\":\"<date>\"}]}"
+    },
+    {
+      "request": "GET /progression/UID-a/x/y/z/w",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /encountered-content/char-a1/5",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"content_types\":[{\"content\":[],\"content_type\":5}],\"success\":true}}"
+    },
+    {
+      "request": "POST /encountered-content/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /encountered-content/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /encountered-content/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /encountered-content/query/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"content_types\":[{\"content\":[\"Behemoth_X\"],\"content_type\":5},{\"content\":[12],\"content_type\":7},{\"content\":[],\"content_type\":0},{\"content\":[],\"content_type\":null}],\"success\":true}}"
+    },
+    {
+      "request": "GET /encountered-content/char-a1/7",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"content_types\":[{\"content\":[12],\"content_type\":7}],\"success\":true}}"
+    },
+    {
+      "request": "POST /encountered-content/query/char-a1",
+      "status": 500,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /encountered-content/query/char-a1",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "POST /encountered-content/query/char-a1",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "GET /encountered-content/char-a1/5",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /encountered-content/char-b1/5",
+      "status": 500,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /encountered-content/char-a1/5",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /breadcrumbs/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"breadcrumbs\":[],\"updateVersion\":0}}"
+    },
+    {
+      "request": "POST /breadcrumbs/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"breadcrumbs\":[{\"id\":\"crumb\"}],\"updateVersion\":1}}"
+    },
+    {
+      "request": "POST /breadcrumbs/char-a1",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /breadcrumbs/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"breadcrumbs\":[\"later\"],\"updateVersion\":\"3\"}}"
+    },
+    {
+      "request": "POST /breadcrumbs/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"breadcrumbs\":[\"noversion\"]}}"
+    },
+    {
+      "request": "GET /breadcrumbs/char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"breadcrumbs\":[\"noversion\"],\"updateVersion\":3}}"
+    },
+    {
+      "request": "GET /breadcrumbs/char-b1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"breadcrumbs\":[\"old\"],\"updateVersion\":4}}"
+    },
+    {
+      "request": "POST /breadcrumbs/char-b1",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /breadcrumbs/char-b1",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /breadcrumbs/char-a1",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    }
+  ]
+}

@@ -46,6 +46,9 @@ pub struct App {
     pub limits: crate::limits::Limits,
     pub store_images: crate::storeimages::StoreImages,
     pub progression: crate::progression::ProgressionMode,
+    /// The Hunt Pass seasons and mastery tracks.
+    pub progression_config: Arc<crate::progression_config::ProgressionConfig>,
+    pub real_progression: crate::realprogression::Settings,
     /// `ENTITLEMENTS_DEFAULT`.
     pub entitlement_defaults: Vec<String>,
     pub history: crate::characters::HistorySettings,
@@ -61,6 +64,15 @@ pub struct App {
 pub type AppState = Arc<App>;
 
 impl App {
+    /// What a real-mode progression write needs.
+    pub fn progression_context(&self) -> crate::realprogression::Context {
+        crate::realprogression::Context {
+            settings: self.real_progression.clone(),
+            config: self.progression_config.clone(),
+            entitlement_defaults: self.entitlement_defaults.clone(),
+        }
+    }
+
     /// What a store call needs, at this moment.
     pub fn store_context(&self) -> crate::store::Context {
         crate::store::Context {
