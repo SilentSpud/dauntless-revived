@@ -12,6 +12,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const crypto = require("node:crypto");
+const http = require("node:http");
 
 const area = process.argv[2];
 if (!area) throw new Error("usage: record.cjs <area>");
@@ -39,10 +40,27 @@ Object.assign(process.env, {
 });
 process.chdir(metagame);
 
-const { app } = require(path.join(build, "app.js"));
-const { GetDb } = require(path.join(build, "db.js"));
-const { SignMetagameJWTForUid } = require(path.join(build, "controllers", "auth.js"));
-const trials = require(path.join(build, "controllers", "trials.js"));
+// Loaded once the fake deploy server listens: matchmaking reads DEPLOYSERVER_URL when it loads
+let app, GetDb, SignMetagameJWTForUid, trials;
+
+// The fake deploy server ("deploy": its replies to the allocation requests, in order; "gameservers":
+// its GET /gameservers reply). What it was asked is recorded as the last result. Kept in step with
+// tests/parity.rs.
+const asked = [];
+const deploy = http.createServer((req, res) => {
+  let text = "";
+  req.on("data", (chunk) => (text += chunk));
+  req.on("end", () => {
+    asked.push({ method: req.method, path: req.url, body: text === "" ? null : JSON.parse(text) });
+    const reply = req.url === "/gameservers"
+      ? { status: 200, body: script.gameservers ?? { servers: [], complete: false } }
+      : (script.deploy ?? []).shift() ?? { status: 500, body: {} };
+    const headers = { "content-type": "application/json" };
+    if (reply.retryAfter !== undefined) headers["retry-after"] = reply.retryAfter;
+    res.writeHead(reply.status, headers);
+    res.end(JSON.stringify(reply.body));
+  });
+});
 
 // Kept in step with normalize() in tests/parity.rs.
 function normalize(text) {
@@ -88,6 +106,12 @@ function fill(value) {
 }
 
 async function main() {
+  await new Promise((resolve) => deploy.listen(0, "127.0.0.1", resolve));
+  process.env.DEPLOYSERVER_URL = `127.0.0.1:${deploy.address().port}`;
+  ({ app } = require(path.join(build, "app.js")));
+  ({ GetDb } = require(path.join(build, "db.js")));
+  ({ SignMetagameJWTForUid } = require(path.join(build, "controllers", "auth.js")));
+  trials = require(path.join(build, "controllers", "trials.js"));
   const db = GetDb();
   for (const sql of script.setup) db.$client.exec(weekly(sql));
   const server = await new Promise((resolve, reject) => {
@@ -119,8 +143,11 @@ async function main() {
       const text = await response.text();
       if (request.capture) saved[request.capture] = JSON.parse(text)[request.capture];
       results.push({ request: `${request.method} ${request.path}`, status: response.status, headers: recorded, body: normalize(text) });
+      if (request.pauseMs) await new Promise((resolve) => setTimeout(resolve, request.pauseMs));
     }
+    if (script.deploy !== undefined) results.push({ request: "deploy server", status: 0, headers: {}, body: normalize(JSON.stringify(asked)) });
   } finally {
+    deploy.close();
     server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));
     db.$client.close();

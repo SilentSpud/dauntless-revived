@@ -99,6 +99,68 @@ async fn bearers(state: &metagame::app::AppState, mut value: String) -> String {
     value
 }
 
+/// The fake deploy server, as record.cjs runs it: `deploy` holds its replies to the allocation
+/// requests, in order (then 500s); `gameservers` its GET /gameservers reply. Returns its address and
+/// what it was asked.
+async fn fake_deploy_server(script: &Value) -> (String, std::sync::Arc<std::sync::Mutex<Vec<Value>>>) {
+    use axum::response::IntoResponse;
+    use std::sync::{Arc, Mutex};
+    let asked = Arc::new(Mutex::new(Vec::new()));
+    let replies = Arc::new(Mutex::new(
+        script["deploy"]
+            .as_array()
+            .cloned()
+            .unwrap_or_default()
+            .into_iter()
+            .collect::<std::collections::VecDeque<_>>(),
+    ));
+    let gameservers = script
+        .get("gameservers")
+        .cloned()
+        .unwrap_or_else(|| json!({"servers": [], "complete": false}));
+    let log = asked.clone();
+    let handler = move |method: axum::http::Method, uri: axum::http::Uri, body: axum::body::Bytes| {
+        let (log, replies, gameservers) = (log.clone(), replies.clone(), gameservers.clone());
+        async move {
+            let text = String::from_utf8(body.to_vec()).unwrap();
+            let body = if text.is_empty() {
+                Value::Null
+            } else {
+                service_kit::jsjson::parse(&text).unwrap()
+            };
+            log.lock()
+                .unwrap()
+                .push(json!({"method": method.as_str(), "path": uri.path(), "body": body}));
+            let reply = if uri.path() == "/gameservers" {
+                json!({"status": 200, "body": gameservers})
+            } else {
+                replies
+                    .lock()
+                    .unwrap()
+                    .pop_front()
+                    .unwrap_or_else(|| json!({"status": 500, "body": {}}))
+            };
+            let status = axum::http::StatusCode::from_u16(reply["status"].as_u64().unwrap() as u16).unwrap();
+            let mut response = (status, service_kit::jsjson::stringify(&reply["body"])).into_response();
+            response
+                .headers_mut()
+                .insert("content-type", "application/json".parse().unwrap());
+            if let Some(after) = reply["retryAfter"].as_str() {
+                response.headers_mut().insert("retry-after", after.parse().unwrap());
+            }
+            response
+        }
+    };
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap().to_string();
+    tokio::spawn(async move {
+        axum::serve(listener, axum::Router::new().fallback(handler))
+            .await
+            .unwrap();
+    });
+    (address, asked)
+}
+
 async fn run_area(area: &str) {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/parity");
     let script: Value =
@@ -124,6 +186,8 @@ async fn run_area(area: &str) {
     // The Node metagame serves the pictures in its own folder (record.cjs runs it there)
     let images = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../legacy/UndauntedMetagame/store-images");
     pairs.push(("STORE_IMAGES_DIR".into(), images.to_string_lossy().into_owned()));
+    let (deploy, asked) = fake_deploy_server(&script).await;
+    pairs.push(("DEPLOYSERVER_URL".into(), deploy));
     for (name, value) in script["env"].as_object().unwrap() {
         pairs.push((name.clone(), value.as_str().unwrap().into()));
     }
@@ -198,6 +262,18 @@ async fn run_area(area: &str) {
             "status": status,
             "headers": headers,
             "body": normalize(&body),
+        }));
+        if let Some(ms) = request["pauseMs"].as_u64() {
+            tokio::time::sleep(std::time::Duration::from_millis(ms)).await;
+        }
+    }
+    if script.get("deploy").is_some() {
+        let asked = Value::Array(asked.lock().unwrap().clone());
+        actual.push(json!({
+            "request": "deploy server",
+            "status": 0,
+            "headers": {},
+            "body": normalize(&service_kit::jsjson::stringify(&asked)),
         }));
     }
 
@@ -370,4 +446,19 @@ async fn party() {
 #[tokio::test(flavor = "multi_thread")]
 async fn party_switches() {
     run_area("party-switches").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn matchmaking() {
+    run_area("matchmaking").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn matchmaking_switches() {
+    run_area("matchmaking-switches").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn matchmaking_unsupported() {
+    run_area("matchmaking-unsupported").await;
 }

@@ -59,6 +59,7 @@ pub struct App {
     /// Each account's recent friend requests, for the request window.
     pub friend_requests: crate::friends::RecentRequests,
     pub parties: crate::party::Parties,
+    pub matchmaking: crate::matchmaking::Matchmaking,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,

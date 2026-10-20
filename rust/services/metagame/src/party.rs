@@ -67,7 +67,7 @@ impl CandidateState {
 /// The whole party matchmade onto one server (`matchmaking.ts`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Candidate {
-    pub region: Option<String>,
+    pub region: Option<crate::matchmaking::region::Region>,
     pub candidate_id: String,
     pub state: CandidateState,
     pub game_mode: String,
@@ -185,9 +185,8 @@ pub struct State {
     /// "<sender>|<recipient>" -> when the recipient declined that sender's invite.
     declined_by: HashMap<String, i64>,
     last_global_sweep: i64,
-    /// (member, candidate id) for each member who left a candidate that still counted them in;
-    /// matchmaking forgets their entry.
-    pub candidate_leaves: Vec<(String, String)>,
+    /// Matchmaking's state, under the same lock: its steps read and change parties as they go.
+    pub mm: crate::matchmaking::State,
 }
 
 /// The parties, shared by the party and matchmaking routes.
@@ -305,9 +304,9 @@ impl State {
         for candidate in party.candidates.values_mut() {
             if candidate.member_ids.iter().any(|m| m == user) {
                 candidate.member_ids.retain(|m| m != user);
+                // Matchmaking forgets the entry of a member who leaves before the server is up
                 if Some(&candidate.candidate_id) == current.as_ref() {
-                    self.candidate_leaves
-                        .push((user.to_owned(), candidate.candidate_id.clone()));
+                    self.mm.candidate_left(user, &candidate.candidate_id);
                 }
             }
         }
@@ -432,7 +431,7 @@ impl State {
 
     /// `GlobalSweep`, at most once a minute from any party call: expire invites, sweep parties,
     /// forget idle players.
-    fn global_sweep(&mut self, conn: &mut Conn, now: i64) -> QueryResult<()> {
+    pub(crate) fn global_sweep(&mut self, conn: &mut Conn, now: i64) -> QueryResult<()> {
         if now - self.last_global_sweep < 60 * 1000 {
             return Ok(());
         }
@@ -1054,6 +1053,104 @@ impl State {
             status: 200,
             body: json!({"parties": parties, "invitations": invitations}),
         })
+    }
+}
+
+// ---- For matchmaking ----
+
+impl State {
+    /// `PartyForMatchmaking`: the caller's party, refreshed, before a join is matched.
+    pub fn party_for_matchmaking(&mut self, conn: &mut Conn, user: &str, now: i64) -> QueryResult<Option<String>> {
+        self.global_sweep(conn, now)?;
+        self.touch(user, now);
+        let id = self.party_id_of(user);
+        if let Some(id) = &id {
+            self.refresh(id, Some(user), now);
+        }
+        Ok(id)
+    }
+
+    pub fn set_candidate(&mut self, party_id: &str, candidate: Candidate) {
+        if let Some(party) = self.parties.get_mut(party_id) {
+            party.set_candidate(candidate);
+        }
+    }
+
+    /// `ClearPartyCandidate`.
+    pub fn clear_candidate_if(&mut self, party_id: &str, candidate_id: &str, why: &str) {
+        if let Some(party) = self.parties.get_mut(party_id)
+            && party.candidate().is_some_and(|c| c.candidate_id == candidate_id)
+        {
+            party.clear_candidate();
+            tracing::info!("party: candidate {candidate_id} of P={party_id} cleared: {why}");
+        }
+    }
+
+    /// The party's last candidate is forgotten when it is this one.
+    pub fn drop_last_candidate_if(&mut self, party_id: &str, candidate_id: &str) {
+        if let Some(party) = self.parties.get_mut(party_id)
+            && party.last_candidate().is_some_and(|c| c.candidate_id == candidate_id)
+        {
+            party.last_candidate = None;
+            party.forget_unused();
+        }
+    }
+
+    /// The last candidate no longer counts `user` in.
+    pub fn leave_last_candidate(&mut self, user: &str, candidate_id: &str) {
+        let Some(id) = self.party_id_of(user) else {
+            return;
+        };
+        if let Some(party) = self.parties.get_mut(&id)
+            && let Some(last) = party.last_candidate.clone()
+            && last == candidate_id
+            && let Some(candidate) = party.candidates.get_mut(&last)
+        {
+            candidate.member_ids.retain(|m| m != user);
+        }
+    }
+
+    /// `MarkPartyCandidateReady`: members' polls now show IN_PROGRESS.
+    pub fn mark_candidate_ready(&mut self, party_id: &str, candidate_id: &str, host: &str, port: u16) {
+        let Some(party) = self.parties.get_mut(party_id) else {
+            return;
+        };
+        if let Some(candidate) = party.candidate_mut()
+            && candidate.candidate_id == candidate_id
+        {
+            candidate.state = CandidateState::InProgress;
+            candidate.capacity_deadline = None;
+            candidate.host = Some(host.to_owned());
+            candidate.port = Some(port);
+            party.keep_as_last();
+        }
+    }
+
+    /// `MarkPartyCandidateServed`: a member was told to travel to the candidate's server.
+    pub fn mark_candidate_served(&mut self, user: &str, candidate_id: &str, first_sent_at: i64, now: i64) {
+        let Some(id) = self.party_id_of(user) else {
+            return;
+        };
+        if let Some(candidate) = self.parties.get_mut(&id).and_then(Party::candidate_mut)
+            && candidate.candidate_id == candidate_id
+            && !candidate.served.contains_key(user)
+        {
+            candidate.served.insert(user.to_owned(), first_sent_at);
+            candidate.last_served_at = Some(now);
+        }
+    }
+
+    /// `RemoveFromPartyCandidate`: a member leaves the candidate but stays in the party.
+    pub fn remove_from_candidate(&mut self, user: &str, candidate_id: &str, now: i64) {
+        let Some(id) = self.party_id_of(user) else {
+            return;
+        };
+        if let Some(candidate) = self.parties.get_mut(&id).and_then(Party::candidate_mut)
+            && candidate.candidate_id == candidate_id
+        {
+            candidate.member_ids.retain(|m| m != user);
+            self.expire_candidate(&id, now);
+        }
     }
 }
 

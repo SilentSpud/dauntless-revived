@@ -1,0 +1,44 @@
+{
+  "about": "Matchmaking with an unsupported MATCHMAKING_MODE (MIGRATION_PLAN.md M29, area 5).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "MATCHMAKING_MODE": "AGONES"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Patrol",
+        "isPrivate": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "CITY"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "DELETE /candidate",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /candidate/leave",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /candidate",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/player/alive",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /candidate/regions",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"success\",\"payload\":{\"maxPingingStepTime\":3,\"pingCount\":5,\"pingFrequency\":0.25,\"regionUrls\":[null]}}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

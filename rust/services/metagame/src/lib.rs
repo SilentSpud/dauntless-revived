@@ -20,6 +20,7 @@ pub mod inventory;
 pub mod js;
 pub mod limits;
 pub mod loadouts;
+pub mod matchmaking;
 pub mod middleman;
 pub mod origin;
 pub mod party;

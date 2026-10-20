@@ -116,6 +116,15 @@ Done so far:
   `PARTY_SOLO_STUB`, and a block dropping the party invites between the two. The party candidate is
   modelled for matchmaking, which fills it in its part. Two parity scripts (`party`, `party-switches`,
   55 replies) match Node; `tests/party.rs` covers the rules that wait on time.
+- Metagame B2, area 5 of M29, third part: matchmaking (`routes/matchmaking.ts`, `matchmakingroster`,
+  CapacityTurns, the hunt region reads). Hunt queues per region, private matches, direct starts (Ramsgate,
+  the Dojo, the tutorial), capacity waits retried by status polls, party candidates started by the leader
+  and joined by id, the cancels behind `MATCHMAKING_CANCEL`, the game servers' expected-player check, and
+  the deploy server over hyper with one deadline per exchange. The state shares the party lock, so a step
+  Node ran between two awaits still runs whole. Three parity scripts (`matchmaking`,
+  `matchmaking-switches`, `matchmaking-unsupported`, 72 replies) match Node, including every request the
+  deploy server got: both harnesses now run a scripted fake deploy server. The `/undaunted/api/HuntRegion`
+  routes come with undauntedapi.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

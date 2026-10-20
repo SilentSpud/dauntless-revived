@@ -1,0 +1,605 @@
+{
+  "about": "Matchmaking: queues, direct starts, capacity waits, party candidates and the expected-player check, against a fake deploy server (MIGRATION_PLAN.md M29, area 5, third part).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "MATCHMAKING_MODE": "DEPLOYSERVER",
+    "MATCHMAKING_CANCEL": "1",
+    "QOS_TARGET_URL": "https://qos.example.test/ping",
+    "TARGET_CHANGELIST": "123456",
+    "GERMANY_REGION": "1"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0), ('UID-e', 'Ed', 0, 0), ('UID-f', 'Fi', 0, 0), ('UID-g', 'Gu', 0, 0), ('UID-h', 'Hal', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO huntregions (userId, region) VALUES ('UID-g', 'ger'), ('UID-f', 'aus')"
+  ],
+  "deploy": [
+    {
+      "status": 200,
+      "body": {
+        "host": "10.0.0.1",
+        "port": 7777,
+        "sessionId": "sess-a"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "host": "10.0.0.2",
+        "port": 7778,
+        "sessionId": "11111111-2222-3333-4444-555555555555"
+      }
+    },
+    {
+      "status": 503,
+      "retryAfter": "1",
+      "body": {
+        "error": "capacity_unavailable",
+        "reason": "cpu"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "host": "10.0.0.3",
+        "port": 7779,
+        "sessionId": "bad session id!"
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "host": "",
+        "port": 7780
+      }
+    },
+    {
+      "status": 200,
+      "body": {
+        "host": "10.0.0.4",
+        "port": 7781,
+        "sessionId": "sess-party"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/QoS",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/regions",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/regions",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/register",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/key/generate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "bad hunt"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "gameArgs": "/Game/Maps/x?y"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "gameArgs": 7
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "gameArgs": "",
+        "playerHuntId": "CR19_PlayerHunt_Patrol",
+        "isPrivate": true
+      },
+      "pauseMs": 300
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "gameArgs": "",
+        "playerHuntId": "CR19_PlayerHunt_Patrol",
+        "privateMatch": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/candidate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/candidate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/candidate/leave",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Hard"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Hard"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-d}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Hard"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Hard"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-e}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Hard"
+      },
+      "pauseMs": 300
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-e}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "playerIds": [
+          "UID-b",
+          "UID-c"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "playerIds": [
+          "UID-b",
+          "UID-c",
+          "UID-d",
+          "UID-e",
+          5
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive?purpose=other",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}",
+        "x-dauntless-game-session-id": "11111111-2222-3333-4444-555555555555"
+      },
+      "json": {
+        "playerIds": [
+          "UID-b",
+          "UID-c"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}",
+        "x-dauntless-game-session-id": "11111111-2222-3333-4444-555555555555",
+        "x-dauntless-connected-player-ids": "[\"UID-b\",\"UID-c\"]"
+      },
+      "json": {
+        "playerIds": [
+          "UID-b",
+          "UID-c",
+          "UID-d",
+          "UID-e"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive?sessionId=11111111-2222-3333-4444-555555555555&purpose=expected",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "playerIds": [
+          "UID-b",
+          "UID-x"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}",
+        "x-dauntless-game-session-id": "not-a-session"
+      },
+      "json": {
+        "playerIds": [
+          "UID-b"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/player/alive",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      },
+      "json": {
+        "gameMode": "CITY",
+        "gameArgs": "",
+        "playerHuntId": ""
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      },
+      "pauseMs": 3200
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      },
+      "json": {
+        "gameMode": "CITY",
+        "gameArgs": "",
+        "playerHuntId": ""
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-g}}"
+      },
+      "json": {
+        "gameMode": "SHARED",
+        "playerHuntId": "Dojo_Training"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-g}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/party/invite",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "recipientPlayerId": "UID-h"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/party/invite/accept/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Party"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Party"
+      },
+      "capture": "candidateId"
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join/{{saved:candidateId}}",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join/{{saved:candidateId}}",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join/nope",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Party"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/candidate/join",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "gameMode": "ISLAND",
+        "playerHuntId": "CR19_PlayerHunt_Party"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/candidate/leave",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-h}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/candidate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/candidate/status",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/party",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    }
+  ]
+}

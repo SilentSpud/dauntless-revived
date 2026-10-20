@@ -1,0 +1,23 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

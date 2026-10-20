@@ -161,6 +161,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         store_sweeps: crate::store::Sweeps::default(),
         friend_requests: crate::friends::RecentRequests::default(),
         parties: crate::party::Parties::default(),
+        matchmaking: crate::matchmaking::Matchmaking::new(config.matchmaking.clone()),
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });

@@ -1,0 +1,455 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /QoS",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "body": "<!DOCTYPE html><html><body>pong</body></html>"
+    },
+    {
+      "request": "GET /candidate/regions",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"success\",\"payload\":{\"maxPingingStepTime\":3,\"pingCount\":5,\"pingFrequency\":0.25,\"regionUrls\":[\"https://qos.example.test/ping\"]}}"
+    },
+    {
+      "request": "GET /candidate/regions",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/player/register",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /key/generate",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Patrol\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Patrol\",\"playerStates\":{\"UserId\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"sess-a\",\"host\":\"10.0.0.1\",\"port\":7777},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Patrol\",\"playerStates\":{\"UserId\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"sess-a\",\"host\":\"10.0.0.1\",\"port\":7777},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Patrol\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Patrol\",\"playerStates\":{\"UserId\":{}},\"status\":\"MATCHING\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "DELETE /candidate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /candidate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /candidate/leave",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"playerStates\":{\"UserId\":{}},\"status\":\"MATCHING\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"playerStates\":{\"UserId\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"<uuid>\",\"host\":\"10.0.0.2\",\"port\":7778},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Hard\",\"playerStates\":{\"UserId\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"<uuid>\",\"host\":\"10.0.0.2\",\"port\":7778},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/player/alive",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"expectedPlayerIds\":[\"UID-b\",\"UID-c\"]}"
+    },
+    {
+      "request": "POST /candidate/player/alive",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"expectedPlayerIds\":[\"UID-b\",\"UID-c\",\"UID-d\",\"UID-e\"]}"
+    },
+    {
+      "request": "POST /candidate/player/alive?purpose=other",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"expectedPlayerIds\":[\"UID-b\",\"UID-c\"]}"
+    },
+    {
+      "request": "POST /candidate/player/alive",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"expectedPlayerIds\":[\"UID-b\",\"UID-c\",\"UID-d\",\"UID-e\"]}"
+    },
+    {
+      "request": "POST /candidate/player/alive?sessionId=11111111-2222-3333-4444-555555555555&purpose=expected",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"expectedPlayerIds\":[\"UID-b\",\"UID-x\"]}"
+    },
+    {
+      "request": "POST /candidate/player/alive",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"expectedPlayerIds\":[\"UID-b\"]}"
+    },
+    {
+      "request": "POST /candidate/player/alive",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"CITY\",\"huntId\":\"\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"\",\"playerStates\":{\"UserId\":{}},\"status\":\"MATCHING\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"\",\"playerStates\":{\"UserId\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"<uuid>\",\"host\":\"10.0.0.3\",\"port\":7779},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"CITY\",\"huntId\":\"\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"SHARED\",\"huntId\":\"Dojo_Training\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":10000,\"gameMode\":\"ISLAND\",\"huntId\":\"Dojo_Training\",\"playerStates\":{\"UserId\":{}},\"status\":\"FAILED\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite/accept/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-h\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-h\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Hal\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"playerStates\":{\"UID-a\":{},\"UID-h\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"sess-party\",\"host\":\"10.0.0.4\",\"port\":7781},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join/{{saved:candidateId}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join/{{saved:candidateId}}",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /candidate/join/nope",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"playerStates\":{\"UID-a\":{},\"UID-h\":{}},\"serverInfo\":{\"buildId\":\"123456_1.4.4_shipping\",\"gameSessionId\":\"sess-party\",\"host\":\"10.0.0.4\",\"port\":7781},\"status\":\"IN_PROGRESS\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"playerStates\":{\"UID-a\":{},\"UID-h\":{}},\"status\":\"MATCHING\",\"statusDuration\":0,\"statusReason\":null}"
+    },
+    {
+      "request": "POST /candidate/join",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"<uuid>\",\"candidateStatusPeriodMillis\":1000,\"gameMode\":\"ISLAND\",\"huntId\":\"CR19_PlayerHunt_Party\",\"status\":\"MATCHING\",\"statusReason\":null}"
+    },
+    {
+      "request": "DELETE /candidate/leave",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /candidate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /candidate/status",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-h\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-h\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Hal\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "deploy server",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"method\":\"POST\",\"path\":\"/api/matchmaker/handle-matchmaking-for-player\",\"body\":{\"GameMode\":\"ISLAND\",\"GameArgs\":\"\",\"HuntId\":\"CR19_PlayerHunt_Patrol\",\"ExpectedPlayers\":[\"UID-a\"]}},{\"method\":\"POST\",\"path\":\"/api/matchmaker/handle-matchmaking-for-player\",\"body\":{\"GameMode\":\"ISLAND\",\"GameArgs\":\"\",\"HuntId\":\"CR19_PlayerHunt_Hard\",\"ExpectedPlayers\":[\"UID-b\",\"UID-c\",\"UID-d\",\"UID-e\"]}},{\"method\":\"POST\",\"path\":\"/api/matchmaker/handle-matchmaking-for-player\",\"body\":{\"GameMode\":\"CITY\",\"GameArgs\":\"\",\"HuntId\":\"\",\"ExpectedPlayers\":[\"UID-f\"],\"Region\":\"us\"}},{\"method\":\"POST\",\"path\":\"/api/matchmaker/handle-matchmaking-for-player\",\"body\":{\"GameMode\":\"CITY\",\"GameArgs\":\"\",\"HuntId\":\"\",\"ExpectedPlayers\":[\"UID-f\"],\"Region\":\"us\"}},{\"method\":\"POST\",\"path\":\"/api/matchmaker/handle-matchmaking-for-player\",\"body\":{\"GameMode\":\"SHARED\",\"HuntId\":\"Dojo_Training\",\"Region\":\"ger\"}},{\"method\":\"POST\",\"path\":\"/api/matchmaker/handle-matchmaking-for-player\",\"body\":{\"GameMode\":\"ISLAND\",\"GameArgs\":\"\",\"HuntId\":\"CR19_PlayerHunt_Party\",\"ExpectedPlayers\":[\"UID-a\",\"UID-h\"]}}]"
+    }
+  ]
+}
