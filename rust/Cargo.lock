@@ -1138,12 +1138,14 @@ name = "service-kit"
 version = "0.0.0"
 dependencies = [
  "axum",
+ "base64 0.23.1",
  "dotenvy",
  "gethostname",
  "http-body-util",
  "percent-encoding",
  "serde",
  "serde_json",
+ "sha2",
  "thiserror",
  "tokio",
  "tower",

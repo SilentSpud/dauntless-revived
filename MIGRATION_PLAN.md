@@ -20,6 +20,9 @@ Done so far:
   lines; `fatal!` for level 60), M25 (`Env` from `--env-file` only, process environment wins) and the serving half
   of M5, M10 and X7 (`ConnectionInfo` with both addresses; stop on `shutdown` on stdin, Ctrl+C/Ctrl+Break or
   SIGTERM, then a drain deadline).
+- Metagame B1: M11 in `service_kit::ratelimit`, `express-rate-limit` 8.7 rebuilt: per-key windows from the first
+  request, draft-8 `RateLimit` and `RateLimit-Policy` headers with its partition key, 429 with `Retry-After` and the
+  JSON reply, skip-successful, IPv6 keys per /56; `Router::layer` puts it (or any middleware) on one route.
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.

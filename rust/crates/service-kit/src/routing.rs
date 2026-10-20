@@ -193,6 +193,22 @@ where
         self.route(Method::DELETE, path, handler)
     }
 
+    /// Wraps the route added last in `layer`, such as a rate limit or an auth check that runs before
+    /// its handler (Express's per-route middleware).
+    pub fn layer<L>(mut self, layer: L) -> Self
+    where
+        L: tower::Layer<axum::routing::Route> + Clone + Send + Sync + 'static,
+        L::Service: Service<Request<Body>> + Clone + Send + Sync + 'static,
+        <L::Service as Service<Request<Body>>>::Response: IntoResponse + 'static,
+        <L::Service as Service<Request<Body>>>::Error: Into<Infallible> + 'static,
+        <L::Service as Service<Request<Body>>>::Future: Send + 'static,
+    {
+        if let Some((method, pattern, route)) = self.routes.pop() {
+            self.routes.push((method, pattern, route.layer(layer)));
+        }
+        self
+    }
+
     /// Appends another router's routes after these, like `app.use("/", router)` in Express.
     pub fn merge(mut self, other: Router<S>) -> Self {
         self.routes.extend(other.routes);

@@ -10,12 +10,14 @@ publish.workspace = true
 
 [dependencies]
 axum.workspace = true
+base64.workspace = true
 dotenvy.workspace = true
 gethostname.workspace = true
 percent-encoding.workspace = true
 serde.workspace = true
 # Keys in insertion order, as JavaScript objects keep them: log lines and JSON replies (SB1).
 serde_json = { workspace = true, features = ["preserve_order"] }
+sha2.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, features = ["net", "signal", "io-std", "io-util", "time", "sync"] }
 tower.workspace = true
