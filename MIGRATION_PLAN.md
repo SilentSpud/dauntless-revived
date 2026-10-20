@@ -2,8 +2,10 @@
 
 # Dauntless Revived master migration plan: one Rust codebase
 
-Status: draft plan; nothing in the repository has changed yet. Written 2026-10-20. The spikes that could run on a
-development PC ran the same day; their results are in section 3.4.
+Status: in progress. Written 2026-10-20. The spikes that could run on a development PC ran the same day; their results
+are in section 3.4. Done so far: R1, R2, R4 with M4 (the workspace and `crates/protocol`, starting with the invite
+types and builder), R8 and the `cargo` entry of X6. Branch protection still has to be switched to require only
+`CI ok` (R8).
 
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot

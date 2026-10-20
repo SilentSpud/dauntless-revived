@@ -146,8 +146,12 @@ ohjesivuston sivulla [Tiekartta](https://mixutin.github.io/dauntless-revived/fi/
 
 ## Mitä projektissa on
 
-Osien kansiot pitävät toistaiseksi alkuperäiset `Undaunted...`-nimensä (niiden nimeäminen uudelleen on
-tehtävälistan kohta 4.15); niissä olevien npm-pakettien nimet ovat `dauntless-revived-*`.
+Koodivarasto siirtyy rakenteeseen, jossa kullakin kieliperheellä on oma kansionsa: `rust/` kaikille
+Rust-osille (käynnistimen taustaosa, palvelimet ja niiden yhteiset kirjastot), `native/` C++:lle,
+`client-mods/` ja `tools/`. Tavoiteltu rakenne ja siirtojen järjestys ovat tiedostossa
+[`MIGRATION_PLAN.md`](MIGRATION_PLAN.md#2-repository-and-workspace-layout) (englanniksi). Kukin
+Node-projekti pitää alkuperäisen `Undaunted...`-kansionsa, kunnes sen Rust-versio korvaa sen; niissä
+olevien npm-pakettien nimet ovat `dauntless-revived-*`.
 
 | Kansio | Mikä se on |
 |---|---|
@@ -156,16 +160,20 @@ tehtävälistan kohta 4.15); niissä olevien npm-pakettien nimet ovat `dauntless
 | `UndauntedGateway/` | Vain julkisessa tilassa: salattu yhdyskäytävä (pelin ainoa julkinen TCP-portti) ja apuohjelma, joka avaa peliportit kirjautuneille pelaajille |
 | `UndauntedContent/` | Sisältöpalvelin: pelitiedostot (tarkistetaan 410 tiedoston luetteloa vasten), uutiset ja kuvapaketti, vain rekisteröityneille käynnistimille |
 | `UndauntedLauncher/` | Dauntless Revived Launcher Windowsille ja x86_64-Linuxille, pohjana alkuperäisen Undaunted-projektin käynnistin. Kansiossa `assets/` ovat ne kaksi tiivisteillä kiinnitettyä valmista DLL-tiedostoa, jotka jokainen asennustapa asentaa |
+| `rust/` | Cargo-työtila, johon kaikki Rust-osat rakennetaan. Toistaiseksi siinä on `crates/protocol`, käynnistimen ja palvelinten yhteiset tietorakenteet |
 | `native/internal-server/` | Undauntedin palvelin-DLL:n C++-lähdekoodi. DLL:n avulla peli toimii pelipalvelimena, ja se ohjaa pelaajat omalle taustapalvelimelle. Se kääntyy Visual Studio 2022 Build Toolsilla, mutta mikään tässä koodivarastossa ei käännä sitä; jokainen asennustapa käyttää valmiita DLL-tiedostoja kansiosta `UndauntedLauncher/assets/` |
+| `client-mods/` | Valinnaiset UE4SS-modit, jotka käynnistin asentaa peliohjelman viereen; `manifest.json` luettelee niiden tiedostot |
 | `deploy/windows-server/` | Windows-palvelinpaketti: asentaa ja pyörittää koko palvelimen Windows Server 2019 -koneella julkisessa tai yksityisessä tilassa, varmuuskopioineen, kutsuineen ja päivityksineen |
 | `deploy/linux-server/` | Erillinen Linux-palvelinporttaus: systemd-palvelut, nftables-sallittujen lista, yhden koneen Proton/Wine-kääre ja Linux-pelityöntekijän asennin |
 | `deploy/openbsd-server/` | Erillinen OpenBSD 7.9 -ohjauspuoli: rc.d-palvelut, PF-säännöt ja rajattu SSH-käynnistin Linux-pelityöntekijälle |
 | `deploy/unix-common/` | Linuxin ja OpenBSD:n yhteiset asetusten, SQLite-bootstrapin, kutsujen ja yhteensopivuusajon apuohjelmat; Windows-paketti ei käytä niitä |
 | `friend-kit/` | Vain Tailscalea käyttävät asennus- ja käynnistysohjelmat kavereiden koneille |
 | `tools/` | `sync-roadmap.js` ja `build-llms.js` (ohjesivuston tuotetut tiedostot), `make-friend-kit.ps1`, `make-game-manifest.js` sekä kansiossa `ci/` CI:n tarkistukset |
+| `brand/` | Logo, tunnus ja väripaletti sekä `build.py`, joka tekee niistä kaikki käynnistimen, ohjesivuston ja GitHubin käyttämät koot |
 | `docs/` | Ohjesivusto (GitHub Pages); suomenkieliset sivut ovat kansiossa `docs/fi/` |
 | `.github/` | CI:n työnkulut (`ci.yml`, `launcher-release.yml`), Dependabot sekä ilmoitus- ja muutospyyntöpohjat |
 | `ROADMAP.md` | Suunnitelma ja tehtävälista |
+| `MIGRATION_PLAN.md` | Suunnitelma käynnistimen siirrosta Tauriin, palvelinten siirrosta Rustiin ja koodivaraston siirrosta tähän rakenteeseen (englanniksi) |
 
 ## Muutokset alkuperäiseen Undauntediin
 

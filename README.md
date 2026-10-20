@@ -131,8 +131,12 @@ The live checklist, with every step and what "done" means for it, is [ROADMAP.md
 
 ## Repository layout
 
-The component folders keep upstream's `Undaunted...` names for now (renaming them is roadmap item
-4.15); the npm packages in them are named `dauntless-revived-*`.
+The repository is moving to one folder per code family: `rust/` for every Rust component (the
+launcher backend, the servers and their shared crates), `native/` for C++, `client-mods/` and
+`tools/`. The target layout and the order of the moves are in
+[`MIGRATION_PLAN.md`](MIGRATION_PLAN.md#2-repository-and-workspace-layout). Until its Rust port
+replaces it, each Node project keeps its upstream `Undaunted...` folder; the npm packages in them are
+named `dauntless-revived-*`.
 
 | Folder | What it is |
 |---|---|
@@ -141,16 +145,20 @@ The component folders keep upstream's `Undaunted...` names for now (renaming the
 | `UndauntedGateway/` | Public mode only: the TLS gateway (the game's one public TCP port) and the helper that opens the game ports for logged-in players |
 | `UndauntedContent/` | The content server: the game files (checked against a manifest of 410 files), news and the art pack, for registered launchers only |
 | `UndauntedLauncher/` | The Dauntless Revived Launcher for Windows and x86_64 Linux; on Linux the pinned Windows game client runs through Proton/Wine. `assets/` holds the two pinned prebuilt DLLs every setup installs |
+| `rust/` | The cargo workspace every Rust component is being built in. So far: `crates/protocol`, the wire types the launcher and the servers share |
 | `native/internal-server/` | The C++ source of Undaunted's server DLL, which lets the retail client run as a game server and points clients at the backend. It compiles with the Visual Studio 2022 Build Tools, but nothing in this repository builds it; every setup uses the prebuilt DLLs from `UndauntedLauncher/assets/` |
+| `client-mods/` | The optional UE4SS client mods the launcher installs next to the game exe, with `manifest.json` listing their files |
 | `deploy/windows-server/` | The Windows server kit: installs and runs the whole server on Windows Server 2019, in public or private mode, with backups, invites and updates |
 | `deploy/linux-server/` | Separate Linux server port: systemd service templates, nftables allowlist, one-host Proton/Wine launch wrapper and the reusable Linux game-worker installer |
 | `deploy/openbsd-server/` | Separate OpenBSD 7.9 control-plane port: rc.d services, PF redirect/allowlist rules and the restricted SSH launcher for a Linux game worker |
 | `deploy/unix-common/` | Shared Linux/OpenBSD config, SQLite/bootstrap, invite and compatibility-runner helpers; the Windows kit does not use these |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends' PCs |
 | `tools/` | `sync-roadmap.js` and `build-llms.js` (the generated docs files), `make-friend-kit.ps1`, `make-game-manifest.js`, and in `ci/` the checks CI runs |
+| `brand/` | The logo, emblem and palette, and `build.py`, which renders every size the launcher, the docs and GitHub use |
 | `docs/` | The documentation site (GitHub Pages), with the Finnish pages in `docs/fi/` |
 | `.github/` | The CI workflows (`ci.yml`, `launcher-release.yml`), Dependabot, and the issue and pull request templates |
 | `ROADMAP.md` | The plan and live checklist |
+| `MIGRATION_PLAN.md` | The plan for moving the launcher to Tauri and every server to Rust, and the repository to this layout |
 
 ## Changes from upstream
 
