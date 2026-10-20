@@ -39,6 +39,10 @@ Done so far:
   (tested with the permissions tests' cases), token epoch and ban checks, the gateway/proxy/local-caller rules, the
   ban check of `CheckPlayerAccess` and the recovery copy of player keys. The app-wide layers (backend health, ban
   check, dev-auth refusal, request log) come with the app assembly.
+- Metagame B1: M27 in `metagame::health` (the request window and histogram as in Node; `eventLoop` measured as
+  the lateness of a 20 ms timer on the async runtime, which is what Node measures; `memoryMB.heapUsed` is `null`, as
+  there is no GC heap) and M28 (`App::key_revocations`, a broadcast channel). `service_kit::json::js_number` writes
+  floats as `JSON.stringify` does (`1`, not `1.0`).
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.

@@ -16,6 +16,7 @@ base64.workspace = true
 diesel.workspace = true
 diesel_migrations.workspace = true
 if-addrs.workspace = true
+memory-stats.workspace = true
 jsonwebtoken.workspace = true
 rand.workspace = true
 serde.workspace = true
@@ -25,7 +26,7 @@ sha2.workspace = true
 store.workspace = true
 subtle.workspace = true
 thiserror.workspace = true
-tokio.workspace = true
+tokio = { workspace = true, features = ["sync", "time"] }
 tracing.workspace = true
 uuid.workspace = true
 

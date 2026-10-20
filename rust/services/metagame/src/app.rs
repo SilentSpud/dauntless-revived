@@ -6,6 +6,7 @@ use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 
 use crate::crypto::TokenKeys;
+use crate::health::Health;
 use crate::origin::{OriginConfig, OwnAddresses};
 
 /// `AUTH_MODE`: account keys checked against the database, or (development only, never with
@@ -39,6 +40,9 @@ pub struct App {
     pub auth: AuthConfig,
     pub origin: OriginConfig,
     pub own_addresses: OwnAddresses,
+    pub health: Arc<Health>,
+    /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
+    pub key_revocations: tokio::sync::broadcast::Sender<String>,
 }
 
 pub type AppState = Arc<App>;

@@ -6,6 +6,7 @@ pub mod auth;
 pub mod crypto;
 pub mod db;
 pub mod dbtools;
+pub mod health;
 pub mod origin;
 #[allow(non_snake_case)]
 pub mod schema;
