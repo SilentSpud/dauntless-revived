@@ -11,7 +11,7 @@
 //! Drizzle databases are adopted (D11, [`adopt`]), new ones get every migration.
 
 pub mod adopt;
-mod backup;
+pub mod backup;
 pub mod drizzle;
 mod snapshot;
 

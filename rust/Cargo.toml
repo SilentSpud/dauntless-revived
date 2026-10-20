@@ -21,6 +21,7 @@ axum = { version = "0.8", default-features = false, features = ["http1", "json",
 aes-gcm = "0.11"
 base64 = "0.23"
 
+clap = { version = "4", features = ["derive"] }
 diesel = { version = "2.3", default-features = false, features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
 diesel_migrations = { version = "2.3", features = ["sqlite"] }
 dotenvy = "0.15"

@@ -9,6 +9,7 @@ repository.workspace = true
 publish.workspace = true
 
 [dependencies]
+clap.workspace = true
 aes-gcm.workspace = true
 base64.workspace = true
 diesel.workspace = true

@@ -25,19 +25,25 @@ impl Store {
         let source = self.path.as_ref().clone();
         let destination = destination.to_owned();
         let busy_timeout = self.busy_timeout;
-        run_blocking(move || {
-            if destination.exists() {
-                return Err(Error::Backup(format!("{} exists already", destination.display())));
-            }
-            let result = copy(&source, &destination, busy_timeout, Instant::now() + deadline);
-            if result.is_err() {
-                // Best effort: a partial copy must not pass for a backup.
-                let _ = std::fs::remove_file(&destination);
-            }
-            result
-        })
-        .await
+        run_blocking(move || backup_file(&source, &destination, busy_timeout, deadline)).await
     }
+}
+
+/// [`Store::backup`] for a database file this process hasn't opened (the `db backup` tool): blocking,
+/// and safe while a service has the database open.
+pub fn backup_file(source: &Path, destination: &Path, busy_timeout: Duration, deadline: Duration) -> Result<(), Error> {
+    if !source.is_file() {
+        return Err(Error::Backup(format!("no database at {}", source.display())));
+    }
+    if destination.exists() {
+        return Err(Error::Backup(format!("{} exists already", destination.display())));
+    }
+    let result = copy(source, destination, busy_timeout, Instant::now() + deadline);
+    if result.is_err() {
+        // Best effort: a partial copy must not pass for a backup.
+        let _ = std::fs::remove_file(destination);
+    }
+    result
 }
 
 fn copy(source: &Path, destination: &Path, busy_timeout: Duration, deadline: Instant) -> Result<(), Error> {

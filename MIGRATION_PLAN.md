@@ -31,6 +31,9 @@ Done so far:
   `BEGIN`, or each step reads anew and the backup restarts after every save: in the test it never finished under
   constant writes, and with the snapshot it takes under a second), checks a deadline between steps, never
   overwrites, and leaves a single-file copy in rollback-journal mode.
+- Metagame B1: M19, `metagame db integrity|backup|add-invite|del-invite|make-admin|gs-key|journal delete|wal <db> …`
+  with dr-db's checks and messages (`metagame db:` instead of `dr-db:`), never migrating or creating the file; the
+  kits switch to it in M39-M41. `offline-save` (X1) waits for the launcher.
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.

@@ -3,5 +3,6 @@
 
 pub mod crypto;
 pub mod db;
+pub mod dbtools;
 #[allow(non_snake_case)]
 pub mod schema;
