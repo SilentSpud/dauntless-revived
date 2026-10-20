@@ -68,6 +68,7 @@ pub struct Config {
     pub inventory: crate::inventory::Settings,
     pub store: crate::store::Settings,
     pub matchmaking: crate::matchmaking::Settings,
+    pub guilds: crate::guild::Settings,
     pub real_progression: crate::realprogression::Settings,
     pub features: Features,
 }
@@ -152,6 +153,7 @@ impl Config {
             inventory: crate::inventory::Settings::from_env(env, on_off(env, "MIDDLEMAN_FUSION_GUARDS", false)),
             store: crate::store::Settings::from_env(env),
             matchmaking: crate::matchmaking::Settings::from_env(env),
+            guilds: crate::guild::Settings::from_env(env),
             real_progression: crate::realprogression::Settings::from_env(env),
             features: Features {
                 accountinfo_public_legacy: env.get("ACCOUNTINFO_PUBLIC_LEGACY") == Some("1"),

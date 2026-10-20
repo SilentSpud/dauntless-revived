@@ -1,0 +1,725 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /guild",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[]},\"invites\":[]}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ObedientAdorableQuillshot\",\"message\":\"Name is invalid. Must contain 4-15 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ObedientAdorableQuillshot\",\"message\":\"Name is invalid. Must contain 4-15 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ObedientAdorableQuillshot\",\"message\":\"Name is invalid. Must contain 4-15 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"NumberedAdorableQuillshot\",\"message\":\"Guild name must have 6 numbers or less.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"LetteredAdorableQuillshot\",\"message\":\"Guild name must not have more than 6 of the same letter in a row.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"NastyAdorableQuillshot\",\"message\":\"Guild name contains profanity.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SeizedAdorableQuillshot\",\"message\":\"Guild name already in use.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SeizedAdorableQuillshot\",\"message\":\"Guild name already in use.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"DutifulAdorableQuillshot\",\"message\":\"Nameplate is invalid. Must contain 2-6 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"CapturedAdorableQuillshot\",\"message\":\"Guild nameplate already in use.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"DirtyAdorableQuillshot\",\"message\":\"Guild nameplate contains profanity.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"DutifulAdorableQuillshot\",\"message\":\"Nameplate is invalid. Must contain 2-6 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ObedientAdorableQuillshot\",\"message\":\"Name is invalid. Must contain 4-15 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"Only a game server may call this.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"No such account.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"No such account.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"Check the name in the create window, then try again.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ObedientAdorableQuillshot\",\"message\":\"Name is invalid. Must contain 4-15 english letters and digits.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-a\",\"members\":[{\"phx_account_id\":\"UID-a\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100},\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-a\",\"members\":[{\"phx_account_id\":\"UID-a\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"Check the name in the create window, then try again.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"Check the name in the create window, then try again.\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-a\",\"members\":[{\"phx_account_id\":\"UID-a\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100},\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-a\",\"members\":[{\"phx_account_id\":\"UID-a\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"Check the name in the create window, then try again.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OccupiedAdorableQuillshot\",\"message\":\"Unable to create guild. You are already in a guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SeizedAdorableQuillshot\",\"message\":\"Guild name already in use.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"CapturedAdorableQuillshot\",\"message\":\"Guild nameplate already in use.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-b",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"RedundantAdorableQuillshot\",\"message\":\"That player already has an invite from your guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ClonedAdorableQuillshot\",\"message\":\"That player is already in your guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-e",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"The invite could not be sent.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-none",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"No such account.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-c",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ExcludedAdorableQuillshot\",\"message\":\"Not in that guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-c",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]},\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]}"
+    },
+    {
+      "request": "POST /guild/invite/accept/nope",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"UninvitedAdorableQuillshot\",\"message\":\"Guild invite not found.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/invite/accept/{{saved:inviteB}}",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"UninvitedAdorableQuillshot\",\"message\":\"Guild invite not found.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/invite/{{saved:inviteB}}",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"UninvitedAdorableQuillshot\",\"message\":\"Guild invite not found.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/invite/accept/{{saved:inviteB}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/invite/accept/{{saved:inviteB}}",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"UninvitedAdorableQuillshot\",\"message\":\"Guild invite not found.\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-a\",\"members\":[{\"phx_account_id\":\"UID-a\",\"rank\":\"Leader\"},{\"phx_account_id\":\"UID-b\",\"rank\":\"Member\"}],\"maximum_guild_members\":100},\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-a\",\"members\":[{\"phx_account_id\":\"UID-a\",\"rank\":\"Leader\"},{\"phx_account_id\":\"UID-b\",\"rank\":\"Member\"}],\"maximum_guild_members\":100}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[]},\"invites\":[]}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]},\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]}"
+    },
+    {
+      "request": "DELETE /guild/invite/{{saved:inviteC}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/invite/{{saved:inviteC}}",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"UninvitedAdorableQuillshot\",\"message\":\"Guild invite not found.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-c",
+      "status": 429,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"That player turned down an invite from this guild recently; try again later.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-c/officer",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SlyAdorableQuillshot\",\"message\":\"You do not have permission to do that.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-b/bogus",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"DocileAdorableQuillshot\",\"message\":\"Invalid guild rank.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-a/officer",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SlyAdorableQuillshot\",\"message\":\"You do not have permission to do that.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-none/officer",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ExcludedAdorableQuillshot\",\"message\":\"Not in that guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-b/OFFICER",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-b/officer",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-d",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-b\"}]},\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-b\"}]}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-b/member",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[]},\"invites\":[]}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-d",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SlyAdorableQuillshot\",\"message\":\"You do not have permission to do that.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ExcludedAdorableQuillshot\",\"message\":\"Not in that guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ChiefAdorableQuillshot\",\"message\":\"The guild leader cannot leave the guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-d",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]},\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]}"
+    },
+    {
+      "request": "POST /guild/invite/accept/{{saved:inviteD}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player/UID-a",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SlyAdorableQuillshot\",\"message\":\"You do not have permission to do that.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player/UID-d",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player/UID-d",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ExcludedAdorableQuillshot\",\"message\":\"Not in that guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ChiefAdorableQuillshot\",\"message\":\"The guild leader cannot leave the guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/player/not-an-id",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ExcludedAdorableQuillshot\",\"message\":\"Not in that guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-f",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]},\"invites\":[{\"id\":\"<uuid>\",\"guild_id\":\"<uuid>\",\"guild_name\":\"Slayers\",\"inviter_account_id\":\"UID-a\"}]}"
+    },
+    {
+      "request": "POST /guild/invite/accept/{{saved:inviteF}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/rank/UID-f/Leader",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-f\",\"members\":[{\"phx_account_id\":\"UID-f\",\"rank\":\"Leader\"},{\"phx_account_id\":\"UID-a\",\"rank\":\"Officer\"}],\"maximum_guild_members\":100},\"id\":\"<uuid>\",\"name\":\"Slayers\",\"nameplate\":\"sly\",\"leader_account_id\":\"UID-f\",\"members\":[{\"phx_account_id\":\"UID-f\",\"rank\":\"Leader\"},{\"phx_account_id\":\"UID-a\",\"rank\":\"Officer\"}],\"maximum_guild_members\":100}"
+    },
+    {
+      "request": "DELETE /guild/{{saved:id}}",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"SlyAdorableQuillshot\",\"message\":\"You do not have permission to do that.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/nope",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"ExcludedAdorableQuillshot\",\"message\":\"Not in that guild.\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /guild/{{saved:id}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /guild",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 429,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"A guild was created a moment ago; try again later.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Others\",\"nameplate\":\"OTH\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100},\"id\":\"<uuid>\",\"name\":\"Others\",\"nameplate\":\"OTH\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Others\",\"nameplate\":\"OTH\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100},\"id\":\"<uuid>\",\"name\":\"Others\",\"nameplate\":\"OTH\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":100}"
+    }
+  ]
+}

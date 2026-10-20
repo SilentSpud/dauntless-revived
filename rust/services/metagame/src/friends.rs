@@ -79,7 +79,7 @@ fn pair<'a>(a: &'a str, b: &'a str) -> (&'a str, &'a str) {
     if a < b { (a, b) } else { (b, a) }
 }
 
-fn account_exists(conn: &mut Conn, account: &str) -> QueryResult<bool> {
+pub(crate) fn account_exists(conn: &mut Conn, account: &str) -> QueryResult<bool> {
     Ok(users::table
         .find(account)
         .select(users::userId)

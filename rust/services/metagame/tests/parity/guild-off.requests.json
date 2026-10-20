@@ -1,0 +1,77 @@
+{
+  "about": "Guilds with GUILDS=0, and the switches on names and the create (MIGRATION_PLAN.md M29, area 5).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "GUILDS": "0"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0), ('UID-e', 'Ed', 0, 0), ('UID-f', 'Fi', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/x",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    }
+  ]
+}

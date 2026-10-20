@@ -1,0 +1,55 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /guild",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[]}}"
+    },
+    {
+      "request": "GET /guild/invite/player",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /guild",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /guild/player",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "PUT /guild/invite/UID-b",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /guild/x",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

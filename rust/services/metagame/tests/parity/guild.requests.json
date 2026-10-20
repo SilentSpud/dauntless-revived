@@ -1,0 +1,826 @@
+{
+  "about": "Guilds: names, the game server's create, invites, ranks, leaving, kicks and disbanding (MIGRATION_PLAN.md M29, area 5, fourth part).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "GUILD_NAME_DENYLIST": "badword, x, Fo0bar"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0), ('UID-e', 'Ed', 0, 0), ('UID-f', 'Fi', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO blocks (blockerId, blockedId, createdAt) VALUES ('UID-e', 'UID-a', 1700000000000)"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "abc"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "a b c d"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "ab1234567"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "aaaaaaab"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Sh1tGuild"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "TheAdmins"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Phoenix"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "toolong"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "GM"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "ss"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Hunters"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "wrong-key"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-none",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "not an id",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "abc"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "sly"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}",
+        "authorization": "{{bearer:UID-c}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Slayers",
+        "nameplate": "SLY"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "capture": "id"
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Hunters"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Hunters"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "slayers"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "Others",
+        "nameplate": "sly"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "Others",
+        "nameplate": "oth"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-e",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-none",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-c",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "capture": "inviteB",
+      "capturePath": [
+        "invites",
+        0,
+        "id"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/guild/invite/accept/nope",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/invite/accept/{{saved:inviteB}}",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/invite/{{saved:inviteB}}",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/invite/accept/{{saved:inviteB}}",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/invite/accept/{{saved:inviteB}}",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      },
+      "capture": "inviteC",
+      "capturePath": [
+        "invites",
+        0,
+        "id"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/invite/{{saved:inviteC}}",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/invite/{{saved:inviteC}}",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-c/officer",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-b/bogus",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-a/officer",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-none/officer",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-b/OFFICER",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-b/officer",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-d}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-b/member",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-d}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-d}}"
+      },
+      "capture": "inviteD",
+      "capturePath": [
+        "invites",
+        0,
+        "id"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/guild/invite/accept/{{saved:inviteD}}",
+      "headers": {
+        "authorization": "{{bearer:UID-d}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-d}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/player/not-an-id",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-f",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild/invite/player",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      },
+      "capture": "inviteF",
+      "capturePath": [
+        "invites",
+        0,
+        "id"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/guild/invite/accept/{{saved:inviteF}}",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/rank/UID-f/Leader",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/{{saved:id}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/nope",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/guild/{{saved:id}}",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-f}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Another"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Another"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "Others",
+        "nameplate": "oth"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "Others",
+        "nameplate": "OTH"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    }
+  ]
+}

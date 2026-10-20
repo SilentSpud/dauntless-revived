@@ -255,7 +255,16 @@ async fn run_area(area: &str) {
         let body = String::from_utf8(response.into_body().collect().await.unwrap().to_bytes().to_vec()).unwrap();
         if let Some(name) = request["capture"].as_str() {
             let reply: Value = serde_json::from_str(&body).unwrap_or_default();
-            saved.insert(name.into(), reply[name].as_str().unwrap_or("").into());
+            // "capturePath" walks into the reply when the value is not a root field
+            let path = request["capturePath"]
+                .as_array()
+                .cloned()
+                .unwrap_or_else(|| vec![json!(name)]);
+            let value = path.iter().fold(&reply, |value, key| match key {
+                Value::Number(index) => &value[index.as_u64().unwrap() as usize],
+                key => &value[key.as_str().unwrap()],
+            });
+            saved.insert(name.into(), value.as_str().unwrap_or("").into());
         }
         actual.push(json!({
             "request": format!("{} {}", request["method"].as_str().unwrap(), request["path"].as_str().unwrap()),
@@ -461,4 +470,19 @@ async fn matchmaking_switches() {
 #[tokio::test(flavor = "multi_thread")]
 async fn matchmaking_unsupported() {
     run_area("matchmaking-unsupported").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn guild() {
+    run_area("guild").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn guild_off() {
+    run_area("guild-off").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn guild_switches() {
+    run_area("guild-switches").await;
 }

@@ -60,6 +60,9 @@ pub struct App {
     pub friend_requests: crate::friends::RecentRequests,
     pub parties: crate::party::Parties,
     pub matchmaking: crate::matchmaking::Matchmaking,
+    pub guilds: crate::guild::Settings,
+    /// Guild validate tickets and rate windows (`guild.rs`).
+    pub guild_memory: crate::guild::Memory,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,

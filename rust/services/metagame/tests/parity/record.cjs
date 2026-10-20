@@ -95,7 +95,8 @@ function weekly(value) {
 
 const HEADERS = ["content-type", "cache-control", "retry-after", "ratelimit", "ratelimit-policy", "content-security-policy", "x-content-type-options"];
 
-// Values a request saved from an earlier reply ("capture": the reply's JSON field to keep)
+// Values a request saved from an earlier reply ("capture": the reply's JSON field to keep, or the
+// name for the value at "capturePath")
 const saved = {};
 
 function fill(value) {
@@ -141,7 +142,8 @@ async function main() {
         if (value !== null) recorded[name] = normalize(value);
       }
       const text = await response.text();
-      if (request.capture) saved[request.capture] = JSON.parse(text)[request.capture];
+      // "capturePath" walks into the reply when the value is not a root field
+      if (request.capture) saved[request.capture] = (request.capturePath ?? [request.capture]).reduce((value, key) => value?.[key], JSON.parse(text));
       results.push({ request: `${request.method} ${request.path}`, status: response.status, headers: recorded, body: normalize(text) });
       if (request.pauseMs) await new Promise((resolve) => setTimeout(resolve, request.pauseMs));
     }

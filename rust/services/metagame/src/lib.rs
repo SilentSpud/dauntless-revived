@@ -15,6 +15,7 @@ pub mod db;
 pub mod dbtools;
 pub mod entitlements;
 pub mod friends;
+pub mod guild;
 pub mod health;
 pub mod inventory;
 pub mod js;

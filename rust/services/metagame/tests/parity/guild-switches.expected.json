@@ -1,0 +1,85 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"NastyAdorableQuillshot\",\"message\":\"Guild name contains profanity.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"NastyAdorableQuillshot\",\"message\":\"Guild name contains profanity.\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"CANDIDATE_ID_LOL\",\"candidateState\":\"QUEUED_FOR_START\",\"gauntletLevel\":null,\"leaderPlayerId\":\"UID-b\",\"partyId\":\"<uuid>\",\"playerHuntId\":null,\"playerStates\":[{\"consoleSessionId\":null,\"displayName\":\"Bo\",\"isMemberOfCandidate\":true,\"platform\":\"win\",\"playerId\":\"UID-b\"}]}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Unvalidated\",\"nameplate\":\"UNV\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":1},\"id\":\"<uuid>\",\"name\":\"Unvalidated\",\"nameplate\":\"UNV\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":1}"
+    },
+    {
+      "request": "POST /guild/validate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Other2\",\"nameplate\":\"\",\"leader_account_id\":\"UID-c\",\"members\":[{\"phx_account_id\":\"UID-c\",\"rank\":\"Leader\"}],\"maximum_guild_members\":1},\"id\":\"<uuid>\",\"name\":\"Other2\",\"nameplate\":\"\",\"leader_account_id\":\"UID-c\",\"members\":[{\"phx_account_id\":\"UID-c\",\"rank\":\"Leader\"}],\"maximum_guild_members\":1}"
+    },
+    {
+      "request": "POST /guild",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"\",\"message\":\"Check the name in the create window, then try again.\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /guild/invite/UID-c",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"StuffedAdorableQuillshot\",\"message\":\"The guild is full.\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /guild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"OK\",\"message\":\"\",\"payload\":{\"id\":\"<uuid>\",\"name\":\"Unvalidated\",\"nameplate\":\"UNV\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":1},\"id\":\"<uuid>\",\"name\":\"Unvalidated\",\"nameplate\":\"UNV\",\"leader_account_id\":\"UID-b\",\"members\":[{\"phx_account_id\":\"UID-b\",\"rank\":\"Leader\"}],\"maximum_guild_members\":1}"
+    }
+  ]
+}

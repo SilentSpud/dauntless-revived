@@ -125,6 +125,13 @@ Done so far:
   `matchmaking-switches`, `matchmaking-unsupported`, 72 replies) match Node, including every request the
   deploy server got: both harnesses now run a scripted fake deploy server. The `/undaunted/api/HuntRegion`
   routes come with undauntedapi.
+- Metagame B2, area 5 of M29, fourth part: guilds (`routes/guild.ts`). Names and nameplates with their
+  denylists and reserved words, the game server's create tied to the leader's own validate (or recent
+  activity behind `GUILD_CREATE_ACTIVITY_FALLBACK`), invites with their limits and the decline pause,
+  ranks, hand-overs, leaving, kicks and disbanding, and the `GUILDS=0` stubs. Three parity scripts
+  (`guild`, `guild-off`, `guild-switches`, 110 replies) match Node; the harnesses gained `capturePath`
+  for values below the reply's root. Area 5 is done; the guild host fallbacks (`ListGuilds`,
+  `DisbandGuildAsAdmin`) and the chat room check come with undauntedapi and chat.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

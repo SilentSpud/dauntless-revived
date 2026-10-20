@@ -1,0 +1,119 @@
+{
+  "about": "Guilds with GUILD_RESERVED_NAMES=0, GUILD_CREATE_ACTIVITY_FALLBACK=1, GUILD_MAX_MEMBERS=1, a denylist and a one-day invite (MIGRATION_PLAN.md M29, area 5).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "GUILD_RESERVED_NAMES": "0",
+    "GUILD_CREATE_ACTIVITY_FALLBACK": "1",
+    "GUILD_MAX_MEMBERS": "1",
+    "GUILD_INVITE_TTL_DAYS": "1",
+    "GUILD_NAME_DENYLIST": "foobar"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0), ('UID-e', 'Ed', 0, 0), ('UID-f', 'Fi', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "TheAdmins",
+        "nameplate": "GM"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "Foobars"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "leader_account_id": "UID-a",
+        "name": "F00bars"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/party",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-b",
+        "name": "Unvalidated",
+        "nameplate": "UNV"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild/validate",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      },
+      "json": {
+        "leader_account_id": "UID-c",
+        "name": "Other1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-c",
+        "name": "Other2"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/guild",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "leader_account_id": "UID-d",
+        "name": "Nobody"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/guild/invite/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/guild",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    }
+  ]
+}
