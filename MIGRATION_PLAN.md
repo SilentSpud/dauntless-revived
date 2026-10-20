@@ -34,6 +34,11 @@ Done so far:
 - Metagame B1: M19, `metagame db integrity|backup|add-invite|del-invite|make-admin|gs-key|journal delete|wal <db> …`
   with dr-db's checks and messages (`metagame db:` instead of `dr-db:`), never migrating or creating the file; the
   kits switch to it in M39-M41. `offline-save` (X1) waits for the launcher.
+- Metagame B1: M9 and the rest of M10 in `metagame::auth` and `metagame::origin`: `MetagameAuth`, `Player`,
+  `SoftPlayer`, `GameServer`, `AdminKey`, `UserKey` and `SoftAccount` extractors with the Node middleware's refusals
+  (tested with the permissions tests' cases), token epoch and ban checks, the gateway/proxy/local-caller rules, the
+  ban check of `CheckPlayerAccess` and the recovery copy of player keys. The app-wide layers (backend health, ban
+  check, dev-auth refusal, request log) come with the app assembly.
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.

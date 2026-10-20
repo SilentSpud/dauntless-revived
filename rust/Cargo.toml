@@ -27,6 +27,7 @@ diesel_migrations = { version = "2.3", features = ["sqlite"] }
 dotenvy = "0.15"
 flate2 = "1"
 gethostname = "1"
+if-addrs = "0.15"
 http-body-util = "0.1"
 jsonwebtoken = { version = "11", default-features = false, features = ["use_pem", "aws_lc_rs"] }
 # Bundled: one SQLite, built with the options in .cargo/config.toml, shared by Diesel and rusqlite (M17).
