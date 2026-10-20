@@ -120,10 +120,7 @@ impl Origin<'_> {
             .filter_map(|value| value.to_str().ok())
             .collect();
         let joined = joined.join(",");
-        let last = joined
-            .split(',')
-            .map(str::trim)
-            .rfind(|entry| !entry.is_empty())?;
+        let last = joined.split(',').map(str::trim).rfind(|entry| !entry.is_empty())?;
         normalize_text(last)
     }
 
