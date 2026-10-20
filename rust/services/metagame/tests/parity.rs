@@ -231,3 +231,13 @@ async fn characters() {
 async fn characters_stub() {
     run_area("characters-stub").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn loadouts() {
+    run_area("loadouts").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn loadouts_stub() {
+    run_area("loadouts-stub").await;
+}

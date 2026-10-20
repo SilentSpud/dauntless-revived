@@ -12,6 +12,7 @@ pub mod dbtools;
 pub mod entitlements;
 pub mod health;
 pub mod limits;
+pub mod loadouts;
 pub mod origin;
 pub mod progression;
 pub mod progression_config;
