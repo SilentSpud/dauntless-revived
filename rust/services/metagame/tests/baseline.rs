@@ -14,8 +14,9 @@ fn drizzle_folder() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../UndauntedMetagame/src/drizzle")
 }
 
-fn baseline() -> &'static str {
-    SCHEMA.drizzle.as_ref().unwrap().snapshot
+/// The baseline with LF line endings (a Windows checkout may have converted the file).
+fn baseline() -> String {
+    SCHEMA.drizzle.as_ref().unwrap().snapshot.replace("\r\n", "\n")
 }
 
 /// A database file the way the Node metagame leaves it after `migrations`.

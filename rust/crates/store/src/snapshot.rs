@@ -22,5 +22,9 @@ pub fn schema_snapshot(conn: &mut Connection) -> Result<String, Error> {
          ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'index' THEN 1 WHEN 'view' THEN 2 ELSE 3 END, name",
     )
     .load::<Row>(conn)?;
-    Ok(rows.into_iter().map(|row| format!("{};\n", row.sql)).collect())
+    // Line endings as LF: a Windows checkout with CRLF files gave the stored statements CRLF.
+    Ok(rows
+        .into_iter()
+        .map(|row| format!("{};\n", row.sql.replace("\r\n", "\n")))
+        .collect())
 }

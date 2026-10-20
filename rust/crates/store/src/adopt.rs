@@ -97,7 +97,8 @@ fn adopt(conn: &mut Connection, schema: &Schema, baseline: &DrizzleBaseline) -> 
             "its last Drizzle migration has a different hash than the baseline's".into(),
         ));
     }
-    if schema_snapshot(conn)? != baseline.snapshot {
+    // Compared with LF line endings: either side may come from a checkout that converted them.
+    if schema_snapshot(conn)? != baseline.snapshot.replace("\r\n", "\n") {
         return Err(Error::Adoption("its schema differs from the baseline's".into()));
     }
 

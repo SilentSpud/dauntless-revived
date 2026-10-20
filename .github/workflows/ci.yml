@@ -294,7 +294,9 @@ jobs:
     name: Launcher (Linux x64)
     needs: changes
     if: needs.changes.outputs.launcher == 'true'
-    runs-on: ubuntu-latest
+    # Not ubuntu-latest: on Ubuntu 26 rpmbuild runs %install in a new build folder, and Electron Forge's
+    # rpm spec copies from the old one ("cp: cannot stat 'usr/*'"). The Tauri launcher replaces this job.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     defaults:
       run:
@@ -404,7 +406,7 @@ jobs:
             pkg_add node git
             # Unlike Linux, OpenBSD requires every synthetic 127.0.0.x test peer to be
             # assigned explicitly. Gateway tests use these aliases to model independent clients.
-            for n in 2 3 4 5 6 20 21 22 23 24 25 30 31 32 40 42 43; do
+            for n in 2 3 4 5 6 20 21 22 23 24 25 30 31 32 40 42 43 44; do
               ifconfig lo0 inet 127.0.0.$n/32 alias
             done
           run: |
