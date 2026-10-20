@@ -23,6 +23,10 @@ Done so far:
 - Metagame B1: M11 in `service_kit::ratelimit`, `express-rate-limit` 8.7 rebuilt: per-key windows from the first
   request, draft-8 `RateLimit` and `RateLimit-Policy` headers with its partition key, 429 with `Retry-After` and the
   JSON reply, skip-successful, IPv6 keys per /56; `Router::layer` puts it (or any middleware) on one route.
+- Metagame B1: M8 in `service_kit::body`: JSON and form bodies parsed for every request before routing, as Express's
+  app-wide parsers do, with body-parser's strict JSON, `qs`-style flat forms, gzip/deflate, the 50 MB limit and
+  Express's production error page; a hook lets the metagame answer `JSON_ERROR_ROUTES` its own way. Not supported:
+  `br` request bodies and charsets other than UTF-8 (415), nested `qs` keys.
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.

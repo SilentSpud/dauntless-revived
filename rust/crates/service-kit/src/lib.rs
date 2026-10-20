@@ -2,6 +2,7 @@
 //! JSON replies like Express's ([`json`]), pino-format logs ([`log`]), configuration from an explicit
 //! env file ([`env`]) and the listen / stop cycle of X7 ([`serve`]).
 
+pub mod body;
 pub mod env;
 pub mod json;
 pub mod log;

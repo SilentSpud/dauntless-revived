@@ -24,6 +24,7 @@ base64 = "0.23"
 diesel = { version = "2.3", default-features = false, features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
 diesel_migrations = { version = "2.3", features = ["sqlite"] }
 dotenvy = "0.15"
+flate2 = "1"
 gethostname = "1"
 http-body-util = "0.1"
 jsonwebtoken = { version = "11", default-features = false, features = ["use_pem", "aws_lc_rs"] }
