@@ -1,4 +1,7 @@
-# Checks every push and pull request:
+# Checks every push and pull request, by code family (MIGRATION_PLAN.md R8): a pull request runs only the
+# jobs of the families it changes, and the "CI ok" job sums them up for branch protection. A push to
+# dauntless-revived always runs everything.
+#  - the Rust workspace (rust/): fmt, clippy, tests on Linux and Windows, cargo-deny
 #  - the four server packages: npm ci, build, unit tests
 #  - the launcher: typecheck, unit tests and the Windows installer, kept as a download for 7 days
 #  - the separate Linux and OpenBSD server ports (native Node services, Wine/SSH game launch wrappers, nftables/PF)
@@ -35,8 +38,141 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Which code families a change touches (MIGRATION_PLAN.md R8). Pull requests and pushes to other
+  # branches run only the jobs of the families they change; a push to dauntless-revived, a manual run
+  # and any change to this workflow run everything, so a release is always built from a full run.
+  # The filters are generous: a family's jobs also run when a folder they read from changes.
+  changes:
+    name: What changed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      rust: ${{ steps.pick.outputs.rust }}
+      native: ${{ steps.pick.outputs.native }}
+      node: ${{ steps.pick.outputs.node }}
+      launcher: ${{ steps.pick.outputs.launcher }}
+      deploy: ${{ steps.pick.outputs.deploy }}
+      docs: ${{ steps.pick.outputs.docs }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          base: ${{ github.event.repository.default_branch }}
+          filters: |
+            workflow:
+              - .github/workflows/**
+            rust:
+              - rust/**
+            native:
+              - native/**
+            node:
+              - UndauntedMetagame/**
+              - UndauntedGateway/**
+              - UndauntedContent/**
+              - UndauntedDeployServer/**
+              - native/**
+            launcher:
+              - UndauntedLauncher/**
+              - UndauntedMetagame/**
+              - UndauntedDeployServer/**
+              - client-mods/**
+              - native/**
+              - deploy/windows-server/lib/**
+            deploy:
+              - deploy/**
+              - Undaunted*/**
+              - native/**
+              - client-mods/**
+              - friend-kit/**
+              - tools/**
+              - "**/*.ps1"
+            docs:
+              - docs/**
+              - tools/**
+              - ROADMAP.md
+
+      - name: Run every family on the default branch, on manual runs and when this workflow changes
+        id: pick
+        env:
+          ALL: ${{ (github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) || github.event_name == 'workflow_dispatch' || steps.filter.outputs.workflow == 'true' }}
+          RUST: ${{ steps.filter.outputs.rust }}
+          NATIVE: ${{ steps.filter.outputs.native }}
+          NODE: ${{ steps.filter.outputs.node }}
+          LAUNCHER: ${{ steps.filter.outputs.launcher }}
+          DEPLOY: ${{ steps.filter.outputs.deploy }}
+          DOCS: ${{ steps.filter.outputs.docs }}
+        run: |
+          set -euo pipefail
+          for family in rust native node launcher deploy docs; do
+            var="${family^^}"
+            value="${!var}"
+            [ "$ALL" = true ] && value=true
+            echo "$family=$value" | tee -a "$GITHUB_OUTPUT"
+          done
+
+  rust:
+    name: Rust workspace (${{ matrix.os }})
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+        working-directory: rust
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # rustup reads rust/rust-toolchain.toml and installs the pinned toolchain.
+      - name: Install the pinned toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: rust
+
+      - name: Format
+        if: runner.os == 'Linux'
+        run: cargo fmt --all --check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+      - name: Tests
+        run: cargo test --workspace --locked
+
+  rust-deny:
+    name: Rust licences and advisories
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+        with:
+          manifest-path: rust/Cargo.toml
+          command: check
+          arguments: --all-features
+
   node-packages:
     name: ${{ matrix.package }}
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: windows-latest
     timeout-minutes: 20
     strategy:
@@ -75,6 +211,8 @@ jobs:
 
   launcher:
     name: Launcher
+    needs: changes
+    if: needs.changes.outputs.launcher == 'true'
     runs-on: windows-2022
     timeout-minutes: 30
     defaults:
@@ -122,6 +260,8 @@ jobs:
 
   launcher-linux:
     name: Launcher (Linux x64)
+    needs: changes
+    if: needs.changes.outputs.launcher == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     defaults:
@@ -170,6 +310,8 @@ jobs:
 
   server-port-linux:
     name: Server port (Linux)
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -212,6 +354,8 @@ jobs:
 
   server-port-openbsd:
     name: Server port (OpenBSD 7.9)
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -264,6 +408,8 @@ jobs:
 
   native-regressions:
     name: Native server regression tests
+    needs: changes
+    if: needs.changes.outputs.native == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -290,6 +436,8 @@ jobs:
 
   internal-server-dll:
     name: Server DLL (Windows x64)
+    needs: changes
+    if: needs.changes.outputs.native == 'true'
     runs-on: windows-latest
     timeout-minutes: 20
     defaults:
@@ -348,6 +496,8 @@ jobs:
 
   server-kit:
     name: Server kit (Windows PowerShell 5.1)
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true'
     runs-on: windows-latest
     timeout-minutes: 45
     defaults:
@@ -434,6 +584,8 @@ jobs:
 
   docs:
     name: Docs site
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -517,11 +669,34 @@ jobs:
             node tools/ci/check-repo.js
           fi
 
+  # The one check branch protection requires. Jobs skipped because their family didn't change count
+  # as passed; a failed or cancelled job, or a failed change detection, fails it.
+  ci-ok:
+    name: CI ok
+    needs: [changes, rust, rust-deny, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every selected job passed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          set -euo pipefail
+          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          bad="$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success" and .value.result != "skipped") | .key] | join(", ")')"
+          if [ -n "$bad" ]; then
+            echo "::error::failed or cancelled: $bad"
+            exit 1
+          fi
+
   # On by default; the repository variable LAUNCHER_AUTO_RELEASE=false pauses it (see the top of this file).
+  # A push to dauntless-revived runs every job (see changes), so ci-ok passing means all of them passed.
   release-check:
     name: Launcher release needed?
-    needs: [node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: ci-ok
     if: >-
+      needs.ci-ok.result == 'success' &&
       github.event_name == 'push' && github.ref == 'refs/heads/dauntless-revived' &&
       github.repository == 'mixutin/dauntless-revived' && vars.LAUNCHER_AUTO_RELEASE != 'false'
     runs-on: ubuntu-latest
