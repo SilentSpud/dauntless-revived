@@ -211,7 +211,7 @@ friend kit and tools. On the host we use:
 
 The Electron app in `UndauntedLauncher/src` is this fork's friend launcher: players use it to join a
 server from an invite, and it downloads the game from the host's own content server. The host setup
-on this page doesn't need it. The C++ source of the server DLL is in `UndauntedInternalServer`. Every
+on this page doesn't need it. The C++ source of the server DLL is in `native/internal-server`. Every
 folder, and what builds where, is listed on [Files and data]({{ files_page.url | relative_url }}).
 
 The `.env` files you create below are git-ignored. Never commit them: they hold the signing keys and
@@ -370,13 +370,13 @@ The client's hook takes precedence for the same keys, so the file doesn't change
 client. Friends connecting from another PC don't need it.
 
 **Generate it from the DLL's own endpoint table.** Don't hand-edit it. The table is in
-`UndauntedInternalServer/dllmain.cpp` as entries shaped like
+`native/internal-server/dllmain.cpp` as entries shaped like
 `{L"AuthEndpoint", L"http://" + Globals::MetagameAddress + L"/game/login"}`. Save this as
 `C:\dr\tools\make-gameini.ps1`:
 
 ```powershell
 param([string]$Metagame = "127.0.0.1:61000",
-      [string]$Source = "C:\dr\undaunted\UndauntedInternalServer\dllmain.cpp",
+      [string]$Source = "C:\dr\undaunted\native\internal-server\dllmain.cpp",
       [string]$Out = "$env:LOCALAPPDATA\Archon\Saved\Config\WindowsClient\Game.ini")
 # Every endpoint the client-mode DLL rewrites: {L"Key", L"http://" + Globals::MetagameAddress [+ L"/path"]}
 $re = '^\s*\{L"([A-Za-z0-9_]+)", L"http://" \+ Globals::MetagameAddress(?: \+ L"([^"]*)")?\},?'

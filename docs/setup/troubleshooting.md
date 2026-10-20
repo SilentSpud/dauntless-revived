@@ -138,7 +138,7 @@ fatal: remote helper 'https' aborted session
 
 **Cause.** The Windows 260-character path limit. The working folder's path was already long, and the
 repository adds up to 94 more characters. The deepest names are in
-`UndauntedInternalServer/SDK/`, a generated SDK of 4,000+ files. Git's own files under `.git` add more
+`native/internal-server/SDK/`, a generated SDK of 4,000+ files. Git's own files under `.git` add more
 still. Adding `-c core.longpaths=true` did **not** fix it: the `$GIT_DIR` error comes from the
 repository location itself being too long.
 

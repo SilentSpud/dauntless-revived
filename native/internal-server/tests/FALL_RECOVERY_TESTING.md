@@ -73,7 +73,7 @@ migration is part of this candidate. Keep the previous DLL until all acceptance 
 
 ## Automated checks
 
-From the repo root, compile and run every `UndauntedInternalServer/tests/*.cpp` with C++20. The policy
+From the repo root, compile and run every `native/internal-server/tests/*.cpp` with C++20. The policy
 suite checks invalid time/coordinates/floors, safe capture timing, normal traversal, missing anchors,
 prolonged falls, persistent/flickering recovery flags, cooldowns, settling, KillZ, death and independent
 player state. The CI native DLL job verifies compilation against the actual 1.4.4 SDK. Neither replaces

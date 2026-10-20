@@ -79,7 +79,7 @@ ja muutama pieni kirjasto) lisenssitekstit.
 Undauntedin lisenssi on **AGPL-3.0-only**, ja niin on meidän haarammekin. Lisenssin koko teksti on
 tiedostossa `LICENSE.txt` [repositoriossa]({{ site.github.repository_url }}) (koodivarastossa
 GitHubissa). MinHookin lähdekoodi on mukana palvelin-DLL:n lähdekoodikansiossa
-(`UndauntedInternalServer/MinHook`), ja sillä on edelleen oma BSD 2-Clause -lisenssinsä.
+(`native/internal-server/MinHook`), ja sillä on edelleen oma BSD 2-Clause -lisenssinsä.
 
 Tässä on selkokielellä, mitä lisenssi käytännössä vaatii. **Tämä on meidän tulkintamme, ei
 oikeudellinen neuvo.** Jos asialla on sinulle merkitystä, lue itse lisenssi.

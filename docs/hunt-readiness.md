@@ -72,7 +72,7 @@ new actor's first lookup does not scan every channel opened before it. Positive
 lookups still validate current array slots; removal, replacement and reentrant
 assignment are covered by the regression suite. If the setter hook cannot be
 installed, lookup keeps its conservative fallback. See
-[`CHANNEL_LOOKUP_TESTING.md`](../UndauntedInternalServer/tests/CHANNEL_LOOKUP_TESTING.md)
+[`CHANNEL_LOOKUP_TESTING.md`](../native/internal-server/tests/CHANNEL_LOOKUP_TESTING.md)
 for the exact binary checks and performance regression.
 
 Update the central metagame, the deploy servers on each worker, and the server

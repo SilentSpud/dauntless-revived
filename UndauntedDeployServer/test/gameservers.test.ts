@@ -94,8 +94,8 @@ describe("Trials weekly rotation", () => {
         assert.equal(Seen.size, Count);
     });
 
-    it("matches the pool compiled into the DLL (UndauntedInternalServer/TrialsRotation.h)", () => {
-        const Header = readFileSync(path.join(__dirname, "../../../UndauntedInternalServer/TrialsRotation.h"), "utf8");
+    it("matches the pool compiled into the DLL (native/internal-server/TrialsRotation.h)", () => {
+        const Header = readFileSync(path.join(__dirname, "../../../native/internal-server/TrialsRotation.h"), "utf8");
         const Compiled = Object.fromEntries([...Header.matchAll(/\{"([a-z_]+)", \{([^}]*)\}\}/g)]
             .map((Match) => [Match[1], [...Match[2].matchAll(/"(\d{3})"/g)].map((Suffix) => Suffix[1])]));
 

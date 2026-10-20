@@ -68,8 +68,8 @@ implies no endorsement or affiliation.
 ### Other material
 
 - [MinHook](https://github.com/TsudaKageyu/minhook) by Tsuda Kageyu (BSD 2-Clause), in
-  `UndauntedInternalServer/MinHook/`, with its own license.
-- The Unreal Engine SDK headers in `UndauntedInternalServer/SDK/`, generated with
+  `native/internal-server/MinHook/`, with its own license.
+- The Unreal Engine SDK headers in `native/internal-server/SDK/`, generated with
   [Dumper-7](https://github.com/Encryqed/Dumper-7) from the 1.4.4 client.
 - Data read from the client for interoperability, carried from upstream: `progression_config.json`
   and the deploy server's hunt tables (`UndauntedDeployServer/src/vendor/*_table.json`), from which

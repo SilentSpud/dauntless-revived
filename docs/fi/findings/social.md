@@ -58,7 +58,7 @@ Jokaisesta tiedosta on merkitty, mistä se tulee ja kuinka varmoja olemme.
 | **B** | 1.4.4-ohjelmatiedosto (`Dauntless-Win64-Shipping.exe`, 103 Mt): sen merkkijonot (ASCII ja UTF-16) sekä pyyntöjä rakentavien ja vastauksia lukevien funktioiden konekielinen koodi (disassembly). Osoitteet ovat muistiosoitteita, joiden perusosoite on `0x140000000`. |
 | **L** | Oikea palvelin: luettelo kaikista reiteistä, joita oikeat peliohjelmat ja pelipalvelimet kutsuivat 22.9.2026, määrineen ja vastaamattomine reitteineen, sekä se, mitä kaksi pelaajaa kertoi nähneensä. |
 | **R** | Pyynnöt, jotka versio 2.1.1 lähetti tutkimuspalvelimellemme (samat Phoenixin palvelut, tallennettu runkoineen). |
-| **K** | Pelin luokkien ja rakenteiden nimet (SDK-vedos) sekä päätepistetaulukko tiedostossa `UndauntedInternalServer/dllmain.cpp`. |
+| **K** | Pelin luokkien ja rakenteiden nimet (SDK-vedos) sekä päätepistetaulukko tiedostossa `native/internal-server/dllmain.cpp`. |
 | **C** | Oma koodimme ja testimme. |
 | **G** | Oma suunnitteluratkaisumme, kun peliohjelma ei ratkaise asiaa. |
 

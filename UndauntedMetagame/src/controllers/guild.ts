@@ -9,7 +9,7 @@ import { IsBlockedEitherWayInTx } from "./friends";
 import { SeenWithinMs } from "./party";
 
 // Guilds (roadmap 3.11): the 1.4.4 client's v2 guild API (the eleven *_v2 endpoint keys in
-// UndauntedInternalServer/dllmain.cpp), stored in SQLite (migration 0013_guilds) so a guild survives
+// native/internal-server/dllmain.cpp), stored in SQLite (migration 0013_guilds) so a guild survives
 // restarts and an invite waits for a player who is offline. The contract was read from the game's
 // executable; docs/findings/social.md has the evidence and routes/guild.ts the routes.
 //

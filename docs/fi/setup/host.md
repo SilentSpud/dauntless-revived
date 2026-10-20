@@ -231,7 +231,7 @@ Windows-palvelinpaketti, kaveripaketti ja työkalut. Palvelinkoneella käytämme
 Kansion `UndauntedLauncher/src` Electron-sovellus on tämän forkin käynnistin kavereille: pelaajat
 liittyvät sillä palvelimelle kutsun avulla, ja se lataa pelin isännän omalta sisältöpalvelimelta.
 Tämän sivun palvelinasennus ei tarvitse sitä. Palvelin-DLL:n C++-lähdekoodi on kansiossa
-`UndauntedInternalServer`. Jokainen kansio ja se, mitä missäkin käännetään, on lueteltu sivulla
+`native/internal-server`. Jokainen kansio ja se, mitä missäkin käännetään, on lueteltu sivulla
 [Tiedostot ja data]({{ files_page.url | relative_url }}).
 
 Alla luotavat `.env`-tiedostot ovat gitin ohittamia (git-ignored). Älä koskaan tallenna niitä
@@ -404,13 +404,13 @@ Peliohjelman koukku menee samoissa avaimissa tiedoston edelle, joten tiedosto ei
 peliohjelman kannalta. Toiselta koneelta liittyvät kaverit eivät tarvitse sitä.
 
 **Luo se DLL:n omasta osoitetaulukosta.** Älä muokkaa sitä käsin. Taulukko on tiedostossa
-`UndauntedInternalServer/dllmain.cpp`, merkintöinä muotoa
+`native/internal-server/dllmain.cpp`, merkintöinä muotoa
 `{L"AuthEndpoint", L"http://" + Globals::MetagameAddress + L"/game/login"}`. Tallenna tämä nimellä
 `C:\dr\tools\make-gameini.ps1`:
 
 ```powershell
 param([string]$Metagame = "127.0.0.1:61000",
-      [string]$Source = "C:\dr\undaunted\UndauntedInternalServer\dllmain.cpp",
+      [string]$Source = "C:\dr\undaunted\native\internal-server\dllmain.cpp",
       [string]$Out = "$env:LOCALAPPDATA\Archon\Saved\Config\WindowsClient\Game.ini")
 # Every endpoint the client-mode DLL rewrites: {L"Key", L"http://" + Globals::MetagameAddress [+ L"/path"]}
 $re = '^\s*\{L"([A-Za-z0-9_]+)", L"http://" \+ Globals::MetagameAddress(?: \+ L"([^"]*)")?\},?'

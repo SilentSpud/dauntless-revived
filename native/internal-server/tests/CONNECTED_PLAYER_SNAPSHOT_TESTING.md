@@ -70,9 +70,9 @@ metagame's loading and recent-arrival grace periods cover short sampling gaps.
 From the repository root:
 
 ```sh
-g++ -std=c++20 -Wall -Wextra -Werror -O2 -pthread UndauntedInternalServer/tests/connected-player-snapshot.cpp -o /tmp/dr-connected-player-snapshot
+g++ -std=c++20 -Wall -Wextra -Werror -O2 -pthread native/internal-server/tests/connected-player-snapshot.cpp -o /tmp/dr-connected-player-snapshot
 /tmp/dr-connected-player-snapshot
-g++ -std=c++20 -Wall -Wextra -Werror -g -O1 -pthread -fsanitize=address,undefined -fno-omit-frame-pointer UndauntedInternalServer/tests/connected-player-snapshot.cpp -o /tmp/dr-connected-player-snapshot-asan
+g++ -std=c++20 -Wall -Wextra -Werror -g -O1 -pthread -fsanitize=address,undefined -fno-omit-frame-pointer native/internal-server/tests/connected-player-snapshot.cpp -o /tmp/dr-connected-player-snapshot-asan
 /tmp/dr-connected-player-snapshot-asan
 ```
 

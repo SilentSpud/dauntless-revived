@@ -8,7 +8,7 @@ import {
 } from "../controllers/slayerlinks";
 
 // Slayer Links: the eight routes the 1.4.4 client sends (the LinkedSlayers* keys of
-// UndauntedInternalServer/dllmain.cpp that the exe reads). The contract came from Harmonic's fork
+// native/internal-server/dllmain.cpp that the exe reads). The contract came from Harmonic's fork
 // (github.com/Harmonicrain/Undaunted 895f7c7); the rules, the shapes and the exe evidence are in
 // controllers/slayerlinks.ts. Every route acts as the bearer token's own account; ids in the body or URL
 // only name the other player. A game server's key alone gets 403.

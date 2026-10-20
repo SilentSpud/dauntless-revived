@@ -47,7 +47,7 @@ code. What we took and what we changed is on [The Harmonic port]({{ harmonic_pag
 | Label | Source |
 |:------|:-------|
 | **B** | The 1.4.4 executable (`Dauntless-Win64-Shipping.exe`): strings and disassembly. Addresses are virtual addresses with image base `0x140000000`. |
-| **K** | The endpoint table in `UndauntedInternalServer/dllmain.cpp` and the client's own data tables. |
+| **K** | The endpoint table in `native/internal-server/dllmain.cpp` and the client's own data tables. |
 | **O** | Observed in game by Harmonic on that fork (one client), not yet on our server. |
 | **S** | Strong inference: one link in the chain was not traced. |
 | **G** | A design decision of ours, where nothing in the client decides it. |

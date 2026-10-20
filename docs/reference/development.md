@@ -78,7 +78,7 @@ inside them are named `dauntless-revived-metagame`, `dauntless-revived-deploy-se
 | `UndauntedContent/` | Serves the verified 1.4.4 game files, the host's art pack and news to the launcher. | TypeScript, Node's own `http` |
 | `UndauntedGateway/` | Public mode: the TLS gateway (the server's only public TCP port) and the allowlist helper (one Windows Firewall rule for the game's UDP ports). | TypeScript, Node's own `https`; `node-forge` for the certificate tool |
 | `UndauntedLauncher/` | The Dauntless Revived Launcher that friends install: invites, registration, downloads, the local relay, starting the game. `assets/` holds the two prebuilt DLLs the game needs. | TypeScript, Electron, Electron Forge and Vite |
-| `UndauntedInternalServer/` | The C++ source of the server DLL, from upstream, with a generated SDK. | C++, Visual Studio 2022 |
+| `native/internal-server/` | The C++ source of the server DLL, from upstream, with a generated SDK. | C++, Visual Studio 2022 |
 | `deploy/windows-server/` | The Windows Server kit: install, update, backup, invites, the stack supervisor, and its tests in `tests/`. | Windows PowerShell 5.1, Node helpers in `lib/` |
 | `friend-kit/` | The manual scripts for friends without the launcher (`setup.ps1`, `play.ps1`). | PowerShell |
 | `tools/` | The docs generators, the content manifest generator and the friend kit builder ([Scripts and parameters]({{ scripts_page.url | relative_url }})), and in `tools/ci/` the repository check and the launcher version rules CI uses ([below](#ci)). | Node, PowerShell |
@@ -406,7 +406,7 @@ Where the launcher keeps its settings, the encrypted account keys and its log is
 
 ### The server DLL {#server-dll}
 
-The source is in `UndauntedInternalServer/` (upstream's C++ with a generated SDK; open
+The source is in `native/internal-server/` (upstream's C++ with a generated SDK; open
 `UndauntedInternalServer.sln` in Visual Studio 2022 and build `Release|x64`). Nothing in the
 repository builds it. The game and every game server run the prebuilt copies in
 `UndauntedLauncher/assets/`, and their SHA-256 hashes are pinned in the launcher
@@ -624,7 +624,7 @@ Paths in each table are relative to the folder named above it.
 
 | Subsystem | Code |
 |---|---|
-| Server DLL | `UndauntedInternalServer/dllmain.cpp` (the endpoint table, client and server mode), `constants.h` |
+| Server DLL | `native/internal-server/dllmain.cpp` (the endpoint table, client and server mode), `constants.h` |
 | Server kit | `deploy/windows-server/*.ps1`; shared pins, paths, the component table and the start order in `DauntlessServer.Common.ps1`; database, key and game-folder helpers in `lib/` |
 | Friend kit | `friend-kit/`, zipped by `tools/make-friend-kit.ps1` |
 | Docs tools | `tools/sync-roadmap.js`, `tools/build-llms.js` |

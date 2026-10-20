@@ -60,9 +60,9 @@ fallback remains active. A changed game build or another mod that assigns
 Run from the repository root:
 
 ```sh
-g++ -std=c++20 -Wall -Wextra -Werror -O2 UndauntedInternalServer/tests/channel-lookup.cpp -o /tmp/dr-channel-lookup
+g++ -std=c++20 -Wall -Wextra -Werror -O2 native/internal-server/tests/channel-lookup.cpp -o /tmp/dr-channel-lookup
 /tmp/dr-channel-lookup
-g++ -std=c++20 -Wall -Wextra -Werror -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer UndauntedInternalServer/tests/channel-lookup.cpp -o /tmp/dr-channel-lookup-asan
+g++ -std=c++20 -Wall -Wextra -Werror -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer native/internal-server/tests/channel-lookup.cpp -o /tmp/dr-channel-lookup-asan
 /tmp/dr-channel-lookup-asan
 ```
 

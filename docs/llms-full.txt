@@ -426,7 +426,7 @@ friend kit and tools. On the host we use:
 
 The Electron app in `UndauntedLauncher/src` is this fork's friend launcher: players use it to join a
 server from an invite, and it downloads the game from the host's own content server. The host setup
-on this page doesn't need it. The C++ source of the server DLL is in `UndauntedInternalServer`. Every
+on this page doesn't need it. The C++ source of the server DLL is in `native/internal-server`. Every
 folder, and what builds where, is listed on [Files and data](https://mixutin.github.io/dauntless-revived/reference/files.html).
 
 The `.env` files you create below are git-ignored. Never commit them: they hold the signing keys and
@@ -585,13 +585,13 @@ The client's hook takes precedence for the same keys, so the file doesn't change
 client. Friends connecting from another PC don't need it.
 
 **Generate it from the DLL's own endpoint table.** Don't hand-edit it. The table is in
-`UndauntedInternalServer/dllmain.cpp` as entries shaped like
+`native/internal-server/dllmain.cpp` as entries shaped like
 `{L"AuthEndpoint", L"http://" + Globals::MetagameAddress + L"/game/login"}`. Save this as
 `C:\dr\tools\make-gameini.ps1`:
 
 ```powershell
 param([string]$Metagame = "127.0.0.1:61000",
-      [string]$Source = "C:\dr\undaunted\UndauntedInternalServer\dllmain.cpp",
+      [string]$Source = "C:\dr\undaunted\native\internal-server\dllmain.cpp",
       [string]$Out = "$env:LOCALAPPDATA\Archon\Saved\Config\WindowsClient\Game.ini")
 # Every endpoint the client-mode DLL rewrites: {L"Key", L"http://" + Globals::MetagameAddress [+ L"/path"]}
 $re = '^\s*\{L"([A-Za-z0-9_]+)", L"http://" \+ Globals::MetagameAddress(?: \+ L"([^"]*)")?\},?'
@@ -2914,7 +2914,7 @@ fatal: remote helper 'https' aborted session
 
 **Cause.** The Windows 260-character path limit. The working folder's path was already long, and the
 repository adds up to 94 more characters. The deepest names are in
-`UndauntedInternalServer/SDK/`, a generated SDK of 4,000+ files. Git's own files under `.git` add more
+`native/internal-server/SDK/`, a generated SDK of 4,000+ files. Git's own files under `.git` add more
 still. Adding `-c core.longpaths=true` did **not** fix it: the `$GIT_DIR` error comes from the
 repository location itself being too long.
 
@@ -4824,7 +4824,7 @@ Components are named by their folder in the repository.
 |:-------|:-----------|:---------|:-------|
 | `UndauntedMetagame/` | The backend the game talks to: accounts, characters, inventory, progression, matchmaking, parties, and the management API. | [Metagame](https://mixutin.github.io/dauntless-revived/reference/configuration.html#metagame) | [Game routes](https://mixutin.github.io/dauntless-revived/reference/api.html#game-routes), [management API](https://mixutin.github.io/dauntless-revived/reference/api.html#undaunted-api) |
 | `UndauntedDeployServer/` | Starts and watches the game servers: Ramsgate, the Training Dojo and one per hunt. | [Deploy server](https://mixutin.github.io/dauntless-revived/reference/configuration.html#deploy-server) | [Deploy server](https://mixutin.github.io/dauntless-revived/reference/api.html#deploy-server) |
-| `UndauntedInternalServer/` | The DLL that turns a copy of the 1.4.4 client into a game server and points clients at the metagame. | [Game settings](https://mixutin.github.io/dauntless-revived/reference/game-settings.html#dlls) | none |
+| `native/internal-server/` | The DLL that turns a copy of the 1.4.4 client into a game server and points clients at the metagame. | [Game settings](https://mixutin.github.io/dauntless-revived/reference/game-settings.html#dlls) | none |
 | `UndauntedGateway/` | Public mode only: the TLS gateway, the one port open to everyone, and the allowlist helper that opens the game ports for players who logged in. | [Gateway](https://mixutin.github.io/dauntless-revived/reference/configuration.html#gateway), [allowlist helper](https://mixutin.github.io/dauntless-revived/reference/configuration.html#allowlist-helper) | [Gateway](https://mixutin.github.io/dauntless-revived/reference/api.html#gateway), [allowlist helper](https://mixutin.github.io/dauntless-revived/reference/api.html#allowlist-helper) |
 | `UndauntedContent/` | Serves the game files, news and art pack to the launcher. | [Content server](https://mixutin.github.io/dauntless-revived/reference/configuration.html#content-server) | [Content server](https://mixutin.github.io/dauntless-revived/reference/api.html#content-server) |
 | `UndauntedLauncher/` | The friend launcher: invites, account key, game download and repair, and the local relay in public mode. | [Launcher](https://mixutin.github.io/dauntless-revived/reference/configuration.html#launcher) | [Launcher relay](https://mixutin.github.io/dauntless-revived/reference/api.html#launcher-relay) |
@@ -7038,7 +7038,7 @@ them are named `dauntless-revived-*` (for example `dauntless-revived-metagame`).
 | `UndauntedGateway/` | Public mode only: the TLS gateway (`dist/server.js`) and the allowlist helper (`dist/allowlist/server.js`). `tools/make-cert.js` makes the gateway certificate. | `dist/`, `build/` |
 | `UndauntedContent/` | The content server: game files, news and the art pack for registered launchers. `data/dauntless-1.4.4.json` is the game manifest (410 files) that the launcher also compiles in. | `dist/`, `build/` |
 | `UndauntedLauncher/` | This fork's friend launcher (Electron). `assets/` holds the two pinned prebuilt DLLs, `dxgi.dll` and `UndauntedInternalServer.dll`, which every setup installs (host, server kit, friend kit and launcher), and the icons (copies from `brand/launcher/`). `src/renderer/brand/` holds copies of the logo and emblem images the window shows. `scripts/` holds the test runner, the brand image copier (`make-icon.mjs`) and `collect-release.ps1`. | `.vite/` (`npm start`), `out/` (`npm run package` and `npm run make`), `.test-build/` (tests), `release/` (the release files that `scripts/collect-release.ps1` collects after `npm run make`: the installer, the Squirrel update files, the zip and `SHA256SUMS.txt`). |
-| `UndauntedInternalServer/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
+| `native/internal-server/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
 | `deploy/windows-server/` | The Windows server kit: the scripts, `lib/` (Node helpers `dr-db.js`, `dr-keys.js`, `verify-game.js`) and `tests/`. | none |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends. | `tools/make-friend-kit.ps1` builds the zip outside the repository |
 | `tools/` | `build-llms.js`, `sync-roadmap.js`, `make-friend-kit.ps1`, `make-game-manifest.js`, and in `ci/` what CI uses: `check-repo.js` (the repository check) and `launcher-version.js` (the launcher version rules). | none |
@@ -7835,7 +7835,7 @@ TrackingEndpoint="http://127.0.0.1:61000"
 ...
 ```
 
-- 167 lines, one for each entry in the DLL's endpoint table in `UndauntedInternalServer/dllmain.cpp`.
+- 167 lines, one for each entry in the DLL's endpoint table in `native/internal-server/dllmain.cpp`.
   Both generators (the kit's installer and the host's `make-gameini.ps1`) read that file with the
   same regular expression and write `Key="http://<metagame address><path>"`.
 - `MatchmakingEndpoint` and `TrackingEndpoint` are the bare address, with no path.
@@ -7862,7 +7862,7 @@ table in `dllmain.cpp`.
 
 - On a server installed with the kit, run `Install-DauntlessServer.ps1` again (it is safe to
   repeat). `Update-DauntlessServer.ps1` does not rewrite `Game.ini` or `Engine.ini`. The installer
-  reads `dllmain.cpp` from the built code in `<InstallRoot>\app\UndauntedInternalServer\` and warns
+  reads `dllmain.cpp` from the built code in `<InstallRoot>\app\native\internal-server\` and warns
   if it finds a number of entries other than 167.
 - On a host set up by hand, run `make-gameini.ps1` again with the new `-Metagame` value. Do not
   search and replace: a replace on `:61000/` misses the two bare-address keys.
@@ -8033,7 +8033,7 @@ command line; see [HTTP API](https://mixutin.github.io/dauntless-revived/referen
 | File | Size | SHA-256 | What it does |
 |:-----|-----:|:--------|:-------------|
 | `dxgi.dll` | 11,264 bytes | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | A proxy. Windows loads it from the game folder instead of the system copy. It loads the real `System32\dxgi.dll`, forwards `CreateDXGIFactory`, `CreateDXGIFactory1` and `CreateDXGIFactory2`, and loads `UndauntedInternalServer.dll`. Its source has not been published. |
-| `UndauntedInternalServer.dll` | 123,392 bytes | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undaunted's server DLL, version 0.0.3. Source in `UndauntedInternalServer/`. It hooks the game in memory, in client mode or in server mode (below). It needs the Visual C++ 2015-2022 x64 runtime (`MSVCP140.dll` and `VCRUNTIME140_1.dll` in `System32`). |
+| `UndauntedInternalServer.dll` | 123,392 bytes | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undaunted's server DLL, version 0.0.3. Source in `native/internal-server/`. It hooks the game in memory, in client mode or in server mode (below). It needs the Visual C++ 2015-2022 x64 runtime (`MSVCP140.dll` and `VCRUNTIME140_1.dll` in `System32`). |
 
 Both are upstream Undaunted's prebuilt, unsigned binaries, kept in `UndauntedLauncher/assets/`.
 Every hook address in the server DLL is fixed to the pinned exe, so **never copy them into another
@@ -8100,7 +8100,7 @@ hash. Building it from source is on the [roadmap](https://mixutin.github.io/daun
 
 | Constant | Value | Mode |
 |:---------|:------|:-----|
-| DLL version | `0.0.3` (`UndauntedInternalServer/constants.h`), printed in the console window | Both |
+| DLL version | `0.0.3` (`native/internal-server/constants.h`), printed in the console window | Both |
 | Mode switch | `-server` anywhere in the raw command line, case-sensitive | Both |
 | Console window | Always opened | Both |
 | Metagame address | First argument, read when at least two arguments follow the exe | Client |
@@ -9357,7 +9357,7 @@ inside them are named `dauntless-revived-metagame`, `dauntless-revived-deploy-se
 | `UndauntedContent/` | Serves the verified 1.4.4 game files, the host's art pack and news to the launcher. | TypeScript, Node's own `http` |
 | `UndauntedGateway/` | Public mode: the TLS gateway (the server's only public TCP port) and the allowlist helper (one Windows Firewall rule for the game's UDP ports). | TypeScript, Node's own `https`; `node-forge` for the certificate tool |
 | `UndauntedLauncher/` | The Dauntless Revived Launcher that friends install: invites, registration, downloads, the local relay, starting the game. `assets/` holds the two prebuilt DLLs the game needs. | TypeScript, Electron, Electron Forge and Vite |
-| `UndauntedInternalServer/` | The C++ source of the server DLL, from upstream, with a generated SDK. | C++, Visual Studio 2022 |
+| `native/internal-server/` | The C++ source of the server DLL, from upstream, with a generated SDK. | C++, Visual Studio 2022 |
 | `deploy/windows-server/` | The Windows Server kit: install, update, backup, invites, the stack supervisor, and its tests in `tests/`. | Windows PowerShell 5.1, Node helpers in `lib/` |
 | `friend-kit/` | The manual scripts for friends without the launcher (`setup.ps1`, `play.ps1`). | PowerShell |
 | `tools/` | The docs generators, the content manifest generator and the friend kit builder ([Scripts and parameters](https://mixutin.github.io/dauntless-revived/reference/scripts.html)), and in `tools/ci/` the repository check and the launcher version rules CI uses ([below](https://mixutin.github.io/dauntless-revived/reference/development.html#ci)). | Node, PowerShell |
@@ -9685,7 +9685,7 @@ Where the launcher keeps its settings, the encrypted account keys and its log is
 
 ### The server DLL
 
-The source is in `UndauntedInternalServer/` (upstream's C++ with a generated SDK; open
+The source is in `native/internal-server/` (upstream's C++ with a generated SDK; open
 `UndauntedInternalServer.sln` in Visual Studio 2022 and build `Release|x64`). Nothing in the
 repository builds it. The game and every game server run the prebuilt copies in
 `UndauntedLauncher/assets/`, and their SHA-256 hashes are pinned in the launcher
@@ -9903,7 +9903,7 @@ Paths in each table are relative to the folder named above it.
 
 | Subsystem | Code |
 |---|---|
-| Server DLL | `UndauntedInternalServer/dllmain.cpp` (the endpoint table, client and server mode), `constants.h` |
+| Server DLL | `native/internal-server/dllmain.cpp` (the endpoint table, client and server mode), `constants.h` |
 | Server kit | `deploy/windows-server/*.ps1`; shared pins, paths, the component table and the start order in `DauntlessServer.Common.ps1`; database, key and game-folder helpers in `lib/` |
 | Friend kit | `friend-kit/`, zipped by `tools/make-friend-kit.ps1` |
 | Docs tools | `tools/sync-roadmap.js`, `tools/build-llms.js` |
@@ -13735,7 +13735,7 @@ Each fact is marked with where it comes from and how sure we are.
 | **B** | The 1.4.4 executable (`Dauntless-Win64-Shipping.exe`, 103 MB): its strings (ASCII and UTF-16), and disassembly of the functions that build requests and parse replies. Addresses are virtual addresses with image base `0x140000000`. |
 | **L** | The live server: a census of every route the real clients and game servers called on 22 September 2026, with counts and unanswered routes, and what the two players reported. |
 | **R** | Requests the 2.1.1 client sent to our research server (the same Phoenix services, recorded with their bodies). |
-| **K** | Reflected class and struct names (the SDK dump of the game's classes), and the endpoint table in `UndauntedInternalServer/dllmain.cpp`. |
+| **K** | Reflected class and struct names (the SDK dump of the game's classes), and the endpoint table in `native/internal-server/dllmain.cpp`. |
 | **C** | Our own code and tests. |
 | **G** | A design decision of ours, where nothing in the client decides it. |
 
@@ -14898,7 +14898,7 @@ code. What we took and what we changed is on [The Harmonic port](https://mixutin
 | Label | Source |
 |:------|:-------|
 | **B** | The 1.4.4 executable (`Dauntless-Win64-Shipping.exe`): strings and disassembly. Addresses are virtual addresses with image base `0x140000000`. |
-| **K** | The endpoint table in `UndauntedInternalServer/dllmain.cpp` and the client's own data tables. |
+| **K** | The endpoint table in `native/internal-server/dllmain.cpp` and the client's own data tables. |
 | **O** | Observed in game by Harmonic on that fork (one client), not yet on our server. |
 | **S** | Strong inference: one link in the chain was not traced. |
 | **G** | A design decision of ours, where nothing in the client decides it. |
@@ -15108,7 +15108,7 @@ We adapted them to our audit log and made the less certain rules warn instead of
 | Label | Source |
 |:------|:-------|
 | **B** | The 1.4.4 executable (`Dauntless-Win64-Shipping.exe`): disassembly. Addresses are virtual addresses with image base `0x140000000`. |
-| **K** | The endpoint table in `UndauntedInternalServer/dllmain.cpp`, and the client's own data tables. |
+| **K** | The endpoint table in `native/internal-server/dllmain.cpp`, and the client's own data tables. |
 | **S** | Strong inference: one link in the chain was not traced. |
 | **G** | A design decision of ours, where nothing in the client decides it. |
 | **C** | Our own code and tests. |
@@ -16825,7 +16825,7 @@ includes (Electron, MinHook, the GitHub mark and a few small libraries) in
 
 Undaunted is licensed **AGPL-3.0-only**, and our fork is too. The full text is in `LICENSE.txt` in
 [the repository](https://github.com/mixutin/dauntless-revived). MinHook's source is included in the server DLL's
-source folder (`UndauntedInternalServer/MinHook`), and it keeps its own BSD 2-Clause license.
+source folder (`native/internal-server/MinHook`), and it keeps its own BSD 2-Clause license.
 
 Here is what the license asks in practice, in plain words. **This is our reading, not legal advice.**
 If it matters to you, read the license itself.

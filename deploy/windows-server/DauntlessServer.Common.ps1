@@ -1006,9 +1006,9 @@ function Build-DRApp {
     $appNew = "$($Paths.App).new"
     if (Test-Path -LiteralPath $appNew) { Remove-Item -LiteralPath $appNew -Recurse -Force }
     Write-DRInfo 'copying the source (without node_modules, build output, .git and .env files) ...'
-    # The server uses the pinned prebuilt DLLs; of UndauntedInternalServer it needs only dllmain.cpp (the
+    # The server uses the pinned prebuilt DLLs; of native\internal-server it needs only dllmain.cpp (the
     # endpoint table for Game.ini), not the ~100 MB of engine SDK headers the DLL is built from.
-    $dllSrc = Join-Path $From 'UndauntedInternalServer'
+    $dllSrc = Join-Path $From 'native\internal-server'
     $code = Invoke-DRNative -FilePath 'robocopy.exe' -Arguments @($From, $appNew, '/E', '/XD', 'node_modules', 'dist', 'build', 'out', '.git', '.vite', 'staging',
         (Join-Path $dllSrc 'SDK'), (Join-Path $dllSrc 'MinHook'),
         '/XF', '.env', '*.db', '*.db-journal', '*.db-wal', '*.db-shm', '*.log', '*.key', '*.pem', (Join-Path $dllSrc 'Assertions.inl'),

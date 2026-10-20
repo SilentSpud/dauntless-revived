@@ -330,7 +330,7 @@ TrackingEndpoint="http://127.0.0.1:61000"
 ```
 
 - 167 riviä, yksi kutakin DLL:n osoitetaulukon merkintää kohden tiedostossa
-  `UndauntedInternalServer/dllmain.cpp`. Molemmat tiedoston luovat skriptit (paketin asennusohjelma
+  `native/internal-server/dllmain.cpp`. Molemmat tiedoston luovat skriptit (paketin asennusohjelma
   ja isännän `make-gameini.ps1`) lukevat tuon tiedoston samalla säännöllisellä lausekkeella ja
   kirjoittavat rivit muodossa `<avain>="http://<metagamen osoite><polku>"`.
 - `MatchmakingEndpoint` ja `TrackingEndpoint` ovat pelkkä osoite ilman polkua.
@@ -360,7 +360,7 @@ yksityisen tilan palvelimen Tailscale-osoite muuttuu, ja kun uusi koodiversio mu
 - Paketilla asennetulla palvelimella aja `Install-DauntlessServer.ps1` uudelleen (sen voi toistaa
   turvallisesti). `Update-DauntlessServer.ps1` ei kirjoita `Game.ini`- eikä `Engine.ini`-tiedostoa
   uudelleen. Asennusohjelma lukee `dllmain.cpp`:n käännetystä koodista kansiosta
-  `<InstallRoot>\app\UndauntedInternalServer\` ja varoittaa, jos merkintöjä on jokin muu määrä kuin
+  `<InstallRoot>\app\native\internal-server\` ja varoittaa, jos merkintöjä on jokin muu määrä kuin
   167.
 - Käsin pystytetyllä isäntäkoneella aja `make-gameini.ps1` uudelleen uudella `-Metagame`-arvolla.
   Älä etsi ja korvaa tekstiä: merkkijonon `:61000/` korvaaminen ohittaa ne kaksi avainta, joiden arvo
@@ -534,7 +534,7 @@ kuin ne päätyvät komentoriville; katso [HTTP API]({{ api_page.url | relative_
 | Tiedosto | Koko | SHA-256 | Mitä se tekee |
 |:---------|-----:|:--------|:--------------|
 | `dxgi.dll` | 11 264 tavua | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | Välittäjä (proxy). Windows lataa sen pelikansiosta järjestelmän oman kopion sijaan. Se lataa oikean `System32\dxgi.dll`-tiedoston, välittää eteenpäin funktiot `CreateDXGIFactory`, `CreateDXGIFactory1` ja `CreateDXGIFactory2` ja lataa `UndauntedInternalServer.dll`-tiedoston. Sen lähdekoodia ei ole julkaistu. |
-| `UndauntedInternalServer.dll` | 123 392 tavua | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undauntedin palvelin-DLL, versio 0.0.3. Lähdekoodi on kansiossa `UndauntedInternalServer/`. Se kaappaa pelin toimintoja muistissa (hook) joko client-tilassa tai palvelintilassa (alla). Se tarvitsee Visual C++ 2015-2022 x64 -ajonaikaisen kirjaston (`MSVCP140.dll` ja `VCRUNTIME140_1.dll` kansiossa `System32`). |
+| `UndauntedInternalServer.dll` | 123 392 tavua | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undauntedin palvelin-DLL, versio 0.0.3. Lähdekoodi on kansiossa `native/internal-server/`. Se kaappaa pelin toimintoja muistissa (hook) joko client-tilassa tai palvelintilassa (alla). Se tarvitsee Visual C++ 2015-2022 x64 -ajonaikaisen kirjaston (`MSVCP140.dll` ja `VCRUNTIME140_1.dll` kansiossa `System32`). |
 
 Molemmat ovat alkuperäisen Undauntedin valmiiksi käännettyjä, allekirjoittamattomia tiedostoja, ja
 ne ovat kansiossa `UndauntedLauncher/assets/`. Jokainen palvelin-DLL:n koukkuosoite on sidottu
@@ -608,7 +608,7 @@ uudelleen, mikä muuttaa sen kiinnitettyä tiivistettä. Kääntäminen lähdeko
 
 | Vakio | Arvo | Tila |
 |:------|:-----|:-----|
-| DLL:n versio | `0.0.3` (`UndauntedInternalServer/constants.h`), tulostetaan konsoli-ikkunaan | Molemmat |
+| DLL:n versio | `0.0.3` (`native/internal-server/constants.h`), tulostetaan konsoli-ikkunaan | Molemmat |
 | Tilan valinta | `-server` missä tahansa raa'assa komentorivissä, kirjainkoko huomioiden | Molemmat |
 | Konsoli-ikkuna | Avataan aina | Molemmat |
 | Metagamen osoite | Ensimmäinen parametri, luetaan, kun exen jälkeen on vähintään kaksi parametria | Client |

@@ -9,7 +9,7 @@ import {
 } from "../controllers/guild";
 
 // Guilds (roadmap 3.11): the eleven v2 routes the 1.4.4 client uses (the *_v2 keys in
-// UndauntedInternalServer/dllmain.cpp). The rules and reply shapes are in controllers/guild.ts; the
+// native/internal-server/dllmain.cpp). The rules and reply shapes are in controllers/guild.ts; the
 // evidence is in docs/findings/social.md. Every client route acts as the bearer token's own account;
 // ids in the URL only name the other player, the invite or the guild. The create comes from the
 // Ramsgate game server with its key (the client's Create button is an RPC to that server).

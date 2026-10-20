@@ -313,7 +313,7 @@ TrackingEndpoint="http://127.0.0.1:61000"
 ...
 ```
 
-- 167 lines, one for each entry in the DLL's endpoint table in `UndauntedInternalServer/dllmain.cpp`.
+- 167 lines, one for each entry in the DLL's endpoint table in `native/internal-server/dllmain.cpp`.
   Both generators (the kit's installer and the host's `make-gameini.ps1`) read that file with the
   same regular expression and write `Key="http://<metagame address><path>"`.
 - `MatchmakingEndpoint` and `TrackingEndpoint` are the bare address, with no path.
@@ -341,7 +341,7 @@ table in `dllmain.cpp`.
 
 - On a server installed with the kit, run `Install-DauntlessServer.ps1` again (it is safe to
   repeat). `Update-DauntlessServer.ps1` does not rewrite `Game.ini` or `Engine.ini`. The installer
-  reads `dllmain.cpp` from the built code in `<InstallRoot>\app\UndauntedInternalServer\` and warns
+  reads `dllmain.cpp` from the built code in `<InstallRoot>\app\native\internal-server\` and warns
   if it finds a number of entries other than 167.
 - On a host set up by hand, run `make-gameini.ps1` again with the new `-Metagame` value. Do not
   search and replace: a replace on `:61000/` misses the two bare-address keys.
@@ -513,7 +513,7 @@ command line; see [HTTP API]({{ api_page.url | relative_url }}).
 | File | Size | SHA-256 | What it does |
 |:-----|-----:|:--------|:-------------|
 | `dxgi.dll` | 11,264 bytes | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | A proxy. Windows loads it from the game folder instead of the system copy. It loads the real `System32\dxgi.dll`, forwards `CreateDXGIFactory`, `CreateDXGIFactory1` and `CreateDXGIFactory2`, and loads `UndauntedInternalServer.dll`. Its source has not been published. |
-| `UndauntedInternalServer.dll` | 123,392 bytes | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undaunted's server DLL, version 0.0.3. Source in `UndauntedInternalServer/`. It hooks the game in memory, in client mode or in server mode (below). It needs the Visual C++ 2015-2022 x64 runtime (`MSVCP140.dll` and `VCRUNTIME140_1.dll` in `System32`). |
+| `UndauntedInternalServer.dll` | 123,392 bytes | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undaunted's server DLL, version 0.0.3. Source in `native/internal-server/`. It hooks the game in memory, in client mode or in server mode (below). It needs the Visual C++ 2015-2022 x64 runtime (`MSVCP140.dll` and `VCRUNTIME140_1.dll` in `System32`). |
 
 Both are upstream Undaunted's prebuilt, unsigned binaries, kept in `UndauntedLauncher/assets/`.
 Every hook address in the server DLL is fixed to the pinned exe, so **never copy them into another
@@ -580,7 +580,7 @@ hash. Building it from source is on the [roadmap]({{ roadmap_page.url | relative
 
 | Constant | Value | Mode |
 |:---------|:------|:-----|
-| DLL version | `0.0.3` (`UndauntedInternalServer/constants.h`), printed in the console window | Both |
+| DLL version | `0.0.3` (`native/internal-server/constants.h`), printed in the console window | Both |
 | Mode switch | `-server` anywhere in the raw command line, case-sensitive | Both |
 | Console window | Always opened | Both |
 | Metagame address | First argument, read when at least two arguments follow the exe | Client |

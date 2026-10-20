@@ -46,7 +46,7 @@ We adapted them to our audit log and made the less certain rules warn instead of
 | Label | Source |
 |:------|:-------|
 | **B** | The 1.4.4 executable (`Dauntless-Win64-Shipping.exe`): disassembly. Addresses are virtual addresses with image base `0x140000000`. |
-| **K** | The endpoint table in `UndauntedInternalServer/dllmain.cpp`, and the client's own data tables. |
+| **K** | The endpoint table in `native/internal-server/dllmain.cpp`, and the client's own data tables. |
 | **S** | Strong inference: one link in the chain was not traced. |
 | **G** | A design decision of ours, where nothing in the client decides it. |
 | **C** | Our own code and tests. |

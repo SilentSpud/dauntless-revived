@@ -148,7 +148,7 @@ fatal: remote helper 'https' aborted session
 ```
 
 **Syy.** Windowsin 260 merkin polkuraja. Työkansion polku oli jo pitkä, ja repositorio lisää jopa 94
-merkkiä. Syvimmät nimet ovat kansiossa `UndauntedInternalServer/SDK/`, joka on yli 4 000 tiedoston
+merkkiä. Syvimmät nimet ovat kansiossa `native/internal-server/SDK/`, joka on yli 4 000 tiedoston
 generoitu SDK. Gitin omat tiedostot `.git`-kansiossa lisäävät pituutta vielä. Valitsimen
 `-c core.longpaths=true` lisääminen **ei** korjannut ongelmaa: `$GIT_DIR`-virhe johtuu siitä, että
 itse repositorion sijainnin polku on liian pitkä.

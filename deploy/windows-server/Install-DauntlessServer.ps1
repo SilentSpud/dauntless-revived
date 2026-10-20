@@ -1249,7 +1249,7 @@ try {
     $cfgDir = $null
     if ($Sandbox) { $cfgDir = Join-Path $P.Data 'sandbox-profile\AppData\Local\Archon\Saved\Config\WindowsClient' }
     elseif ($svcProfile) { $cfgDir = Join-Path $svcProfile 'AppData\Local\Archon\Saved\Config\WindowsClient' }
-    $dllMain = Join-Path $P.App 'UndauntedInternalServer\dllmain.cpp'
+    $dllMain = Join-Path $P.App 'native\internal-server\dllmain.cpp'
     if (-not $cfgDir -or -not (Test-Path -LiteralPath $dllMain)) { Write-DRInfo '(what-if: Game.ini and Engine.ini would be written for the service account)' }
     elseif (Test-Do $cfgDir 'Write Game.ini (endpoint overrides) and Engine.ini (memory caps, chat override)') {
         $n = Write-DRGameUserConfig -ConfigDir $cfgDir -DllMainCpp $dllMain -Metagame $metaAddr

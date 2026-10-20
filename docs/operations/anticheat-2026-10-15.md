@@ -7,7 +7,7 @@ server RPCs, not a verified fix for attack-speed, infinite-stamina, movement-spe
 or monster-freeze cheats. The supplied videos were inaccessible; the cheat
 behaviors come from the operator's description. No automatic bans are enabled.
 
-`UndauntedInternalServer/ServerRpcGuard.h` lists exact SDK function names.
+`native/internal-server/ServerRpcGuard.h` lists exact SDK function names.
 The server-only `ProcessEventHook` checks `NetServer`, caches decisions per thread,
 and returns before invoking a denied handler. Each denied function is logged at
 most once per thread, without arguments, player identifiers or credentials.

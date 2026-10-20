@@ -275,7 +275,7 @@ jobs:
         run: |
           set -euo pipefail
           out="$(mktemp -d)"
-          for source in UndauntedInternalServer/tests/*.cpp; do
+          for source in native/internal-server/tests/*.cpp; do
             # Windows CRT and HID/XInput tests run in the Windows job.
             [[ "$source" == */server-locale.cpp || "$source" == */dualsense.cpp ]] && continue
             name="$(basename "$source" .cpp)"
@@ -284,7 +284,7 @@ jobs:
             echo "PASS $name"
           done
           g++ -std=c++20 -Wall -Wextra -Werror -g -fsanitize=address,undefined \
-            -fno-omit-frame-pointer UndauntedInternalServer/tests/fall-recovery-policy.cpp \
+            -fno-omit-frame-pointer native/internal-server/tests/fall-recovery-policy.cpp \
             -o "$out/fall-recovery-sanitized"
           "$out/fall-recovery-sanitized"
 
@@ -305,7 +305,7 @@ jobs:
           $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
           $msbuild = & $vswhere -latest -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
           if (-not $msbuild) { throw 'MSBuild not found' }
-          & $msbuild UndauntedInternalServer\UndauntedInternalServer.sln /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
+          & $msbuild native\internal-server\UndauntedInternalServer.sln /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Test Windows native regressions
@@ -318,7 +318,7 @@ jobs:
           @call "$vs\VC\Auxiliary\Build\vcvars64.bat"
           @if errorlevel 1 exit /b 1
           @for %%t in (server-locale dualsense console-visibility) do @(
-          cl /nologo /std:c++20 /EHsc /W4 /WX /O2 UndauntedInternalServer\tests\%%t.cpp /Fe:"$env:RUNNER_TEMP\%%t.exe" /Fo:"$env:RUNNER_TEMP\%%t.obj" user32.lib
+          cl /nologo /std:c++20 /EHsc /W4 /WX /O2 native\internal-server\tests\%%t.cpp /Fe:"$env:RUNNER_TEMP\%%t.exe" /Fo:"$env:RUNNER_TEMP\%%t.obj" user32.lib
           if errorlevel 1 exit /b 1
           "$env:RUNNER_TEMP\%%t.exe"
           if errorlevel 1 exit /b 1
@@ -329,7 +329,7 @@ jobs:
 
       - name: Verify DLL output
         run: |
-          $dll = Get-ChildItem -Path UndauntedInternalServer -Filter UndauntedInternalServer.dll -Recurse |
+          $dll = Get-ChildItem -Path native\internal-server -Filter UndauntedInternalServer.dll -Recurse |
             Where-Object { $_.FullName -match '[\\/]x64[\\/]Release[\\/]' } |
             Select-Object -First 1
           if (-not $dll) { throw 'Release x64 DLL not found' }

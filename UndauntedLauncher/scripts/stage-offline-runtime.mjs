@@ -114,7 +114,7 @@ for (const file of ["dr-db.js", "backup-policy.cjs"]) {
     await cp(path.join(repoDir, "deploy", "windows-server", "lib", file), path.join(outputDir, file));
 }
 
-const dllSource = await readFile(path.join(repoDir, "UndauntedInternalServer", "dllmain.cpp"), "utf8");
+const dllSource = await readFile(path.join(repoDir, "native", "internal-server", "dllmain.cpp"), "utf8");
 const endpoints = {};
 const entry = /^\s*\{L"([A-Za-z0-9_]+)", L"http:\/\/" \+ Globals::MetagameAddress(?: \+ L"([^"]*)")?\},?/gm;
 for (const match of dllSource.matchAll(entry)) {

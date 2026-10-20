@@ -67,7 +67,7 @@ includes (Electron, MinHook, the GitHub mark and a few small libraries) in
 
 Undaunted is licensed **AGPL-3.0-only**, and our fork is too. The full text is in `LICENSE.txt` in
 [the repository]({{ site.github.repository_url }}). MinHook's source is included in the server DLL's
-source folder (`UndauntedInternalServer/MinHook`), and it keeps its own BSD 2-Clause license.
+source folder (`native/internal-server/MinHook`), and it keeps its own BSD 2-Clause license.
 
 Here is what the license asks in practice, in plain words. **This is our reading, not legal advice.**
 If it matters to you, read the license itself.

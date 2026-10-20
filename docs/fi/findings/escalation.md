@@ -50,7 +50,7 @@ hylkäysten sijaan; yksityiskohdat sivulla [Harmonicin työn siirto]({{ harmonic
 | Merkki | Lähde |
 |:-------|:------|
 | **B** | 1.4.4-ohjelmatiedosto (`Dauntless-Win64-Shipping.exe`): konekielinen koodi. Osoitteet ovat muistiosoitteita, joiden perusosoite on `0x140000000`. |
-| **K** | Päätepisteiden taulukko tiedostossa `UndauntedInternalServer/dllmain.cpp` sekä peliohjelman omat datataulukot. |
+| **K** | Päätepisteiden taulukko tiedostossa `native/internal-server/dllmain.cpp` sekä peliohjelman omat datataulukot. |
 | **S** | Vahva päätelmä: yksi ketjun lenkki on jäljittämättä. |
 | **G** | Oma suunnitteluratkaisumme, kun peliohjelma ei ratkaise asiaa. |
 | **C** | Oma koodimme ja testimme. |

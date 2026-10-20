@@ -82,7 +82,7 @@ ennallaan. Kansioiden npm-pakettien nimet ovat `dauntless-revived-metagame`,
 | `UndauntedContent/` | Tarjoaa käynnistimelle tarkistetut 1.4.4-pelitiedostot, ylläpitäjän kuvapaketin ja uutiset. | TypeScript, Noden oma `http` |
 | `UndauntedGateway/` | Julkinen tila: TLS-yhdyskäytävä (palvelimen ainoa julkinen TCP-portti) ja sallittujen listan apuri (yksi Windowsin palomuurisääntö pelin UDP-porteille). | TypeScript, Noden oma `https`; varmennetyökalussa `node-forge` |
 | `UndauntedLauncher/` | Dauntless Revived Launcher, jonka kaverit asentavat: kutsut, rekisteröinti, lataukset, paikallinen välitin ja pelin käynnistys. Kansiossa `assets/` ovat pelin tarvitsemat kaksi valmiiksi käännettyä DLL:ää. | TypeScript, Electron, Electron Forge ja Vite |
-| `UndauntedInternalServer/` | Palvelin-DLL:n C++-lähdekoodi upstreamista, generoidun SDK:n kanssa. | C++, Visual Studio 2022 |
+| `native/internal-server/` | Palvelin-DLL:n C++-lähdekoodi upstreamista, generoidun SDK:n kanssa. | C++, Visual Studio 2022 |
 | `deploy/windows-server/` | Windows Server -palvelinpaketti: asennus, päivitys, varmuuskopiointi, kutsut, palvelinkokonaisuuden valvoja ja paketin testit kansiossa `tests/`. | Windows PowerShell 5.1, Node-apuohjelmat kansiossa `lib/` |
 | `friend-kit/` | Käsin ajettavat skriptit kavereille, jotka eivät käytä käynnistintä (`setup.ps1`, `play.ps1`). | PowerShell |
 | `tools/` | Dokumentaation generaattorit, sisältömanifestin generaattori ja kaveripaketin kokoaja ([Skriptit ja parametrit]({{ scripts_page.url | relative_url }})) sekä kansiossa `tools/ci/` CI:n käyttämät repositorion tarkistus ja käynnistimen versiosäännöt ([alla](#ci)). | Node, PowerShell |
@@ -428,7 +428,7 @@ julkaisut kääntää GitHub Actions, ei kehittäjän kone.
 
 ### Palvelin-DLL {#server-dll}
 
-Lähdekoodi on kansiossa `UndauntedInternalServer/` (upstreamin C++-koodi generoidun SDK:n kanssa; avaa
+Lähdekoodi on kansiossa `native/internal-server/` (upstreamin C++-koodi generoidun SDK:n kanssa; avaa
 `UndauntedInternalServer.sln` Visual Studio 2022:ssa ja käännä kokoonpano `Release|x64`). Mikään repositoriossa
 ei käännä sitä. Peli ja jokainen pelipalvelin ajavat valmiiksi käännettyjä kopioita kansiosta
 `UndauntedLauncher/assets/`, ja niiden SHA-256-tiivisteet on kiinnitetty käynnistimeen
@@ -657,7 +657,7 @@ Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 
 | Osa-alue | Koodi |
 |---|---|
-| Palvelin-DLL | `UndauntedInternalServer/dllmain.cpp` (päätepistetaulukko, asiakas- ja palvelintila), `constants.h` |
+| Palvelin-DLL | `native/internal-server/dllmain.cpp` (päätepistetaulukko, asiakas- ja palvelintila), `constants.h` |
 | Palvelinpaketti | `deploy/windows-server/*.ps1`; yhteiset kiinnitykset, polut, osien taulukko ja käynnistysjärjestys tiedostossa `DauntlessServer.Common.ps1`; tietokanta-, avain- ja pelikansioapurit kansiossa `lib/` |
 | Kaveripaketti | `friend-kit/`, jonka `tools/make-friend-kit.ps1` pakkaa zip-tiedostoksi |
 | Dokumentaatiotyökalut | `tools/sync-roadmap.js`, `tools/build-llms.js` |

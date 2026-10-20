@@ -49,7 +49,7 @@ Mitä otimme ja mitä muutimme, kerrotaan sivulla [Harmonicin työn siirto]({{ h
 | Merkki | Lähde |
 |:-------|:------|
 | **B** | 1.4.4-ohjelmatiedosto (`Dauntless-Win64-Shipping.exe`): merkkijonot ja konekielinen koodi. Osoitteet ovat muistiosoitteita, joiden perusosoite on `0x140000000`. |
-| **K** | Päätepisteiden taulukko tiedostossa `UndauntedInternalServer/dllmain.cpp` sekä peliohjelman omat datataulukot. |
+| **K** | Päätepisteiden taulukko tiedostossa `native/internal-server/dllmain.cpp` sekä peliohjelman omat datataulukot. |
 | **O** | Harmonic näki tämän pelissä omalla forkillaan (yksi peliohjelma), ei vielä meidän palvelimellamme. |
 | **S** | Vahva päätelmä: yksi ketjun lenkki on jäljittämättä. |
 | **G** | Oma suunnitteluratkaisumme, kun peliohjelma ei ratkaise asiaa. |
