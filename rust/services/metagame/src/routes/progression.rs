@@ -112,7 +112,7 @@ fn local_epoch_day() -> String {
 
 /// `RefuseForeignPlayer`: a game server names the player in the URL and is trusted; a player client
 /// only gets its own account.
-fn refuse_foreign(auth: &MetagameAuth, parts: &Parts, account: &str) -> Option<Response> {
+pub(super) fn refuse_foreign(auth: &MetagameAuth, parts: &Parts, account: &str) -> Option<Response> {
     if auth.is_game_server() || auth.user_id() == Some(account) {
         return None;
     }
@@ -125,7 +125,7 @@ fn refuse_foreign(auth: &MetagameAuth, parts: &Parts, account: &str) -> Option<R
     Some(empty(StatusCode::FORBIDDEN))
 }
 
-fn caller(auth: &MetagameAuth) -> Caller {
+pub(super) fn caller(auth: &MetagameAuth) -> Caller {
     if auth.is_game_server() {
         Caller::GameServer
     } else {

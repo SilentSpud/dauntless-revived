@@ -1,0 +1,400 @@
+{
+  "about": "Real-mode Hunt Pass selection, cooldowns, bounties and the admin Progression and SeedProgression routes (MIGRATION_PLAN.md M29, area 4, second part).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Sep 21, 2026', 'Ada', 0, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')",
+    "INSERT INTO cooldowns (accountId, cooldownId, startedDate, updatedDate) VALUES ('UID-a', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z'), ('UID-a', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z')",
+    "INSERT INTO progress_tracks (accountId, progressionId, progress, confirmedFreeRank, confirmedPremiumRank, confirmedDate, updatedDate) VALUES ('UID-a', 'season09b', 2500, 1, 0, '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/progression/config",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/huntpass/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/huntpass/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/huntpass/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "progression_id": "MasteryTrack_PlayerLevel"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/huntpass/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "progression_id": "MasteryTrack_PlayerLevel"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/huntpass/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "progressionId": "nope"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/huntpass/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {}
+    },
+    {
+      "method": "GET",
+      "path": "/huntpass/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cooldown/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cooldown/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cooldown/batch/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "cooldowns": [
+          {
+            "cooldown_id": "bounty_tokens_season09b",
+            "cooldown_started_date": "2026-01-02T03:04:05.000Z"
+          },
+          {
+            "cooldownId": "Trials_1",
+            "startedDate": "not a date"
+          },
+          {
+            "cooldown_started_date": "2026-01-01T00:00:00.000Z"
+          },
+          {
+            "cooldown_id": "nodate"
+          }
+        ]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cooldown/batch/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "Blueprint_1": "2026-02-02T00:00:00.000Z"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cooldown/batch/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "foo": 1
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cooldown/batch/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "cooldowns": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cooldown/UID-a/0123456789ABCDEF0123456789ABCDEF",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/cooldown/UID-a/0123456789ABCDEF0123456789ABCDEF",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cooldown/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/bounty/game-data",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "bounties": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "bounties": [
+          {
+            "bounty_id": "B1",
+            "slot_index": 0,
+            "update_version": 1,
+            "status": 1
+          },
+          {
+            "bounty_id": "B2",
+            "slot_index": 1,
+            "update_version": "2",
+            "drafted_timestamp": "2026-03-03T00:00:00.000Z"
+          },
+          {
+            "slot_index": 2
+          }
+        ],
+        "draft_data": {
+          "current_draft_choices": [
+            "x"
+          ],
+          "bronze_count": 1
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "bounties": [
+          {
+            "bounty_id": "B3",
+            "slot_index": 0,
+            "update_version": 0
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "bounties": [
+          {
+            "bounty_id": "B2",
+            "slot_index": 1,
+            "update_version": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "draft_data": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": []
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/delete/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "bounty_ids": [
+          "B3"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/delete/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "bounty_ids": [
+          "B3",
+          "nope",
+          4
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/bounty/delete/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {}
+    },
+    {
+      "method": "GET",
+      "path": "/bounty/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Progression?UserId=UID-a",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Progression?UserId=UID-none",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Progression",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/SeedProgression",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "UserId": "UID-b",
+        "Mode": "grandfather"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/SeedProgression",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "UserId": "UID-a",
+        "Mode": "fresh"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/SeedProgression",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "UserId": "UID-a",
+        "Mode": "other"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/SeedProgression",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "UserId": "UID-none",
+        "Mode": "fresh"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Progression?UserId=UID-b",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Progression?UserId=UID-a",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    }
+  ]
+}

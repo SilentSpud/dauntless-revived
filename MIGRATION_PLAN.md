@@ -93,7 +93,11 @@ Done so far:
   without stored progression. The seed (`SeedProgression`) is in place for the admin route. Two parity scripts
   (`progression`, `progression-stub`, 77 replies) match Node. Deliberate difference: a breadcrumbs
   `updateVersion` that is neither an integer nor a string of digits is refused (500) instead of stored as sent.
-  Left of the area: Hunt Pass selection, cooldowns, bounties, the admin progression routes, and Trials.
+- Metagame B2, area 4 of M29, second part: from `routes/system.ts`, the progression config, Hunt Pass
+  selection, cooldowns (with the 24-hour pruning of gatherable cooldowns) and the bounty board (partial
+  upserts by bounty id, slot replacement, draft data, deletes), each with upstream's stub for stub-mode
+  accounts; and the admin `/undaunted/api/Progression` and `/undaunted/api/SeedProgression`. Two parity
+  scripts (`progression-extras`, `progression-extras-stub`, 52 replies) match Node. Left of the area: Trials.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

@@ -14,7 +14,7 @@ use service_kit::env::Env;
 use crate::entitlements;
 use crate::progression::{Caller, Event, account_exists, parse_path_integer, read_field, read_integer, record_event};
 use crate::progression_config::{ProgressionConfig, ProgressionPath};
-use crate::schema::{characters, objectives, progress_tracks, progression_events, users};
+use crate::schema::{characters, huntpassselection, objectives, progress_tracks, progression_events, users};
 use crate::time::{iso_now, now_ms};
 
 pub type Conn = store::Connection;
@@ -942,6 +942,69 @@ pub fn reset(conn: &mut Conn, ctx: &Context, account: &str, id: &str, who: Calle
         "Reset track {id} of {account} (was progress {progress}) by {}",
         who.as_str()
     );
+    Ok(reply)
+}
+
+// ---- The Hunt Pass selection ----
+
+/// `GetSelectedHuntPass`: the stored selection while it is a configured track, else
+/// `ACTIVE_HUNT_PASS` (season09b, the only one with reward data).
+pub fn selected_hunt_pass(conn: &mut Conn, config: &ProgressionConfig, account: &str) -> QueryResult<String> {
+    let stored: Option<String> = huntpassselection::table
+        .find(account)
+        .select(huntpassselection::progressionId)
+        .first(conn)
+        .optional()?;
+    Ok(stored
+        .filter(|id| config.path(id).is_some())
+        .unwrap_or_else(|| config.active_hunt_pass.clone()))
+}
+
+/// `SetSelectedHuntPass`, POST /huntpass/:uid `{"progression_id": "..."}` (game server, debug only in
+/// the client).
+pub fn set_hunt_pass(
+    conn: &mut Conn,
+    ctx: &Context,
+    account: &str,
+    body: Option<&Value>,
+    who: Caller,
+) -> QueryResult<Reply> {
+    let route = "POST /huntpass/:uid";
+    let mut notes = Vec::new();
+    let id = read_field(body, &["progression_id", "progressionId"], "hunt pass id", &mut notes).cloned();
+    let Some(id) = id
+        .as_ref()
+        .and_then(Value::as_str)
+        .filter(|id| ctx.config.path(id).is_some())
+    else {
+        notes.push("not a configured track".into());
+        let reply = Reply::status(400);
+        event(conn, account, who, route, body, &reply, &notes)?;
+        tracing::warn!(
+            "Refusing hunt pass selection {} for {account}: not a configured track",
+            id.as_ref()
+                .map_or("undefined".to_owned(), service_kit::jsjson::stringify)
+        );
+        return Ok(reply);
+    };
+    let now = iso_now();
+    diesel::insert_into(huntpassselection::table)
+        .values((
+            huntpassselection::accountId.eq(account),
+            huntpassselection::progressionId.eq(id),
+            huntpassselection::updatedDate.eq(&now),
+        ))
+        .on_conflict(huntpassselection::accountId)
+        .do_update()
+        .set((
+            huntpassselection::progressionId.eq(id),
+            huntpassselection::updatedDate.eq(&now),
+        ))
+        .execute(conn)?;
+    let reply = Reply::ok(json!({"code": "OK", "message": "OK", "payload": id}));
+    event(conn, account, who, route, body, &reply, &notes)?;
+    warn_notes(&format!("Hunt pass selection for {account}"), &notes);
+    tracing::info!("Hunt pass of {account} set to {id}");
     Ok(reply)
 }
 

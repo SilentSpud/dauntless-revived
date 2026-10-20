@@ -305,3 +305,13 @@ async fn progression() {
 async fn progression_stub() {
     run_area("progression-stub").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn progression_extras() {
+    run_area("progression-extras").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn progression_extras_stub() {
+    run_area("progression-extras-stub").await;
+}

@@ -4,9 +4,11 @@
 pub mod accounts;
 pub mod app;
 pub mod auth;
+pub mod bounties;
 pub mod characterprogress;
 pub mod characters;
 pub mod config;
+pub mod cooldowns;
 pub mod creator;
 pub mod crypto;
 pub mod db;
