@@ -15,7 +15,11 @@ Done so far:
   bundled SQLite is built with the better-sqlite3 compile options that change behaviour (`SQLITE_DQS=0` and others,
   `rust/.cargo/config.toml`), and `schema.rs` maps every `INTEGER` to `BigInt` (patch in `diesel.toml`): SQLite
   integers are 64-bit, and `print-schema` would read them as `i32`.
-
+- Metagame B1: `service-kit` with M6 (an ordered, case-insensitive matcher in front of axum handlers, since axum
+  prefers static segments whatever the order), M7 (`application/json; charset=utf-8`, empty 404), M24 (pino JSON
+  lines; `fatal!` for level 60), M25 (`Env` from `--env-file` only, process environment wins) and the serving half
+  of M5, M10 and X7 (`ConnectionInfo` with both addresses; stop on `shutdown` on stdin, Ctrl+C/Ctrl+Break or
+  SIGTERM, then a drain deadline).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

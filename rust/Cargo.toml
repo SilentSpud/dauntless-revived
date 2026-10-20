@@ -15,9 +15,14 @@ publish = false
 [workspace.dependencies]
 protocol = { path = "crates/protocol" }
 store = { path = "crates/store" }
+service-kit = { path = "crates/service-kit" }
 
+axum = { version = "0.8", default-features = false, features = ["http1", "json", "query", "tokio", "form"] }
 diesel = { version = "2.3", default-features = false, features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
 diesel_migrations = { version = "2.3", features = ["sqlite"] }
+dotenvy = "0.15"
+gethostname = "1"
+http-body-util = "0.1"
 # Bundled: one SQLite, built with the options in .cargo/config.toml, shared by Diesel and rusqlite (M17).
 libsqlite3-sys = { version = "0.38", features = ["bundled"] }
 percent-encoding = "2"
@@ -26,6 +31,9 @@ serde_json = "1"
 sha2 = "0.11"
 thiserror = "2"
 tokio = { version = "1", features = ["rt", "macros"] }
+tower = { version = "0.5", features = ["util"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt", "registry", "std"] }
 tempfile = "3"
 
 [workspace.lints.rust]
