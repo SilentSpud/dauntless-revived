@@ -1,0 +1,103 @@
+{
+  "about": "The Rams store pilot: STORE_RAMS=1 with the Event01 wire adapter and the curated catalogue (MIGRATION_PLAN.md M29, area 3).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "STORE": "free",
+    "STORE_RAMS": "1",
+    "STORE_RAMS_EVENT_TRANSPORT": "1",
+    "STORE_CATALOG_PROFILE": "curated30"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 120, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 7, 0)",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Oct 1, 2026', 'Ada', 3, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')",
+    "INSERT INTO inventories (characterId, instancedItems, stackedItems) VALUES ('char-a1', '[{\"catalogId\": \"WP_AC_BLACKCAT_00\", \"instanceId\": \"inst-cat\", \"updateVersion\": 0}]', '[{\"catalogId\": \"CURRENCY_NOTES\", \"quantity\": 3000}, {\"catalogId\": \"CURRENCY_MARKS_STEEL\", \"quantity\": 600}, {\"catalogId\": \"AR_HP07A_MONK_HELM\", \"quantity\": 1}, {\"catalogId\": \"CURRENCY_CELLDUST\", \"quantity\": \"45\"}]')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/product/skus/public?requiredTags=webstore",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/skus/public?requiredTags=webstore&shop_protocol=rams-v1",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/bundle_armour_iron?shop_protocol=rams-v1",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/bundle_armour_iron",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/single_exchange_slot_2",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/event01/single_weapon_unseen_strikers?shop_protocol=rams-v1",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "capture": "purchaseToken"
+    },
+    {
+      "method": "POST",
+      "path": "/notification/event_01?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/event_01?token={{saved:purchaseToken}}&shop_protocol=rams-v1",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/rams/bundle_armour_iron?shop_protocol=rams-v1",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/bundle_armour_iron?shop_protocol=rams-v1",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    }
+  ]
+}

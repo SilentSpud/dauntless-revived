@@ -75,6 +75,16 @@ Done so far:
   job at start. Node's request objects are shared with the stored stacks and the reply, so stacks live in an
   arena of indexes to give the same sharing. Two parity scripts (`inventory`, `inventory-switches` with every
   switch off its default, 78 replies) match Node.
+- Metagame B2, area 3 of M29: the store. Balance sheets (with the held currencies and the Rams pilot's Event01
+  alias), the creator code, store offer pictures, and the purchase service of the free webstore, Lady Luck and the
+  Middleman: offer lists and single offers with `remaining`, Rams pricing and the weekly shop, purchase tokens
+  (the per-account window, the hourly sweep and the one at start) and redeems with their refusals and replays,
+  plus the part of Trials the store needs (settling finished weeks). Offers stay JSON objects in the catalogue's
+  key order, since a token is bound to the hash of the offer's JSON text. The maintenance script
+  `revoke-free-store.cjs` is `metagame db revoke-free-store <db> <cutoff> [--apply]`. Three parity scripts
+  (`store`, `store-off`, `store-rams`, 75 replies) match Node; the harness gained `capture` / `{{saved:…}}` to
+  carry a purchase token into the next request. What depends on the week (the Middleman's cells, the weekly
+  shop) is checked against Node's output at fixed times instead (`tests/fixtures/store-weekly.json`).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

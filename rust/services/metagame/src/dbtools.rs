@@ -53,6 +53,14 @@ pub enum DbCommand {
         mode: JournalMode,
         db: PathBuf,
     },
+    /// Revokes what free store purchases redeemed at or before `cutoff` granted; a preview unless
+    /// `--apply`. Maintenance only: stop the game servers and the metagame, and back up first.
+    RevokeFreeStore {
+        db: PathBuf,
+        cutoff: String,
+        #[arg(long)]
+        apply: bool,
+    },
 }
 
 #[derive(Debug, Clone, Copy, clap::ValueEnum)]
@@ -123,6 +131,7 @@ pub fn run(command: &DbCommand) -> Result<String, String> {
                 .map_err(|e| e.to_string())?;
             Ok("game-server key registered".into())
         }
+        DbCommand::RevokeFreeStore { db, cutoff, apply } => revoke_free_store(db, cutoff, *apply),
         DbCommand::Journal { mode, db } => {
             let mut conn = open(db)?;
             let sql = match mode {
@@ -134,6 +143,65 @@ pub fn run(command: &DbCommand) -> Result<String, String> {
             Ok(format!("journal mode {now}"))
         }
     }
+}
+
+/// `scripts/revoke-free-store.cjs`: one JSON line per step (preview, applied, verified). The applied
+/// run rolls back if any character or escalation data changed with it.
+fn revoke_free_store(db: &Path, cutoff: &str, apply: bool) -> Result<String, String> {
+    use crate::store_revocation::{RevokeError, progression_hash, revoke_before};
+    let line = |mode: &str, report: &crate::store_revocation::Report, extra: Option<(&str, serde_json::Value)>| {
+        let mut fields = serde_json::Map::new();
+        fields.insert("mode".into(), mode.into());
+        fields.insert("cutoff".into(), cutoff.into());
+        fields.extend(report.fields());
+        if let Some((name, value)) = extra {
+            fields.insert(name.into(), value);
+        }
+        service_kit::jsjson::stringify(&serde_json::Value::Object(fields))
+    };
+    let mut conn = open(db)?;
+    let before = progression_hash(&mut conn).map_err(|e| e.to_string())?;
+    let preview = conn
+        .transaction(|c| revoke_before(c, cutoff, false))
+        .map_err(|e| e.to_string())?;
+    let mut lines = vec![line("preview", &preview, None)];
+    if apply {
+        let fail = |lines: &[String], error: String| format!("{}\n{error}", lines.join("\n"));
+        let applied = conn
+            .immediate_transaction(|c| {
+                let result = revoke_before(c, cutoff, true)?;
+                if progression_hash(c)? != before {
+                    return Err(RevokeError::Other(
+                        "Unrelated character or escalation data changed".into(),
+                    ));
+                }
+                Ok(result)
+            })
+            .map_err(|e| fail(&lines, e.to_string()))?;
+        lines.push(line("applied", &applied, Some(("progressionUnchanged", true.into()))));
+        let repeat = conn
+            .transaction(|c| revoke_before(c, cutoff, false))
+            .map_err(|e| fail(&lines, e.to_string()))?;
+        if repeat.purchases != 0 {
+            return Err(fail(&lines, "Revocation audit did not cover all purchases".into()));
+        }
+        let check = diesel::sql_query("PRAGMA quick_check")
+            .get_result::<QuickCheck>(&mut conn)
+            .map_err(|e| fail(&lines, e.to_string()))?
+            .quick_check;
+        let mut verified = serde_json::Map::new();
+        verified.insert("mode".into(), "verified".into());
+        verified.insert("remaining".into(), repeat.purchases.into());
+        verified.insert("integrity".into(), check.into());
+        lines.push(service_kit::jsjson::stringify(&serde_json::Value::Object(verified)));
+    }
+    Ok(lines.join("\n"))
+}
+
+#[derive(QueryableByName)]
+struct QuickCheck {
+    #[diesel(sql_type = Text)]
+    quick_check: String,
 }
 
 fn valid_invite_code(code: &str) -> bool {

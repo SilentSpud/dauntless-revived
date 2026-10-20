@@ -50,12 +50,27 @@ pub struct App {
     pub entitlement_defaults: Vec<String>,
     pub history: crate::characters::HistorySettings,
     pub inventory: crate::inventory::Settings,
+    pub shop: crate::store::Settings,
+    /// When the store purchase table was last swept.
+    pub store_sweeps: crate::store::Sweeps,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,
 }
 
 pub type AppState = Arc<App>;
+
+impl App {
+    /// What a store call needs, at this moment.
+    pub fn store_context(&self) -> crate::store::Context {
+        crate::store::Context {
+            settings: self.shop.clone(),
+            entitlement_defaults: self.entitlement_defaults.clone(),
+            inventory: self.inventory,
+            now: crate::time::now_ms(),
+        }
+    }
+}
 
 /// A failure the request can't recover from: Express's 500 page, and the cause in the log.
 #[derive(Debug, thiserror::Error)]

@@ -154,6 +154,8 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         entitlement_defaults: config.entitlement_defaults.clone(),
         history: config.history,
         inventory: config.inventory,
+        shop: config.store.clone(),
+        store_sweeps: crate::store::Sweeps::default(),
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });
@@ -183,6 +185,22 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
         Err(error) => tracing::warn!(
             err = &error as &dyn std::error::Error,
             "Could not set the daily token stacks"
+        ),
+    }
+
+    // Store purchase tokens that expired without being redeemed, and old receipts (also at most once
+    // an hour when a token is issued)
+    let now = crate::time::now_ms();
+    state.store_sweeps.mark(now);
+    match state
+        .store
+        .write(move |conn| crate::store::prune(conn, now).map_err(store::Error::from))
+        .await
+    {
+        Ok(pruned) => crate::store::log_pruned(pruned),
+        Err(error) => tracing::warn!(
+            err = &error as &dyn std::error::Error,
+            "Could not remove the expired store purchase tokens"
         ),
     }
 

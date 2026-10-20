@@ -60,11 +60,12 @@ pub struct Config {
     pub entitlement_defaults: Vec<String>,
     pub history: crate::characters::HistorySettings,
     pub inventory: crate::inventory::Settings,
+    pub store: crate::store::Settings,
     pub features: Features,
 }
 
 /// `ParseOnOff` of `features.ts`: 1/true/on/yes, 0/false/off/no; anything else is the default.
-fn on_off(env: &Env, name: &str, default: bool) -> bool {
+pub(crate) fn on_off(env: &Env, name: &str, default: bool) -> bool {
     match env.get(name).map(|v| v.trim().to_ascii_lowercase()) {
         None => default,
         Some(v) if ["1", "true", "on", "yes"].contains(&v.as_str()) => true,
@@ -141,6 +142,7 @@ impl Config {
             entitlement_defaults: crate::entitlements::defaults_from(env.raw("ENTITLEMENTS_DEFAULT")),
             history: crate::characters::HistorySettings::from_env(env),
             inventory: crate::inventory::Settings::from_env(env, on_off(env, "MIDDLEMAN_FUSION_GUARDS", false)),
+            store: crate::store::Settings::from_env(env),
             features: Features {
                 accountinfo_public_legacy: env.get("ACCOUNTINFO_PUBLIC_LEGACY") == Some("1"),
                 account_display_name: env.get("ACCOUNT_DISPLAY_NAME") != Some("0"),

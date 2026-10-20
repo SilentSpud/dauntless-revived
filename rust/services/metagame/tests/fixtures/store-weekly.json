@@ -1,0 +1,843 @@
+{
+ "about": "Node outputs of SelectWeeklyMiddlemanOffers and ShopLayout (STORE_RAMS=1, STORE_WEEKLY_ROTATION=1, STORE_ROTATION_SEED=seed-7) over the whole webstore catalogue at fixed times; written by a one-off node -e script against legacy/UndauntedMetagame/build.",
+ "middleman": {
+  "2026-10-15T17:59:59.999Z": [
+   [
+    "middleman_weekly_cell_reduce_shocked_uc",
+    "+1 Insulated Cell",
+    0,
+    "2026-10-08T18:00:00.000Z",
+    "2026-10-15T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_meter_gain_uc",
+    "+1 Energized Cell",
+    1,
+    "2026-10-08T18:00:00.000Z",
+    "2026-10-15T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_object_breaker_r",
+    "+2 Deconstruction Cell",
+    2,
+    "2026-10-08T18:00:00.000Z",
+    "2026-10-15T18:00:00.000Z"
+   ]
+  ],
+  "2026-10-15T18:00:00.000Z": [
+   [
+    "middleman_weekly_cell_vsrage_basedmg_uc",
+    "+1 Ragehunter Cell",
+    0,
+    "2026-10-15T18:00:00.000Z",
+    "2026-10-22T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_stagger_flat_uc",
+    "+1 Weighted Strikes Cell",
+    1,
+    "2026-10-15T18:00:00.000Z",
+    "2026-10-22T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_vsstagger_expose_flat_r",
+    "+2 Merciless Cell",
+    2,
+    "2026-10-15T18:00:00.000Z",
+    "2026-10-22T18:00:00.000Z"
+   ]
+  ],
+  "2027-03-02T09:30:00.000Z": [
+   [
+    "middleman_weekly_cell_reduce_chilled_and_frozen_uc",
+    "+1 Warmth Cell",
+    0,
+    "2027-02-25T18:00:00.000Z",
+    "2027-03-04T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_anyexpose_regen_uc",
+    "+1 Vampiric Cell",
+    1,
+    "2027-02-25T18:00:00.000Z",
+    "2027-03-04T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_convert_part_to_expose_r",
+    "+2 Acidic Cell",
+    2,
+    "2027-02-25T18:00:00.000Z",
+    "2027-03-04T18:00:00.000Z"
+   ]
+  ],
+  "2019-01-01T00:00:00.000Z": [
+   [
+    "middleman_weekly_cell_convert_part_to_expose_uc",
+    "+1 Acidic Cell",
+    0,
+    "2018-12-27T18:00:00.000Z",
+    "2019-01-03T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_mybreak_regen_uc",
+    "+1 Assassin's Vigour Cell",
+    1,
+    "2018-12-27T18:00:00.000Z",
+    "2019-01-03T18:00:00.000Z"
+   ],
+   [
+    "middleman_weekly_cell_partbreak_pct_r",
+    "+2 Sharpened Cell",
+    2,
+    "2018-12-27T18:00:00.000Z",
+    "2019-01-03T18:00:00.000Z"
+   ]
+  ]
+ },
+ "layout": {
+  "2026-10-15T17:59:59.999Z": [
+   [
+    "single_weapon_hp07a_axe_01",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_unseen_axe",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_axe_02",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_hammer_01",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_forgemaster_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_serrated_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_unseen_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_blackcat_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_hp07a_strikers_01",
+    "webstore skin_weapon_ac"
+   ],
+   [
+    "bundle_armour_ramsguard_commander",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_trenchcoat",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_nighthunter",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "single_fabric_eyretells",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_wingedshield",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_shatteredgrowth",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_weapon_6b_pike_02",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_ostian_warpike",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_6b_pike_01",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_kats_claw",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_6b_sword_02",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_6b_sword_01",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_sigil_compass",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_sigil_sock",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_flare_elk",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_emote_maximumcool_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_3point_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_flamenco_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_weapon_hp07a_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_02",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_emote_cutthroat",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_thrilling_dance",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_hp08a_dance",
+    "webstore social_emote"
+   ],
+   [
+    "single_lantern_sharktooth_shine",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_breathoflife",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_ostian_ironclad",
+    "webstore skin_lantern"
+   ],
+   [
+    "bundle_dyes_palette_03",
+    "webstore dye_armour"
+   ],
+   [
+    "single_dye_sheen_glossy",
+    "webstore dye_armour"
+   ],
+   [
+    "bundle_dyes_palette_04",
+    "webstore dye_armour"
+   ],
+   [
+    "single_weapon_6b_chainblades_01",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_unseen_chainblades",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_6b_chainblades_02",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "bundle_hairtint_springtime",
+    "webstore dye_tint"
+   ],
+   [
+    "single_dye_hairtint_02",
+    "webstore dye_tint"
+   ],
+   [
+    "single_dye_hairtint_00",
+    "webstore dye_tint"
+   ],
+   [
+    "bundle_currency_bounty_small",
+    "webstore supplies_boost supplies_supplies"
+   ]
+  ],
+  "2026-10-15T18:00:00.000Z": [
+   [
+    "single_weapon_6b_axe_01",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_serrated_axe",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_the_headsman",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_hammer_02",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_unseen_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_hp07a_hammer_01",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_unseen_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_blackcat_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_hp07a_strikers_01",
+    "webstore skin_weapon_ac"
+   ],
+   [
+    "bundle_armour_monk",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_ostian_admiral",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_iron",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "single_fabric_beninmoray",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_aendiures",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_tureanhule",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_weapon_hp07a_warpike_01",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_serrated_warpike",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_unseen_warpike",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_ostian_falchion",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_unseen_sword",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_serrated_sword",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_sigil_crossedblades",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_flare_wolfshead",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_flare_cedar",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_emote_faceplant_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_meantto_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_smollusksplat_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_weapon_hp07a_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_02",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_emote_batterup",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_tubularmoves",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_spreadthewealth",
+    "webstore social_emote"
+   ],
+   [
+    "single_lantern_ostian_admiral",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_jackolantern",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_defiant",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_dye_sheen_metallic",
+    "webstore dye_armour"
+   ],
+   [
+    "single_dye_sheen_velvet",
+    "webstore dye_armour"
+   ],
+   [
+    "bundle_dyes_palette_06",
+    "webstore dye_armour"
+   ],
+   [
+    "single_weapon_iron_chainblade",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_hp07a_chainblades_01",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_ostian_chainblades",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_dye_hairtint_01",
+    "webstore dye_tint"
+   ],
+   [
+    "bundle_hairtint_springtime",
+    "webstore dye_tint"
+   ],
+   [
+    "single_dye_hairtint_02",
+    "webstore dye_tint"
+   ],
+   [
+    "bundle_currency_bounty_small",
+    "webstore supplies_boost supplies_supplies"
+   ]
+  ],
+  "2027-03-02T09:30:00.000Z": [
+   [
+    "single_weapon_hp07a_axe_01",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_unseen_axe",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_axe_02",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_hammer_01",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_forgemaster_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_serrated_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_unseen_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_blackcat_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_hp07a_strikers_01",
+    "webstore skin_weapon_ac"
+   ],
+   [
+    "bundle_armour_ramsguard_commander",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_trenchcoat",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_nighthunter",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "single_fabric_pazelvines",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_toshuno",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_standard_savant",
+    "webstore personality_fabric personality_standard"
+   ],
+   [
+    "single_weapon_6b_pike_02",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_ostian_warpike",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_6b_pike_01",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_unseen_sword",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_serrated_sword",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_hp07a_sword_01",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_flare_dinnerclub",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_sigil_trophy",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_sigil_verdant_troika",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_emote_faceplant_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_meantto_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_smollusksplat_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_weapon_hp07a_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_02",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_emote_applause",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_highfive",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_twirl",
+    "webstore social_emote"
+   ],
+   [
+    "single_lantern_sharktooth_shine",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_breathoflife",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_ostian_ironclad",
+    "webstore skin_lantern"
+   ],
+   [
+    "bundle_dyes_palette_03",
+    "webstore dye_armour"
+   ],
+   [
+    "single_dye_sheen_glossy",
+    "webstore dye_armour"
+   ],
+   [
+    "bundle_dyes_palette_04",
+    "webstore dye_armour"
+   ],
+   [
+    "single_weapon_6b_chainblades_01",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_unseen_chainblades",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_6b_chainblades_02",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "bundle_hairtint_springtime",
+    "webstore dye_tint"
+   ],
+   [
+    "single_dye_hairtint_02",
+    "webstore dye_tint"
+   ],
+   [
+    "single_dye_hairtint_00",
+    "webstore dye_tint"
+   ],
+   [
+    "bundle_currency_bounty_small",
+    "webstore supplies_boost supplies_supplies"
+   ]
+  ],
+  "2019-01-01T00:00:00.000Z": [
+   [
+    "single_weapon_hp07a_axe_01",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_unseen_axe",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_axe_02",
+    "webstore skin_weapon_ga feature"
+   ],
+   [
+    "single_weapon_6b_hammer_01",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_forgemaster_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_serrated_hammer",
+    "webstore skin_weapon_ih feature"
+   ],
+   [
+    "single_weapon_unseen_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_blackcat_strikers",
+    "webstore skin_weapon_ac feature"
+   ],
+   [
+    "single_weapon_hp07a_strikers_01",
+    "webstore skin_weapon_ac"
+   ],
+   [
+    "bundle_armour_nighthunter",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_monk",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "bundle_armour_ostian_admiral",
+    "webstore skin_armour your_offers"
+   ],
+   [
+    "single_fabric_barbariansgate",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_sanderebens",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_fabric_admiralswill",
+    "webstore personality_fabric"
+   ],
+   [
+    "single_weapon_6b_pike_02",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_ostian_warpike",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_6b_pike_01",
+    "webstore skin_weapon_ms"
+   ],
+   [
+    "single_weapon_kats_claw",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_6b_sword_02",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_weapon_6b_sword_01",
+    "webstore skin_weapon_eb"
+   ],
+   [
+    "single_flare_turtle",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_flare_thumbsdown",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_sigil_wolf",
+    "webstore personality_flaresigil"
+   ],
+   [
+    "single_emote_arrival_acrobaticassassin",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_cb_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_emote_maximumcool_arrival",
+    "webstore social_arrival"
+   ],
+   [
+    "single_weapon_hp07a_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_01",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_weapon_6b_repeaters_02",
+    "webstore skin_weapon_dp"
+   ],
+   [
+    "single_emote_batterup",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_tubularmoves",
+    "webstore social_emote"
+   ],
+   [
+    "single_emote_spreadthewealth",
+    "webstore social_emote"
+   ],
+   [
+    "single_lantern_captains_signal",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_hp07a_01",
+    "webstore skin_lantern"
+   ],
+   [
+    "single_lantern_blackcat",
+    "webstore skin_lantern"
+   ],
+   [
+    "bundle_dyes_palette_05",
+    "webstore dye_armour"
+   ],
+   [
+    "bundle_dyes_palette_02",
+    "webstore dye_armour"
+   ],
+   [
+    "single_dye_endurance",
+    "webstore dye_armour"
+   ],
+   [
+    "single_weapon_6b_chainblades_01",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_unseen_chainblades",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_weapon_6b_chainblades_02",
+    "webstore skin_weapon_cb"
+   ],
+   [
+    "single_dye_hairtint_00",
+    "webstore dye_tint"
+   ],
+   [
+    "single_dye_hairtint_01",
+    "webstore dye_tint"
+   ],
+   [
+    "bundle_hairtint_springtime",
+    "webstore dye_tint"
+   ],
+   [
+    "bundle_currency_bounty_small",
+    "webstore supplies_boost supplies_supplies"
+   ]
+  ]
+ }
+}

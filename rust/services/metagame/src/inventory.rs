@@ -1026,6 +1026,27 @@ pub fn apply(
     })
 }
 
+/// `ApplyInventoryTransactionInTx`: a transaction the server itself makes (store, Trials, admin
+/// tools), inside the caller's transaction. An `Err` must roll it back.
+pub fn apply_in_tx(
+    conn: &mut Conn,
+    request: TransactionRequest,
+    caller: InventoryCaller,
+    source: Option<&Value>,
+    settings: &Settings,
+) -> Result<Applied, Fail> {
+    assert_owned(conn, request.user_id.as_deref(), request.character_id.as_ref())?;
+    let prepared = prepare(request)?;
+    if !prepared.touches_anything {
+        return Ok(Applied {
+            response: empty_response(&prepared),
+            replayed: false,
+            overspent: Vec::new(),
+        });
+    }
+    apply(conn, &prepared, caller, source, settings)
+}
+
 /// `LogOverspend`, after the transaction committed.
 pub fn log_overspend(
     request: &TransactionRequest,

@@ -7,6 +7,7 @@ pub mod eos;
 pub mod inventory;
 pub mod loadout;
 pub mod login;
+pub mod store;
 pub mod system;
 
 use axum::http::StatusCode;
@@ -59,6 +60,7 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
         .merge(system::routes())
         .merge(character::routes())
         .merge(inventory::routes())
+        .merge(store::routes(state))
         .merge(loadout::routes())
         .merge(admin_accounts::routes(state))
         .merge(admin_history::routes())

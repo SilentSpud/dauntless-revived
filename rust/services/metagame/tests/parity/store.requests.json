@@ -1,0 +1,401 @@
+{
+  "about": "The store: balance sheets, the creator code, the free webstore, Lady Luck (with the Trials week it settles) and the Middleman slots: offers, purchase tokens and redeems (MIGRATION_PLAN.md M29, area 3).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "STORE": "free"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 120, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 7, 0)",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Oct 1, 2026', 'Ada', 3, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')",
+    "INSERT INTO inventories (characterId, instancedItems, stackedItems) VALUES ('char-a1', '[{\"catalogId\": \"WP_AC_BLACKCAT_00\", \"instanceId\": \"inst-cat\", \"updateVersion\": 0}]', '[{\"catalogId\": \"CURRENCY_NOTES\", \"quantity\": 3000}, {\"catalogId\": \"CURRENCY_MARKS_STEEL\", \"quantity\": 600}, {\"catalogId\": \"AR_HP07A_MONK_HELM\", \"quantity\": 1}, {\"catalogId\": \"CURRENCY_CELLDUST\", \"quantity\": \"45\"}]')",
+    "INSERT INTO trialruns (trialId, trialWeek, difficulty, mode, runKey, groupKey, completionTime, objectivesCompleted, sessionId, entries, submittedDate) VALUES ('Arena_MatchmakerHunt_Elite_001', 0, 1, 'solo', 'run-1', 'group-1', 90000, 3, 'sess-1', '[{\"phx_account_id\": \"UID-b\", \"platform\": \"PC\", \"platform_name\": \"Bo\", \"player_role_id\": \"r\", \"weapon\": 1}]', '2019-07-19T00:00:00.000Z')",
+    "INSERT INTO storepurchases (tokenHash, accountId, characterId, skuId, offerHash, createdDate, expiresDate, redeemedDate) VALUES ('ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb', 'UID-a', 'char-a1', 'single_armour_monk_chest', 'x', '2020-01-01T00:00:00.000Z', '2020-01-01T00:10:00.000Z', NULL), ('a0fab1377f49a759b57f63318262ebe89fabfc990e8e93ceac2984561482b9d4', 'UID-b', 'char-a1', 'single_armour_monk_chest', 'x', '2099-01-01T00:00:00.000Z', '2099-01-01T00:10:00.000Z', NULL)"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/reconcile",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/product/skus/public",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/skus/public?requiredTags=season09b_pass",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/skus/public?requiredTags=nope",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/skus/public?requiredTags=ladyluckstore",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/UID-b/char-b1",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/skus/public?requiredTags=exchange_vendor_slot_2",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/single_armour_monk_chest",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/unknown_offer",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/bundle_currency_bounty_small",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/single_dye_sheen_glossy",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/single_armour_monk_chest",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/notification/platinum?token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/platinum?token=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/platinum?token=nothex",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/gold?token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/platinum?token=0000000000000000000000000000000000000000000000000000000000000000",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/gold/single_armour_monk_chest",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/notes/single_armour_monk_chest",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/single_weapon_unseen_strikers",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "capture": "purchaseToken"
+    },
+    {
+      "method": "POST",
+      "path": "/notification/PLATINUM?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/platinum?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/notification/celldust?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/single_weapon_unseen_strikers",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/single_weapon_unseen_strikers",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/single_weapon_blackcat_strikers",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/bundle_armour_monk",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "capture": "purchaseToken"
+    },
+    {
+      "method": "POST",
+      "path": "/notification/currency_platinum_univ?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/bundle_armour_monk",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/season09b_premium",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/steelmarks/trials_cell_berserker_e",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/id_currency_marks_steel/trials_cell_berserker_e",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "capture": "purchaseToken"
+    },
+    {
+      "method": "POST",
+      "path": "/notification/marks_steel?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/trials_cell_berserker_e",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/single_exchange_slot_2",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "capture": "purchaseToken"
+    },
+    {
+      "method": "POST",
+      "path": "/notification/platinum?token={{saved:purchaseToken}}",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/product/sku/single_exchange_slot_2",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/single_exchange_slot_2",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/token/platinum/single_armour_monk_chest",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/creator",
+      "headers": {
+        "x-epic-authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/creator",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/creator",
+      "headers": {},
+      "json": {
+        "authorization": "{{bearer:UID-a}}",
+        "slug": "nope"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/creator",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "slug": " VOID "
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/creator",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "slug": "void"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/creator",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/creator",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      },
+      "json": {
+        "slug": "void"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/creator",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {}
+    },
+    {
+      "method": "GET",
+      "path": "/balance",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/store-images/NOPE.png",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/store-images/missing.png",
+      "headers": {}
+    }
+  ]
+}

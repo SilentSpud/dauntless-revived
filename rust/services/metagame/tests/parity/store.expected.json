@@ -1,0 +1,490 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /balance",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id_currency_s20_coin\":0,\"CURRENCY_GAUNTLET_COIN_FADED\":0,\"CURRENCY_S20_COIN\":0,\"CURRENCY_S18_COIN\":0,\"id_currency_seasonal_coin\":0,\"id_currency_s18_coin\":0,\"id_currency_weapon_token\":25,\"id_currency_celldust\":45,\"id_currency_event_ramsgiving\":0,\"CURRENCY_NOTES\":3000,\"id_currency_event_frostfall\":0,\"CURRENCY_EVENT_DARKHARVEST\":0,\"CURRENCY_S19_COIN\":0,\"id_currency_s16_coin\":0,\"CURRENCY_S16_COIN\":0,\"id_currency_gauntlet_coin\":0,\"id_currency_s13_coin\":0,\"CURRENCY_MARKS_STEEL\":600,\"CURRENCY_S13_COIN\":0,\"CURRENCY_EVENT_FROSTFALL\":0,\"CURRENCY_GAUNTLET_COIN\":0,\"id_currency_marks_steel\":600,\"id_currency_rewardcache\":0,\"CURRENCY_PRESTIGE\":0,\"CURRENCY_SEASONAL_COIN\":0,\"CURRENCY_REWARDCACHE\":0,\"id_currency_token_exchange_speed_up\":0,\"id_currency_event_springtide\":0,\"CURRENCY_TOKEN_EXCHANGE_SPEED_UP\":0,\"id_currency_gauntlet_coin_faded\":0,\"CURRENCY_S15_COIN\":0,\"CURRENCY_PLATINUM\":0,\"id_currency_platinum\":0,\"id_currency_s15_coin\":0,\"id_currency_marks_gilded\":0,\"id_currency_event_darkharvest\":0,\"id_currency_event_saintsbond\":0,\"CURRENCY_EVENT_SPRINGTIDE\":0,\"id_currency_s19_coin\":0,\"id_currency_notes\":3000,\"id_currency_prestige\":0,\"id_currency_s13_daily\":0,\"CURRENCY_WEAPON_TOKEN\":25,\"CURRENCY_MARKS_GILDED\":0,\"CURRENCY_S13_DAILY\":0,\"CURRENCY_CELLDUST\":45,\"CURRENCY_S14_COIN\":0,\"CURRENCY_EVENT_SAINTSBOND\":0,\"CURRENCY_S17_COIN\":0,\"id_currency_s14_coin\":0,\"CURRENCY_EVENT_RAMSGIVING\":0,\"id_currency_s17_coin\":0}"
+    },
+    {
+      "request": "POST /reconcile",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"balances\":{\"id_currency_notes\":3000,\"CURRENCY_NOTES\":3000},\"refreshInventory\":true}"
+    },
+    {
+      "request": "GET /balance",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id_currency_s20_coin\":0,\"CURRENCY_GAUNTLET_COIN_FADED\":0,\"CURRENCY_S20_COIN\":0,\"CURRENCY_S18_COIN\":0,\"id_currency_seasonal_coin\":0,\"id_currency_s18_coin\":0,\"id_currency_weapon_token\":25,\"id_currency_celldust\":0,\"id_currency_event_ramsgiving\":0,\"CURRENCY_NOTES\":7,\"id_currency_event_frostfall\":0,\"CURRENCY_EVENT_DARKHARVEST\":0,\"CURRENCY_S19_COIN\":0,\"id_currency_s16_coin\":0,\"CURRENCY_S16_COIN\":0,\"id_currency_gauntlet_coin\":0,\"id_currency_s13_coin\":0,\"CURRENCY_MARKS_STEEL\":0,\"CURRENCY_S13_COIN\":0,\"CURRENCY_EVENT_FROSTFALL\":0,\"CURRENCY_GAUNTLET_COIN\":0,\"id_currency_marks_steel\":0,\"id_currency_rewardcache\":0,\"CURRENCY_PRESTIGE\":0,\"CURRENCY_SEASONAL_COIN\":0,\"CURRENCY_REWARDCACHE\":0,\"id_currency_token_exchange_speed_up\":0,\"id_currency_event_springtide\":0,\"CURRENCY_TOKEN_EXCHANGE_SPEED_UP\":0,\"id_currency_gauntlet_coin_faded\":0,\"CURRENCY_S15_COIN\":0,\"CURRENCY_PLATINUM\":0,\"id_currency_platinum\":0,\"id_currency_s15_coin\":0,\"id_currency_marks_gilded\":0,\"id_currency_event_darkharvest\":0,\"id_currency_event_saintsbond\":0,\"CURRENCY_EVENT_SPRINGTIDE\":0,\"id_currency_s19_coin\":0,\"id_currency_notes\":7,\"id_currency_prestige\":0,\"id_currency_s13_daily\":0,\"CURRENCY_WEAPON_TOKEN\":25,\"CURRENCY_MARKS_GILDED\":0,\"CURRENCY_S13_DAILY\":0,\"CURRENCY_CELLDUST\":0,\"CURRENCY_S14_COIN\":0,\"CURRENCY_EVENT_SAINTSBOND\":0,\"CURRENCY_S17_COIN\":0,\"id_currency_s14_coin\":0,\"CURRENCY_EVENT_RAMSGIVING\":0,\"id_currency_s17_coin\":0}"
+    },
+    {
+      "request": "GET /balance",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /product/skus/public",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"missing requiredTags query parameter\"}"
+    },
+    {
+      "request": "GET /product/skus/public?requiredTags=season09b_pass",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"id\":\"season09b_premium\",\"displayName\":\"Elite Hunt Pass\",\"displayDescription\":\"Unlock the Elite reward track for this Hunt Pass.\",\"displayPriority\":300,\"tags\":[\"season09b_pass\"],\"platinumPrice\":0,\"platinumSalePrice\":null,\"cellDustPrice\":null,\"prestigePrice\":null,\"event01Price\":null,\"steelMarksPrice\":null,\"gildedMarksPrice\":null,\"items\":null,\"entitlements\":[{\"name\":\"season09b_premium\",\"duration\":0}],\"maxAllowed\":1,\"remaining\":0,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null}]"
+    },
+    {
+      "request": "GET /product/skus/public?requiredTags=nope",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "GET /product/skus/public?requiredTags=ladyluckstore",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"id\":\"ladyluck_ga_special_skillshot\",\"displayName\":\"Grim Onslaught\",\"displayDescription\":\"Hurl the axe forward, dealing up to 800 damage (further increased by determination) to enemies in its path and gaining 15 meter when hitting a Behemoth. Catch the axe to gain 30 meter.\",\"displayPriority\":1,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ga_special_skillshot.png\",\"feature\":\"http://<host>/store-images/part_ga_special_skillshot.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_GA_SPECIAL_SKILLSHOT\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_ih_special_islandcracker\",\"displayName\":\"Mighty Landbreaker\",\"displayDescription\":\"Hold to load ammo into the hammer. Release to create an aether vent that buffs players who step over it, granting them up to +35% damage based on ammo quality.\",\"displayPriority\":2,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ih_special_islandcracker.png\",\"feature\":\"http://<host>/store-images/part_ih_special_islandcracker.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_IH_SPECIAL_ISLANDCRACKER\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_ac_special_mastery\",\"displayName\":\"Titan's Crash\",\"displayDescription\":\"Unleash energy forward in a pressure wave, dealing 500 damage to the closest target and 166 damage to up to 2 other nearby targets. Deals up to +100% damage when Tempest Form and Karma Breaker's effects are active.\",\"displayPriority\":3,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ac_special_mastery.png\",\"feature\":\"http://<host>/store-images/part_ac_special_mastery.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_AC_SPECIAL_MASTERY\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_eb_special_parry\",\"displayName\":\"Avenging Overdrive\",\"displayDescription\":\"Activate at full meter to enter Overdrive, gaining +20% attack speed and causing attacks to deal +60-80 aoe damage. Reactivate to parry and riposte a Behemoth attack, dealing 800 damage and granting 1 Valour when successful (2 second cooldown).\",\"displayPriority\":4,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_eb_special_parry.png\",\"feature\":\"http://<host>/store-images/part_eb_special_parry.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_EB_SPECIAL_PARRY\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_ms_special_rocketlunge\",\"displayName\":\"Reckless Leap\",\"displayDescription\":\"Press to convert meter into ammo. Hold to spend ammo and perform a flying lunge attack that deals up to 1200 damage based on distance and ammo quality.\",\"displayPriority\":5,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ms_special_rocketlunge.png\",\"feature\":\"http://<host>/store-images/part_ms_special_rocketlunge.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_MS_SPECIAL_ROCKETLUNGE\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_ga_passive_trials_01\",\"displayName\":\"Railsplitter's Canteen\",\"displayDescription\":\"Tonics consumed while your axe is thrown have +50% effectiveness.\",\"displayPriority\":6,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ga_passive_trials_01.png\",\"feature\":\"http://<host>/store-images/part_ga_passive_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_GA_PASSIVE_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_ga_passive_trials_02\",\"displayName\":\"Furious Axecore\",\"displayDescription\":\"Perfectly charged attacks grants +15 meter on hit, but no longer grant resolve\",\"displayPriority\":7,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ga_passive_trials_02.png\",\"feature\":\"http://<host>/store-images/part_ga_passive_trials_02.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_GA_PASSIVE_TRIALS_02\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_cb_passive_trials_01\",\"displayName\":\"Momentum Blades\",\"displayDescription\":\"After using a special, your next special use within 4 seconds is free.\",\"displayPriority\":8,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_cb_passive_trials_01.png\",\"feature\":\"http://<host>/store-images/part_cb_passive_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_CB_PASSIVE_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_cb_passive_trials_02\",\"displayName\":\"Demolition Blades\",\"displayDescription\":\"After using a special, deal +100% damage to objects created by Behemoths for 6 seconds.\",\"displayPriority\":9,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_cb_passive_trials_02.png\",\"feature\":\"http://<host>/store-images/part_cb_passive_trials_02.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_CB_PASSIVE_TRIALS_02\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_ih_passive_trials_01\",\"displayName\":\"Antique Clip\",\"displayDescription\":\"Ammo decreased to 2, but bonus from aethercharged ammo is increased by 300%.\",\"displayPriority\":10,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ih_passive_trials_01.png\",\"feature\":\"http://<host>/store-images/part_ih_passive_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_IH_PASSIVE_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_ih_passive_trials_02\",\"displayName\":\"Turbine Trigger\",\"displayDescription\":\"Priming attacks increases attack speed by 10% until the combo ends. Stacks.\",\"displayPriority\":11,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ih_passive_trials_02.png\",\"feature\":\"http://<host>/store-images/part_ih_passive_trials_02.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_IH_PASSIVE_TRIALS_02\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_dp_passive_trials_01\",\"displayName\":\"Tactician's Magazine\",\"displayDescription\":\"Empowered Reloading at exactly 0 ammo decreases the cooldown of both abilities by 4 seconds.\",\"displayPriority\":12,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_dp_passive_trials_01.png\",\"feature\":\"http://<host>/store-images/part_dp_passive_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_DP_PASSIVE_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_dp_passive_trials_02\",\"displayName\":\"Demolition Sights\",\"displayDescription\":\"While empowered, deal +50% damage to objects created by Behemoths\",\"displayPriority\":13,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_dp_passive_trials_02.png\",\"feature\":\"http://<host>/store-images/part_dp_passive_trials_02.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_DP_PASSIVE_TRIALS_02\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_eb_passive_trials_01\",\"displayName\":\"Keen Edge\",\"displayDescription\":\"After the Bladesurge projectile travels a short distance, the damage is increased by 100%.\",\"displayPriority\":14,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_eb_passive_trials_01.png\",\"feature\":\"http://<host>/store-images/part_eb_passive_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_EB_PASSIVE_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_eb_passive_trials_02\",\"displayName\":\"Dynamic Bladecore\",\"displayDescription\":\"After using any Valour combo, your next Valour combo within 5 seconds deals +30% damage.\",\"displayPriority\":15,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_eb_passive_trials_02.png\",\"feature\":\"http://<host>/store-images/part_eb_passive_trials_02.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_EB_PASSIVE_TRIALS_02\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_ms_passive_trials_01\",\"displayName\":\"Barbed Spearhead\",\"displayDescription\":\"After a dodge piercing attack, gain +50% wound damage for 8 seconds.\",\"displayPriority\":16,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ms_passive_trials_01.png\",\"feature\":\"http://<host>/store-images/part_ms_passive_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_MS_PASSIVE_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"ladyluck_ms_passive_trials_02\",\"displayName\":\"Executioner's Spearhead\",\"displayDescription\":\"Each time the Behemoth is wounded, gain +6% damage. Stacks up to 10.\",\"displayPriority\":17,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/part_ms_passive_trials_02.png\",\"feature\":\"http://<host>/store-images/part_ms_passive_trials_02.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"PART_MS_PASSIVE_TRIALS_02\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":250},{\"id\":\"trials_cell_berserker_e\",\"displayName\":\"+3 Berserker Cell\",\"displayDescription\":\"Reduces max health. Dealing damage stacks increased damage dealt for a short period.\",\"displayPriority\":18,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_01_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_01_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_01_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"trials_cell_discipline_e\",\"displayName\":\"+3 Discipline Cell\",\"displayDescription\":\"Prevents you from having over half health. Increases critical strike chance.\",\"displayPriority\":19,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_05_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_05_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_05_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"trials_cell_engineer_e\",\"displayName\":\"+3 Engineer Cell\",\"displayDescription\":\"Reduces healing from Slayer Flask. Increases range of Pylons.\",\"displayPriority\":20,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_03_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_03_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_03_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"trials_cell_mender_e\",\"displayName\":\"+3 Mender Cell\",\"displayDescription\":\"Reduces healing from Slayer Flask. Using your flask restores other Slayers' health.\",\"displayPriority\":21,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_06_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_06_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_06_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"trials_cell_sprinter_e\",\"displayName\":\"+3 Sprinter Cell\",\"displayDescription\":\"Reduces max stamina. Increases movespeed and reduces sprint cost.\",\"displayPriority\":22,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_04_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_04_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_04_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"trials_cell_strategist_e\",\"displayName\":\"+3 Strategist Cell\",\"displayDescription\":\"Reduces max health. Dodging through behemoth attacks grants health shields to all slayers.\",\"displayPriority\":23,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_02_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_02_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_02_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"ladyluck_weapon_axe_normal\",\"displayName\":\"Victorious Axe\",\"displayDescription\":\"A sterling axe for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":24,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ga_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_ga_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_GA_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_chainblade_normal\",\"displayName\":\"Victorious Chain Blades\",\"displayDescription\":\"A sterling set of chain blades for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":25,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_cb_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_cb_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_CB_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_hammer_normal\",\"displayName\":\"Victorious Hammer\",\"displayDescription\":\"A sterling hammer for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":26,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ih_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_ih_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_IH_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_repeaters_normal\",\"displayName\":\"Victorious Repeaters\",\"displayDescription\":\"A sterling set of repeaters for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":27,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_dp_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_dp_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_DP_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_strikers_normal\",\"displayName\":\"Victorious Aether Strikers\",\"displayDescription\":\"A sterling set of aether strikers for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":28,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ac_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_ac_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_AC_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_sword_normal\",\"displayName\":\"Victorious Sword\",\"displayDescription\":\"A sterling sword for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":29,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_eb_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_eb_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_EB_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_spear_normal\",\"displayName\":\"Victorious War Pike\",\"displayDescription\":\"A sterling war pike for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":30,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ms_trials_00.png\",\"feature\":\"http://<host>/store-images/wp_ms_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_MS_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_banner_normal\",\"displayName\":\"Victorious Standard\",\"displayDescription\":\"A sterling standard for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":31,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/bnc_standard_trials_00.png\",\"feature\":\"http://<host>/store-images/bnc_standard_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"BNC_STANDARD_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_armor_helm\",\"displayName\":\"Victorious Helm\",\"displayDescription\":\"Sterling head protection for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":32,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_helm_00.png\",\"feature\":\"http://<host>/store-images/ar_trials_helm_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_HELM_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_armor_chest\",\"displayName\":\"Victorious Plate\",\"displayDescription\":\"Sterling torso protection for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":33,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_chest_00.png\",\"feature\":\"http://<host>/store-images/ar_trials_chest_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_CHEST_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_armor_arms\",\"displayName\":\"Victorious Gauntlets\",\"displayDescription\":\"Sterling arm and hand protection for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":34,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_arms_00.png\",\"feature\":\"http://<host>/store-images/ar_trials_arms_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_ARMS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_armor_legs\",\"displayName\":\"Victorious Greaves\",\"displayDescription\":\"Sterling leg and foot protection for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":35,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_legs_00.png\",\"feature\":\"http://<host>/store-images/ar_trials_legs_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_LEGS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_weapon_axe_prestige\",\"displayName\":\"Champion's Axe\",\"displayDescription\":\"A golden axe for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":36,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ga_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_ga_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_GA_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_chainblade_prestige\",\"displayName\":\"Champion's Chain Blades\",\"displayDescription\":\"A golden set of chain blades for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\",\"displayPriority\":37,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_cb_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_cb_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_CB_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_hammer_prestige\",\"displayName\":\"Champion's Hammer\",\"displayDescription\":\"A golden hammer for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\",\"displayPriority\":38,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ih_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_ih_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_IH_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_repeaters_prestige\",\"displayName\":\"Champion's Repeaters\",\"displayDescription\":\"A golden set of repeaters for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\",\"displayPriority\":39,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_dp_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_dp_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_DP_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_strikers_prestige\",\"displayName\":\"Champion's Aether Strikers\",\"displayDescription\":\"A golden set of aether strikers for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\",\"displayPriority\":40,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ac_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_ac_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_AC_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_sword_prestige\",\"displayName\":\"Champion's Sword\",\"displayDescription\":\"A golden sword for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":41,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_eb_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_eb_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_EB_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_spear_prestige\",\"displayName\":\"Champion's War Pike\",\"displayDescription\":\"A golden war pike for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\",\"displayPriority\":42,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_ms_trials_01.png\",\"feature\":\"http://<host>/store-images/wp_ms_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_MS_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_banner_prestige\",\"displayName\":\"Champion's Standard\",\"displayDescription\":\"A golden standard for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\",\"displayPriority\":43,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/bnc_standard_trials_01.png\",\"feature\":\"http://<host>/store-images/bnc_standard_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"BNC_STANDARD_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_armor_helm_prestige\",\"displayName\":\"Champion's Helm\",\"displayDescription\":\"Golden head protection for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":44,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_helm_01.png\",\"feature\":\"http://<host>/store-images/ar_trials_helm_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_HELM_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_armor_chest_prestige\",\"displayName\":\"Champion's Plate\",\"displayDescription\":\"Golden torso protection for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":45,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_chest_01.png\",\"feature\":\"http://<host>/store-images/ar_trials_chest_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_CHEST_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_armor_arms_prestige\",\"displayName\":\"Champion's Gauntlets\",\"displayDescription\":\"Golden arm and hand protection for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":46,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_arms_01.png\",\"feature\":\"http://<host>/store-images/ar_trials_arms_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_ARMS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_armor_legs_prestige\",\"displayName\":\"Champion's Greaves\",\"displayDescription\":\"Golden leg and foot protection for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":47,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ar_trials_legs_01.png\",\"feature\":\"http://<host>/store-images/ar_trials_legs_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AR_TRIALS_LEGS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"single_dye_white\",\"displayName\":\"Sunlight Champion\",\"displayDescription\":\"Set a shining example of what it looks like to be a winner.\",\"displayPriority\":48,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/dye_gray01_durable.png\",\"feature\":\"http://<host>/store-images/dye_gray01_durable.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"DYE_GRAY01_DURABLE\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"single_dye_black\",\"displayName\":\"Midnight Champion\",\"displayDescription\":\"If you're going to own the night you'd better look the part.\",\"displayPriority\":49,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/dye_gray02_durable.png\",\"feature\":\"http://<host>/store-images/dye_gray02_durable.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"DYE_GRAY02_DURABLE\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"trials_dye_hp08b_punk_02\",\"displayName\":\"Entropy\",\"displayDescription\":\"An aether-infused dye that may be applied to many different fabrics and surfaces.\",\"displayPriority\":50,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/dye_hp08b_punk_02_durable.png\",\"feature\":\"http://<host>/store-images/dye_hp08b_punk_02_durable.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"DYE_HP08B_PUNK_02_DURABLE\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"trials_dye_hp11b_engineer_00\",\"displayName\":\"Sundown\",\"displayDescription\":\"An aether-infused dye that may be applied to many different fabrics and surfaces.\",\"displayPriority\":51,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/dye_hp11b_engineer_00_durable.png\",\"feature\":\"http://<host>/store-images/dye_hp11b_engineer_00_durable.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"DYE_HP11B_ENGINEER_00_DURABLE\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_headbling_normal\",\"displayName\":\"Crown of the Victor\",\"displayDescription\":\"An impressive head accessory for those who have earned gilded marks on the Island of Trials.\",\"displayPriority\":52,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ac_head_trials_00.png\",\"feature\":\"http://<host>/store-images/ac_head_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cosmetics\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AC_HEAD_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":500},{\"id\":\"ladyluck_headbling_prestige\",\"displayName\":\"Crown of the Champion\",\"displayDescription\":\"An extremely impressive head accessory for those who have earned gilded marks on the Island of Trials and won the title \\\"Trials Champion.\\\"\\n\",\"displayPriority\":53,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/ac_head_trials_01.png\",\"feature\":\"http://<host>/store-images/ac_head_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"AC_HEAD_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_lantern_cooldown_01\",\"displayName\":\"Broadsides Lantern\",\"displayDescription\":\"Strike with the full fury of the Fortunate Soul. Hold to drop a bomb from above that explodes after 1 second. Deals 2750 damage and can interrupt Behemoths.\\n\",\"displayPriority\":54,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/lt_trials_00.png\",\"feature\":\"http://<host>/store-images/lt_trials_00.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"LT_TRIALS_00\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":500},{\"id\":\"ladyluck_lantern_01_cosmetic\",\"displayName\":\"Champion's Light\",\"displayDescription\":\"A golden lantern for those who have defeated a Dauntless Behemoth on the Island of Trials.\",\"displayPriority\":55,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/lt_trials_01.png\",\"feature\":\"http://<host>/store-images/lt_trials_01.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_champion\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"LT_TRIALS_01\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":1000},{\"id\":\"ladyluck_weapon_twin_suns\",\"displayName\":\"The Twin Suns\",\"displayDescription\":\"Exotic repeaters. Activate Legendary to drop a large bomb from your airship that deals massive damage.\",\"displayPriority\":56,\"maxAllowed\":1,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/wp_dp_exotic_bombs.png\",\"feature\":\"http://<host>/store-images/wp_dp_exotic_bombs.png\"},\"tags\":[\"ladyluckstore\",\"live\",\"one_time\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"WP_DP_EXOTIC_BOMBS\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":1000},{\"id\":\"ladyluck_bundle_consumables_00\",\"displayName\":\"Silver Tonic Pack\",\"displayDescription\":\"A bundle of useful tonics for a seasoned Trials slayer. Contains 25x Blitz Tonics, 25x Aetherdrive Tonics, and 25x Frenzy Tonics.\",\"displayPriority\":57,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/qi_damage_enragebonus_potion.png\",\"feature\":\"http://<host>/store-images/qi_damage_enragebonus_potion.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_supplies\",\"rarity_uncommon\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"QI_DAMAGE_ENRAGEBONUS_POTION\",\"quantity\":25},{\"catalogId\":\"QI_LANTERN_POTION\",\"quantity\":25},{\"catalogId\":\"QI_ATTACK_SPEED_POTION\",\"quantity\":25}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150},{\"id\":\"ladyluck_bundle_consumables_01\",\"displayName\":\"Gold Tonic Pack\",\"displayDescription\":\"A bundle of useful tonics for a seasoned Trials slayer. Contains 50x Blitz Tonics, 50x Aetherdrive Tonics, and 50x Frenzy Tonics.\",\"displayPriority\":58,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/qi_damage_enragebonus_potion.png\",\"feature\":\"http://<host>/store-images/qi_damage_enragebonus_potion.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_supplies\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"QI_DAMAGE_ENRAGEBONUS_POTION\",\"quantity\":50},{\"catalogId\":\"QI_LANTERN_POTION\",\"quantity\":50},{\"catalogId\":\"QI_ATTACK_SPEED_POTION\",\"quantity\":50}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"gildedMarksPrice\":150}]"
+    },
+    {
+      "request": "GET /inventory/UID-b/char-b1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"characterId\":\"char-b1\",\"instancedItems\":[],\"stackedItems\":[{\"catalogId\":\"TITLE_TRIALS_00\",\"quantity\":1},{\"catalogId\":\"TITLE_TRIALS_01\",\"quantity\":1}]}"
+    },
+    {
+      "request": "GET /product/skus/public?requiredTags=exchange_vendor_slot_2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"id\":\"single_exchange_slot_2\",\"displayName\":\"Middleman Slot 2\",\"displayDescription\":\"Unlock a second cell fusion slot.\",\"displayPriority\":2,\"tags\":[\"exchange_vendor_slot_2\"],\"platinumPrice\":0,\"platinumSalePrice\":null,\"cellDustPrice\":null,\"prestigePrice\":null,\"event01Price\":null,\"steelMarksPrice\":null,\"gildedMarksPrice\":null,\"items\":null,\"entitlements\":[{\"name\":\"exchange_slot_2\",\"duration\":0}],\"maxAllowed\":1,\"remaining\":1,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null}]"
+    },
+    {
+      "request": "GET /product/sku/single_armour_monk_chest",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"single_armour_monk_chest\",\"displayName\":\"Monk Chestpiece\",\"displayDescription\":\"Free on this private server.\",\"displayPriority\":1998,\"tags\":[\"webstore\",\"skin_armour\",\"feature\"],\"platinumPrice\":0,\"platinumSalePrice\":null,\"cellDustPrice\":null,\"prestigePrice\":null,\"event01Price\":null,\"steelMarksPrice\":null,\"gildedMarksPrice\":null,\"items\":[{\"catalogId\":\"AR_HP07A_MONK_CHEST\",\"quantity\":1}],\"entitlements\":[],\"maxAllowed\":1,\"remaining\":1,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null}"
+    },
+    {
+      "request": "GET /product/sku/unknown_offer",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"Unknown store offer\"}"
+    },
+    {
+      "request": "GET /product/sku/bundle_currency_bounty_small",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"Unknown store offer\"}"
+    },
+    {
+      "request": "GET /product/sku/single_dye_sheen_glossy",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"Unknown store offer\"}"
+    },
+    {
+      "request": "GET /product/sku/single_armour_monk_chest",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /notification/platinum?token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": 410,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=59; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"410\",\"message\":\"Purchase token expired\"}"
+    },
+    {
+      "request": "POST /notification/platinum?token=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=59; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YzU1YjhmYjE4NmI1:"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"The purchase's character is no longer the account's\"}"
+    },
+    {
+      "request": "POST /notification/platinum?token=nothex",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=58; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Invalid purchase token or currency\"}"
+    },
+    {
+      "request": "POST /notification/gold?token=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=57; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Invalid purchase token or currency\"}"
+    },
+    {
+      "request": "POST /notification/platinum?token=0000000000000000000000000000000000000000000000000000000000000000",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=56; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"Invalid purchase token\"}"
+    },
+    {
+      "request": "GET /token/gold/single_armour_monk_chest",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=55; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Unsupported store currency\"}"
+    },
+    {
+      "request": "GET /token/notes/single_armour_monk_chest",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=54; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Offer is not sold in that currency\"}"
+    },
+    {
+      "request": "GET /token/platinum/single_weapon_unseen_strikers",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=53; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"purchaseToken\":\"<hex64>\"}"
+    },
+    {
+      "request": "POST /notification/PLATINUM?token={{saved:purchaseToken}}",
+      "status": 204,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=52; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /notification/platinum?token={{saved:purchaseToken}}",
+      "status": 204,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=51; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /notification/celldust?token={{saved:purchaseToken}}",
+      "status": 204,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=50; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /product/sku/single_weapon_unseen_strikers",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"single_weapon_unseen_strikers\",\"displayName\":\"Broken Sockets\",\"displayDescription\":\"Free on this private server.\",\"displayPriority\":1997,\"tags\":[\"webstore\",\"skin_weapon_ac\"],\"platinumPrice\":0,\"platinumSalePrice\":null,\"cellDustPrice\":null,\"prestigePrice\":null,\"event01Price\":null,\"steelMarksPrice\":null,\"gildedMarksPrice\":null,\"items\":[{\"catalogId\":\"WP_AC_UNSEEN_00\",\"quantity\":1}],\"entitlements\":[],\"maxAllowed\":1,\"remaining\":0,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null}"
+    },
+    {
+      "request": "GET /token/platinum/single_weapon_unseen_strikers",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=49; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"You already own everything this offer grants\"}"
+    },
+    {
+      "request": "GET /token/platinum/single_weapon_blackcat_strikers",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=48; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"You already own everything this offer grants\"}"
+    },
+    {
+      "request": "GET /token/platinum/bundle_armour_monk",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=47; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"purchaseToken\":\"<hex64>\"}"
+    },
+    {
+      "request": "POST /notification/currency_platinum_univ?token={{saved:purchaseToken}}",
+      "status": 204,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=46; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /product/sku/bundle_armour_monk",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"bundle_armour_monk\",\"displayName\":\"Monk Armour\",\"displayDescription\":\"Free on this private server.\",\"displayPriority\":1999,\"tags\":[\"webstore\",\"skin_armour\",\"feature\",\"your_offers\"],\"platinumPrice\":0,\"platinumSalePrice\":null,\"cellDustPrice\":null,\"prestigePrice\":null,\"event01Price\":null,\"steelMarksPrice\":null,\"gildedMarksPrice\":null,\"items\":[{\"catalogId\":\"AR_HP07A_MONK_HELM\",\"quantity\":1},{\"catalogId\":\"AR_HP07A_MONK_CHEST\",\"quantity\":1},{\"catalogId\":\"AR_HP07A_MONK_ARMS\",\"quantity\":1},{\"catalogId\":\"AR_HP07A_MONK_LEGS\",\"quantity\":1}],\"entitlements\":[],\"maxAllowed\":1,\"remaining\":0,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null}"
+    },
+    {
+      "request": "GET /token/platinum/season09b_premium",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=45; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"You already own everything this offer grants\"}"
+    },
+    {
+      "request": "GET /token/steelmarks/trials_cell_berserker_e",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=58; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YzU1YjhmYjE4NmI1:"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"Insufficient balance\"}"
+    },
+    {
+      "request": "GET /token/id_currency_marks_steel/trials_cell_berserker_e",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=44; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"purchaseToken\":\"<hex64>\"}"
+    },
+    {
+      "request": "POST /notification/marks_steel?token={{saved:purchaseToken}}",
+      "status": 204,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=43; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /balance",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id_currency_s20_coin\":0,\"CURRENCY_GAUNTLET_COIN_FADED\":0,\"CURRENCY_S20_COIN\":0,\"CURRENCY_S18_COIN\":0,\"id_currency_seasonal_coin\":0,\"id_currency_s18_coin\":0,\"id_currency_weapon_token\":25,\"id_currency_celldust\":45,\"id_currency_event_ramsgiving\":0,\"CURRENCY_NOTES\":3000,\"id_currency_event_frostfall\":0,\"CURRENCY_EVENT_DARKHARVEST\":0,\"CURRENCY_S19_COIN\":0,\"id_currency_s16_coin\":0,\"CURRENCY_S16_COIN\":0,\"id_currency_gauntlet_coin\":0,\"id_currency_s13_coin\":0,\"CURRENCY_MARKS_STEEL\":450,\"CURRENCY_S13_COIN\":0,\"CURRENCY_EVENT_FROSTFALL\":0,\"CURRENCY_GAUNTLET_COIN\":0,\"id_currency_marks_steel\":450,\"id_currency_rewardcache\":0,\"CURRENCY_PRESTIGE\":0,\"CURRENCY_SEASONAL_COIN\":0,\"CURRENCY_REWARDCACHE\":0,\"id_currency_token_exchange_speed_up\":0,\"id_currency_event_springtide\":0,\"CURRENCY_TOKEN_EXCHANGE_SPEED_UP\":0,\"id_currency_gauntlet_coin_faded\":0,\"CURRENCY_S15_COIN\":0,\"CURRENCY_PLATINUM\":0,\"id_currency_platinum\":0,\"id_currency_s15_coin\":0,\"id_currency_marks_gilded\":0,\"id_currency_event_darkharvest\":0,\"id_currency_event_saintsbond\":0,\"CURRENCY_EVENT_SPRINGTIDE\":0,\"id_currency_s19_coin\":0,\"id_currency_notes\":3000,\"id_currency_prestige\":0,\"id_currency_s13_daily\":0,\"CURRENCY_WEAPON_TOKEN\":25,\"CURRENCY_MARKS_GILDED\":0,\"CURRENCY_S13_DAILY\":0,\"CURRENCY_CELLDUST\":45,\"CURRENCY_S14_COIN\":0,\"CURRENCY_EVENT_SAINTSBOND\":0,\"CURRENCY_S17_COIN\":0,\"id_currency_s14_coin\":0,\"CURRENCY_EVENT_RAMSGIVING\":0,\"id_currency_s17_coin\":0}"
+    },
+    {
+      "request": "GET /product/sku/trials_cell_berserker_e",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"trials_cell_berserker_e\",\"displayName\":\"+3 Berserker Cell\",\"displayDescription\":\"Reduces max health. Dealing damage stacks increased damage dealt for a short period.\",\"displayPriority\":18,\"maxAllowed\":null,\"remaining\":1,\"images\":{\"standard\":\"http://<host>/store-images/cell_trials_01_e.png\",\"feature\":\"http://<host>/store-images/cell_trials_01_e.png\"},\"tags\":[\"ladyluckstore\",\"store_trials_tab_cells\"],\"scheduledTags\":null,\"items\":[{\"catalogId\":\"CELL_TRIALS_01_E\",\"quantity\":1}],\"entitlements\":[],\"skuProgression\":null,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null,\"steelMarksPrice\":150}"
+    },
+    {
+      "request": "GET /token/platinum/single_exchange_slot_2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=42; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"purchaseToken\":\"<hex64>\"}"
+    },
+    {
+      "request": "POST /notification/platinum?token={{saved:purchaseToken}}",
+      "status": 204,
+      "headers": {
+        "ratelimit": "\"60-in-1min\"; r=41; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /product/sku/single_exchange_slot_2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"single_exchange_slot_2\",\"displayName\":\"Middleman Slot 2\",\"displayDescription\":\"Unlock a second cell fusion slot.\",\"displayPriority\":2,\"tags\":[\"exchange_vendor_slot_2\"],\"platinumPrice\":0,\"platinumSalePrice\":null,\"cellDustPrice\":null,\"prestigePrice\":null,\"event01Price\":null,\"steelMarksPrice\":null,\"gildedMarksPrice\":null,\"items\":null,\"entitlements\":[{\"name\":\"exchange_slot_2\",\"duration\":0}],\"maxAllowed\":1,\"remaining\":0,\"loadoutSlots\":null,\"availableFrom\":null,\"availableTo\":null,\"timeAvailabilityReason\":null,\"platformOfferId\":null,\"missingEntitlementNames\":null}"
+    },
+    {
+      "request": "GET /token/platinum/single_exchange_slot_2",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=40; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"You already own everything this offer grants\"}"
+    },
+    {
+      "request": "GET /token/platinum/single_armour_monk_chest",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"60-in-1min\"; r=59; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:MGUzYjczNDZmZDU3:"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"The account has no character to deliver the purchase to\"}"
+    },
+    {
+      "request": "GET /creator",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"success\":false,\"slug\":\"\",\"expirationDate\":\"<date>\"}"
+    },
+    {
+      "request": "GET /creator",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /creator",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"60-in-1min\"; r=39; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"success\":false,\"message\":\"Creator code not found\"}"
+    },
+    {
+      "request": "POST /creator",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"60-in-1min\"; r=38; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"success\":true,\"slug\":\"Void\",\"expirationDate\":\"<date>\",\"grantedRams\":10000,\"refreshInventory\":true}"
+    },
+    {
+      "request": "POST /creator",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"60-in-1min\"; r=37; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YjliNTJjNzY3Yzc4:"
+      },
+      "body": "{\"success\":false,\"message\":\"Void has already been redeemed on this account\"}"
+    },
+    {
+      "request": "GET /creator",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"success\":true,\"slug\":\"Void\",\"expirationDate\":\"<date>\"}"
+    },
+    {
+      "request": "POST /creator",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"60-in-1min\"; r=58; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:MGUzYjczNDZmZDU3:"
+      },
+      "body": "{\"success\":false,\"message\":\"Create a character before redeeming Void\"}"
+    },
+    {
+      "request": "POST /creator",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"60-in-1min\"; r=57; t=<s>",
+        "ratelimit-policy": "\"60-in-1min\"; q=60; w=60; pk=:YzU1YjhmYjE4NmI1:"
+      },
+      "body": "{\"success\":false,\"message\":\"Creator code not found\"}"
+    },
+    {
+      "request": "GET /balance",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id_currency_s20_coin\":0,\"CURRENCY_GAUNTLET_COIN_FADED\":0,\"CURRENCY_S20_COIN\":0,\"CURRENCY_S18_COIN\":0,\"id_currency_seasonal_coin\":0,\"id_currency_s18_coin\":0,\"id_currency_weapon_token\":25,\"id_currency_celldust\":45,\"id_currency_event_ramsgiving\":0,\"CURRENCY_NOTES\":13000,\"id_currency_event_frostfall\":0,\"CURRENCY_EVENT_DARKHARVEST\":0,\"CURRENCY_S19_COIN\":0,\"id_currency_s16_coin\":0,\"CURRENCY_S16_COIN\":0,\"id_currency_gauntlet_coin\":0,\"id_currency_s13_coin\":0,\"CURRENCY_MARKS_STEEL\":450,\"CURRENCY_S13_COIN\":0,\"CURRENCY_EVENT_FROSTFALL\":0,\"CURRENCY_GAUNTLET_COIN\":0,\"id_currency_marks_steel\":450,\"id_currency_rewardcache\":0,\"CURRENCY_PRESTIGE\":0,\"CURRENCY_SEASONAL_COIN\":0,\"CURRENCY_REWARDCACHE\":0,\"id_currency_token_exchange_speed_up\":0,\"id_currency_event_springtide\":0,\"CURRENCY_TOKEN_EXCHANGE_SPEED_UP\":0,\"id_currency_gauntlet_coin_faded\":0,\"CURRENCY_S15_COIN\":0,\"CURRENCY_PLATINUM\":0,\"id_currency_platinum\":0,\"id_currency_s15_coin\":0,\"id_currency_marks_gilded\":0,\"id_currency_event_darkharvest\":0,\"id_currency_event_saintsbond\":0,\"CURRENCY_EVENT_SPRINGTIDE\":0,\"id_currency_s19_coin\":0,\"id_currency_notes\":13000,\"id_currency_prestige\":0,\"id_currency_s13_daily\":0,\"CURRENCY_WEAPON_TOKEN\":25,\"CURRENCY_MARKS_GILDED\":0,\"CURRENCY_S13_DAILY\":0,\"CURRENCY_CELLDUST\":45,\"CURRENCY_S14_COIN\":0,\"CURRENCY_EVENT_SAINTSBOND\":0,\"CURRENCY_S17_COIN\":0,\"id_currency_s14_coin\":0,\"CURRENCY_EVENT_RAMSGIVING\":0,\"id_currency_s17_coin\":0}"
+    },
+    {
+      "request": "GET /store-images/NOPE.png",
+      "status": 404,
+      "headers": {
+        "ratelimit": "\"600-in-1min\"; r=599; t=<s>",
+        "ratelimit-policy": "\"600-in-1min\"; q=600; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /store-images/missing.png",
+      "status": 404,
+      "headers": {
+        "ratelimit": "\"600-in-1min\"; r=598; t=<s>",
+        "ratelimit-policy": "\"600-in-1min\"; q=600; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    }
+  ]
+}

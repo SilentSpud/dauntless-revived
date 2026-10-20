@@ -69,6 +69,8 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         entitlement_defaults: vec![],
         history: metagame::characters::HistorySettings::default(),
         inventory: Default::default(),
+        shop: Default::default(),
+        store_sweeps: Default::default(),
         health: Arc::new(metagame::health::Health::new(false)),
         key_revocations: tokio::sync::broadcast::channel(64).0,
     });

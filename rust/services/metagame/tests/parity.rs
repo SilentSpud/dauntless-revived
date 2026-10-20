@@ -54,10 +54,24 @@ fn normalize(text: &str) -> String {
         ),
         // The seconds left in a rate-limit window depend on how fast the requests ran
         (r"; t=\d+", "; t=<s>"),
+        // Random tokens (store purchases) and the port the recording server listened on
+        (r"\b[0-9a-f]{64}\b", "<hex64>"),
+        (r"http://127\.0\.0\.1:\d+", "http://<host>"),
     ];
     rules.iter().fold(text.to_owned(), |text, (pattern, with)| {
         Regex::new(pattern).unwrap().replace_all(&text, *with).into_owned()
     })
+}
+
+/// `{{bearer:<account>}}` replaced by a session token for the account, as record.cjs signs them.
+async fn bearers(state: &metagame::app::AppState, mut value: String) -> String {
+    while let Some(start) = value.find("{{bearer:") {
+        let end = value[start..].find("}}").unwrap() + start;
+        let user = value[start + 9..end].to_owned();
+        let token = metagame::auth::sign_token(state, &user).await.unwrap().unwrap();
+        value = format!("{}bearer {token}{}", &value[..start], &value[end + 2..]);
+    }
+    value
 }
 
 async fn run_area(area: &str) {
@@ -82,6 +96,9 @@ async fn run_area(area: &str) {
             keys["pubB64"].as_str().unwrap().into(),
         ),
     ];
+    // The Node metagame serves the pictures in its own folder (record.cjs runs it there)
+    let images = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../legacy/UndauntedMetagame/store-images");
+    pairs.push(("STORE_IMAGES_DIR".into(), images.to_string_lossy().into_owned()));
     for (name, value) in script["env"].as_object().unwrap() {
         pairs.push((name.clone(), value.as_str().unwrap().into()));
     }
@@ -99,23 +116,29 @@ async fn run_area(area: &str) {
     let game_server_key = script["gameServerKey"].as_str().unwrap_or("").to_owned();
 
     let mut actual = Vec::new();
+    // Values a request saved from an earlier reply ("capture": the reply's JSON field to keep)
+    let mut saved = std::collections::HashMap::<String, String>::new();
+    let fill = |text: &str, saved: &std::collections::HashMap<String, String>| {
+        Regex::new(r"\{\{saved:([^}]+)\}\}")
+            .unwrap()
+            .replace_all(text, |c: &regex::Captures| {
+                saved.get(&c[1]).cloned().unwrap_or_default()
+            })
+            .into_owned()
+    };
     for request in script["requests"].as_array().unwrap() {
         let mut builder = Request::builder()
             .method(request["method"].as_str().unwrap())
-            .uri(request["path"].as_str().unwrap());
+            .uri(fill(request["path"].as_str().unwrap(), &saved))
+            // What fetch() sends to the recording server (normalized away in the replies)
+            .header("host", "127.0.0.1:61000");
         for (name, value) in request["headers"].as_object().into_iter().flatten() {
-            let mut value = value.as_str().unwrap().replace("{{gs}}", &game_server_key);
-            if let Some(start) = value.find("{{bearer:") {
-                let end = value[start..].find("}}").unwrap() + start;
-                let user = value[start + 9..end].to_owned();
-                let token = metagame::auth::sign_token(&state, &user).await.unwrap().unwrap();
-                value = format!("{}bearer {token}{}", &value[..start], &value[end + 2..]);
-            }
-            builder = builder.header(name, value);
+            let value = fill(value.as_str().unwrap(), &saved).replace("{{gs}}", &game_server_key);
+            builder = builder.header(name, bearers(&state, value).await);
         }
         let body = if let Some(json) = request.get("json") {
             builder = builder.header("content-type", "application/json; charset=utf-8");
-            Body::from(serde_json::to_vec(json).unwrap())
+            Body::from(bearers(&state, fill(&serde_json::to_string(json).unwrap(), &saved)).await)
         } else if let Some(raw) = request.get("raw") {
             builder = builder.header("content-type", "application/json; charset=utf-8");
             Body::from(raw.as_str().unwrap().to_owned())
@@ -140,6 +163,10 @@ async fn run_area(area: &str) {
         }
         let status = response.status().as_u16();
         let body = String::from_utf8(response.into_body().collect().await.unwrap().to_bytes().to_vec()).unwrap();
+        if let Some(name) = request["capture"].as_str() {
+            let reply: Value = serde_json::from_str(&body).unwrap_or_default();
+            saved.insert(name.into(), reply[name].as_str().unwrap_or("").into());
+        }
         actual.push(json!({
             "request": format!("{} {}", request["method"].as_str().unwrap(), request["path"].as_str().unwrap()),
             "status": status,
@@ -252,4 +279,19 @@ async fn inventory() {
 #[tokio::test(flavor = "multi_thread")]
 async fn inventory_switches() {
     run_area("inventory-switches").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn store() {
+    run_area("store").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn store_off() {
+    run_area("store-off").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn store_rams() {
+    run_area("store-rams").await;
 }

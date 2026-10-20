@@ -6,6 +6,7 @@ pub mod app;
 pub mod auth;
 pub mod characters;
 pub mod config;
+pub mod creator;
 pub mod crypto;
 pub mod db;
 pub mod dbtools;
@@ -24,7 +25,10 @@ pub mod routes;
 #[allow(non_snake_case)]
 pub mod schema;
 pub mod server;
+pub mod store;
+pub mod store_revocation;
 pub mod storeimages;
 pub mod time;
+pub mod trials;
 pub mod unlocker;
 pub mod vendor;

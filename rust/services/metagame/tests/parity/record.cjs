@@ -54,15 +54,22 @@ function normalize(text) {
     .replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{1,2}, \d{4}\b/g, "<day>")
     .replace(/[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}/g, "<invite>")
     // The seconds left in a rate-limit window depend on how fast the requests ran
-    .replace(/; t=\d+/g, "; t=<s>");
+    .replace(/; t=\d+/g, "; t=<s>")
+    // Random tokens (store purchases) and the port the recording server listened on
+    .replace(/\b[0-9a-f]{64}\b/g, "<hex64>")
+    .replace(/http:\/\/127\.0\.0\.1:\d+/g, "http://<host>");
 }
 
 const HEADERS = ["content-type", "cache-control", "retry-after", "ratelimit", "ratelimit-policy", "content-security-policy", "x-content-type-options"];
 
+// Values a request saved from an earlier reply ("capture": the reply's JSON field to keep)
+const saved = {};
+
 function fill(value) {
   return value
     .replace(/\{\{bearer:([^}]+)\}\}/g, (_, id) => `bearer ${SignMetagameJWTForUid(id)}`)
-    .replace(/\{\{gs\}\}/g, script.gameServerKey);
+    .replace(/\{\{gs\}\}/g, script.gameServerKey)
+    .replace(/\{\{saved:([^}]+)\}\}/g, (_, name) => saved[name] ?? "");
 }
 
 async function main() {
@@ -80,7 +87,7 @@ async function main() {
       let body;
       if (request.json !== undefined) {
         headers["content-type"] = "application/json; charset=utf-8";
-        body = JSON.stringify(request.json);
+        body = fill(JSON.stringify(request.json));
       } else if (request.raw !== undefined) {
         headers["content-type"] = "application/json; charset=utf-8";
         body = request.raw;
@@ -88,13 +95,15 @@ async function main() {
         headers["content-type"] = "application/x-www-form-urlencoded";
         body = request.form;
       }
-      const response = await fetch(base + request.path, { method: request.method, headers, body });
+      const response = await fetch(base + fill(request.path), { method: request.method, headers, body });
       const recorded = {};
       for (const name of HEADERS) {
         const value = response.headers.get(name);
         if (value !== null) recorded[name] = normalize(value);
       }
-      results.push({ request: `${request.method} ${request.path}`, status: response.status, headers: recorded, body: normalize(await response.text()) });
+      const text = await response.text();
+      if (request.capture) saved[request.capture] = JSON.parse(text)[request.capture];
+      results.push({ request: `${request.method} ${request.path}`, status: response.status, headers: recorded, body: normalize(text) });
     }
   } finally {
     server.closeAllConnections();
