@@ -77,11 +77,11 @@ ennallaan. Kansioiden npm-pakettien nimet ovat `dauntless-revived-metagame`,
 
 | Kansio | Mikä se on | Kieli ja työkalut |
 |---|---|---|
-| `UndauntedMetagame/` | Taustapalvelu, jonka kanssa peli keskustelee: tilit ja avaimet, hahmot, inventaario, varustukset (loadoutit), eteneminen, ryhmät, kaverit, killat, matchmaking, ylläpitäjän rajapinta ja pelin tekstichat (XMPP-kuuntelija samassa prosessissa, päällä kun `CHAT=1`). | TypeScript, Express 5, SQLite `better-sqlite3`:n ja Drizzlen kautta |
-| `UndauntedDeployServer/` | Käynnistää pelipalvelinprosessit ja valvoo niitä, kun metagame pyytää. Siinä ei ole tunnistautumista, ja se vastaa vain loopback-kutsujille. | TypeScript, Express 5 |
-| `UndauntedContent/` | Tarjoaa käynnistimelle tarkistetut 1.4.4-pelitiedostot, ylläpitäjän kuvapaketin ja uutiset. | TypeScript, Noden oma `http` |
-| `UndauntedGateway/` | Julkinen tila: TLS-yhdyskäytävä (palvelimen ainoa julkinen TCP-portti) ja sallittujen listan apuri (yksi Windowsin palomuurisääntö pelin UDP-porteille). | TypeScript, Noden oma `https`; varmennetyökalussa `node-forge` |
-| `UndauntedLauncher/` | Dauntless Revived Launcher, jonka kaverit asentavat: kutsut, rekisteröinti, lataukset, paikallinen välitin ja pelin käynnistys. Kansiossa `assets/` ovat pelin tarvitsemat kaksi valmiiksi käännettyä DLL:ää. | TypeScript, Electron, Electron Forge ja Vite |
+| `legacy/UndauntedMetagame/` | Taustapalvelu, jonka kanssa peli keskustelee: tilit ja avaimet, hahmot, inventaario, varustukset (loadoutit), eteneminen, ryhmät, kaverit, killat, matchmaking, ylläpitäjän rajapinta ja pelin tekstichat (XMPP-kuuntelija samassa prosessissa, päällä kun `CHAT=1`). | TypeScript, Express 5, SQLite `better-sqlite3`:n ja Drizzlen kautta |
+| `legacy/UndauntedDeployServer/` | Käynnistää pelipalvelinprosessit ja valvoo niitä, kun metagame pyytää. Siinä ei ole tunnistautumista, ja se vastaa vain loopback-kutsujille. | TypeScript, Express 5 |
+| `legacy/UndauntedContent/` | Tarjoaa käynnistimelle tarkistetut 1.4.4-pelitiedostot, ylläpitäjän kuvapaketin ja uutiset. | TypeScript, Noden oma `http` |
+| `legacy/UndauntedGateway/` | Julkinen tila: TLS-yhdyskäytävä (palvelimen ainoa julkinen TCP-portti) ja sallittujen listan apuri (yksi Windowsin palomuurisääntö pelin UDP-porteille). | TypeScript, Noden oma `https`; varmennetyökalussa `node-forge` |
+| `legacy/UndauntedLauncher/` | Dauntless Revived Launcher, jonka kaverit asentavat: kutsut, rekisteröinti, lataukset, paikallinen välitin ja pelin käynnistys. Kansiossa `assets/` ovat pelin tarvitsemat kaksi valmiiksi käännettyä DLL:ää. | TypeScript, Electron, Electron Forge ja Vite |
 | `native/internal-server/` | Palvelin-DLL:n C++-lähdekoodi upstreamista, generoidun SDK:n kanssa. | C++, Visual Studio 2022 |
 | `deploy/windows-server/` | Windows Server -palvelinpaketti: asennus, päivitys, varmuuskopiointi, kutsut, palvelinkokonaisuuden valvoja ja paketin testit kansiossa `tests/`. | Windows PowerShell 5.1, Node-apuohjelmat kansiossa `lib/` |
 | `friend-kit/` | Käsin ajettavat skriptit kavereille, jotka eivät käytä käynnistintä (`setup.ps1`, `play.ps1`). | PowerShell |
@@ -97,7 +97,7 @@ Jokainen Node-paketti asennetaan, käännetään ja testataan erikseen omasta ka
 `npm ci`, niin saat täsmälleen ne versiot, jotka paketin `package-lock.json` määrää:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 npm ci --no-audit --no-fund
 npm run build
 npm test
@@ -105,11 +105,11 @@ npm test
 
 | Paketti | Käännös | Testit | Muut skriptit |
 |---|---|---|---|
-| `UndauntedMetagame` | `npm run build`: TypeScript kansioon `dist/`, minkä jälkeen `scripts/write-build-info.js` kirjoittaa tiedoston `dist/build-info.json` (commit, versio, käännösaika) | `npm test` | `npm run dev` (käynnistyy uudelleen, kun muutat lähdetiedostoa), `npm start`, `npm run db:generate` |
-| `UndauntedDeployServer` | `npm run build` (kansioon `dist/`) | `npm test` | `npm run dev`, `npm start` |
-| `UndauntedGateway` | `npm run build` (kansioon `dist/`) | `npm test` | `npm start` (yhdyskäytävä), `npm run start:allowlist` (apuri), `npm run make-cert` |
-| `UndauntedContent` | `npm run build` (kansioon `dist/`) | `npm test`, `npm run test:integration` | `npm start`, `npm run verify` (laskee pelikansion tiivisteet ja vertaa niitä manifestiin) |
-| `UndauntedLauncher` | `npm run make` (asennusohjelma ja zip kansioon `out/make/`), `npm run package` (pelkkä sovelluskansio) | `npm run typecheck`, `npm test` | `npm start`, `npm run icon` |
+| `legacy/UndauntedMetagame` | `npm run build`: TypeScript kansioon `dist/`, minkä jälkeen `scripts/write-build-info.js` kirjoittaa tiedoston `dist/build-info.json` (commit, versio, käännösaika) | `npm test` | `npm run dev` (käynnistyy uudelleen, kun muutat lähdetiedostoa), `npm start`, `npm run db:generate` |
+| `legacy/UndauntedDeployServer` | `npm run build` (kansioon `dist/`) | `npm test` | `npm run dev`, `npm start` |
+| `legacy/UndauntedGateway` | `npm run build` (kansioon `dist/`) | `npm test` | `npm start` (yhdyskäytävä), `npm run start:allowlist` (apuri), `npm run make-cert` |
+| `legacy/UndauntedContent` | `npm run build` (kansioon `dist/`) | `npm test`, `npm run test:integration` | `npm start`, `npm run verify` (laskee pelikansion tiivisteet ja vertaa niitä manifestiin) |
+| `legacy/UndauntedLauncher` | `npm run make` (asennusohjelma ja zip kansioon `out/make/`), `npm run package` (pelkkä sovelluskansio) | `npm run typecheck`, `npm test` | `npm start`, `npm run icon` |
 
 `dist/`, `build/` sekä käynnistimen `out/`, `.vite/` ja `.test-build/` ovat gitin ohittamia
 (git-ignored). Käännä ne itse äläkä koskaan commitoi niitä. Kun olet hakenut uudet muutokset (pull),
@@ -119,7 +119,7 @@ lähdetiedosto on poistettu tai nimetty uudelleen.
 
 Käännöstiedot kertovat, mikä lähdekoodi tarkalleen on käynnissä. Ne näkyvät reiteissä
 `GET /undaunted/api/ServerStatus` ja `/dauntless-status`
-([HTTP-rajapinta]({{ api_page.url | relative_url }})). Jos `UndauntedMetagame/`-kansiossa on
+([HTTP-rajapinta]({{ api_page.url | relative_url }})). Jos `legacy/UndauntedMetagame/`-kansiossa on
 käännöshetkellä commitoimattomia muutoksia, commitin perään tulee `-dirty`. Metagamen `.env`-tiedoston
 `GIT_COMMIT` korvaa kirjatun commitin. `npm run dev` ajaa lähdekoodia ilman käännöstä, joten
 käännöstietoja ei silloin ole: tilareitit näyttävät commitiksi `unknown`, ellei `GIT_COMMIT` ole
@@ -148,7 +148,7 @@ testitiedosto ajetaan omassa prosessissaan. Yhdyskäytävä ajaa tiedostonsa yks
 Kun haluat ajaa yhden metagamen testitiedoston, käännä testit kerran ja kutsu Nodea paketin kansiosta:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 npx tsc -p tsconfig.test.json
 node --test build/test/party.test.js
 ```
@@ -165,7 +165,7 @@ koneella vain yksi testisarja kerrallaan.** Koko lista on sivulla
 ### Sisältöpalvelimen integraatiotesti {#content-integration-test}
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedContent
+Set-Location C:\dr\undaunted\legacy/UndauntedContent
 $env:CONTENT_IT_GAME_DIR = "C:\D144\Dauntless"   # oletus; kansio, jossa Archon\ on
 npm run test:integration
 ```
@@ -193,7 +193,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File deploy\windows-server\tests\
 
 | Skripti | Mitä se tarkistaa | Mitä se tarvitsee | Parametrit |
 |---|---|---|---|
-| `Test-KitUnit.ps1` | Jokainen paketin skripti jäsentyy PowerShell 5.1:ssä ja on pelkkää ASCII:ta; v1- ja v2-kutsumerkkijonot, myös kaikki, mikä pitää hylätä; varmenteiden sormenjäljet; TLS-kiinnitys paikallista testipalvelinta vasten; `Get-ServerStatus.ps1` tiliavaimen kanssa ja ilman; tiliavaintiedostot; paloina lähettämisen (chunked upload) apuri; suorituskykymittari. | Ensin `npm ci` kansiossa `UndauntedGateway`: testi ajaa yhdyskäytävän varmennetyökalua. | `-WorkDir` (oletus `%TEMP%\dr-kit-unit`, poistetaan lopuksi), `-Port` (oletus 62450; 62000–62499; suorituskykytesti käyttää myös sitä seuraavaa porttia) |
+| `Test-KitUnit.ps1` | Jokainen paketin skripti jäsentyy PowerShell 5.1:ssä ja on pelkkää ASCII:ta; v1- ja v2-kutsumerkkijonot, myös kaikki, mikä pitää hylätä; varmenteiden sormenjäljet; TLS-kiinnitys paikallista testipalvelinta vasten; `Get-ServerStatus.ps1` tiliavaimen kanssa ja ilman; tiliavaintiedostot; paloina lähettämisen (chunked upload) apuri; suorituskykymittari. | Ensin `npm ci` kansiossa `legacy/UndauntedGateway`: testi ajaa yhdyskäytävän varmennetyökalua. | `-WorkDir` (oletus `%TEMP%\dr-kit-unit`, poistetaan lopuksi), `-Port` (oletus 62450; 62000–62499; suorituskykytesti käyttää myös sitä seuraavaa porttia) |
 | `Test-DeployRemote.ps1` | `Deploy-Remote.ps1` ilman palvelinta: ensin argumenttien käsittely, sitten paketin, lähdekoodin, varmuuskopion ja pelin zip-tiedoston lähetys paikalliseen kansioon, joka esittää palvelinta. Lisäksi keskeytynyt lähetys, joka jatkuu; osa, joka vioittui siirrossa tai tarkistuksen jälkeen; toinen ajo, jossa ei ole enää mitään tehtävää; sekä työkopion lähetys, jossa ei ole `.env`-tiedostoa, avainta, tietokantaa, `node_modules`- eikä `dist`-kansiota. | Git. Ei verkkoa, ei SSH-avainta. | `-WorkDir` (oletus `%TEMP%\dr-deploy-test`, poistetaan lopuksi) |
 | `Test-Sandbox.ps1` | Tämän kloonin oikea `-Sandbox`-asennus julkisessa tilassa väliaikaiskansioon, jossa on pelikansion korvike: ensin `-WhatIf`, sitten asennus (se kääntää neljä palvelinpakettia, mikä vie muutaman minuutin), kutsut, tila ja rekisteröinti yhdyskäytävän kautta kiinnitetyllä varmenteella, yhdyskäytävän hylkäykset, päivitys ja paluu edelliseen versioon (rollback), tila, varmuuskopio ja pysäytys sekä toinen asennus, joka palautetaan tuosta varmuuskopiosta. Lopuksi se pysäyttää kaiken ja poistaa kansion. Se tarkistaa myös, ettei porteissa 61000/61001 käynnissä olevaan palvelinkokonaisuuteen koskettu. Deploy-palvelinta ja peliä hiekkalaatikossa ei koskaan käynnistetä. | Vapaat loopback-portit 62000, 62002, 62005 ja 62443 (testi pysähtyy, jos jokin niistä on varattu); npm-rekisteri `npm ci`:tä varten | `-SandboxDir` (oletus `C:\dr\sandbox-ws2019`; kansion nimessä on oltava `sandbox`, koska kansio poistetaan), `-KeepSandbox` (säilyttää kansion ja pysäytetyn asennuksen), `-SkipRestore` (jättää toisen asennuksen väliin) |
 
@@ -223,11 +223,11 @@ käynnistetty metagame ei.)
 
 | Osa | Asetustiedosto | Käynnistys | Tarvitsee ensin | Tarvitaan vain |
 |---|---|---|---|---|
-| Metagame | `UndauntedMetagame\.env`. Tiedoston on oltava olemassa. | `npm run dev` tai `npm start` | ei mitään | kaikkeen |
-| Deploy-palvelin | `UndauntedDeployServer\.env`. Tiedoston on oltava olemassa. | `npm run dev` tai `npm start` | metagamen, jossa on rekisteröity pelipalvelinavain; tarkistetun 1.4.4-asennuksen kahden DLL:n kanssa; käyttäjäkohtaisen `Game.ini`-tiedoston ([Pystytä palvelin, vaihe 8]({{ host_page.url | relative_url }}#game-ini)) | pelipalvelinten käynnistämiseen: Ramsgate, Training Dojo, metsästykset |
-| Sisältöpalvelin | `UndauntedContent\.env` (luetaan, jos se on olemassa). `CONTENT_GAME_DIR`-asetuksella ei ole oletusarvoa. | `npm start` | metagamen (se tarkistaa tiliavaimet sieltä); tarkistetun 1.4.4-asennuksen | käynnistimen latauksiin |
-| Sallittujen listan apuri | `UndauntedGateway\.env` (luetaan, jos se on olemassa). Asetuksilla `ALLOWLIST_DRY_RUN` ja `ALLOWLIST_SECRET` ei ole oletusarvoa. | `npm run start:allowlist` | ei mitään | julkiseen tilaan |
-| Yhdyskäytävä | `UndauntedGateway\.env` (luetaan, jos se on olemassa). Varmenteella, sen avaimella ja molemmilla salaisuuksilla ei ole oletusarvoa. | `npm start` | metagamen, sisältöpalvelimen, sallittujen listan apurin ja varmenteen | julkiseen tilaan |
+| Metagame | `legacy\UndauntedMetagame\.env`. Tiedoston on oltava olemassa. | `npm run dev` tai `npm start` | ei mitään | kaikkeen |
+| Deploy-palvelin | `legacy\UndauntedDeployServer\.env`. Tiedoston on oltava olemassa. | `npm run dev` tai `npm start` | metagamen, jossa on rekisteröity pelipalvelinavain; tarkistetun 1.4.4-asennuksen kahden DLL:n kanssa; käyttäjäkohtaisen `Game.ini`-tiedoston ([Pystytä palvelin, vaihe 8]({{ host_page.url | relative_url }}#game-ini)) | pelipalvelinten käynnistämiseen: Ramsgate, Training Dojo, metsästykset |
+| Sisältöpalvelin | `legacy\UndauntedContent\.env` (luetaan, jos se on olemassa). `CONTENT_GAME_DIR`-asetuksella ei ole oletusarvoa. | `npm start` | metagamen (se tarkistaa tiliavaimet sieltä); tarkistetun 1.4.4-asennuksen | käynnistimen latauksiin |
+| Sallittujen listan apuri | `legacy\UndauntedGateway\.env` (luetaan, jos se on olemassa). Asetuksilla `ALLOWLIST_DRY_RUN` ja `ALLOWLIST_SECRET` ei ole oletusarvoa. | `npm run start:allowlist` | ei mitään | julkiseen tilaan |
+| Yhdyskäytävä | `legacy\UndauntedGateway\.env` (luetaan, jos se on olemassa). Varmenteella, sen avaimella ja molemmilla salaisuuksilla ei ole oletusarvoa. | `npm start` | metagamen, sisältöpalvelimen, sallittujen listan apurin ja varmenteen | julkiseen tilaan |
 
 Metagamen ja deploy-palvelimen skriptit lataavat `.env`-tiedoston Noden valitsimella `--env-file`, ja
 Node pysähtyy, jos tiedostoa ei ole. Yhdyskäytävän ja sisältöpalvelimen skriptit lataavat sen vain, jos
@@ -259,7 +259,7 @@ QOS_TARGET_URL=http://127.0.0.1:61000/QoS
 MATCHMAKING_MODE=DEPLOYSERVER
 DEPLOYSERVER_URL=127.0.0.1:61001
 REGISTRATION_MODE=OPEN
-"@ | Set-Content C:\dr\undaunted\UndauntedMetagame\.env -Encoding ascii
+"@ | Set-Content C:\dr\undaunted\legacy\UndauntedMetagame\.env -Encoding ascii
 ```
 
 Lisää sen jälkeen allekirjoitusavaimet (seuraava osio): ilman niitä metagame pysähtyy heti
@@ -306,7 +306,7 @@ kuin [vaiheessa 9]({{ host_page.url | relative_url }}#metagame)). Käytä koment
 jota Node ei osaa lukea `.env`-tiedostona.
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 node -e "const c=require('crypto');const k=c.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});console.log('AUTH_SIGNING_PRIVKEY_B64='+Buffer.from(k.privateKey).toString('base64'));console.log('AUTH_SIGNING_PUBKEY_B64='+Buffer.from(k.publicKey).toString('base64'))" | Add-Content .env -Encoding ascii
 ```
 
@@ -328,7 +328,7 @@ samana.
 
 ### Käynnistysjärjestys {#start-order}
 
-1. **Metagame.** Kansiossa `UndauntedMetagame` joko `npm run dev` tai ensin `npm run build` ja sitten
+1. **Metagame.** Kansiossa `legacy/UndauntedMetagame` joko `npm run dev` tai ensin `npm run build` ja sitten
    `npm start`. Ensimmäinen käynnistys luo tietokannan ja ajaa kaikki migraatiot. Jokainen käynnistys
    rekisteröi avaimet, jotka odottavat tietokannan jonotauluissa. Käynnistä metagame sen omasta
    kansiosta (npm-skriptit tekevät niin): migraatiot löytyvät suhteellisella polulla `./src/drizzle`.
@@ -353,15 +353,15 @@ Helpoin tapa kokeilla julkista tilaa on `Test-Sandbox.ps1` ([yllä](#kit-tests))
 salaisuudet, käynnistää yhdyskäytävän ja apurin vapaissa porteissa ja poistaa kaiken lopuksi. Käsin se
 tehdään näin:
 
-1. **Varmenne.** Aja kansiossa `UndauntedGateway` (kun olet ajanut `npm ci`)
+1. **Varmenne.** Aja kansiossa `legacy/UndauntedGateway` (kun olet ajanut `npm ci`)
    `node tools/make-cert.js --host 127.0.0.1 --out C:\dr\dev\tls`. Se kirjoittaa tiedostot
    `gateway-cert.pem` ja `gateway-key.pem` ja tulostaa sormenjäljen kutsun `fp=`-kenttää varten.
    Avaintiedosto on salaisuus: älä koskaan jaa sitä äläkä koskaan commitoi sitä.
-2. **Yhdyskäytävä ja apuri.** Kopioi `UndauntedGateway\.env.example` nimelle `.env`. Se on valmiiksi
+2. **Yhdyskäytävä ja apuri.** Kopioi `legacy\UndauntedGateway\.env.example` nimelle `.env`. Se on valmiiksi
    asetettu yhdelle koneelle: `GATEWAY_BIND=127.0.0.1` portissa 61443, `ALLOWLIST_DRY_RUN=1` ja
    `ALLOWLIST_ALLOW_PRIVATE=1` (muuten apuri hylkää pelaajan osoitteen `127.0.0.1`). Täytä
    `GATEWAY_CERT`, `GATEWAY_KEY` ja molemmat salaisuudet. Apuri kirjoittaa tiedostot
-   `allowlist-audit.log` ja `allowlist-state.json` kansioon `UndauntedGateway\` (git ohittaa
+   `allowlist-audit.log` ja `allowlist-state.json` kansioon `legacy\UndauntedGateway\` (git ohittaa
    molemmat), ellet aseta arvoja `ALLOWLIST_AUDIT_LOG` ja `ALLOWLIST_STATE_FILE`.
    **Älä koskaan aseta kehityskoneella `ALLOWLIST_DRY_RUN=0`:** se muuttaa Windowsin palomuuria
    oikeasti, ja apuri tarvitsee silloin järjestelmänvalvojan oikeudet.
@@ -382,7 +382,7 @@ Jokainen yhdyskäytävän ja apurin asetus sallittuine arvoineen on sivulla
 ### Käynnistin kehityskäytössä {#launcher-dev}
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedLauncher
+Set-Location C:\dr\undaunted\legacy/UndauntedLauncher
 npm ci
 npm start
 ```
@@ -393,7 +393,7 @@ Viten kehityspalvelimelta. Kehitysajo eroaa asennetusta käynnistimestä näin:
 - DevTools ovat käytettävissä.
 - Se ei rekisteröi `dauntless-revived:`-linkkien käsittelijää, joten liitä kutsut Pelaa-sivulle.
 - Se ei koskaan etsi eikä asenna päivityksiä.
-- Se ottaa kaksi DLL:ää kansiosta `UndauntedLauncher\assets\` eikä asennetuista resursseistaan. Ne
+- Se ottaa kaksi DLL:ää kansiosta `legacy\UndauntedLauncher\assets\` eikä asennetuista resursseistaan. Ne
   tarkistetaan kiinnitettyjä tiivisteitä vasten kummassakin tapauksessa.
 
 Tämä ei muutu: kehitysajo saa nimensä samasta `productName`-kentästä kuin asennettu käynnistin, joten
@@ -423,7 +423,7 @@ npm start
 
 Missä käynnistin säilyttää asetuksensa, salatut tiliavaimet ja lokinsa, kerrotaan sivulla
 [Tiedostot ja data]({{ files_page.url | relative_url }}). Julkaisujen kääntäminen ja julkaiseminen
-kuvataan tiedostossa `UndauntedLauncher/README.md` (suomeksi `UndauntedLauncher/README.fi.md`);
+kuvataan tiedostossa `legacy/UndauntedLauncher/README.md` (suomeksi `legacy/UndauntedLauncher/README.fi.md`);
 julkaisut kääntää GitHub Actions, ei kehittäjän kone.
 
 ### Palvelin-DLL {#server-dll}
@@ -431,7 +431,7 @@ julkaisut kääntää GitHub Actions, ei kehittäjän kone.
 Lähdekoodi on kansiossa `native/internal-server/` (upstreamin C++-koodi generoidun SDK:n kanssa; avaa
 `UndauntedInternalServer.sln` Visual Studio 2022:ssa ja käännä kokoonpano `Release|x64`). Mikään repositoriossa
 ei käännä sitä. Peli ja jokainen pelipalvelin ajavat valmiiksi käännettyjä kopioita kansiosta
-`UndauntedLauncher/assets/`, ja niiden SHA-256-tiivisteet on kiinnitetty käynnistimeen
+`legacy/UndauntedLauncher/assets/`, ja niiden SHA-256-tiivisteet on kiinnitetty käynnistimeen
 (`src/main/constants.ts`), palvelinpakettiin (`DauntlessServer.Common.ps1`), kaveripakettiin
 (`setup.ps1`, `play.ps1`, `tools/make-friend-kit.ps1`) ja dokumentaatioon. Itse kääntämäsi DLL:n
 tiiviste ei vastaa kiinnitettyä, joten kaikki nämä hylkäävät sen. DLL:n vaihtaminen tarkoittaa, että
@@ -469,7 +469,7 @@ GitHub Actionsille viikoittain, jokaiselle npm-paketille kuukausittain.
 ### Käynnistimen julkaisut {#launcher-releases}
 
 Käynnistimen julkaisu on GitHub-julkaisu `launcher-v<versio>` sille versiolle, joka on
-`UndauntedLauncher/package.json`-tiedostossa, ja se julkaistaan vain `dauntless-revived`-haarasta.
+`legacy/UndauntedLauncher/package.json`-tiedostossa, ja se julkaistaan vain `dauntless-revived`-haarasta.
 Asennetut käynnistimet päivittyvät siihen. Julkaistaksesi nosta tuota versiota. Sitten:
 
 - **Automaattisesti (oletuksena päällä).** Kun `dauntless-revived`-haaraan tehty push läpäisee kaikki
@@ -489,7 +489,7 @@ korvata. Esiversio (kuten `0.2.0-beta.1`) julkaistaan GitHubin esijulkaisuna, jo
 käynnistimet eivät päivity. Tarkemmin asiasta kerrotaan tiedoston
 [CONTRIBUTING.md]({{ site.github.repository_url }}/blob/dauntless-revived/CONTRIBUTING.md)
 kohdassa "Tarkistukset" ja tiedoston
-[UndauntedLauncher/README.fi.md]({{ site.github.repository_url }}/blob/dauntless-revived/UndauntedLauncher/README.fi.md)
+[legacy/UndauntedLauncher/README.fi.md]({{ site.github.repository_url }}/blob/dauntless-revived/legacy/UndauntedLauncher/README.fi.md)
 kohdassa "Julkaisut ja päivitykset".
 
 ---
@@ -500,10 +500,10 @@ kohdassa "Julkaisut ja päivitykset".
 |---|---|---|
 | `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` muuttuu. Älä koskaan muokkaa tiedostoa `docs/roadmap.md` käsin. |
 | `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` | Mikä tahansa englanninkielinen sivu tai UKK:n data muuttuu (`llms-full.txt` sisältää jokaisen englanninkielisen sivun tekstin; `llms.txt` listaa jokaisen sivun otsikkoineen ja kuvauksineen). |
-| `UndauntedMetagame/src/drizzle/*.sql` ja `meta/` | `npm run db:generate` kansiossa `UndauntedMetagame` | `src/db/schema.ts` muuttuu. Komento lukee `.env`-tiedoston. Commitoi uusi migraatio samassa muutoksessa skeemamuutoksen kanssa. |
-| `UndauntedMetagame/src/vendor/hunt_titles.json` | `node UndauntedMetagame/scripts/make-hunt-titles.js` | Deploy-palvelimen metsästystaulukot kansiossa `UndauntedDeployServer/src/vendor/` muuttuvat. |
-| `UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <pelin zip>`, kun `npm ci` on ajettu kansiossa `UndauntedContent` (sen zip-lukijaa varten) | Käytännössä ei koskaan: tiedosto kuvaa kiinnitettyä 1.4.4-versiota. Käynnistin kääntää saman tiedoston sisäänsä, joten käännä käynnistin sen jälkeen uudelleen. |
-| `UndauntedLauncher/assets/icon.png`, `icon.ico` ja `src/renderer/brand/*.png` | `npm run icon` kansiossa `UndauntedLauncher`; se kopioi ne kansiosta `brand/` (siellä ne tekee `python3 brand/build.py`) | Käynnistimen kuvakkeet kansiossa `brand/launcher/` tai tunnuskuvan koot kansiossa `brand/web/` muuttuvat. Käynnistimen yksikkötestit epäonnistuvat, kun jokin kopio on vanhentunut. |
+| `legacy/UndauntedMetagame/src/drizzle/*.sql` ja `meta/` | `npm run db:generate` kansiossa `legacy/UndauntedMetagame` | `src/db/schema.ts` muuttuu. Komento lukee `.env`-tiedoston. Commitoi uusi migraatio samassa muutoksessa skeemamuutoksen kanssa. |
+| `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node legacy/UndauntedMetagame/scripts/make-hunt-titles.js` | Deploy-palvelimen metsästystaulukot kansiossa `legacy/UndauntedDeployServer/src/vendor/` muuttuvat. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <pelin zip>`, kun `npm ci` on ajettu kansiossa `legacy/UndauntedContent` (sen zip-lukijaa varten) | Käytännössä ei koskaan: tiedosto kuvaa kiinnitettyä 1.4.4-versiota. Käynnistin kääntää saman tiedoston sisäänsä, joten käännä käynnistin sen jälkeen uudelleen. |
+| `legacy/UndauntedLauncher/assets/icon.png`, `icon.ico` ja `src/renderer/brand/*.png` | `npm run icon` kansiossa `legacy/UndauntedLauncher`; se kopioi ne kansiosta `brand/` (siellä ne tekee `python3 brand/build.py`) | Käynnistimen kuvakkeet kansiossa `brand/launcher/` tai tunnuskuvan koot kansiossa `brand/web/` muuttuvat. Käynnistimen yksikkötestit epäonnistuvat, kun jokin kopio on vanhentunut. |
 
 Aja kaksi dokumentaatiogeneraattoria niin, että `sync-roadmap.js` on ensin: `build-llms.js` lukee sen
 kirjoittaman tiekarttasivun. Kumpikaan ei ota argumentteja, ja molemmat löytävät repositorion juuren
@@ -559,7 +559,7 @@ Käytännössä:
   siisteystarkistus hylkää myös tällaiset tiedostot, mutta vasta pushin jälkeen. Jos salaisuus on
   päätynyt committiin, kerro siitä ja vaihda avain. Salaisuus jää jokaisen kloonin historiaan.
 - **Pidä tallennetut pyyntöjen sisällöt poissa työpuusta.** `LOG_BODIES=1` kirjoittaa tiedoston
-  `bodies.log` kansioon, josta metagame ajetaan (npm-skripteillä `UndauntedMetagame\`), ellei
+  `bodies.log` kansioon, josta metagame ajetaan (npm-skripteillä `legacy\UndauntedMetagame\`), ellei
   `BODY_LOG_FILE` määrää muuta, eikä `*.log` ole siellä gitin ohittama. Osoita tiedosto repositorion
   ulkopuolelle, esimerkiksi `BODY_LOG_FILE=C:/dr/dev/bodies.log`. Tiedostossa on se, mitä pelaajat
   lähettivät.
@@ -594,7 +594,7 @@ Käytännössä:
 
 Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 
-**`UndauntedMetagame/src/`**
+**`legacy/UndauntedMetagame/src/`**
 
 | Osa-alue | Koodi | Huomiot |
 |---|---|---|
@@ -619,14 +619,14 @@ Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 | Matchmaking | `controllers/matchmaking.ts` (jonot, ehdokkaiden tila, ryhmät, kutsu deploy-palvelimelle), `routes/matchmaking.ts` | |
 | Palvelimen tila | `controllers/serverstatus.ts`, `middleware/SoftAccountAuth.ts`, `/dauntless-status` tiedostossa `routes/system.ts` | |
 
-**`UndauntedDeployServer/src/`**
+**`legacy/UndauntedDeployServer/src/`**
 
 | Osa-alue | Koodi | Huomiot |
 |---|---|---|
 | Pelipalvelimet | `controllers/gameservers.ts` (portit, Ramsgate ja Dojo yhdellä yhteisellä käynnistyksellä maailmaa kohden ja elossaolon tarkistuksella, prosessien käynnistys sekä niiden `error`- ja `exit`-kuuntelijat, testikoukut), `controllers/watchdog.ts`, `routes/gameservers.ts` | Vain loopback-kutsujat. Testit `test/persistentworlds.test.ts` ja `test/deployenv.ts` (korvaava käynnistysfunktio). |
 | Matchmaking | `controllers/matchmaker.ts`, `controllers/matchmakinginput.ts` (toinen tarkistus kaikelle, mikä päätyy pelipalvelimen komentoriville), `routes/matchmaker.ts`, `vendor/*_table.json` | |
 
-**`UndauntedGateway/`**
+**`legacy/UndauntedGateway/`**
 
 | Osa-alue | Koodi | Huomiot |
 |---|---|---|
@@ -635,13 +635,13 @@ Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 | Sallittujen listan syöte ja apuri | `src/feed.ts` (kertoo apurille, kuka kirjautui), `src/allowlist/` (`server.ts`, `config.ts`, `helper.ts`, `state.ts`, `sync.ts`, `firewall.ts`) | |
 | Varmennetyökalu | `tools/make-cert.js` | |
 
-**`UndauntedContent/`**: `src/server.ts` ja `src/config.ts` (käynnistys ja asetukset), `src/app.ts`
+**`legacy/UndauntedContent/`**: `src/server.ts` ja `src/config.ts` (käynnistys ja asetukset), `src/app.ts`
 (reitit), `src/auth.ts` (avaintarkistus metagamea vasten),
 `src/paths.ts`, `src/range.ts`, `src/limits.ts`, `src/gamedir.ts`, `src/manifest.ts`,
 `src/branding.ts`, `src/news.ts`, `src/verify.ts` (`npm run verify`) sekä manifesti tiedostossa
 `data/dauntless-1.4.4.json`.
 
-**`UndauntedLauncher/src/`**
+**`legacy/UndauntedLauncher/src/`**
 
 | Osa-alue | Koodi | Huomiot |
 |---|---|---|
@@ -661,4 +661,4 @@ Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 | Palvelinpaketti | `deploy/windows-server/*.ps1`; yhteiset kiinnitykset, polut, osien taulukko ja käynnistysjärjestys tiedostossa `DauntlessServer.Common.ps1`; tietokanta-, avain- ja pelikansioapurit kansiossa `lib/` |
 | Kaveripaketti | `friend-kit/`, jonka `tools/make-friend-kit.ps1` pakkaa zip-tiedostoksi |
 | Dokumentaatiotyökalut | `tools/sync-roadmap.js`, `tools/build-llms.js` |
-| CI | `.github/workflows/ci.yml`, `.github/workflows/launcher-release.yml`, `.github/dependabot.yml`, `tools/ci/`, `UndauntedLauncher/scripts/collect-release.ps1` |
+| CI | `.github/workflows/ci.yml`, `.github/workflows/launcher-release.yml`, `.github/dependabot.yml`, `tools/ci/`, `legacy/UndauntedLauncher/scripts/collect-release.ps1` |

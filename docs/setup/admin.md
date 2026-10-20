@@ -82,8 +82,8 @@ but not built yet is marked as such. The other side of this setup is
 
 | Component | Listens on | Who has to reach it |
 |:----------|:-----------|:--------------------|
-| Metagame (`UndauntedMetagame`: Node, Express, SQLite) | TCP 61000 | Every player's client, every game server, and you as admin |
-| Deploy server (`UndauntedDeployServer`) | TCP 61001, loopback only | Only the metagame on the same PC. **It has no authentication.** |
+| Metagame (`legacy/UndauntedMetagame`: Node, Express, SQLite) | TCP 61000 | Every player's client, every game server, and you as admin |
+| Deploy server (`legacy/UndauntedDeployServer`) | TCP 61001, loopback only | Only the metagame on the same PC. **It has no authentication.** |
 | Ramsgate server | UDP 8777 (`PORT_RANGE_END`) | Players. Always running. If it dies, the deploy server starts it again when a player travels there, or its watchdog does within a minute. |
 | Training Dojo | UDP 8776 | Players. Our fork starts it on first use; `ENABLE_DOJO=1` restores upstream's always-on behaviour. |
 | Hunt servers | UDP 8770-8775 | Players. One per group of up to 4. Each exits after 50 seconds in total with nobody connected. |
@@ -181,11 +181,11 @@ Three settings point at `127.0.0.1` today and have to change:
 
 | Setting | File | New value | Why |
 |:--------|:-----|:----------|:----|
-| `MY_IP` | `UndauntedDeployServer/.env` | `<host 100.x address>` | The only host address the deploy server hands out for Ramsgate, the Dojo and hunts, via the matchmaking result. With `127.0.0.1`, a friend's client would travel to its own PC. |
-| `QOS_TARGET_URL` | `UndauntedMetagame/.env` | `http://<host 100.x address>:61000/QoS` | `/candidate/regions` returns this URL as the region to ping. With `127.0.0.1`, friends ping their own localhost. We have not tested what the client does when that ping fails. |
-| `BIND_HOST` | `UndauntedMetagame/.env` | `<host 100.x address>` | The address the metagame listens on. Our fork defaults to `127.0.0.1`; upstream listened on every interface. |
-| `BIND_HOST` | `UndauntedDeployServer/.env` | stays `127.0.0.1` | No authentication. |
-| `DEPLOYSERVER_URL` | `UndauntedMetagame/.env` | stays `127.0.0.1:61001` | The metagame reaches the deploy server locally. |
+| `MY_IP` | `legacy/UndauntedDeployServer/.env` | `<host 100.x address>` | The only host address the deploy server hands out for Ramsgate, the Dojo and hunts, via the matchmaking result. With `127.0.0.1`, a friend's client would travel to its own PC. |
+| `QOS_TARGET_URL` | `legacy/UndauntedMetagame/.env` | `http://<host 100.x address>:61000/QoS` | `/candidate/regions` returns this URL as the region to ping. With `127.0.0.1`, friends ping their own localhost. We have not tested what the client does when that ping fails. |
+| `BIND_HOST` | `legacy/UndauntedMetagame/.env` | `<host 100.x address>` | The address the metagame listens on. Our fork defaults to `127.0.0.1`; upstream listened on every interface. |
+| `BIND_HOST` | `legacy/UndauntedDeployServer/.env` | stays `127.0.0.1` | No authentication. |
+| `DEPLOYSERVER_URL` | `legacy/UndauntedMetagame/.env` | stays `127.0.0.1:61001` | The metagame reaches the deploy server locally. |
 
 **The catch: the metagame listens on one address**, and two local things talk to it as well.
 
@@ -309,7 +309,7 @@ Invoke-RestMethod -Method Delete -Uri "http://$M/undaunted/api/InviteCode/$code"
 ### Making an account an admin
 
 An admin is a row in the `users` table with `isAdmin = 1`. No API sets it. Edit the database while the
-metagame is stopped, for example with a small `better-sqlite3` script run from the `UndauntedMetagame`
+metagame is stopped, for example with a small `better-sqlite3` script run from the `legacy/UndauntedMetagame`
 folder (`UPDATE users SET isAdmin = 1 WHERE userId = ?`). An admin key is simply that user's account
 key, so keep it on the host.
 
@@ -420,7 +420,7 @@ Renaming does exist (`RenameUser`, see [Usernames](#usernames)).
   already issued stays valid for up to 24 hours.
 - **A friend lost their key.** It cannot be recovered, because only its hash is stored. Issue a new one
   by replacing the hash. A re-key admin endpoint is planned. Until then, save this as `rekey.js` in the
-  `UndauntedMetagame` folder, so that `require` finds `better-sqlite3`:
+  `legacy/UndauntedMetagame` folder, so that `require` finds `better-sqlite3`:
 
   ```js
   // node rekey.js <UserId>   (take the UserId from GET /undaunted/api/GetAllUsers)
@@ -445,7 +445,7 @@ Renaming does exist (`RenameUser`, see [Usernames](#usernames)).
 ## Switching features on {#switching-features-on}
 
 Several features are built but off by default, and a few that are on have a switch to turn them off.
-Each is one line in the metagame's settings: `.env` in the `UndauntedMetagame` folder on a hand-built
+Each is one line in the metagame's settings: `.env` in the `legacy/UndauntedMetagame` folder on a hand-built
 host, `C:\DauntlessRevived\data\config\metagame.env` on a kit server (edit it from an elevated editor).
 The kit keeps a line you add across re-runs and updates. Then restart the metagame **when nobody is
 playing** (a restart drops parties and matchmaking queues): by hand as in
@@ -479,7 +479,7 @@ Set-Location C:\DauntlessRevived\app\UndauntedMetagame
 node -e "const db = new (require('better-sqlite3'))(process.argv[1], { readonly: true }); console.log(db.prepare('SELECT COUNT(*) AS accountsWithSeveralCharacters FROM (SELECT userId FROM characters GROUP BY userId HAVING COUNT(*) > 1)').get())" C:/DauntlessRevived/data/undaunted.db
 ```
 
-On a hand-built host, run it from your `UndauntedMetagame` folder with your `DB_FILENAME`. A result of
+On a hand-built host, run it from your `legacy/UndauntedMetagame` folder with your `DB_FILENAME`. A result of
 0 means every purchase goes to the player's only character.
 
 ## Usernames
@@ -647,7 +647,7 @@ rollback journal, so there is no separate `-wal` file to forget.
 
 **Option 2: live backup.** SQLite's online backup API is safe while the metagame is writing, and
 `better-sqlite3` (already a metagame dependency) exposes it. Save this as `backup-db.js` in the
-`UndauntedMetagame` folder, so that `require` finds the module:
+`legacy/UndauntedMetagame` folder, so that `require` finds the module:
 
 ```js
 // node backup-db.js  -> C:/dr/backups/undaunted-YYYYMMDDHHMM.db (UTC time)

@@ -131,7 +131,7 @@ try {
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         $z = [IO.Compression.ZipFile]::OpenRead($wz.FullName)
         try { $names = @($z.Entries | ForEach-Object { $_.FullName }) } finally { $z.Dispose() }
-        Check 'the working tree zip has the server packages' (($names -contains 'UndauntedMetagame/package.json') -and ($names -contains 'deploy/windows-server/Install-DauntlessServer.ps1'))
+        Check 'the working tree zip has the server packages' (($names -contains 'legacy/UndauntedMetagame/package.json') -and ($names -contains 'deploy/windows-server/Install-DauntlessServer.ps1'))
         $leak = @($names | Where-Object { $_ -match '(^|/)\.env($|\.)' -and $_ -notmatch '\.env\.example$' -or $_ -match '\.(key|pem|db)$' -or $_ -match '(^|/)node_modules/' -or $_ -match '(^|/)dist/' })
         Check 'no .env, key, database, node_modules or dist in it' ($leak.Count -eq 0) (($leak | Select-Object -First 5) -join ', ')
     }

@@ -294,7 +294,7 @@ agrees with Phoenix's own file list.
 Two more cross-checks for 1.4.4:
 
 - The SHA-256 of the main executable and of the zip both equal the values pinned in the upstream
-  Undaunted launcher (`UndauntedLauncher/src/main.ts`):
+  Undaunted launcher (`legacy/UndauntedLauncher/src/main.ts`):
 
   | File | SHA-256 |
   |:-----|:--------|

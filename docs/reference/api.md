@@ -46,13 +46,13 @@ own. The management routes under `/undaunted/api` come from Undaunted and from t
 
 | Service | Folder | Listens on (default) | From the internet in public mode | Authentication |
 |:--------|:-------|:---------------------|:---------------------------------|:---------------|
-| Metagame | `UndauntedMetagame/` | `BIND_HOST` (`127.0.0.1`) and `PORT` (no default in code; the guides and the kit use 61000) | Only through the gateway, filtered | Player token, account key, admin key or game-server key, depending on the route |
-| Chat (inside the metagame, `CHAT=1`) | `UndauntedMetagame/src/realtime/` | `127.0.0.1:61099` (`CHAT_BIND_HOST`, `CHAT_PORT`) | Only through the gateway (a WebSocket upgrade) | Player token (SASL PLAIN) |
-| Deploy server | `UndauntedDeployServer/` | `BIND_HOST` (`127.0.0.1`) and `PORT` (no default in code; 61001 in the guides and the kit) | Never | None. It answers only direct callers on loopback. |
-| Content server | `UndauntedContent/` | `127.0.0.1:61002` | Through the gateway (`/content`) | Account key for game files; the rest is public |
-| Gateway | `UndauntedGateway/` | HTTPS on `0.0.0.0:443` | Yes: the only public TCP port | Its own refusals; passes credentials through |
-| Allowlist helper | `UndauntedGateway/` (the `allowlist` part) | `127.0.0.1:61005` | Never | Allowlist secret |
-| Launcher relay | `UndauntedLauncher/` | `127.0.0.1:61000` on each player's own PC | Not a service on the server | Refuses anything that is not the local game |
+| Metagame | `legacy/UndauntedMetagame/` | `BIND_HOST` (`127.0.0.1`) and `PORT` (no default in code; the guides and the kit use 61000) | Only through the gateway, filtered | Player token, account key, admin key or game-server key, depending on the route |
+| Chat (inside the metagame, `CHAT=1`) | `legacy/UndauntedMetagame/src/realtime/` | `127.0.0.1:61099` (`CHAT_BIND_HOST`, `CHAT_PORT`) | Only through the gateway (a WebSocket upgrade) | Player token (SASL PLAIN) |
+| Deploy server | `legacy/UndauntedDeployServer/` | `BIND_HOST` (`127.0.0.1`) and `PORT` (no default in code; 61001 in the guides and the kit) | Never | None. It answers only direct callers on loopback. |
+| Content server | `legacy/UndauntedContent/` | `127.0.0.1:61002` | Through the gateway (`/content`) | Account key for game files; the rest is public |
+| Gateway | `legacy/UndauntedGateway/` | HTTPS on `0.0.0.0:443` | Yes: the only public TCP port | Its own refusals; passes credentials through |
+| Allowlist helper | `legacy/UndauntedGateway/` (the `allowlist` part) | `127.0.0.1:61005` | Never | Allowlist secret |
+| Launcher relay | `legacy/UndauntedLauncher/` | `127.0.0.1:61000` on each player's own PC | Not a service on the server | Refuses anything that is not the local game |
 
 [Ports and network]({{ ports_page.url | relative_url }}) lists every port and how to change it.
 [Configuration]({{ config_page.url | relative_url }}) describes each setting named on this page.
@@ -331,7 +331,7 @@ work on the host.
 | POST | `/inventory/:characterId/:changeList` | token | Inventory migration stub. Answers `{code: null, message: ""}`. |
 | POST | `/reconcile` | token | `{balances: {id_currency_notes, CURRENCY_NOTES}, refreshInventory: true}`. With `BALANCE_FROM_INVENTORY` (on by default) each key is the quantity of that currency's stack (`CURRENCY_NOTES`, the Rams) in the inventory of the account's active character, the one saved last; a currency the character does not hold keeps the old value (the notes column of `users`). `0`: the old values only. |
 | GET | `/balance` | token | The currency sheet: the same 52 keys as before (both spellings, `CURRENCY_X` and `id_currency_x`). With `BALANCE_FROM_INVENTORY` (on) every key whose `CURRENCY_*` stack the active character holds reports that quantity; the others keep the old values (notes from the database, 25 weapon tokens, the rest 0). No key is added, removed or reordered. `CURRENCY_PLATINUM_UNIV` is not mapped. `0`: the old fixed sheet. |
-| GET | `/store-images/:file` | none | A store offer's icon (`<catalog id>.png` from `UndauntedMetagame/store-images`, the item's 1.4.4 art). The offers' `images.standard` and `images.feature` point here. Other names: 404. |
+| GET | `/store-images/:file` | none | A store offer's icon (`<catalog id>.png` from `legacy/UndauntedMetagame/store-images`, the item's 1.4.4 art). The offers' `images.standard` and `images.feature` point here. Other names: 404. |
 | GET | `/creator` | token | A fixed support-a-creator reply. |
 
 ### Store {#store}
@@ -867,7 +867,7 @@ the host's art pack and news. It only answers `GET` and `HEAD`, and there is no 
 The gateway exists only in public mode. It is HTTPS (TLS 1.2 or newer) with a self-signed
 certificate that the launcher pins by fingerprint, on `GATEWAY_BIND` (`0.0.0.0`) and `GATEWAY_PORT`
 (443).
-[UndauntedGateway/README.md]({{ site.github.repository_url }}/blob/dauntless-revived/UndauntedGateway/README.md)
+[legacy/UndauntedGateway/README.md]({{ site.github.repository_url }}/blob/dauntless-revived/legacy/UndauntedGateway/README.md)
 covers its limits, timeouts and access log in more depth.
 
 | Request | Goes to | Default |
@@ -998,12 +998,12 @@ invite. On a hand-built host, `POST $api/CreateInvite` with the body `{"uses": 1
 
 ## Changing the routes {#changing-the-routes}
 
-- `UndauntedMetagame/test/permissions.test.ts` pins the list of every metagame route with its access
+- `legacy/UndauntedMetagame/test/permissions.test.ts` pins the list of every metagame route with its access
   checks, in registration order. Adding a route or changing its checks fails that test until the list
   is updated, which forces a decision about who may call it.
-- The gateway's tests read `UndauntedMetagame/src/routes/undauntedapi.ts`, so every new
+- The gateway's tests read `legacy/UndauntedMetagame/src/routes/undauntedapi.ts`, so every new
   `/undaunted/api` route is automatically tested as blocked by the gateway. Only a route added to
-  `PUBLIC_UNDAUNTED_API` in `UndauntedGateway/src/policy.ts` becomes reachable from the internet.
+  `PUBLIC_UNDAUNTED_API` in `legacy/UndauntedGateway/src/policy.ts` becomes reachable from the internet.
 - A new game route is reachable through the gateway as soon as it exists. Give it an access check.
 
 [Developer guide]({{ dev_page.url | relative_url }}) covers building and running the tests.

@@ -10,7 +10,7 @@ own server, sets everything up and starts the game. English and Finnish.
 
 **No game files are in this app or in this repository.** They come from the host's content server,
 and every file is checked against the list of 410 files, sizes and SHA-256 hashes compiled into the
-launcher (`UndauntedContent/data/dauntless-1.4.4.json`). A server that offers anything else is refused.
+launcher (`legacy/UndauntedContent/data/dauntless-1.4.4.json`). A server that offers anything else is refused.
 
 **Community:** [Join the Dauntless Revived Discord](https://discord.gg/ZJRprHzsgu) for help, players and project updates. The launcher also keeps a Discord button in its sidebar.
 

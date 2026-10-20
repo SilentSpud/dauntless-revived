@@ -15,7 +15,7 @@ $script:DRPinned = @{
     ExeRelative     = 'Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe'
     Build           = 'dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827'
     Changelist      = '239827'
-    # Undaunted's prebuilt DLLs, kept in UndauntedLauncher/assets/ (same pins as friend-kit/).
+    # Undaunted's prebuilt DLLs, kept in legacy/UndauntedLauncher/assets/ (same pins as friend-kit/).
     Dlls            = [ordered]@{
         'dxgi.dll'                    = '9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F'
         'UndauntedInternalServer.dll' = '6f2433abebdee451edfc9060fa58eb3e2a3e73e5f7063de05386316b52d7b30b'
@@ -54,7 +54,7 @@ $script:DRNames = @{
     BackupTask     = 'Dauntless Revived backup'
     FirewallGroup  = 'Dauntless Revived'
     # The one rule the allowlist helper keeps up to date (shared contract C3). The helper finds it by
-    # its Name (UndauntedGateway/src/allowlist/firewall.ts) and disables any other rule that uses the
+    # its Name (legacy/UndauntedGateway/src/allowlist/firewall.ts) and disables any other rule that uses the
     # same display name, so the installer creates it under exactly this Name.
     AllowlistRule     = 'Dauntless Revived game ports (allowlist)'
     AllowlistRuleName = 'DauntlessRevived-GamePorts-Allowlist'
@@ -673,7 +673,7 @@ function Test-DRServerName([string]$Name) {
     return $true
 }
 
-# The launcher's display rule for a received name (cleanServerName in UndauntedLauncher/src/shared/invite.ts).
+# The launcher's display rule for a received name (cleanServerName in legacy/UndauntedLauncher/src/shared/invite.ts).
 function ConvertTo-DRCleanServerName([string]$Raw) {
     if ($Raw -match '[\x00-\x1f\x7f\u200e\u200f\u202a-\u202e\u2066-\u2069]') { return $null }
     $n = ($Raw.Trim() -replace '\s+', ' ')
@@ -687,7 +687,7 @@ function Test-DRUsername([string]$Name) { return ($Name -cmatch '^[A-Za-z0-9_]{3
 # Account keys (never printed)
 # ---------------------------------------------------------------------------------------------
 # The key in a file: owner.key (the key alone) or a launcher key backup (a "Key: ..." line), with the
-# launcher's rule (extractAccountKey in UndauntedLauncher/src/shared/username.ts). $null when the file
+# launcher's rule (extractAccountKey in legacy/UndauntedLauncher/src/shared/username.ts). $null when the file
 # holds no key; throws when it cannot be read.
 function Read-DRAccountKey([string]$Path) {
     $item = Get-Item -LiteralPath $Path -ErrorAction Stop
@@ -1001,6 +1001,12 @@ function Get-DRBuildEnvironment([string]$NodeExe) {
     return @{ NODE_ENV = 'development'; npm_config_update_notifier = 'false'; npm_config_fund = 'false'; npm_config_audit = 'false'; Path = "$(Split-Path $NodeExe -Parent);$env:Path" }
 }
 
+# A Dauntless Revived source folder: the Node packages in legacy\ (since the Rust port began) or, in older
+# code, at the top level.
+function Test-DRSource([string]$Dir) {
+    (Test-Path -LiteralPath (Join-Path $Dir 'legacy\UndauntedMetagame\package.json')) -or (Test-Path -LiteralPath (Join-Path $Dir 'UndauntedMetagame\package.json'))
+}
+
 function Build-DRApp {
     param($Paths, [string]$From, [string]$NodeExe, [hashtable]$Version)
     $appNew = "$($Paths.App).new"
@@ -1016,6 +1022,17 @@ function Build-DRApp {
     if ($code -ge 8) { Stop-DR "Copying the source failed (robocopy exit code $code)" }
     # .env files of the source must never come along, whatever their name
     Get-ChildItem -LiteralPath $appNew -Recurse -Force -Filter '.env*' -File | Where-Object { $_.Name -ne '.env.example' } | Remove-Item -Force
+    # The source keeps the Node packages in legacy\; the app keeps them at its top level, where the services,
+    # the updates and the backups expect them.
+    $legacy = Join-Path $appNew 'legacy'
+    if (Test-Path -LiteralPath $legacy) {
+        foreach ($d in @(Get-ChildItem -LiteralPath $legacy -Force)) {
+            $target = Join-Path $appNew $d.Name
+            if (Test-Path -LiteralPath $target) { Stop-DR "the source has both $($d.Name) and legacy\$($d.Name)" }
+            Move-Item -LiteralPath $d.FullName -Destination $target
+        }
+        Remove-Item -LiteralPath $legacy -Recurse -Force
+    }
     $npmCli = Join-Path (Split-Path $NodeExe -Parent) 'node_modules\npm\bin\npm-cli.js'
     if (-not (Test-Path -LiteralPath $npmCli)) { Stop-DR "npm not found next to $NodeExe" }
     $built = @()
@@ -1067,16 +1084,16 @@ function Get-DRTar {
 }
 
 # A source zip made by Deploy-Remote.ps1 (git archive) or downloaded from GitHub: extracted with
-# tar.exe; returns the folder that holds UndauntedMetagame\.
+# tar.exe; returns the source folder in it (Test-DRSource).
 function Expand-DRSourceZip($Paths, [string]$Zip, [string]$Tag) {
     $unz = Join-Path $Paths.Downloads "source-$Tag"
     if (Test-Path -LiteralPath $unz) { Remove-Item -LiteralPath $unz -Recurse -Force }
     New-Item -ItemType Directory -Force -Path $unz | Out-Null
     $code = Invoke-DRNative -FilePath (Get-DRTar) -Arguments @('-xf', $Zip, '-C', $unz) -LogBase (Join-Path $Paths.Logs 'install\source-unzip')
     if ($code -ne 0) { Stop-DR "Extracting the source zip failed (exit code $code)" }
-    if (Test-Path -LiteralPath (Join-Path $unz 'UndauntedMetagame\package.json')) { return $unz }
-    $sub = Get-ChildItem -LiteralPath $unz -Directory | Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'UndauntedMetagame\package.json') } | Select-Object -First 1
-    if (-not $sub) { Stop-DR "$Zip does not contain the server source (no UndauntedMetagame\package.json)" }
+    if (Test-DRSource $unz) { return $unz }
+    $sub = Get-ChildItem -LiteralPath $unz -Directory | Where-Object { Test-DRSource $_.FullName } | Select-Object -First 1
+    if (-not $sub) { Stop-DR "$Zip does not contain the server source (no legacy\UndauntedMetagame\package.json)" }
     return $sub.FullName
 }
 

@@ -1,4 +1,4 @@
-//! Invite strings, as in `UndauntedLauncher/src/shared/invite.ts`. Two versions exist:
+//! Invite strings, as in `legacy/UndauntedLauncher/src/shared/invite.ts`. Two versions exist:
 //!
 //! - v=1, private mode (the host's PC, reached over Tailscale, plain HTTP):
 //!   `dauntless-revived://join?v=1&host=…&port=61000&code=…&name=…[&share=…]`

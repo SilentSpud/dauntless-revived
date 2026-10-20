@@ -1,6 +1,6 @@
 # Player downloads from R2
 
-Upload only the files listed in `UndauntedContent/data/dauntless-1.4.4.json`, preserving their relative paths under a versioned prefix. Verify local SHA-256 values before uploading and run `rclone check` afterward. Do not upload server kits, configuration, databases or logs. Bucket-scoped R2 credentials may require `--s3-no-check-bucket` with `rclone copyto`; the destination bucket must already exist.
+Upload only the files listed in `legacy/UndauntedContent/data/dauntless-1.4.4.json`, preserving their relative paths under a versioned prefix. Verify local SHA-256 values before uploading and run `rclone check` afterward. Do not upload server kits, configuration, databases or logs. Bucket-scoped R2 credentials may require `--s3-no-check-bucket` with `rclone copyto`; the destination bucket must already exist.
 
 After the custom domain serves the verified files over HTTPS, set the content service environment:
 

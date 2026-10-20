@@ -13,7 +13,7 @@ import path from "node:path";
 // Windows uses Squirrel plus a portable ZIP. Linux builds AppImage, deb, rpm and a portable ZIP.
 // CI builds both platforms on every push and launcher-release.yml publishes them together.
 const skipRpm = process.env.DAUNTLESS_REVIVED_SKIP_RPM === "1";
-const launcherResources = ["assets/dxgi.dll", "assets/UndauntedInternalServer.dll", "assets/icon.png", "THIRD-PARTY-NOTICES.txt", "../client-mods"];
+const launcherResources = ["assets/dxgi.dll", "assets/UndauntedInternalServer.dll", "assets/icon.png", "THIRD-PARTY-NOTICES.txt", "../../client-mods"];
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -23,10 +23,10 @@ const config: ForgeConfig = {
     appBundleId: "io.github.mixutin.dauntlessrevived",
     appCopyright: "Dauntless Revived contributors. Free software under the GNU AGPL-3.0.",
     // assets/icon.ico (the exe, and below the installer) and assets/icon.png (the window) are copies of
-    // the brand icons in ../brand/launcher/, made by npm run icon.
+    // the brand icons in ../../brand/launcher/, made by npm run icon.
     icon: "assets/icon",
     // The two pinned DLLs the game needs, the window icon, and the license texts of the third-party
-    // software the launcher and the DLLs include, plus ../client-mods (UE4SS and the client mods, installed
+    // software the launcher and the DLLs include, plus ../../client-mods (UE4SS and the client mods, installed
     // by src/main/client-mods.ts). Windows also ships the offline runtime outside the asar.
     extraResource: launcherResources,
     win32metadata: {
@@ -64,7 +64,7 @@ const config: ForgeConfig = {
       description: "Dauntless Revived Launcher",
       setupExe: "DauntlessRevivedLauncher-Setup.exe",
       setupIcon: "assets/icon.ico",
-      iconUrl: "https://raw.githubusercontent.com/mixutin/dauntless-revived/dauntless-revived/UndauntedLauncher/assets/icon.ico",
+      iconUrl: "https://raw.githubusercontent.com/mixutin/dauntless-revived/dauntless-revived/legacy/UndauntedLauncher/assets/icon.ico",
       noMsi: true,
     }, ["win32"]),
     new MakerZIP({}, ["win32", "linux"]),

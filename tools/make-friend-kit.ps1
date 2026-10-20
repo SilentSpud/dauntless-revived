@@ -23,7 +23,7 @@ foreach ($f in "setup.ps1", "play.ps1", "Setup.cmd", "Play Dauntless.cmd", "READ
   Copy-Item -LiteralPath (Join-Path $Repo "friend-kit\$f") -Destination $Stage
 }
 foreach ($name in $Pinned.Keys) {
-  $src = Join-Path $Repo "UndauntedLauncher\assets\$name"
+  $src = Join-Path $Repo "legacy\UndauntedLauncher\assets\$name"
   if ((Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash -ne $Pinned[$name]) { throw "$name does not match its pinned hash" }
   Copy-Item -LiteralPath $src -Destination (Join-Path $Stage "dll")
 }

@@ -197,7 +197,7 @@ palkkiotehtävälistan tyhjänä).
 **Näin hänen työnsä mainitaan:**
 
 - Neljä hänen koodistaan siirrettyä lähdetiedostoa (`escalationConfig.ts`, `escalation.ts`,
-  `freestore.ts` ja `slayerlinks.ts` kansiossa `UndauntedMetagame/src/controllers/`) alkavat rivillä
+  `freestore.ts` ja `slayerlinks.ts` kansiossa `legacy/UndauntedMetagame/src/controllers/`) alkavat rivillä
   `Ported from Harmonicrain/Undaunted (895f7c7), Copyright (C) 2026 Harmonic, AGPL-3.0-only`, jonka
   jälkeen kerrotaan, miten niitä muokattiin (tai Slayer Linksin kohdalla kirjoitettiin uudelleen ja
   korjattiin) Dauntless Revivedia varten. Hänen ideoidensa varaan rakennettu oma koodimme mainitsee

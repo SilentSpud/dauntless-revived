@@ -342,7 +342,7 @@ function New-SourceZip([string]$OutFile) {
     # content server (they may be uncommitted), the install fails on the server only after hours of
     # uploading. Catch it here, before the backup and the ~10.5 GB game zip go up.
     if (-not $WorkingTree -and $Mode -eq 'Public' -and -not $script:Test) {
-        foreach ($need in 'UndauntedGateway/package.json', 'UndauntedContent/package.json') {
+        foreach ($need in 'legacy/UndauntedGateway/package.json', 'legacy/UndauntedContent/package.json') {
             $old2 = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
             try { & git.exe -C $repo cat-file -e "HEAD:$need" 2>$null; $present = ($LASTEXITCODE -eq 0) } finally { $ErrorActionPreference = $old2 }
             if (-not $present) { Stop-DR "HEAD does not contain $need, which public mode needs. Commit and push your work, or add -WorkingTree to deploy your current files." }

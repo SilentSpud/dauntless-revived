@@ -11,7 +11,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(__dirname, "..", "..");
-const BRAND = path.resolve(ROOT, "..", "brand");
+const BRAND = path.resolve(ROOT, "..", "..", "brand");
 const CSS_FILE = path.join(ROOT, "src", "renderer", "styles.css");
 const CSS = readFileSync(CSS_FILE, "utf8").replace(/\r\n/g, "\n");
 const HTML = readFileSync(path.join(ROOT, "index.html"), "utf8");

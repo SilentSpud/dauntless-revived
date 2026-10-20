@@ -63,8 +63,8 @@ no longer match.
 | `icons/favicon.ico` | 16, 32, 48 | The docs site's favicon. |
 | `icons/apple-touch-icon.png` | 180x180 | `<link rel="apple-touch-icon">`. Opaque on purpose: iOS fills transparent pixels with black. |
 | `icons/icon-192.png`, `icons/icon-512.png` | square | The docs site links the 192 one as its large PNG icon; both also suit a web app manifest. |
-| `launcher/icon.ico` | 16, 24, 32, 48, 64, 128, 256 | The launcher's Windows icon (executable, installer, shortcut), as `UndauntedLauncher/assets/icon.ico`. |
-| `launcher/icon-256.png`, `-512`, `-1024` | square | The launcher's window icon (the 256 one, as `UndauntedLauncher/assets/icon.png`) and larger listings. |
+| `launcher/icon.ico` | 16, 24, 32, 48, 64, 128, 256 | The launcher's Windows icon (executable, installer, shortcut), as `legacy/UndauntedLauncher/assets/icon.ico`. |
+| `launcher/icon-256.png`, `-512`, `-1024` | square | The launcher's window icon (the 256 one, as `legacy/UndauntedLauncher/assets/icon.png`) and larger listings. |
 | `launcher/logo-inapp.png`, `logo-inapp@2x.png` | 320x256, 640x512 | The full logo inside the launcher window (1x and 2x), in its left-hand rail. |
 | `social-preview.png` | 1280x640 | GitHub repository settings, Social preview. The same image is kept at `.github/assets/social-preview.png`. |
 | `og.png` | 1200x630 | The docs site's default `og:image`, copied as `docs/assets/og-revived.png`. Give the copy a new name whenever the image changes: link previews (Discord, Slack, social sites) cache images by URL. |
@@ -99,12 +99,12 @@ art is not redrawn.
 
 ### The launcher
 
-The launcher uses copies: `npm run icon` in `UndauntedLauncher` copies `launcher/icon.ico` and
+The launcher uses copies: `npm run icon` in `legacy/UndauntedLauncher` copies `launcher/icon.ico` and
 `launcher/icon-256.png` to its `assets/` (as `icon.ico` and `icon.png`), and the in-app logo and the
 32, 64 and 512 px emblems to `src/renderer/brand/`. Its unit tests fail when a copy is out of date,
 so run it after `build.py` changes one of them.
 
-Its theme (`UndauntedLauncher/src/renderer/styles.css`) defines the eight tokens as `--dr-ink` to
+Its theme (`legacy/UndauntedLauncher/src/renderer/styles.css`) defines the eight tokens as `--dr-ink` to
 `--dr-frost` and uses them like the docs site: an `ink` page with `navy` and `deep` surfaces,
 `frost` text and `steel` muted text, `ice` links, primary buttons in `ink` on `ice` (`ink` on `glow`
 hovered, `frost` on `azure` pressed), `glow` focus rings, and `steel` edges on controls on `navy`. The

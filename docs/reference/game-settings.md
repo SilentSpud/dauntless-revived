@@ -62,7 +62,7 @@ DLLs do, and the pinned build facts. The step-by-step guides are
 |:--|:--|:--|
 | Exe | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` from the pinned build | The same exe |
 | DLLs | `dxgi.dll` and `UndauntedInternalServer.dll` next to the exe | The same two files |
-| Started by | The launcher (`UndauntedLauncher/`), the friend kit's `play.ps1`, or the host's own `play.ps1` | The deploy server (`UndauntedDeployServer/`) |
+| Started by | The launcher (`legacy/UndauntedLauncher/`), the friend kit's `play.ps1`, or the host's own `play.ps1` | The deploy server (`legacy/UndauntedDeployServer/`) |
 | First argument | The metagame address, `host:port` | The game-server key (secret) |
 | Server DLL mode | Client mode: answers the backend endpoints in memory | Server mode: the command line contains `-server` |
 | `Engine.ini` | Memory lines, an optional forced graphics level, the chat redirect | Memory lines and the chat redirect |
@@ -107,7 +107,7 @@ is in [Game assets and config]({{ assets_page.url | relative_url }}).
 
 | Writer | When | `Engine.ini` | `Game.ini` | `GameUserSettings.ini` |
 |:-------|:-----|:-------------|:-----------|:-----------------------|
-| Launcher (`UndauntedLauncher/`) | Every PLAY, before the game starts | Replaces `[SystemSettings]` and `[OnlineSubsystemMcp.XMPP]` | Never | `sg.<Group>Quality` lines, when a level is chosen and the file exists |
+| Launcher (`legacy/UndauntedLauncher/`) | Every PLAY, before the game starts | Replaces `[SystemSettings]` and `[OnlineSubsystemMcp.XMPP]` | Never | `sg.<Group>Quality` lines, when a level is chosen and the file exists |
 | Friend kit, `friend-kit/play.ps1` | Every launch, also with `-DryRun` | The same lines as the launcher, except the launcher's opt-in [auto exposure](#auto-exposure) line | Never | Same as the launcher |
 | Host's `C:\dr\tools\play.ps1` (not in the repository; listed in full in [Host a server, step 13]({{ host_page.url | relative_url }}#launch-the-client)) | Every launch | The same lines | Never | Same, plus `sg.ResolutionQuality=100.000000` |
 | Host's `make-gameini.ps1` (a script to save from [Host a server, step 8]({{ host_page.url | relative_url }}#game-ini); not in the repository) | When you run it | Not touched | Overwrites the whole file | Not touched |
@@ -515,7 +515,7 @@ command line; see [HTTP API]({{ api_page.url | relative_url }}).
 | `dxgi.dll` | 11,264 bytes | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | A proxy. Windows loads it from the game folder instead of the system copy. It loads the real `System32\dxgi.dll`, forwards `CreateDXGIFactory`, `CreateDXGIFactory1` and `CreateDXGIFactory2`, and loads `UndauntedInternalServer.dll`. Its source has not been published. |
 | `UndauntedInternalServer.dll` | 123,392 bytes | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | Undaunted's server DLL, version 0.0.3. Source in `native/internal-server/`. It hooks the game in memory, in client mode or in server mode (below). It needs the Visual C++ 2015-2022 x64 runtime (`MSVCP140.dll` and `VCRUNTIME140_1.dll` in `System32`). |
 
-Both are upstream Undaunted's prebuilt, unsigned binaries, kept in `UndauntedLauncher/assets/`.
+Both are upstream Undaunted's prebuilt, unsigned binaries, kept in `legacy/UndauntedLauncher/assets/`.
 Every hook address in the server DLL is fixed to the pinned exe, so **never copy them into another
 build**; in 2.1.1 they would crash the game. Antivirus may flag the proxy; see
 [Windows Defender and the unsigned DLLs]({{ trouble_page.url | relative_url }}#windows-defender-and-the-unsigned-dlls).
@@ -526,10 +526,10 @@ the one that contains `Archon\`.
 | Installed by | Game folder (default) | Copied from | Checks |
 |:-------------|:----------------------|:------------|:-------|
 | Launcher | `%LOCALAPPDATA%\DauntlessRevived\Game`; Settings > Game > Game files can move it | The launcher's own resources folder | Hashes the launcher's copy, a temporary copy (`<name>.new`) and the final file, and clears the "downloaded from the internet" mark. Checks again before every PLAY and repairs them if needed. |
-| Friend kit, `setup.ps1` | `-Game`, default `C:\D144\Dauntless` | The kit's `dll\` folder (in a repository checkout, `UndauntedLauncher\assets\`) | Hash before copying, `Unblock-File`, hash again after. A DLL that already matches is left alone. `play.ps1` checks both on every launch. |
+| Friend kit, `setup.ps1` | `-Game`, default `C:\D144\Dauntless` | The kit's `dll\` folder (in a repository checkout, `legacy\UndauntedLauncher\assets\`) | Hash before copying, `Unblock-File`, hash again after. A DLL that already matches is left alone. `play.ps1` checks both on every launch. |
 | Server kit, `Install-DauntlessServer.ps1` | `<InstallRoot>\game\Dauntless` (default `C:\DauntlessRevived\game\Dauntless`), or `-GameDir` | `<InstallRoot>\app\UndauntedLauncher\assets` | Hash before copying, `Unblock-File`, hash again after. A DLL that already matches is left alone. |
-| By hand | [Host a server, step 5]({{ host_page.url | relative_url }}#dlls); [Join as a friend]({{ friends_page.url | relative_url }}), step 3 | `UndauntedLauncher/assets/` | As written there |
-| `tools/make-friend-kit.ps1` | Not applicable: it packs them into the kit's `dll\` folder | `UndauntedLauncher/assets/` | Hash before packing |
+| By hand | [Host a server, step 5]({{ host_page.url | relative_url }}#dlls); [Join as a friend]({{ friends_page.url | relative_url }}), step 3 | `legacy/UndauntedLauncher/assets/` | As written there |
+| `tools/make-friend-kit.ps1` | Not applicable: it packs them into the kit's `dll\` folder | `legacy/UndauntedLauncher/assets/` | Hash before packing |
 
 To uninstall, delete the two files. Nothing else in the game folder changes. The content manifest
 does not list them, and the launcher refuses a manifest that does.
@@ -607,7 +607,7 @@ DLL is an offset into the pinned exe, so the exe hash is what keeps the DLL safe
 | Engine | Unreal Engine `4.25.3-239827+++dauntless+rel-1.4.4`, the version the DLL's SDK headers were generated from |
 | Exe | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe`, SHA-256 `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4`, 103,673,520 bytes |
 | Game zip | `BaseGame144.zip`, SHA-256 `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D`, 10,479,214,119 bytes. Its top folder is `Dauntless\`, which contains `Archon\`. |
-| Content manifest | `UndauntedContent/data/dauntless-1.4.4.json`: 410 files, 10,893,512,875 bytes, with a `build` field equal to the build string. It lists no ini files (the cooked config is inside the paks, and the user config lives outside the game folder) and not the two DLLs. Generated with `tools/make-game-manifest.js`. |
+| Content manifest | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 files, 10,893,512,875 bytes, with a `build` field equal to the build string. It lists no ini files (the cooked config is inside the paks, and the user config lives outside the game folder) and not the two DLLs. Generated with `tools/make-game-manifest.js`. |
 | Phoenix's own manifest | `Manifest.bin.json` in the game folder: 406 entries. Our 410 are those plus `Manifest.bin.json` itself, `Manifest.bin` and two empty `debug.log` files. How we checked it is in [Host a server, step 2]({{ host_page.url | relative_url }}#verify-the-build) and [Verifying game files]({{ verification_page.url | relative_url }}). |
 
 ### Who checks the pins {#pin-checks}
@@ -627,11 +627,11 @@ together, and only together with the files they describe.
 
 | Value | Files |
 |:------|:------|
-| Exe SHA-256 | `UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.js`, `UndauntedContent/data/dauntless-1.4.4.json` (and its test) |
-| Exe size | `UndauntedLauncher/src/main/constants.ts` and `UndauntedContent/data/dauntless-1.4.4.json` (and its test). The other files check the hash only. |
-| DLL SHA-256s | `UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-friend-kit.ps1` |
+| Exe SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test) |
+| Exe size | `legacy/UndauntedLauncher/src/main/constants.ts` and `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test). The other files check the hash only. |
+| DLL SHA-256s | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-friend-kit.ps1` |
 | Zip SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (with the byte count), `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| Build string | `UndauntedLauncher/src/main/manifest.ts`, `UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.js`, the manifest JSON |
+| Build string | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.js`, the manifest JSON |
 | Changelist | `deploy/windows-server/DauntlessServer.Common.ps1`, which writes the metagame's `TARGET_CHANGELIST` |
 
 ---
@@ -640,7 +640,7 @@ together, and only together with the files they describe.
 
 Some of what the game shows comes from the metagame's own data files, not from the game's paks: the
 progression tracks (Hunt Pass seasons and mastery), the store's offers and the Escalation seasons. They
-live in `UndauntedMetagame/src/vendor/` and are copied to `dist/vendor/` by the build. They hold
+live in `legacy/UndauntedMetagame/src/vendor/` and are copied to `dist/vendor/` by the build. They hold
 identifiers and tuning values read from the 1.4.4 client, and no game assets.
 
 ### Hunt Pass seasons and mastery tracks {#hunt-pass-seasons}
@@ -688,7 +688,7 @@ Only used with `STORE=free` ([The in-game store]({{ '/findings/store.html' | rel
 | `vendor/store_item_kinds.json` | For each of the 211 items the store sells: `stacked` or `instanced`, the stackable flag of the client's item catalogue. An item without an entry is never granted. |
 | `test/data/store_art_skus.json` | The 994 SKU ids whose store tile image is 2:1. Only a test reads it: every offer in the storefront must be one of them, or its tile shows the fallback art or a stretched image. |
 
-Change the catalogue only together with the test (`npm test` in `UndauntedMetagame`) and an in-game
+Change the catalogue only together with the test (`npm test` in `legacy/UndauntedMetagame`) and an in-game
 check of the store tabs: an empty tab placed before a filled one shifts every later tab's contents.
 The repeatable bounty-token bundle (`bundle_currency_bounty_small`) is listed only with
 `STORE_REPEATABLE_TOKENS=1`.
@@ -709,16 +709,16 @@ it: a wrong value refuses (or, in the soft rules, warns about) real saves.
 
 For contributors. The `Engine.ini` lines exist in four copies that must stay identical:
 
-- `UndauntedLauncher/src/main/engineini.ts`
+- `legacy/UndauntedLauncher/src/main/engineini.ts`
 - `friend-kit/play.ps1`
 - the host's `play.ps1`, and its listing in [Host a server, step 13]({{ host_page.url | relative_url }}#launch-the-client)
 - `Write-DRGameUserConfig` in `deploy/windows-server/DauntlessServer.Common.ps1` (memory lines and
   chat only)
 
-The launch arguments are in `UndauntedLauncher/src/main/launch.ts`, `friend-kit/play.ps1` and the
+The launch arguments are in `legacy/UndauntedLauncher/src/main/launch.ts`, `friend-kit/play.ps1` and the
 host's `play.ps1`.
 
-Tests that cover them: `UndauntedLauncher/test/engineini-launch.test.ts` checks the launcher's
+Tests that cover them: `legacy/UndauntedLauncher/test/engineini-launch.test.ts` checks the launcher's
 `Engine.ini` byte for byte and pins the exact argument list, and
 `deploy/windows-server/tests/Test-Sandbox.ps1` checks that a sandbox install writes 167 `Game.ini`
 lines pointing at `127.0.0.1:62000`. Nothing tests the kit's `Engine.ini`. The kit's `Game.ini`

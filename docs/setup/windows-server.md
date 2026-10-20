@@ -288,7 +288,7 @@ Run through this checklist once the server is deployed:
    with no Run anyway; then the friend checks the file's SHA-256 against `SHA256SUMS.txt` from the same
    release and unblocks it (right-click > **Properties** > **Unblock**, or `Unblock-File`), as
    [Join as a friend]({{ friends_page.url | relative_url }}) explains. Code-signing is roadmap item
-   4.16. CI publishes every new version in `UndauntedLauncher/package.json` by itself once all
+   4.16. CI publishes every new version in `legacy/UndauntedLauncher/package.json` by itself once all
    checks pass (the repository variable `LAUNCHER_AUTO_RELEASE` set to `false` pauses that), and
    Actions > **Launcher release** > **Run workflow** on `dauntless-revived` publishes by hand (see
    "Releases and updates" in the launcher's README). Or send the `Setup.exe` with its SHA-256 through

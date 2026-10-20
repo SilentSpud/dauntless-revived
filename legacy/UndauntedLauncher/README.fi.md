@@ -10,7 +10,7 @@ omalta palvelimelta, laittaa kaiken valmiiksi ja käynnistää pelin. Kielinä e
 
 **Sovelluksessa tai tässä repositoriossa ei ole pelitiedostoja.** Ne tulevat ylläpitäjän
 sisältöpalvelimelta, ja jokainen tiedosto tarkistetaan käynnistimeen käännettyä listaa vasten
-(410 tiedostoa, koot ja SHA-256-tiivisteet, `UndauntedContent/data/dauntless-1.4.4.json`).
+(410 tiedostoa, koot ja SHA-256-tiivisteet, `legacy/UndauntedContent/data/dauntless-1.4.4.json`).
 Palvelin, joka tarjoaa jotain muuta, hylätään.
 
 **Yhteisö:** [Liity Dauntless Revived Discordiin](https://discord.gg/ZJRprHzsgu) saadaksesi apua, pelikavereita ja projektin päivityksiä. Discord-painike näkyy myös aina käynnistimen sivupalkissa.

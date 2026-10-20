@@ -61,9 +61,9 @@ in, but the stock client never calls it.
 
 | Component | Language | Role |
 |---|---|---|
-| `UndauntedLauncher` | Electron | Checks the exe's SHA-256, copies the two DLLs into `Archon\Binaries\Win64` before every launch, and starts the client with the player's account key |
-| `UndauntedMetagame` | TypeScript, SQLite (Drizzle) | The backend: login, characters, inventory, loadouts, progression, the matchmaking queue, an admin API |
-| `UndauntedDeployServer` | TypeScript (Express) | Starts and supervises game-server processes |
+| `legacy/UndauntedLauncher` | Electron | Checks the exe's SHA-256, copies the two DLLs into `Archon\Binaries\Win64` before every launch, and starts the client with the player's account key |
+| `legacy/UndauntedMetagame` | TypeScript, SQLite (Drizzle) | The backend: login, characters, inventory, loadouts, progression, the matchmaking queue, an admin API |
+| `legacy/UndauntedDeployServer` | TypeScript (Express) | Starts and supervises game-server processes |
 | `UndauntedInternalServer.dll` | C++ (MinHook, a Dumper-7 SDK) | Injected into every game process, the client included. Runs in server mode or client mode. |
 | `dxgi.dll` | prebuilt proxy | Loads the DLL into the process |
 

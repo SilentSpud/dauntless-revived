@@ -48,16 +48,16 @@ Three setups come up throughout:
 
 | Port | Protocol | Who listens | Runs on | Reachable from other machines |
 |:-----|:---------|:------------|:--------|:------------------------------|
-| 443 | TCP | Gateway (`UndauntedGateway/`), TLS | Server, public mode only | Everyone. The only public TCP port. |
-| 61000 | TCP | Metagame (`UndauntedMetagame/`) | Server | Public mode: never, only through the gateway. Private mode: Tailscale peers. Dev PC: nobody. |
-| 61001 | TCP | Deploy server (`UndauntedDeployServer/`) | Server | Never. |
-| 61002 | TCP | Content server (`UndauntedContent/`), game files for the launcher | Server, when installed | Public mode: never, only through the gateway. Private mode: Tailscale peers. |
-| 61005 | TCP | Allowlist helper (`UndauntedGateway/`, runs as SYSTEM) | Server, public mode only | Never. |
+| 443 | TCP | Gateway (`legacy/UndauntedGateway/`), TLS | Server, public mode only | Everyone. The only public TCP port. |
+| 61000 | TCP | Metagame (`legacy/UndauntedMetagame/`) | Server | Public mode: never, only through the gateway. Private mode: Tailscale peers. Dev PC: nobody. |
+| 61001 | TCP | Deploy server (`legacy/UndauntedDeployServer/`) | Server | Never. |
+| 61002 | TCP | Content server (`legacy/UndauntedContent/`), game files for the launcher | Server, when installed | Public mode: never, only through the gateway. Private mode: Tailscale peers. |
+| 61005 | TCP | Allowlist helper (`legacy/UndauntedGateway/`, runs as SYSTEM) | Server, public mode only | Never. |
 | 61099 | TCP | Chat, inside the metagame (only with `CHAT=1`), on `127.0.0.1` | Server | Never directly. Public mode: through the gateway. No firewall rule anywhere. |
 | 8777 | UDP | Ramsgate game server | Server | Players. Public mode: only addresses of logged-in players. Private mode: Tailscale peers. |
 | 8776 | UDP | Training Dojo game server | Server | As 8777. |
 | 8770-8775 | UDP | Hunt and tutorial game servers, one process per group | Server | As 8777. |
-| 61000 | TCP | Launcher relay (`UndauntedLauncher/`) | Each player's PC, public mode, only while the game runs | Never: it listens on `127.0.0.1` only. |
+| 61000 | TCP | Launcher relay (`legacy/UndauntedLauncher/`) | Each player's PC, public mode, only while the game runs | Never: it listens on `127.0.0.1` only. |
 | 22 | TCP | OpenSSH (Windows, not part of the stack) | Server | Public mode: allowed by the kit, for key-only administration. Limit it to your own address at the provider. |
 | 3389 | TCP, UDP | Remote Desktop (Windows) | Server | Public mode: only from `-AdminIp`; without it the kit turns internet-open rules off, unless `-KeepRdpOpen`. |
 
@@ -187,7 +187,7 @@ firewall rule opens it in any mode.
   `CHAT_PORT` and the gateway's `GATEWAY_WS_URL`, so they cannot disagree. With chat off the gateway
   answers the upgrade with 502, and the game retries every 15-45 s, harmlessly.
 - **Dev PC** (one PC): the game connects to `ws://127.0.0.1:61099` straight. Set `CHAT=1` in
-  `UndauntedMetagame/.env` ([Host a server]({{ host_page.url | relative_url }})).
+  `legacy/UndauntedMetagame/.env` ([Host a server]({{ host_page.url | relative_url }})).
 - **Private mode** (Tailscale): not supported yet. The game would connect to `ws://<Tailscale
   address>:61099`, but the listener refuses any address other than loopback, so the connection fails
   harmlessly, as before.
@@ -422,12 +422,12 @@ sandbox install or `Test-Sandbox.ps1` is running. How to run the tests is on
 
 | Suite | Ports |
 |:------|:------|
-| `UndauntedMetagame/`, `npm test` | 62014, 62015-62016, 62471-62472, 62481-62483, 62501-62502, 62901-62904, 62921-62922; the chat tests' own listeners take a random free port |
-| `UndauntedDeployServer/`, `npm test` | 62013, 62473 |
-| `UndauntedGateway/`, `npm test` | 62400-62499 (in use: 62400-62405, 62409-62417, 62420-62422, 62430-62436) |
-| `UndauntedContent/`, `npm test` | 62011, 62012, 62019 |
-| `UndauntedContent/`, `npm run test:integration` | 62002 and 62003 (`CONTENT_IT_PORT`, `CONTENT_IT_MOCK_PORT`) |
-| `UndauntedLauncher/`, `npm test` | 62012, 62013, 62401-62404, 62409, 62420-62422, 62429, 62440-62444 |
+| `legacy/UndauntedMetagame/`, `npm test` | 62014, 62015-62016, 62471-62472, 62481-62483, 62501-62502, 62901-62904, 62921-62922; the chat tests' own listeners take a random free port |
+| `legacy/UndauntedDeployServer/`, `npm test` | 62013, 62473 |
+| `legacy/UndauntedGateway/`, `npm test` | 62400-62499 (in use: 62400-62405, 62409-62417, 62420-62422, 62430-62436) |
+| `legacy/UndauntedContent/`, `npm test` | 62011, 62012, 62019 |
+| `legacy/UndauntedContent/`, `npm run test:integration` | 62002 and 62003 (`CONTENT_IT_PORT`, `CONTENT_IT_MOCK_PORT`) |
+| `legacy/UndauntedLauncher/`, `npm test` | 62012, 62013, 62401-62404, 62409, 62420-62422, 62429, 62440-62444 |
 | `deploy/windows-server/tests/Test-KitUnit.ps1` | 62450 and 62451 (`-Port` and the port above it, 62000-62499) |
 | `-Sandbox` install and `Test-Sandbox.ps1` | Metagame 62000, content 62002, allowlist helper 62005, gateway 62443, chat (the gateway's WebSocket target and the metagame's `CHAT_PORT`) 62099. 62001 is written for the deploy server, which does not run in a sandbox. |
 

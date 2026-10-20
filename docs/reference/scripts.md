@@ -175,8 +175,8 @@ server's host key in a `known_hosts` file. Commands run on the server as
 | `-Ref` | branch, tag or commit | `friends-v1` (`$DRRepo.PinnedRef`) | The ref for `-Source GitHub`. |
 | `-WorkingTree` | switch | off | Sends your current files instead of `HEAD`: tracked and untracked files that git does not ignore, minus the folders `node_modules`, `dist`, `build`, `out` and `.vite`, every `.env` and `.env.*` file except `.env.example`, and `*.key`, `*.pem`, `*.db`, `*.db-journal`, `*.db-wal`, `*.db-shm` and `*.log`. The commit is recorded as `<commit>-worktree`. Cannot be combined with `-Source GitHub`. |
 
-In public mode an upload of `HEAD` is refused when `HEAD` lacks `UndauntedGateway` or
-`UndauntedContent`. The check runs after the kit upload, before the code, the backup and the game
+In public mode an upload of `HEAD` is refused when `HEAD` lacks `legacy/UndauntedGateway` or
+`legacy/UndauntedContent`. The check runs after the kit upload, before the code, the backup and the game
 zip are sent. Commit your work, or add `-WorkingTree`. Uncommitted changes are not deployed without
 `-WorkingTree`, and the script warns about them.
 
@@ -275,19 +275,19 @@ manifest. Then it installs the two server DLLs with their pinned hashes.
 |:----------|:-----|:--------|:-------------|
 | `-SourceZip` | path of a source zip (`git archive`) | none | Builds from an uploaded zip. This is what `Deploy-Remote.ps1` sends. |
 | `-SourceCommit` | 7-40 hex characters, optionally with `-dirty` or `-worktree` | `zip-` and the first 12 hex characters of the zip's SHA-256 | Names the commit of `-SourceZip` for the version reports. |
-| `-SourceDir` | a folder with `UndauntedMetagame\package.json` | none | Builds from a local folder. In a git checkout the commit is read from git, with `-dirty` when there are changes. |
+| `-SourceDir` | a folder with `legacy\UndauntedMetagame\package.json` | none | Builds from a local folder. In a git checkout the commit is read from git, with `-dirty` when there are changes. |
 | `-Ref` | branch, tag or commit: letters, digits, `.`, `_`, `/`, `-` (1-100) | See below | Downloads that ref from GitHub and builds it. |
 
 With none of the three, the installer builds the checkout it runs in, if it runs from one (when
-`..\..\UndauntedMetagame\package.json` exists). Otherwise it builds `$DRRepo.PinnedRef`, which is
+`..\..\legacy\UndauntedMetagame\package.json` exists). Otherwise it builds `$DRRepo.PinnedRef`, which is
 `friends-v1`, from GitHub. **Watch out:** a re-run from `<root>\bin` is not in a checkout, so without
 a source parameter it downloads `friends-v1`. To keep the installed code, re-deploy with
 `Deploy-Remote.ps1`, which uploads the code again, or pass `-Ref <the installed commit>` if that
 commit is on GitHub. A commit that is already built is not rebuilt, unless it ends in `-dirty` or
 `-worktree` or is `unknown`. The build copies the source into `<root>\app.new` (without
 `node_modules`, build output, `.git`, `.env` files, keys, certificates, databases and logs), runs
-`npm ci` and `npm run build` in the four server packages (`UndauntedMetagame`,
-`UndauntedDeployServer`, `UndauntedContent` and `UndauntedGateway`; the launcher is not built), then
+`npm ci` and `npm run build` in the four server packages (`legacy/UndauntedMetagame`,
+`legacy/UndauntedDeployServer`, `legacy/UndauntedContent` and `legacy/UndauntedGateway`; the launcher is not built), then
 swaps it in, keeping the old build as `app.prev`.
 
 **Owner, restore and certificate**
@@ -384,7 +384,7 @@ certificate, the game files and the firewall stay as they are; run the installer
 | `-Ref` | branch, tag or commit | `friends-v1` | Downloads that ref from GitHub. This is the default parameter set: with no source parameter at all, the updater builds `friends-v1`, which may be older than what the server runs. **Always name the source.** |
 | `-SourceZip` | path | none | Builds from a source zip. `Deploy-Remote.ps1 -Update` passes this. |
 | `-SourceCommit` | 7-40 hex characters, optionally with `-dirty` or `-worktree` | `zip-<12 hex of the zip's SHA-256>` | The commit of `-SourceZip`. |
-| `-SourceDir` | a folder with `UndauntedMetagame\package.json` | none | Builds from a local folder. |
+| `-SourceDir` | a folder with `legacy\UndauntedMetagame\package.json` | none | Builds from a local folder. |
 | `-Rollback` | switch | off | Switches back to `app.prev` by hand: stop (with a backup), rename `app` to `app.rolledback` and `app.prev` to `app`, restore the recorded commit, refresh the scripts in `<root>\bin`, start without another backup, check. |
 | `-Force` | switch | off | Rebuilds even when that commit is already installed. A commit ending in `-dirty` or `-worktree` is always rebuilt. |
 | `-HealthTimeoutSec` | seconds | `180` | How long the new build may take to become healthy before the automatic rollback. |
@@ -677,7 +677,7 @@ at CRLF line endings, also in `git archive`, which is what `Deploy-Remote.ps1` u
 
 | Script | Parameters | What it tests |
 |:-------|:-----------|:--------------|
-| `tests\Test-KitUnit.ps1` | `-WorkDir` (default `%TEMP%\dr-kit-unit`; emptied at the start, deleted at the end); `-Port` (62000-62499, default `62450`; the performance check also uses the port above it) | Every kit script parses on PowerShell 5.1 and is ASCII only; invite lines v1 and v2 and everything that must be refused; addresses and `.env` rules; certificate fingerprints; TLS pinning against a local test server; `Get-ServerStatus.ps1` with and without a key; key files; the upload helper; the performance sampler (CPU arithmetic, roles from the port range, the fixed header, day files and their pruning, player counts from a stand-in metagame with no names or keys in the file, a decimal point on a Finnish Windows, and refusing a junction or a hard link); the chat settings (`CHAT_PORT` equal to the gateway's WebSocket port in normal and sandbox installs, `-Chat` against `server.json`, the keys surviving a re-run, and the `chat` status line). Needs `node` on `PATH` and `npm ci` in `UndauntedGateway`. |
+| `tests\Test-KitUnit.ps1` | `-WorkDir` (default `%TEMP%\dr-kit-unit`; emptied at the start, deleted at the end); `-Port` (62000-62499, default `62450`; the performance check also uses the port above it) | Every kit script parses on PowerShell 5.1 and is ASCII only; invite lines v1 and v2 and everything that must be refused; addresses and `.env` rules; certificate fingerprints; TLS pinning against a local test server; `Get-ServerStatus.ps1` with and without a key; key files; the upload helper; the performance sampler (CPU arithmetic, roles from the port range, the fixed header, day files and their pruning, player counts from a stand-in metagame with no names or keys in the file, a decimal point on a Finnish Windows, and refusing a junction or a hard link); the chat settings (`CHAT_PORT` equal to the gateway's WebSocket port in normal and sandbox installs, `-Chat` against `server.json`, the keys surviving a re-run, and the `chat` status line). Needs `node` on `PATH` and `npm ci` in `legacy/UndauntedGateway`. |
 | `tests\Test-DeployRemote.ps1` | `-WorkDir` (default `%TEMP%\dr-deploy-test`; emptied at the start, deleted at the end) | `Deploy-Remote.ps1` without a server: argument refusals, `-WhatIf`, the kit, source and backup uploads, the chunked upload with a dropped connection and damaged parts, and `-Chat` (passed to the installer, or `Set-Chat.ps1` on its own). No network, no SSH key. |
 | `tests\Test-Sandbox.ps1` | `-SandboxDir` (default `C:\dr\sandbox-ws2019`; the folder name must contain `sandbox`, because it is deleted, and it must be outside the checkout, which the installer copies); `-KeepSandbox`; `-SkipRestore` | A full `-Sandbox` public-mode install with chat on into a scratch folder, then invites, status, the gateway's refusals, registration through the gateway, the game's chat connection through the gateway (101), an update and a rollback, `Set-Chat.ps1 -Off` (502 again), a performance sample, a backup, a restore into a second folder, and cleanup. Needs ports 62000, 62002, 62005, 62099 and 62443 free, and builds the code with `npm ci`. The log is copied to `%TEMP%\dr-sandbox-test.log` unless `-KeepSandbox`. |
 
@@ -700,7 +700,7 @@ install; the names cannot.
 | `$DRNames.BackupTask` | `Dauntless Revived backup` | Scheduled task: `backup-hidden.vbs` as `dauntless`, hourly. |
 | `$DRNames.FirewallGroup` | `Dauntless Revived` | The group of the kit's firewall rules. |
 | `$DRNames.AllowlistRule` | `Dauntless Revived game ports (allowlist)` | Display name of the UDP game-port rule. |
-| `$DRNames.AllowlistRuleName` | `DauntlessRevived-GamePorts-Allowlist` | Name of that rule. It must match `UndauntedGateway/src/allowlist/firewall.ts`. |
+| `$DRNames.AllowlistRuleName` | `DauntlessRevived-GamePorts-Allowlist` | Name of that rule. It must match `legacy/UndauntedGateway/src/allowlist/firewall.ts`. |
 | `$DRDefaultPorts` | metagame 61000, deploy 61001, content 61002, gateway 443, allowlist 61005 | Default TCP ports. |
 | `$DRSandboxPorts` | metagame 62000, deploy 62001, content 62002, gateway 62443, allowlist 62005 | TCP ports of a `-Sandbox` install. |
 | `$DRRelayPort` | 61000 | The friend launcher's relay port. Public mode sends every player the QoS address `http://127.0.0.1:61000/QoS`, so it is fixed. |
@@ -714,8 +714,8 @@ install; the names cannot.
 | What | SHA-256 | Also pinned in |
 |:-----|:--------|:---------------|
 | Game zip, 1.4.4 (`BaseGame144.zip`, 10,479,214,119 bytes) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `UndauntedLauncher/src/main/constants.ts`, the content manifest |
-| `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `UndauntedLauncher/src/main/constants.ts` |
+| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedLauncher/src/main/constants.ts`, the content manifest |
+| `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | the same files as `dxgi.dll` |
 | Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | only the kit; it must also match nodejs.org's `SHASUMS256.txt` |
 | Tailscale 1.102.4 MSI (private mode) | `80EB007E39DFEBE17299FA1A09C79A8E1D934F76E0246C0817EBE3AF675B7EF6` | only the kit; it must also match the published `.sha256` file |
@@ -745,7 +745,7 @@ Both scripts keep their files in `%APPDATA%\DauntlessRevived\`:
 
 A one-time setup, safe to run again. It checks the game exe against its pin, copies the two DLLs
 into `Archon\Binaries\Win64` (checked before and after copying; taken from the kit's `dll\` folder,
-or from `..\UndauntedLauncher\assets\` in a checkout), and warns when the Visual C++ runtime
+or from `..\legacy\UndauntedLauncher\assets\` in a checkout), and warns when the Visual C++ runtime
 (`MSVCP140.dll`, `VCRUNTIME140_1.dll`) is missing. Then it checks that the host answers on its port,
 registers once (only when `account.key` does not exist yet), checks that the key works and saves
 `settings.json`.
@@ -839,7 +839,7 @@ Builds the friend-kit zip.
 
 It stages `<Out>\DauntlessRevived-FriendKit\` (deleted first if it exists) with `setup.ps1`,
 `play.ps1`, `Setup.cmd`, `Play Dauntless.cmd`, `README.txt`, `THIRD-PARTY-NOTICES.txt`, the two DLLs
-in `dll\` (copied from `UndauntedLauncher\assets` and checked against their pins), `LICENSE.txt`, a
+in `dll\` (copied from `legacy\UndauntedLauncher\assets` and checked against their pins), `LICENSE.txt`, a
 `SOURCE.txt` and a `SHA256SUMS.txt`. Then it zips everything to
 `<Out>\DauntlessRevived-FriendKit-<7-character commit>.zip` and prints the zip's path and SHA-256.
 
@@ -880,7 +880,7 @@ A link from the FAQ data to a page that does not exist is also an error, and so 
 
 ### make-game-manifest.js
 
-Builds the content manifest, `UndauntedContent/data/dauntless-1.4.4.json`, from the verified game
+Builds the content manifest, `legacy/UndauntedContent/data/dauntless-1.4.4.json`, from the verified game
 zip. The content server serves only the files in it, and the launcher compiles the same file in and
 refuses any other file. Run it only when the manifest must change.
 
@@ -892,7 +892,7 @@ node tools/make-game-manifest.js --zip <BaseGame144.zip> [--out <file>] [--compa
 | Argument | Default | What it does |
 |:---------|:--------|:-------------|
 | `--zip <file>` | **required** | The verified 1.4.4 zip. |
-| `--out <file>` | `UndauntedContent/data/dauntless-1.4.4.json` | Where the manifest goes. |
+| `--out <file>` | `legacy/UndauntedContent/data/dauntless-1.4.4.json` | Where the manifest goes. |
 | `--compare-dir <folder>` | none | Afterwards, checks an extracted install against the new manifest: every file's size, and full hashes of the exe and a few others. Read-only. |
 | `--compare-all` | off | With `--compare-dir`: hashes every file. |
 | `--zip-sha256 <hex>` | the pinned zip hash | The hash the zip must have. |
@@ -902,8 +902,8 @@ It checks each entry's CRC-32 and size against the zip's own records, that every
 same rule the content server applies), that no two paths differ only in letter case, that
 `Version.txt` names the 1.4.4 build and that the exe matches its pin. It prints the file count, the
 total bytes and the manifest's own SHA-256. It runs at low priority, reads the zip twice (about 21 GB
-of reads), exits with `1` on any failure, and needs `yauzl`: run `npm ci` in `UndauntedContent` or
-`UndauntedLauncher` first. After regenerating the manifest, rebuild the launcher.
+of reads), exits with `1` on any failure, and needs `yauzl`: run `npm ci` in `legacy/UndauntedContent` or
+`legacy/UndauntedLauncher` first. After regenerating the manifest, rebuild the launcher.
 
 ## CI workflows and tools {#ci-workflows-and-tools}
 
@@ -916,7 +916,7 @@ and run the tools from a checkout. What each CI job checks, and how launcher rel
 | Workflow | Runs on | Inputs | What it does |
 |:---------|:--------|:-------|:-------------|
 | `.github/workflows/ci.yml` (**CI**) | Every push to any branch, every pull request, and Actions > **CI** > **Run workflow** | none | Builds and tests the four server packages, the launcher and the server kit, checks the docs and the repository, and keeps the launcher's release files for 7 days (not for pull requests from forks). Then, on a push to `dauntless-revived` in `mixutin/dauntless-revived` that passed every check, it publishes the launcher version if that version has no release yet, unless `LAUNCHER_AUTO_RELEASE` is `false`. |
-| `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** on `dauntless-revived`; called by `ci.yml` | None by hand. `ci.yml` passes `version` (it must equal the `UndauntedLauncher/package.json` version at that commit) and `artifact` (the release files it built). | Publishes the launcher version as the release `launcher-v<version>`, creates that tag, attests the build provenance of every file, and points the `launcher-updates` feed at it. Run by hand, it builds and tests the commit itself; for a version that is published already, it only brings the feed up to it. It refuses to run on any branch but `dauntless-revived`, the default branch. |
+| `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** on `dauntless-revived`; called by `ci.yml` | None by hand. `ci.yml` passes `version` (it must equal the `legacy/UndauntedLauncher/package.json` version at that commit) and `artifact` (the release files it built). | Publishes the launcher version as the release `launcher-v<version>`, creates that tag, attests the build provenance of every file, and points the `launcher-updates` feed at it. Run by hand, it builds and tests the commit itself; for a version that is published already, it only brings the feed up to it. It refuses to run on any branch but `dauntless-revived`, the default branch. |
 
 ### tools/ci/check-repo.js {#check-repojs}
 
@@ -933,8 +933,8 @@ The repository hygiene check. Without arguments it checks every tracked file:
 - no file identical to a file of the 1.4.4 game (by the hashes in the game manifest);
 - nothing inside a file that is shaped like a secret: an account key, a JWT, a private key (also
   base64-encoded), a Tailscale key or a GitHub token;
-- the two DLLs in `UndauntedLauncher/assets/` match their pins in the launcher and the server kit,
-  and the launcher version in `UndauntedLauncher/package.json` is valid.
+- the two DLLs in `legacy/UndauntedLauncher/assets/` match their pins in the launcher and the server kit,
+  and the launcher version in `legacy/UndauntedLauncher/package.json` is valid.
 
 | Argument | What it does |
 |:---------|:-------------|
@@ -962,7 +962,7 @@ A usage error, or a `<version>` that is not a launcher version where one is requ
 
 ### collect-release.ps1 {#collect-releaseps1}
 
-From `UndauntedLauncher`, after `npm run make`:
+From `legacy/UndauntedLauncher`, after `npm run make`:
 
 ```powershell
 pwsh -NoProfile -File scripts\collect-release.ps1
@@ -985,7 +985,7 @@ at the same time, is in [Developer guide]({{ dev_page.url | relative_url }}).
 | Script | Runs | What it does |
 |:-------|:-----|:-------------|
 | `npm run dev` | `tsx watch --env-file=.env src/server.ts` | Runs from source and restarts on changes. Fails without a `.env` in the folder. |
-| `npm run build` | `tsc`, then `postbuild` | Compiles to `dist\`. `postbuild` runs `scripts/write-build-info.js`, which writes `dist\build-info.json` with the commit, the package version and the build time. The commit comes from git, with `-dirty` when `UndauntedMetagame` has changes, or is `unknown` without git (as in the kit's builds). `GIT_COMMIT` and `SERVER_VERSION` in `.env` override it at run time. |
+| `npm run build` | `tsc`, then `postbuild` | Compiles to `dist\`. `postbuild` runs `scripts/write-build-info.js`, which writes `dist\build-info.json` with the commit, the package version and the build time. The commit comes from git, with `-dirty` when `legacy/UndauntedMetagame` has changes, or is `unknown` without git (as in the kit's builds). `GIT_COMMIT` and `SERVER_VERSION` in `.env` override it at run time. |
 | `npm start` | `node --env-file=.env dist/server.js` | Runs the build. Fails without a `.env`. Start it from the package folder: the database migrations are found relative to the working directory. |
 | `npm run db:generate` | `drizzle-kit generate` | Writes a new migration to `src/drizzle` after a change to `src/db/schema.ts`. Reads `DB_FILENAME` from `.env`. |
 | `npm test` | `tsc -p tsconfig.test.json`, then `node --test` | Deletes `build\`, compiles the tests and runs them. |
@@ -1054,11 +1054,11 @@ Node.js 24.19.0 on a server.
 
 | Script | Run as | What it does |
 |:-------|:-------|:-------------|
-| `UndauntedMetagame/scripts/write-build-info.js [out folder]` | the `postbuild` step; tests pass another folder | Writes `build-info.json` (default folder: `dist`). |
-| `UndauntedMetagame/scripts/make-hunt-titles.js` | `node scripts/make-hunt-titles.js` in `UndauntedMetagame` | Rebuilds `src/vendor/hunt_titles.json`, the hunt names that `ServerStatus` shows, from the deploy server's hunt tables in `UndauntedDeployServer/src/vendor`. Rerun it after those tables change. |
-| `UndauntedGateway/tools/make-cert.js` | `npm run make-cert -- ...` | See above. |
-| `UndauntedLauncher/scripts/run-tests.mjs`, `make-icon.mjs` | `npm test`, `npm run icon` | See above. |
-| `UndauntedLauncher/scripts/collect-release.ps1` | `pwsh -NoProfile -File scripts\collect-release.ps1` in `UndauntedLauncher`, after `npm run make` | Collects the release files in `release\`; see [collect-release.ps1](#collect-releaseps1). |
+| `legacy/UndauntedMetagame/scripts/write-build-info.js [out folder]` | the `postbuild` step; tests pass another folder | Writes `build-info.json` (default folder: `dist`). |
+| `legacy/UndauntedMetagame/scripts/make-hunt-titles.js` | `node scripts/make-hunt-titles.js` in `legacy/UndauntedMetagame` | Rebuilds `src/vendor/hunt_titles.json`, the hunt names that `ServerStatus` shows, from the deploy server's hunt tables in `legacy/UndauntedDeployServer/src/vendor`. Rerun it after those tables change. |
+| `legacy/UndauntedGateway/tools/make-cert.js` | `npm run make-cert -- ...` | See above. |
+| `legacy/UndauntedLauncher/scripts/run-tests.mjs`, `make-icon.mjs` | `npm test`, `npm run icon` | See above. |
+| `legacy/UndauntedLauncher/scripts/collect-release.ps1` | `pwsh -NoProfile -File scripts\collect-release.ps1` in `legacy/UndauntedLauncher`, after `npm run make` | Collects the release files in `release\`; see [collect-release.ps1](#collect-releaseps1). |
 
 ## Scripts printed in the guides
 

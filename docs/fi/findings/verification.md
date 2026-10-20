@@ -311,7 +311,7 @@ asennus vastaa Phoenixin omaa tiedostoluetteloa.
 Kaksi lisätarkistusta versiolle 1.4.4:
 
 - Pääohjelman ja zip-arkiston SHA-256-tiivisteet ovat samat kuin alkuperäisen Undaunted-käynnistimen
-  kiinnittämät arvot (`UndauntedLauncher/src/main.ts`):
+  kiinnittämät arvot (`legacy/UndauntedLauncher/src/main.ts`):
 
   | Tiedosto | SHA-256 |
   |:-----|:--------|

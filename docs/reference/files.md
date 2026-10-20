@@ -47,9 +47,9 @@ own key, a password manager). The repository's `.gitignore` already keeps `.env`
 
 | File | Where | What makes it secret |
 |:-----|:------|:---------------------|
-| Metagame settings | `UndauntedMetagame\.env` (developer or hand-built host); `C:\DauntlessRevived\data\config\metagame.env` (server kit) | The token-signing private key: whoever has it can sign in as any account. In public mode also the gateway secret. |
-| Deploy server settings | `UndauntedDeployServer\.env`; kit: `data\config\deployserver.env` | The game-server key. |
-| Gateway and allowlist settings | `UndauntedGateway\.env` (developer); kit: `data\config\gateway.env`, `data\config\allowlist.env` | The gateway secret and the allowlist secret. |
+| Metagame settings | `legacy\UndauntedMetagame\.env` (developer or hand-built host); `C:\DauntlessRevived\data\config\metagame.env` (server kit) | The token-signing private key: whoever has it can sign in as any account. In public mode also the gateway secret. |
+| Deploy server settings | `legacy\UndauntedDeployServer\.env`; kit: `data\config\deployserver.env` | The game-server key. |
+| Gateway and allowlist settings | `legacy\UndauntedGateway\.env` (developer); kit: `data\config\gateway.env`, `data\config\allowlist.env` | The gateway secret and the allowlist secret. |
 | `owner.key` | `C:\dr\data\owner.key` (hand-built host); kit: `data\keys\owner.key` | The admin account's key. It is the password of an account that can create invites and use every admin route. |
 | `gameserver.key` | `C:\dr\data\gameserver.key`; kit: `data\keys\gameserver.key` | The key game servers use to write saves, progression and rewards. |
 | `gateway-key.pem` | kit: `data\tls\gateway-key.pem` (public mode) | The private key of the gateway certificate that every invite pins. |
@@ -73,12 +73,12 @@ them are named `dauntless-revived-*` (for example `dauntless-revived-metagame`).
 
 | Folder | What it holds | Build output (git-ignored) |
 |:-------|:--------------|:---------------------------|
-| `UndauntedMetagame/` | The backend the game talks to (TypeScript, Express): accounts, saves, progression, matchmaking, parties, friends, guilds, the `/undaunted/api` admin API and the game's text chat (`src/realtime/`, an XMPP listener in the same process, on when `CHAT=1`). `src/db/schema.ts` defines the database, `src/drizzle/` holds its migrations, `src/vendor/` the game's `progression_config.json`, the generated `hunt_titles.json`, and the data from Harmonic's 1.4.4 fork: `escalation/seasons.json` (the Escalation season registry), `store_catalog.json` (the free store's offers) and `store_item_kinds.json` (how each store item is granted). `test/data/store_art_skus.json` lists the store SKU ids with a 2:1 tile image, for a test. The build copies `src/vendor/` to `dist/vendor/`. `scripts/` has `write-build-info.js` and `make-hunt-titles.js`. | `dist/` (with `dist/build-info.json`), `build/` (tests), `node_modules/` |
-| `UndauntedDeployServer/` | Starts and supervises the game-server processes (Ramsgate, the Training Dojo, hunts). `src/vendor/` holds the hunt tables. | `dist/`, `build/` |
-| `UndauntedGateway/` | Public mode only: the TLS gateway (`dist/server.js`) and the allowlist helper (`dist/allowlist/server.js`). `tools/make-cert.js` makes the gateway certificate. | `dist/`, `build/` |
-| `UndauntedContent/` | The content server: game files, news and the art pack for registered launchers. `data/dauntless-1.4.4.json` is the game manifest (410 files) that the launcher also compiles in. | `dist/`, `build/` |
-| `UndauntedLauncher/` | This fork's friend launcher (Electron). `assets/` holds the two pinned prebuilt DLLs, `dxgi.dll` and `UndauntedInternalServer.dll`, which every setup installs (host, server kit, friend kit and launcher), and the icons (copies from `brand/launcher/`). `src/renderer/brand/` holds copies of the logo and emblem images the window shows. `scripts/` holds the test runner, the brand image copier (`make-icon.mjs`) and `collect-release.ps1`. | `.vite/` (`npm start`), `out/` (`npm run package` and `npm run make`), `.test-build/` (tests), `release/` (the release files that `scripts/collect-release.ps1` collects after `npm run make`: the installer, the Squirrel update files, the zip and `SHA256SUMS.txt`). |
-| `native/internal-server/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
+| `legacy/UndauntedMetagame/` | The backend the game talks to (TypeScript, Express): accounts, saves, progression, matchmaking, parties, friends, guilds, the `/undaunted/api` admin API and the game's text chat (`src/realtime/`, an XMPP listener in the same process, on when `CHAT=1`). `src/db/schema.ts` defines the database, `src/drizzle/` holds its migrations, `src/vendor/` the game's `progression_config.json`, the generated `hunt_titles.json`, and the data from Harmonic's 1.4.4 fork: `escalation/seasons.json` (the Escalation season registry), `store_catalog.json` (the free store's offers) and `store_item_kinds.json` (how each store item is granted). `test/data/store_art_skus.json` lists the store SKU ids with a 2:1 tile image, for a test. The build copies `src/vendor/` to `dist/vendor/`. `scripts/` has `write-build-info.js` and `make-hunt-titles.js`. | `dist/` (with `dist/build-info.json`), `build/` (tests), `node_modules/` |
+| `legacy/UndauntedDeployServer/` | Starts and supervises the game-server processes (Ramsgate, the Training Dojo, hunts). `src/vendor/` holds the hunt tables. | `dist/`, `build/` |
+| `legacy/UndauntedGateway/` | Public mode only: the TLS gateway (`dist/server.js`) and the allowlist helper (`dist/allowlist/server.js`). `tools/make-cert.js` makes the gateway certificate. | `dist/`, `build/` |
+| `legacy/UndauntedContent/` | The content server: game files, news and the art pack for registered launchers. `data/dauntless-1.4.4.json` is the game manifest (410 files) that the launcher also compiles in. | `dist/`, `build/` |
+| `legacy/UndauntedLauncher/` | This fork's friend launcher (Electron). `assets/` holds the two pinned prebuilt DLLs, `dxgi.dll` and `UndauntedInternalServer.dll`, which every setup installs (host, server kit, friend kit and launcher), and the icons (copies from `brand/launcher/`). `src/renderer/brand/` holds copies of the logo and emblem images the window shows. `scripts/` holds the test runner, the brand image copier (`make-icon.mjs`) and `collect-release.ps1`. | `.vite/` (`npm start`), `out/` (`npm run package` and `npm run make`), `.test-build/` (tests), `release/` (the release files that `scripts/collect-release.ps1` collects after `npm run make`: the installer, the Squirrel update files, the zip and `SHA256SUMS.txt`). |
+| `native/internal-server/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `legacy/UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
 | `deploy/windows-server/` | The Windows server kit: the scripts, `lib/` (Node helpers `dr-db.js`, `dr-keys.js`, `verify-game.js`) and `tests/`. | none |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends. | `tools/make-friend-kit.ps1` builds the zip outside the repository |
 | `tools/` | `build-llms.js`, `sync-roadmap.js`, `make-friend-kit.ps1`, `make-game-manifest.js`, and in `ci/` what CI uses: `check-repo.js` (the repository check) and `launcher-version.js` (the launcher version rules). | none |
@@ -102,12 +102,12 @@ the tool again.
 |:-----|:--------|:-----|:------------------|
 | `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` | you change `ROADMAP.md`. The Finnish `docs/fi/roadmap.md` is a hand-written summary, not generated. |
 | `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` (after `sync-roadmap.js`) | The front matter and text of the docs pages, and `docs/_data/faq_*.yml` | you add a page, change a title or description, or change the text of an English page (`llms-full.txt` holds every English page in full). |
-| `UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js`, in `UndauntedMetagame` | The deploy server's `player_hunts_table.json` and `matchmaker_hunts_table.json` | the deploy server's hunt tables change. |
-| `UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | The verified game zip | practically never: the build is pinned. If it changes, rebuild the launcher, which compiles the same file in. |
-| `UndauntedMetagame/src/drizzle/*.sql` and `meta/` | `npm run db:generate`, in `UndauntedMetagame` | `src/db/schema.ts` | you change the schema. Commit the new migration with the schema change. |
+| `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js`, in `legacy/UndauntedMetagame` | The deploy server's `player_hunts_table.json` and `matchmaker_hunts_table.json` | the deploy server's hunt tables change. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | The verified game zip | practically never: the build is pinned. If it changes, rebuild the launcher, which compiles the same file in. |
+| `legacy/UndauntedMetagame/src/drizzle/*.sql` and `meta/` | `npm run db:generate`, in `legacy/UndauntedMetagame` | `src/db/schema.ts` | you change the schema. Commit the new migration with the schema change. |
 
-`UndauntedMetagame/dist/build-info.json` is also generated (by `npm run build`: the commit, with
-`-dirty` if `UndauntedMetagame` has uncommitted changes, the version and the build time), but it is
+`legacy/UndauntedMetagame/dist/build-info.json` is also generated (by `npm run build`: the commit, with
+`-dirty` if `legacy/UndauntedMetagame` has uncommitted changes, the version and the build time), but it is
 not committed.
 
 ## A developer or hand-built host
@@ -117,7 +117,7 @@ what the guides and a few script defaults use.
 
 | Path | What it is |
 |:-----|:-----------|
-| `C:\dr\undaunted\` | The repository checkout ([Host a server, step 4]({{ host_page.url | relative_url }}#fork)). The settings are in `UndauntedMetagame\.env` and `UndauntedDeployServer\.env`, both git-ignored. **Secret: never share, never commit.** Start each server from its own package folder: the metagame finds its migrations through the relative path `./src/drizzle`. |
+| `C:\dr\undaunted\` | The repository checkout ([Host a server, step 4]({{ host_page.url | relative_url }}#fork)). The settings are in `legacy\UndauntedMetagame\.env` and `legacy\UndauntedDeployServer\.env`, both git-ignored. **Secret: never share, never commit.** Start each server from its own package folder: the metagame finds its migrations through the relative path `./src/drizzle`. |
 | `C:\dr\data\` | Runtime data, outside the repository: `undaunted.db` (`DB_FILENAME=C:/dr/data/undaunted.db`), `owner.key` and `gameserver.key` (**secret: never share, never commit**), the logs `metagame.log`, `metagame.err`, `deploy.log` and `deploy.err`, and the pid files `metagame.pid`, `deploy.pid` and `client.pid`. The logs are replaced at every start, because the guide starts the servers with `Start-Process -RedirectStandardOutput`. |
 | `C:\dr\data\rekey-<UserId>.txt` | A new account key made by the re-key script in [Run it for a group]({{ admin_page.url | relative_url }}). **Secret**: hand it over privately, then delete it. |
 | `C:\dr\data\ssh\` | `dauntless_deploy` (the SSH key for a rented server) and `known_hosts`, the defaults of `Deploy-Remote.ps1`. **The key is secret: never share, never commit.** |
@@ -129,15 +129,15 @@ what the guides and a few script defaults use.
 | `%LOCALAPPDATA%\Archon\Saved\Config\WindowsClient\` | The game's user config for this Windows user: `Engine.ini`, `Game.ini` and `GameUserSettings.ini`. See [Game settings]({{ gamesettings_page.url | relative_url }}). |
 
 With `LOG_BODIES=1` and no `BODY_LOG_FILE`, the metagame writes `bodies.log` into its working
-directory, which is `C:\dr\undaunted\UndauntedMetagame`. **No `.gitignore` rule covers that file.** Set
+directory, which is `C:\dr\undaunted\legacy/UndauntedMetagame`. **No `.gitignore` rule covers that file.** Set
 `BODY_LOG_FILE=C:/dr/data/bodies.log`, or delete the file before you commit. The metagame's unit tests
 use a fresh database in a temporary `undaunted-test-*` folder per test file and delete it afterwards.
 
 The gateway and the allowlist helper, run from a checkout (`npm start`, `npm run start:allowlist`),
-both read `UndauntedGateway\.env`, which holds the gateway and allowlist secrets (**secret: never share,
+both read `legacy\UndauntedGateway\.env`, which holds the gateway and allowlist secrets (**secret: never share,
 never commit**; it is git-ignored). Without `ALLOWLIST_AUDIT_LOG` and `ALLOWLIST_STATE_FILE` the helper
 writes `allowlist-audit.log` and `allowlist-state.json` into its working directory; the gateway's
-`.gitignore` covers both. The content server's `UndauntedContent\.env` holds no secrets.
+`.gitignore` covers both. The content server's `legacy\UndauntedContent\.env` holds no secrets.
 
 ## Windows server kit: `C:\DauntlessRevived` {#kit-install-root}
 
@@ -273,7 +273,7 @@ alone then misses them. A file left in WAL mode is switched back at the next sta
 ### Migrations
 
 The metagame applies every pending migration from `src/drizzle/` at each start, before it answers
-anything. The path is relative to its working directory, so start it from the `UndauntedMetagame`
+anything. The path is relative to its working directory, so start it from the `legacy/UndauntedMetagame`
 folder (the kit does). All pending migrations run in one transaction: if one fails, none is applied
 and the metagame does not start. drizzle records what it applied in its own table,
 `__drizzle_migrations`; never edit it, because drizzle decides from it which migrations still have to
@@ -448,7 +448,7 @@ usernames and, in public mode, players' IP addresses, so read a log before you s
 | Written by | Format |
 |:-----------|:-------|
 | Metagame, deploy server | pino. With `NODE_ENV=production` (always on the kit), one JSON object per line: `level` (30 info, 40 warn, 50 error, 60 fatal), `time` (milliseconds since 1970), `pid`, `hostname`, `msg`. Every level goes to standard output. Without `production`, readable coloured lines. The metagame's request lines read `METHOD /path gs=0` (a player) or `gs=1` (a game server), plus ` via=gateway ip=<player address>` behind the gateway. `LOG_LEVEL` and `LOG_REQUESTS` are on [Configuration]({{ config_page.url | relative_url }}). |
-| Gateway, allowlist helper, content server | One JSON object per line: `t` (ISO time), `level` (`debug`, `info`, `warn` or `error`), `msg` and extra fields. Warnings and errors go to standard error, the rest to standard output. The gateway's `request` lines are its access log; the fields are in the [gateway README]({{ site.github.repository_url }}/blob/dauntless-revived/UndauntedGateway/README.md#access-log). |
+| Gateway, allowlist helper, content server | One JSON object per line: `t` (ISO time), `level` (`debug`, `info`, `warn` or `error`), `msg` and extra fields. Warnings and errors go to standard error, the rest to standard output. The gateway's `request` lines are its access log; the fields are in the [gateway README]({{ site.github.repository_url }}/blob/dauntless-revived/legacy/UndauntedGateway/README.md#access-log). |
 | Game servers, game client | No log file. A game server prints only to its own console window (Ramsgate and the Training Dojo keep theirs visible; the deploy server starts hunt servers with the window hidden). The client writes crash reports only, to `%LOCALAPPDATA%\Archon\Saved\Crashes\` (see [Troubleshooting]({{ trouble_page.url | relative_url }})). |
 | Launcher | Text lines: ISO time, `INFO`, `WARN` or `ERROR`, message. |
 

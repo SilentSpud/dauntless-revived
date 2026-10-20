@@ -14,7 +14,7 @@
 #
 # Automatic launcher releases are ON: set the repository variable LAUNCHER_AUTO_RELEASE to false
 # (Settings > Secrets and variables > Actions > Variables) to pause them. A push to dauntless-revived that passes
-# every check, is still the head of the branch, and whose UndauntedLauncher/package.json version has no
+# every check, is still the head of the branch, and whose legacy/UndauntedLauncher/package.json version has no
 # published launcher-v<version> release yet publishes that version (launcher-release.yml) with the
 # installer built and tested here. While paused, Actions > Launcher release > Run workflow
 # publishes by hand.
@@ -71,23 +71,23 @@ jobs:
             rust:
               - rust/**
               # The metagame crate embeds the last Drizzle migration, the vendor data and the Node route table, and tests against them.
-              - UndauntedMetagame/src/drizzle/**
-              - UndauntedMetagame/src/vendor/**
-              - UndauntedMetagame/routes.json
+              - legacy/UndauntedMetagame/src/drizzle/**
+              - legacy/UndauntedMetagame/src/vendor/**
+              - legacy/UndauntedMetagame/routes.json
             native:
               - native/**
             client-mods:
               - client-mods/**
             node:
-              - UndauntedMetagame/**
-              - UndauntedGateway/**
-              - UndauntedContent/**
-              - UndauntedDeployServer/**
+              - legacy/UndauntedMetagame/**
+              - legacy/UndauntedGateway/**
+              - legacy/UndauntedContent/**
+              - legacy/UndauntedDeployServer/**
               - native/**
             launcher:
-              - UndauntedLauncher/**
-              - UndauntedMetagame/**
-              - UndauntedDeployServer/**
+              - legacy/UndauntedLauncher/**
+              - legacy/UndauntedMetagame/**
+              - legacy/UndauntedDeployServer/**
               - client-mods/**
               - native/**
               - deploy/windows-server/lib/**
@@ -218,7 +218,7 @@ jobs:
     defaults:
       run:
         shell: pwsh
-        working-directory: ${{ matrix.package }}
+        working-directory: legacy/${{ matrix.package }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -228,7 +228,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: ${{ matrix.package }}/package-lock.json
+          cache-dependency-path: legacy/${{ matrix.package }}/package-lock.json
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -250,7 +250,7 @@ jobs:
     defaults:
       run:
         shell: pwsh
-        working-directory: UndauntedLauncher
+        working-directory: legacy/UndauntedLauncher
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -260,7 +260,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: UndauntedLauncher/package-lock.json
+          cache-dependency-path: legacy/UndauntedLauncher/package-lock.json
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -285,7 +285,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: launcher-windows
-          path: UndauntedLauncher/release/
+          path: legacy/UndauntedLauncher/release/
           if-no-files-found: error
           retention-days: 7
 
@@ -300,7 +300,7 @@ jobs:
     timeout-minutes: 30
     defaults:
       run:
-        working-directory: UndauntedLauncher
+        working-directory: legacy/UndauntedLauncher
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -310,7 +310,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: UndauntedLauncher/package-lock.json
+          cache-dependency-path: legacy/UndauntedLauncher/package-lock.json
 
       - name: Install Linux package tools
         run: |
@@ -337,7 +337,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: launcher-linux
-          path: UndauntedLauncher/release-linux/
+          path: legacy/UndauntedLauncher/release-linux/
           if-no-files-found: error
           retention-days: 7
 
@@ -358,17 +358,17 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: |
-            UndauntedMetagame/package-lock.json
-            UndauntedGateway/package-lock.json
-            UndauntedContent/package-lock.json
-            UndauntedDeployServer/package-lock.json
+            legacy/UndauntedMetagame/package-lock.json
+            legacy/UndauntedGateway/package-lock.json
+            legacy/UndauntedContent/package-lock.json
+            legacy/UndauntedDeployServer/package-lock.json
 
       - name: Build and test the native server services on Linux
         run: |
           set -euo pipefail
           for pkg in UndauntedMetagame UndauntedGateway UndauntedContent UndauntedDeployServer; do
             echo "::group::$pkg"
-            (cd "$pkg" && npm ci --no-audit --no-fund && npm run build && npm test)
+            (cd "legacy/$pkg" && npm ci --no-audit --no-fund && npm run build && npm test)
             echo "::endgroup::"
           done
 
@@ -415,7 +415,7 @@ jobs:
             npm --version
             for pkg in UndauntedMetagame UndauntedGateway UndauntedContent UndauntedDeployServer; do
               echo "=== $pkg ==="
-              (cd "$pkg" && npm ci --no-audit --no-fund && npm run build && npm test)
+              (cd "legacy/$pkg" && npm ci --no-audit --no-fund && npm run build && npm test)
             done
             node --test deploy/linux-server/tests/game-runner.test.mjs
             for file in deploy/openbsd-server/*.ksh deploy/openbsd-server/rc.d/*; do
@@ -433,8 +433,8 @@ jobs:
               --game-dir "$tmp/game" --my-ip 203.0.113.10 --mode public \
               --worker-host 10.0.0.2 --worker-user dauntless --worker-key "$tmp/worker.key" \
               --worker-command dr-game-worker
-            (cd UndauntedMetagame && node --env-file="$tmp/config/metagame.env" -e 'require("./dist/db.js").GetDb()')
-            node deploy/unix-common/dr-db.cjs integrity "$PWD/UndauntedMetagame" "$tmp/data/undaunted.db"
+            (cd legacy/UndauntedMetagame && node --env-file="$tmp/config/metagame.env" -e 'require("./dist/db.js").GetDb()')
+            node deploy/unix-common/dr-db.cjs integrity "$PWD/legacy/UndauntedMetagame" "$tmp/data/undaunted.db"
             ksh deploy/openbsd-server/configure-pf.ksh \
               --mode public --interface vio0 --worker-interface vio0 --worker-ip 10.0.0.2 \
               --output "$tmp/pf.conf"
@@ -548,10 +548,10 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: |
-            UndauntedMetagame/package-lock.json
-            UndauntedGateway/package-lock.json
-            UndauntedContent/package-lock.json
-            UndauntedDeployServer/package-lock.json
+            legacy/UndauntedMetagame/package-lock.json
+            legacy/UndauntedGateway/package-lock.json
+            legacy/UndauntedContent/package-lock.json
+            legacy/UndauntedDeployServer/package-lock.json
 
       - name: Every PowerShell script parses in Windows PowerShell 5.1
         run: |
@@ -587,7 +587,7 @@ jobs:
 
       - name: Install the gateway's dependencies (Test-KitUnit uses its certificate tool)
         shell: pwsh
-        working-directory: UndauntedGateway
+        working-directory: legacy/UndauntedGateway
         run: npm ci --no-audit --no-fund
 
       - name: Unit checks (Test-KitUnit.ps1)
@@ -742,7 +742,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          sparse-checkout: UndauntedLauncher/package.json
+          sparse-checkout: legacy/UndauntedLauncher/package.json
           sparse-checkout-cone-mode: false
 
       # A first look; launcher-release.yml decides again, under its lock, right before publishing.
@@ -755,12 +755,12 @@ jobs:
           COMMIT: ${{ github.sha }}
         run: |
           set -euo pipefail
-          version="$(node -p 'require("./UndauntedLauncher/package.json").version')"
+          version="$(node -p 'require("./legacy/UndauntedLauncher/package.json").version')"
           tag="launcher-v$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           publish=false
           if out="$(gh api "repos/$GH_REPO/releases/tags/$tag" --jq .html_url 2>&1)"; then
-            echo "$tag is published already ($out). Raise the version in UndauntedLauncher/package.json to publish a new one."
+            echo "$tag is published already ($out). Raise the version in legacy/UndauntedLauncher/package.json to publish a new one."
           elif ! grep -q 'HTTP 404' <<<"$out"; then
             echo "::error::could not look up the release $tag: $out"
             exit 1

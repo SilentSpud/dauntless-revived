@@ -18,7 +18,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const brand = path.resolve(root, "..", "brand");
+const brand = path.resolve(root, "..", "..", "brand");
 
 // Launcher path -> brand/ path.
 export const BRAND_COPIES = {

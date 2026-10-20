@@ -1,7 +1,7 @@
 # Dauntless Revived gateway
 
 The public front door of a Dauntless Revived server in public mode (roadmap 1.17), in the
-`UndauntedGateway/` folder. Two small processes:
+`legacy/UndauntedGateway/` folder. Two small processes:
 
 - **The gateway** (`dist/server.js`) is the server's only public TCP listener. It speaks TLS with a
   self-signed certificate, and the friend launcher pins that certificate's fingerprint (the `fp` of a
@@ -54,7 +54,7 @@ and no servers, `"limited": true`). Like every header, the key is never logged.
 
 The admin-route check is at least as lenient as Express's own routing: it matches regardless of
 letter case, trailing or repeated slashes and percent-encoding. The tests read every route from
-`UndauntedMetagame/src/routes/undauntedapi.ts` and try each one through the gateway, so a route
+`legacy/UndauntedMetagame/src/routes/undauntedapi.ts` and try each one through the gateway, so a route
 added there later is covered automatically: it is blocked unless it is added to
 `PUBLIC_UNDAUNTED_API` in `src/policy.ts`.
 

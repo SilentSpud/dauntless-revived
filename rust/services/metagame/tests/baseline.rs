@@ -11,7 +11,7 @@ use metagame::db::{DRIZZLE_TAG, SCHEMA};
 use store::{Error, Options, Store, drizzle, schema_snapshot};
 
 fn drizzle_folder() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../UndauntedMetagame/src/drizzle")
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../legacy/UndauntedMetagame/src/drizzle")
 }
 
 /// The baseline with LF line endings (a Windows checkout may have converted the file).

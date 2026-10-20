@@ -91,7 +91,7 @@ Sisältö (payload), samoin kuin tallennuksen runko, on yksi kausi:
 
 ## Kausiluettelo {#registry}
 
-`UndauntedMetagame/src/vendor/escalation/seasons.json` luettelee jokaisen kauden, joka 1.4.4-peliohjelmassa
+`legacy/UndauntedMetagame/src/vendor/escalation/seasons.json` luettelee jokaisen kauden, joka 1.4.4-peliohjelmassa
 on. Harmonic vei sen vain lukien peliohjelman omasta Escalation-etenemistaulukosta ja kunkin kauden
 nimeämästä kykytaulukosta (versio CL239827). Metagame tarkistaa tiedoston käynnistyessään, ja
 virheellinen tiedosto pysäyttää käynnistyksen.
@@ -204,7 +204,7 @@ ja luettelotiedosto sivulla [Pelin asetukset]({{ game_page.url | relative_url }}
 
 ## Testit {#tests}
 
-`UndauntedMetagame/test/escalation.test.ts` sisältää 27 tapausta: Harmonicin 17 (kausiluettelo,
+`legacy/UndauntedMetagame/test/escalation.test.ts` sisältää 27 tapausta: Harmonicin 17 (kausiluettelo,
 luvut, versiosäännöt, kovat ja pehmeät säännöt, tynkävahti) meidän vastauksiimme sovitettuina (toisen
 tilin luku on 403, uusinta on kirjattu 200, toisen tilin välitetty tunniste kirjataan ja hyväksytään,
 pehmeät säännöt vastaavat 409 vain, kun `ESCALATION_STRICT=1`, tiukka XP-tapaus nousee tasolle 25

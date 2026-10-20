@@ -193,7 +193,7 @@ held bounties, and `/bounty/game-data` keeps an empty bounty list).
 **How Harmonic's work is credited:**
 
 - The four source files ported from the fork (`escalationConfig.ts`, `escalation.ts`, `freestore.ts` and
-  `slayerlinks.ts` in `UndauntedMetagame/src/controllers/`) start with `Ported from
+  `slayerlinks.ts` in `legacy/UndauntedMetagame/src/controllers/`) start with `Ported from
   Harmonicrain/Undaunted (895f7c7), Copyright (C) 2026 Harmonic, AGPL-3.0-only`, followed by how they
   were modified (or, for Slayer Links, rewritten and corrected) for Dauntless Revived. Code of ours
   built on Harmonic's ideas names the fork in its comments.

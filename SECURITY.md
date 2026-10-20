@@ -32,8 +32,8 @@ time to fix the problem (90 days by default) before you publish.
 
 ## In scope
 
-- **The metagame** (`UndauntedMetagame/`), as modified in this repository.
-- **The deploy server** (`UndauntedDeployServer/`), as modified in this repository.
+- **The metagame** (`legacy/UndauntedMetagame/`), as modified in this repository.
+- **The deploy server** (`legacy/UndauntedDeployServer/`), as modified in this repository.
 - **The friend kit** (`friend-kit/` and `tools/make-friend-kit.ps1`): for example, a way to make
   its hash checks pass for a tampered DLL, or anything it writes to a player's PC that it
   should not.
@@ -59,7 +59,7 @@ These are deliberate. Please read them first, so that your report can focus on w
     reach the metagame and the game servers through the host's Tailscale address, and encryption
     comes from the Tailscale tunnel.
   - **Public mode** (the default of the Windows server kit in `deploy/windows-server/`): a TLS
-    gateway (`UndauntedGateway/`) is the game's only public TCP port. The client talks plain HTTP only to
+    gateway (`legacy/UndauntedGateway/`) is the game's only public TCP port. The client talks plain HTTP only to
     the launcher on the player's own PC, which forwards over TLS pinned to the certificate
     fingerprint in the invite. The gateway refuses admin routes and the game-server key from
     outside, and the game's UDP ports are opened only for the addresses of players who logged in.
@@ -127,7 +127,7 @@ omaa asennustasi, älä muiden ihmisten palvelimia tai koneita.
   - **Yksityinen tila:** Tailscalen kautta. Tailscale on ohjelma, joka tekee kavereiden koneista
     yksityisen, salatun verkon.
   - **Julkinen tila** (Windows-palvelinpaketin oletus, `deploy/windows-server/`): salattu
-    yhdyskäytävä (`UndauntedGateway/`) on pelin ainoa julkinen TCP-portti. Peli puhuu salaamatonta HTTP:tä
+    yhdyskäytävä (`legacy/UndauntedGateway/`) on pelin ainoa julkinen TCP-portti. Peli puhuu salaamatonta HTTP:tä
     vain pelaajan omalla koneella olevalle käynnistimelle, joka välittää liikenteen salattuna kutsun
     varmenteeseen kiinnitettyä yhteyttä pitkin. Yhdyskäytävä torjuu ylläpitoreitit ja pelipalvelimen
     avaimen ulkopuolelta, ja pelin UDP-portit avataan vain kirjautuneiden pelaajien osoitteille.

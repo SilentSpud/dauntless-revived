@@ -38,6 +38,8 @@ for spec in "dxgi.dll:$PIN_DXGI" "UndauntedInternalServer.dll:$PIN_SERVER"; do
   file=${spec%%:*}
   expected=${spec#*:}
   source="$repo/UndauntedLauncher/assets/$file"
+  # A checkout keeps the launcher in legacy/
+  [ -f "$source" ] || source="$repo/legacy/UndauntedLauncher/assets/$file"
   target="$win64/$file"
   [ -f "$source" ] || { echo "missing pinned asset: $source" >&2; exit 1; }
   [ "$(hash_file "$source")" = "$expected" ] || { echo "repo asset failed pin: $file" >&2; exit 1; }

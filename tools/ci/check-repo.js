@@ -6,13 +6,13 @@
 //     folders;
 //   - a tracked file matches a .gitignore rule (it was added with --force);
 //   - a tracked file is byte for byte a file of the Dauntless 1.4.4 client (its SHA-256 is in the game
-//     manifest UndauntedContent/data/dauntless-1.4.4.json);
+//     manifest legacy/UndauntedContent/data/dauntless-1.4.4.json);
 //   - a tracked file contains something shaped like a real secret: an account key (UUK_ and 48 hex
 //     characters, as the metagame makes them), a JWT, a private key block (also base64-encoded, the way
 //     AUTH_SIGNING_PRIVKEY_B64 stores one), a Tailscale auth key or a GitHub token;
-//   - the two prebuilt server DLLs in UndauntedLauncher/assets/ differ from the SHA-256 pins in the launcher
+//   - the two prebuilt server DLLs in legacy/UndauntedLauncher/assets/ differ from the SHA-256 pins in the launcher
 //     and the Windows Server kit;
-//   - UndauntedLauncher/package.json "version" is not a launcher version (a semantic version without build
+//   - legacy/UndauntedLauncher/package.json "version" is not a launcher version (a semantic version without build
 //     metadata; it names the launcher release tag launcher-v<version>; see tools/ci/launcher-version.js).
 //
 // With --history <revision range> (CI passes the commits of the push or pull request, e.g. abc123..HEAD),
@@ -31,15 +31,15 @@ const path = require("path");
 const { isLauncherVersion } = require("./launcher-version.js");
 
 const ROOT = path.resolve(__dirname, "..", "..");
-const LAUNCHER_PACKAGE = "UndauntedLauncher/package.json";
-const GAME_MANIFEST = "UndauntedContent/data/dauntless-1.4.4.json";
+const LAUNCHER_PACKAGE = "legacy/UndauntedLauncher/package.json";
+const GAME_MANIFEST = "legacy/UndauntedContent/data/dauntless-1.4.4.json";
 
 // Tracked files that trip a content check on purpose: path -> the checks it may trip.
 const ALLOWED_CONTENT = {
     // A made-up token (its signature part reads "signature-not-real-...") for the gateway's redaction tests.
-    "UndauntedGateway/test/gateway.test.ts": ["jwt"],
-    "UndauntedGateway/test/redact-ratelimit-config.test.ts": ["jwt"],
-    "UndauntedLauncher/scripts/portable-save-smoke.cjs": ["private-key"],
+    "legacy/UndauntedGateway/test/gateway.test.ts": ["jwt"],
+    "legacy/UndauntedGateway/test/redact-ratelimit-config.test.ts": ["jwt"],
+    "legacy/UndauntedLauncher/scripts/portable-save-smoke.cjs": ["private-key"],
     // Throwaway key pair, tokens and recovery blob made by make-node-crypto.cjs for the Rust metagame's
     // compatibility tests; nothing in it is used by a server.
     "rust/services/metagame/tests/fixtures/node-crypto.json": ["private-key-b64", "jwt", "account-key"],
@@ -47,13 +47,13 @@ const ALLOWED_CONTENT = {
 
 // The only DLLs the repository may hold: Undaunted's prebuilt server DLLs, which the launcher ships and the
 // kit installs. Each must match its pin in both files below.
-const PINNED_DLLS = ["UndauntedLauncher/assets/dxgi.dll", "UndauntedLauncher/assets/UndauntedInternalServer.dll"];
+const PINNED_DLLS = ["legacy/UndauntedLauncher/assets/dxgi.dll", "legacy/UndauntedLauncher/assets/UndauntedInternalServer.dll"];
 // UE4SS (MIT) and its loader, for the optional client mods in client-mods/. Each must match its SHA-256 in
 // client-mods/manifest.json, which the launcher and the friend kit check before installing.
 const CLIENT_MODS_MANIFEST = "client-mods/manifest.json";
 const CLIENT_MODS_DLLS = ["client-mods/dwmapi.dll", "client-mods/ue4ss/UE4SS.dll"];
 const DLL_PIN_SOURCES = [
-    { file: "UndauntedLauncher/src/main/constants.ts", pattern: /name:\s*"([^"]+\.dll)",\s*sha256:\s*"([0-9a-fA-F]{64})"/g },
+    { file: "legacy/UndauntedLauncher/src/main/constants.ts", pattern: /name:\s*"([^"]+\.dll)",\s*sha256:\s*"([0-9a-fA-F]{64})"/g },
     { file: "deploy/windows-server/DauntlessServer.Common.ps1", pattern: /'([^']+\.dll)'\s*=\s*'([0-9a-fA-F]{64})'/g },
 ];
 

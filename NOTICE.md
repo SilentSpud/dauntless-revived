@@ -45,10 +45,10 @@ named below.
     marked with the original file and line.
 - Files that carry Harmonic's copyright notice (`Ported from Harmonicrain/Undaunted (895f7c7), Copyright (C)
   2026 Harmonic, AGPL-3.0-only`, with how each was modified for Dauntless Revived):
-  `UndauntedMetagame/src/controllers/escalationConfig.ts`, `escalation.ts`, `freestore.ts` and
+  `legacy/UndauntedMetagame/src/controllers/escalationConfig.ts`, `escalation.ts`, `freestore.ts` and
   `slayerlinks.ts`.
 - Data files from the fork, each with a provenance note in its `_comment`:
-  `UndauntedMetagame/src/vendor/escalation/seasons.json`, `src/vendor/store_catalog.json`,
+  `legacy/UndauntedMetagame/src/vendor/escalation/seasons.json`, `src/vendor/store_catalog.json`,
   `src/vendor/store_item_kinds.json` and `test/data/store_art_skus.json`. They hold identifiers and
   tuning values read from the installed 1.4.4 client for interoperability, and no game assets.
 - Code of ours built on Harmonic's ideas names the fork in its comments.
@@ -60,7 +60,7 @@ named below.
 Harmonic's fork also contains realtime XMPP code derived from
 [Mystic Paradox](https://github.com/pranav158/Mystic-Paradox), which carries additional terms under
 AGPLv3 section 7. **Dauntless Revived contains none of that code**: our chat and presence code
-(`UndauntedMetagame/src/realtime/`) was written for this project, and nothing from Harmonic's
+(`legacy/UndauntedMetagame/src/realtime/`) was written for this project, and nothing from Harmonic's
 `src/realtime/` was copied. Those additional terms therefore do not apply to this repository, and it
 has no `ADDITIONAL_TERMS.md`. Mystic Paradox is named in our README only as a related project; that
 implies no endorsement or affiliation.
@@ -72,10 +72,10 @@ implies no endorsement or affiliation.
 - The Unreal Engine SDK headers in `native/internal-server/SDK/`, generated with
   [Dumper-7](https://github.com/Encryqed/Dumper-7) from the 1.4.4 client.
 - Data read from the client for interoperability, carried from upstream: `progression_config.json`
-  and the deploy server's hunt tables (`UndauntedDeployServer/src/vendor/*_table.json`), from which
+  and the deploy server's hunt tables (`legacy/UndauntedDeployServer/src/vendor/*_table.json`), from which
   our `hunt_titles.json` is generated.
 - The launcher ships the license texts of the software it includes in
-  `UndauntedLauncher/THIRD-PARTY-NOTICES.txt`.
+  `legacy/UndauntedLauncher/THIRD-PARTY-NOTICES.txt`.
 
 No game files are distributed in this repository. "Dauntless" is a trademark of its owners;
 Dauntless Revived is not affiliated with or endorsed by Phoenix Labs or Epic Games. The full credits

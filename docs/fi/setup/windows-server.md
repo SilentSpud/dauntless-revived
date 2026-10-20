@@ -301,7 +301,7 @@ Käy tämä lista läpi, kun palvelin on asennettu:
    vasten ja poistaa eston (hiiren oikea > **Ominaisuudet** > **Poista esto**, tai `Unblock-File`),
    kuten sivulla [Liity kaverina]({{ friends_page.url | relative_url }}) kerrotaan. Allekirjoitus on
    tiekartan kohta 4.16. CI julkaisee jokaisen
-   `UndauntedLauncher/package.json`-tiedoston uuden version itse, kun kaikki tarkistukset menevät läpi
+   `legacy/UndauntedLauncher/package.json`-tiedoston uuden version itse, kun kaikki tarkistukset menevät läpi
    (repositorion muuttuja `LAUNCHER_AUTO_RELEASE` arvolla `false` pysäyttää sen), ja Actions >
    **Launcher release** > **Run workflow** `dauntless-revived`-haaralle julkaisee käsin (ks.
    käynnistimen README, kohta "Julkaisut ja päivitykset"). Tai lähetä `Setup.exe` SHA-256-summineen yksityisesti.

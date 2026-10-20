@@ -1,8 +1,8 @@
 // Records what the Node metagame answers to a request script (<area>.requests.json), for the Rust
 // metagame's parity test (tests/parity.rs; MIGRATION_PLAN.md M29, M31, a small M35 per area).
 //
-//   cd UndauntedMetagame && npm ci && npx tsc -p tsconfig.test.json
-//   node ../rust/services/metagame/tests/parity/record.cjs accounts
+//   cd legacy/UndauntedMetagame && npm ci && npx tsc -p tsconfig.test.json
+//   node ../../rust/services/metagame/tests/parity/record.cjs accounts
 //
 // Writes <area>.expected.json next to the script: per request the status, the headers the client or
 // the tools read, and the body. Values that differ on every run (tokens, account keys, generated ids,
@@ -17,7 +17,7 @@ const area = process.argv[2];
 if (!area) throw new Error("usage: record.cjs <area>");
 const here = __dirname;
 const script = JSON.parse(fs.readFileSync(path.join(here, `${area}.requests.json`), "utf8"));
-const metagame = path.resolve(here, "../../../../../UndauntedMetagame");
+const metagame = path.resolve(here, "../../../../../legacy/UndauntedMetagame");
 const build = path.join(metagame, "build", "src");
 
 // The environment before the app loads, as the Node tests set it (test/setup.ts, authenv.ts, appenv.ts).

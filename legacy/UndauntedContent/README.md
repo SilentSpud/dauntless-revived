@@ -1,6 +1,6 @@
 # Dauntless Revived content server
 
-The content server, in the `UndauntedContent/` folder (roadmap item 1.16). It gives the friend
+The content server, in the `legacy/UndauntedContent/` folder (roadmap item 1.16). It gives the friend
 launcher the verified 1.4.4 game files, file by file, over Tailscale, and only to registered
 accounts. It also serves the host's optional art pack and news for the launcher.
 

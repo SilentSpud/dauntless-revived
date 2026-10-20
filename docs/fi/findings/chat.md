@@ -347,7 +347,7 @@ luettelo on sivulla [Vianetsintä]({{ trouble_page.url | relative_url }}#chat-pr
 
 ## Testaus ilman peliä {#testing-without-the-game}
 
-`UndauntedMetagame/test/chatclient.ts` on malli siitä, miten peliohjelma lukee chattia, yllä olevine
+`legacy/UndauntedMetagame/test/chatclient.ts` on malli siitä, miten peliohjelma lukee chattia, yllä olevine
 osoitteineen. Kun sille syötetään ensimmäisen palvelimen vastaukset, se toistaa sen, mitä Vvoidddd
 näki: lähettäjänä `UID-...`, liittyminen jumissa ilmoituksella "Another operation already pending"
 ja `[unknown]`. Kun sille syötetään meidän vastauksemme, jotka on kaapattu testissä oikealta

@@ -135,18 +135,20 @@ The repository is moving to one folder per code family: `rust/` for every Rust c
 launcher backend, the servers and their shared crates), `native/` for C++, `client-mods/` and
 `tools/`. The target layout and the order of the moves are in
 [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md#2-repository-and-workspace-layout). Until its Rust port
-replaces it, each Node project keeps its upstream `Undaunted...` folder; the npm packages in them are
-named `dauntless-revived-*`.
+replaces it, each Node project (the Electron launcher and the TypeScript servers) keeps its upstream
+`Undaunted...` folder under `legacy/`, so the old code and the new are easy to tell apart; the npm
+packages in them are named `dauntless-revived-*`. The server kits still install them at the top of the
+install root, as before.
 
 | Folder | What it is |
 |---|---|
-| `UndauntedMetagame/` | The backend the game talks to: accounts, characters, inventory, loadouts, progression, matchmaking, parties, the friends list and the `/undaunted/api` admin API |
-| `UndauntedDeployServer/` | Starts and supervises game-server processes (Ramsgate, hunts, the Training Dojo) |
-| `UndauntedGateway/` | Public mode only: the TLS gateway (the game's one public TCP port) and the helper that opens the game ports for logged-in players |
-| `UndauntedContent/` | The content server: the game files (checked against a manifest of 410 files), news and the art pack, for registered launchers only |
-| `UndauntedLauncher/` | The Dauntless Revived Launcher for Windows and x86_64 Linux; on Linux the pinned Windows game client runs through Proton/Wine. `assets/` holds the two pinned prebuilt DLLs every setup installs |
+| `legacy/UndauntedMetagame/` | The backend the game talks to: accounts, characters, inventory, loadouts, progression, matchmaking, parties, the friends list and the `/undaunted/api` admin API |
+| `legacy/UndauntedDeployServer/` | Starts and supervises game-server processes (Ramsgate, hunts, the Training Dojo) |
+| `legacy/UndauntedGateway/` | Public mode only: the TLS gateway (the game's one public TCP port) and the helper that opens the game ports for logged-in players |
+| `legacy/UndauntedContent/` | The content server: the game files (checked against a manifest of 410 files), news and the art pack, for registered launchers only |
+| `legacy/UndauntedLauncher/` | The Dauntless Revived Launcher for Windows and x86_64 Linux; on Linux the pinned Windows game client runs through Proton/Wine. `assets/` holds the two pinned prebuilt DLLs every setup installs |
 | `rust/` | The cargo workspace every Rust component is being built in. So far: `crates/protocol`, the wire types the launcher and the servers share |
-| `native/internal-server/` | The C++ source of Undaunted's server DLL, which lets the retail client run as a game server and points clients at the backend. It compiles with the Visual Studio 2022 Build Tools, but nothing in this repository builds it; every setup uses the prebuilt DLLs from `UndauntedLauncher/assets/` |
+| `native/internal-server/` | The C++ source of Undaunted's server DLL, which lets the retail client run as a game server and points clients at the backend. It compiles with the Visual Studio 2022 Build Tools, but nothing in this repository builds it; every setup uses the prebuilt DLLs from `legacy/UndauntedLauncher/assets/` |
 | `client-mods/` | The optional UE4SS client mods the launcher installs next to the game exe, with `manifest.json` listing their files |
 | `deploy/windows-server/` | The Windows server kit: installs and runs the whole server on Windows Server 2019, in public or private mode, with backups, invites and updates |
 | `deploy/linux-server/` | Separate Linux server port: systemd service templates, nftables allowlist, one-host Proton/Wine launch wrapper and the reusable Linux game-worker installer |
@@ -206,15 +208,15 @@ named `dauntless-revived-*`.
   registers the player, points the game's chat connection at the host so it never contacts Epic's
   old chat server, and ships with the license, third-party notices and a `SOURCE.txt` naming the
   exact commit.
-- Our own **friend launcher** (`UndauntedLauncher/`), built on upstream's, which was hard-wired to
+- Our own **friend launcher** (`legacy/UndauntedLauncher/`), built on upstream's, which was hard-wired to
   Undaunted's own servers. It joins a server from an invite, registers the player (it keeps the key
   only through Electron safe storage (DPAPI on Windows, the desktop secret store on Linux); the one plain copy is a backup the player chooses to save),
   downloads the game from the host and checks every file against a manifest
   built into it, installs the two pinned DLLs and the game settings, and in public mode relays the
   game's plain-HTTP calls over TLS pinned to the invite's certificate. CI publishes each new version on GitHub Releases, and installed launchers
   update themselves.
-- A **content server** (`UndauntedContent/`) that hands the game files only to registered accounts,
-  with resumable downloads, and a **gateway** (`UndauntedGateway/`) for public mode: the game's only
+- A **content server** (`legacy/UndauntedContent/`) that hands the game files only to registered accounts,
+  with resumable downloads, and a **gateway** (`legacy/UndauntedGateway/`) for public mode: the game's only
   public TCP port, TLS with a pinned self-signed certificate, admin routes and the game-server key refused
   from outside, body limits and rate limits, and a helper that opens the game's UDP ports only for
   the addresses of players who logged in.

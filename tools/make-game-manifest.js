@@ -1,4 +1,4 @@
-// Builds the content manifest (UndauntedContent/data/dauntless-1.4.4.json) from the verified 1.4.4 game zip.
+// Builds the content manifest (legacy/UndauntedContent/data/dauntless-1.4.4.json) from the verified 1.4.4 game zip.
 //
 // The manifest lists every file of the game: its path relative to the folder that contains Archon/
 // (forward slashes), its size and the SHA-256 of its uncompressed bytes, sorted by path. The content
@@ -17,7 +17,7 @@
 //
 // It runs at low CPU priority and reads the zip twice (about 21 GB of reads in total).
 //
-// Usage (from the repository root; needs `npm install` in UndauntedContent/ first, for yauzl):
+// Usage (from the repository root; needs `npm install` in legacy/UndauntedContent/ first, for yauzl):
 //   node tools/make-game-manifest.js --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
 //                                    [--compare-all] [--zip-sha256 <hex>] [--skip-zip-hash]
 "use strict";
@@ -34,10 +34,10 @@ const PINNED_ZIP_SHA256 = "556b9a648a5e5e7e11b6f8dd3d80ff8e88fceb0d3448297aaf47c
 const EXPECTED_BUILD = "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827";
 const EXE_PATH = "Archon/Binaries/Win64/Dauntless-Win64-Shipping.exe";
 const EXE_SHA256 = "d3d41e614908d2befd518b27046d9822d6130ef12ba3504babbdb786bef9cff4";
-const DEFAULT_OUT = path.join(root, "UndauntedContent", "data", "dauntless-1.4.4.json");
+const DEFAULT_OUT = path.join(root, "legacy", "UndauntedContent", "data", "dauntless-1.4.4.json");
 
 // The rule every manifest path must pass. Keep in sync with IsSafeManifestPath in
-// UndauntedContent/src/manifest.ts (the server refuses to load a manifest that breaks it).
+// legacy/UndauntedContent/src/manifest.ts (the server refuses to load a manifest that breaks it).
 const SEGMENT = /^[A-Za-z0-9_-](?:[A-Za-z0-9_.-]{0,126}[A-Za-z0-9_-])?$/;
 const RESERVED = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 function IsSafeManifestPath(p) {
@@ -74,8 +74,8 @@ function ParseArgs(argv) {
 
 function LoadYauzl() {
     const candidates = [
-        path.join(root, "UndauntedContent", "package.json"),
-        path.join(root, "UndauntedLauncher", "package.json"),
+        path.join(root, "legacy", "UndauntedContent", "package.json"),
+        path.join(root, "legacy", "UndauntedLauncher", "package.json"),
     ];
     for (const candidate of candidates) {
         try {
@@ -84,7 +84,7 @@ function LoadYauzl() {
             // try the next one
         }
     }
-    Fail("yauzl not found. Run `npm install` in UndauntedContent/ first.");
+    Fail("yauzl not found. Run `npm install` in legacy/UndauntedContent/ first.");
 }
 
 function HashFile(file) {

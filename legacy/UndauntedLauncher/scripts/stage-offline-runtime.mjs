@@ -10,10 +10,11 @@ const electronVersion = require("electron/package.json").version;
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const launcherDir = path.resolve(scriptDir, "..");
-const repoDir = path.resolve(launcherDir, "..");
+const legacyDir = path.resolve(launcherDir, "..");
+const repoDir = path.resolve(legacyDir, "..");
 
-const metagameSource = path.join(repoDir, "UndauntedMetagame");
-const deploySource = path.join(repoDir, "UndauntedDeployServer");
+const metagameSource = path.join(legacyDir, "UndauntedMetagame");
+const deploySource = path.join(legacyDir, "UndauntedDeployServer");
 
 const outputDir = path.join(launcherDir, "offline-runtime");
 const metagameOutput = path.join(outputDir, "metagame");

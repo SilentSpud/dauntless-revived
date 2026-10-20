@@ -159,7 +159,7 @@ Molemmat tiedostot menevät kansioon `<game folder>\Archon\Binaries\Win64\` eli 
 
 Saat ne isännältä, helpoimmin kaveripaketissa (katso yllä), tai
 alkuperäisestä repositoriosta kansiosta
-[`UndauntedLauncher/assets/`](https://github.com/SyST3MDeV/Undaunted/tree/main/UndauntedLauncher/assets).
+[`legacy/UndauntedLauncher/assets/`](https://github.com/SyST3MDeV/Undaunted/tree/main/UndauntedLauncher/assets).
 Ne ovat samat tiedostot. Kopioinnin jälkeen tarkista ne ja poista niistä ”ladattu internetistä”
 -merkintä:
 

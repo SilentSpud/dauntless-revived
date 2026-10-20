@@ -314,7 +314,7 @@ Palvelinpaketti ottaa varmuuskopion jokaisen päivityksen yhteydessä; itse koot
 ### Missä asetus on {#where-the-setting-lives}
 
 - **Itse koottu kone** ([Pystytä palvelin]({{ host_page.url | relative_url }})): `.env`
-  `UndauntedMetagame`-kansiossa. Käynnistä metagame uudelleen muutoksen jälkeen.
+  `legacy/UndauntedMetagame`-kansiossa. Käynnistä metagame uudelleen muutoksen jälkeen.
 - **Windows-palvelinpaketti** ([Windows-palvelin]({{ winserver_page.url | relative_url }})):
   `C:\DauntlessRevived\data\config\metagame.env`. Asennus ja `Update-DauntlessServer.ps1` säilyttävät
   jokaisen tiedostossa jo olevan asetuksen (asennus kirjoittaa uudelleen vain palvelinkohtaiset

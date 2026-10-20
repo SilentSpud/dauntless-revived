@@ -92,7 +92,18 @@ mkdir -p "$install_root" "$data_dir" "$config_dir"
 
 if [ "$source_root" != "$install_root" ]; then
   echo "Copying server source to $install_root"
-  (cd "$source_root" && tar --exclude=.git --exclude="*/node_modules" --exclude="*/dist" --exclude="*/build" --exclude="UndauntedLauncher/out" -cf - .) | (cd "$install_root" && tar -xf -)
+  (cd "$source_root" && tar --exclude=.git --exclude="*/node_modules" --exclude="*/dist" --exclude="*/build" --exclude=./legacy -cf - .) | (cd "$install_root" && tar -xf -)
+  if [ -d "$source_root/legacy" ]; then
+    (cd "$source_root/legacy" && tar --exclude="*/node_modules" --exclude="*/dist" --exclude="*/build" --exclude="UndauntedLauncher/out" -cf - .) | (cd "$install_root" && tar -xf -)
+  fi
+fi
+# The Node packages sit in legacy/ in the source; installed, they stay at the top level, where the
+# services and tools expect them (an install into the checkout itself links them there).
+if [ -d "$install_root/legacy" ]; then
+  for dir in "$install_root"/legacy/*; do
+    name=$(basename "$dir")
+    [ -e "$install_root/$name" ] || ln -s "legacy/$name" "$install_root/$name"
+  done
 fi
 
 chmod +x "$install_root/deploy/linux-server/launch-gameserver.mjs" "$install_root/deploy/linux-server/worker-launch.mjs" "$install_root/deploy/linux-server/prepare-game.sh" "$install_root/deploy/linux-server/allowlist.mjs" "$install_root/deploy/linux-server/stack.sh"

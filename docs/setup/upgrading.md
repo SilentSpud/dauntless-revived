@@ -289,7 +289,7 @@ up around every update; on a hand-built host, see
 ### Where the setting lives
 
 - **Hand-built host** ([Host a server]({{ host_page.url | relative_url }})): `.env` in the
-  `UndauntedMetagame` folder. Restart the metagame after a change.
+  `legacy/UndauntedMetagame` folder. Restart the metagame after a change.
 - **Windows server kit** ([Windows server kit]({{ winserver_page.url | relative_url }})):
   `C:\DauntlessRevived\data\config\metagame.env`. The installer and `Update-DauntlessServer.ps1` keep
   every setting already in that file (the installer rewrites only the keys that describe the host,

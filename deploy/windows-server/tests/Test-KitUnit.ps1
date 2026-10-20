@@ -104,12 +104,12 @@ Check '.env round trip' ($back['A'] -eq '1' -and $back['SERVER_NAME'] -eq 'Two w
 Check '.env unchanged write reports no change' (-not (Write-DREnv $envFile ([ordered]@{ A = '1'; SERVER_NAME = 'Two words'; C = 'x=y' }) @('header')))
 
 Write-Host '== certificate fingerprint and TLS pinning'
-$gw = Join-Path (Split-Path $Kit -Parent | Split-Path -Parent) 'UndauntedGateway'
+$gw = Join-Path (Split-Path $Kit -Parent | Split-Path -Parent) 'legacy\UndauntedGateway'
 $makeCert = Join-Path $gw 'tools\make-cert.js'
 $node = (Get-Command node.exe).Source
 $server = $null
 if (-not (Test-Path -LiteralPath (Join-Path $gw 'node_modules\node-forge'))) {
-    Check 'UndauntedGateway\node_modules present (npm ci there first)' $false
+    Check 'legacy\UndauntedGateway\node_modules present (npm ci there first)' $false
 } else {
     $cert = Join-Path $WorkDir 'cert.pem'; $key = Join-Path $WorkDir 'key.pem'
     $out = & $node $makeCert --host 127.0.0.1 --host test.invalid --cert $cert --key $key --json 2>&1 | Out-String

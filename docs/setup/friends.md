@@ -148,7 +148,7 @@ Both files go into `<game folder>\Archon\Binaries\Win64\`, next to `Dauntless-Wi
 
 You get them from the host, most easily in the friend kit (see above), or from the upstream
 repository under
-[`UndauntedLauncher/assets/`](https://github.com/SyST3MDeV/Undaunted/tree/main/UndauntedLauncher/assets).
+[`legacy/UndauntedLauncher/assets/`](https://github.com/SyST3MDeV/Undaunted/tree/main/UndauntedLauncher/assets).
 They are the same files. After copying, check them and clear the "downloaded from the internet" flag:
 
 ```powershell

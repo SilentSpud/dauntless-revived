@@ -21,7 +21,7 @@ They only change what you see on your own screen. The game works without them.
 
 ## How they get installed
 
-- **Launcher**: on install, repair and before every launch (`UndauntedLauncher/src/main/client-mods.ts`).
+- **Launcher**: on install, repair and before every launch (`legacy/UndauntedLauncher/src/main/client-mods.ts`).
 - **Friend kit**: `friend-kit/setup.ps1` (skip with `-NoMods`).
 
 Both install only files whose SHA-256 matches `manifest.json`, and check them again after copying.

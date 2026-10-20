@@ -150,18 +150,20 @@ Koodivarasto siirtyy rakenteeseen, jossa kullakin kieliperheellä on oma kansion
 Rust-osille (käynnistimen taustaosa, palvelimet ja niiden yhteiset kirjastot), `native/` C++:lle,
 `client-mods/` ja `tools/`. Tavoiteltu rakenne ja siirtojen järjestys ovat tiedostossa
 [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md#2-repository-and-workspace-layout) (englanniksi). Kukin
-Node-projekti pitää alkuperäisen `Undaunted...`-kansionsa, kunnes sen Rust-versio korvaa sen; niissä
-olevien npm-pakettien nimet ovat `dauntless-revived-*`.
+Node-projekti (Electron-käynnistin ja TypeScript-palvelimet) pitää alkuperäisen `Undaunted...`-kansionsa
+`legacy/`-kansion alla, kunnes sen Rust-versio korvaa sen, joten vanha ja uusi koodi erottuvat
+toisistaan; niissä olevien npm-pakettien nimet ovat `dauntless-revived-*`. Palvelinpaketit asentavat ne
+edelleen asennuskansion ylätasolle kuten ennenkin.
 
 | Kansio | Mikä se on |
 |---|---|
-| `UndauntedMetagame/` | Taustapalvelin, jonka kanssa peli keskustelee: tilit, hahmot, tavarat, varusteet, eteneminen, pelien järjestäminen, pelaajaryhmät, kaverilista ja ylläpitorajapinta `/undaunted/api` |
-| `UndauntedDeployServer/` | Käynnistää ja valvoo pelipalvelimia (Ramsgate, metsästykset, harjoitussali) |
-| `UndauntedGateway/` | Vain julkisessa tilassa: salattu yhdyskäytävä (pelin ainoa julkinen TCP-portti) ja apuohjelma, joka avaa peliportit kirjautuneille pelaajille |
-| `UndauntedContent/` | Sisältöpalvelin: pelitiedostot (tarkistetaan 410 tiedoston luetteloa vasten), uutiset ja kuvapaketti, vain rekisteröityneille käynnistimille |
-| `UndauntedLauncher/` | Dauntless Revived Launcher Windowsille ja x86_64-Linuxille, pohjana alkuperäisen Undaunted-projektin käynnistin. Kansiossa `assets/` ovat ne kaksi tiivisteillä kiinnitettyä valmista DLL-tiedostoa, jotka jokainen asennustapa asentaa |
+| `legacy/UndauntedMetagame/` | Taustapalvelin, jonka kanssa peli keskustelee: tilit, hahmot, tavarat, varusteet, eteneminen, pelien järjestäminen, pelaajaryhmät, kaverilista ja ylläpitorajapinta `/undaunted/api` |
+| `legacy/UndauntedDeployServer/` | Käynnistää ja valvoo pelipalvelimia (Ramsgate, metsästykset, harjoitussali) |
+| `legacy/UndauntedGateway/` | Vain julkisessa tilassa: salattu yhdyskäytävä (pelin ainoa julkinen TCP-portti) ja apuohjelma, joka avaa peliportit kirjautuneille pelaajille |
+| `legacy/UndauntedContent/` | Sisältöpalvelin: pelitiedostot (tarkistetaan 410 tiedoston luetteloa vasten), uutiset ja kuvapaketti, vain rekisteröityneille käynnistimille |
+| `legacy/UndauntedLauncher/` | Dauntless Revived Launcher Windowsille ja x86_64-Linuxille, pohjana alkuperäisen Undaunted-projektin käynnistin. Kansiossa `assets/` ovat ne kaksi tiivisteillä kiinnitettyä valmista DLL-tiedostoa, jotka jokainen asennustapa asentaa |
 | `rust/` | Cargo-työtila, johon kaikki Rust-osat rakennetaan. Toistaiseksi siinä on `crates/protocol`, käynnistimen ja palvelinten yhteiset tietorakenteet |
-| `native/internal-server/` | Undauntedin palvelin-DLL:n C++-lähdekoodi. DLL:n avulla peli toimii pelipalvelimena, ja se ohjaa pelaajat omalle taustapalvelimelle. Se kääntyy Visual Studio 2022 Build Toolsilla, mutta mikään tässä koodivarastossa ei käännä sitä; jokainen asennustapa käyttää valmiita DLL-tiedostoja kansiosta `UndauntedLauncher/assets/` |
+| `native/internal-server/` | Undauntedin palvelin-DLL:n C++-lähdekoodi. DLL:n avulla peli toimii pelipalvelimena, ja se ohjaa pelaajat omalle taustapalvelimelle. Se kääntyy Visual Studio 2022 Build Toolsilla, mutta mikään tässä koodivarastossa ei käännä sitä; jokainen asennustapa käyttää valmiita DLL-tiedostoja kansiosta `legacy/UndauntedLauncher/assets/` |
 | `client-mods/` | Valinnaiset UE4SS-modit, jotka käynnistin asentaa peliohjelman viereen; `manifest.json` luettelee niiden tiedostot |
 | `deploy/windows-server/` | Windows-palvelinpaketti: asentaa ja pyörittää koko palvelimen Windows Server 2019 -koneella julkisessa tai yksityisessä tilassa, varmuuskopioineen, kutsuineen ja päivityksineen |
 | `deploy/linux-server/` | Erillinen Linux-palvelinporttaus: systemd-palvelut, nftables-sallittujen lista, yhden koneen Proton/Wine-kääre ja Linux-pelityöntekijän asennin |
@@ -227,7 +229,7 @@ olevien npm-pakettien nimet ovat `dauntless-revived-*`.
   rekisteröi pelaajan ja ohjaa pelin chat-yhteyden palvelinkoneelle, jotta peli ei ota yhteyttä
   Epicin vanhaan chat-palvelimeen. Paketin mukana tulevat lisenssi, muiden tekijöiden
   tekijänoikeustiedot ja `SOURCE.txt`, joka kertoo tarkan koodiversion.
-- Oma **kaverikäynnistin** (`UndauntedLauncher/`), tehty alkuperäisen käynnistimen pohjalta, joka oli
+- Oma **kaverikäynnistin** (`legacy/UndauntedLauncher/`), tehty alkuperäisen käynnistimen pohjalta, joka oli
   kytketty kiinteästi Undauntedin omiin palvelimiin. Se liittyy palvelimelle kutsulla, rekisteröi
   pelaajan (se säilyttää avaimen käyttöjärjestelmän suojatussa tallennuksessa: Windowsissa DPAPI,
   Linuxissa työpöydän salaisuustallennus; ainoa selväkielinen
@@ -236,8 +238,8 @@ olevien npm-pakettien nimet ovat `dauntless-revived-*`.
   DLL-tiedostoa ja pelin asetukset sekä välittää julkisessa tilassa pelin salaamattomat HTTP-kutsut salattuna yhteytenä, joka on kiinnitetty
   kutsun varmenteeseen. CI julkaisee jokaisen uuden version GitHubin julkaisuihin, ja asennetut
   käynnistimet päivittävät itsensä.
-- **Sisältöpalvelin** (`UndauntedContent/`), joka antaa pelitiedostot vain rekisteröityneille tileille
-  ja jatkaa keskeytyneitä latauksia, sekä julkisen tilan **yhdyskäytävä** (`UndauntedGateway/`): pelin
+- **Sisältöpalvelin** (`legacy/UndauntedContent/`), joka antaa pelitiedostot vain rekisteröityneille tileille
+  ja jatkaa keskeytyneitä latauksia, sekä julkisen tilan **yhdyskäytävä** (`legacy/UndauntedGateway/`): pelin
   ainoa julkinen TCP-portti, salaus kiinnitetyllä itse allekirjoitetulla varmenteella, ylläpitoreitit ja
   pelipalvelimen avain torjutaan ulkopuolelta, pyyntöjen koko- ja määrärajat sekä apuohjelma, joka
   avaa pelin UDP-portit vain kirjautuneiden pelaajien osoitteille.

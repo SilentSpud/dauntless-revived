@@ -66,6 +66,6 @@ the change and passed afterward. No real player was banned to test deployment.
 
 HWID enforcement is intentionally omitted by operator choice. The native login
 still exchanges a reusable account key directly, so a launcher-only fingerprint
-header would be bypassable. See `UndauntedMetagame/src/routes/eos.ts` and
-`UndauntedLauncher/src/main/launch.ts`; adding a fingerprint alone would provide
+header would be bypassable. See `legacy/UndauntedMetagame/src/routes/eos.ts` and
+`legacy/UndauntedLauncher/src/main/launch.ts`; adding a fingerprint alone would provide
 no hardware-backed identity assurance.

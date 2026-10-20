@@ -48,8 +48,8 @@ toinen puoli on sivu [Liity kaverina]({{ friends_page.url | relative_url }}).
 
 | Osa | Kuuntelee | Kenen on tavoitettava se |
 |:----------|:-----------|:--------------------|
-| Metagame (`UndauntedMetagame`: Node, Express, SQLite) | TCP 61000 | Jokaisen pelaajan peliohjelman, jokaisen pelipalvelimen ja sinun ylläpitäjänä |
-| Deploy-palvelin (`UndauntedDeployServer`) | TCP 61001, vain loopback | Vain samalla koneella olevan metagamen. **Siinä ei ole tunnistautumista.** |
+| Metagame (`legacy/UndauntedMetagame`: Node, Express, SQLite) | TCP 61000 | Jokaisen pelaajan peliohjelman, jokaisen pelipalvelimen ja sinun ylläpitäjänä |
+| Deploy-palvelin (`legacy/UndauntedDeployServer`) | TCP 61001, vain loopback | Vain samalla koneella olevan metagamen. **Siinä ei ole tunnistautumista.** |
 | Ramsgate-palvelin | UDP 8777 (`PORT_RANGE_END`) | Pelaajien. Aina käynnissä. Jos se kuolee, deploy-palvelin käynnistää sen uudelleen, kun pelaaja matkustaa sinne, tai sen vahtikoira (watchdog) tekee sen minuutin sisällä. |
 | Training Dojo | UDP 8776 | Pelaajien. Forkimme käynnistää sen ensimmäisellä käyttökerralla; `ENABLE_DOJO=1` palauttaa alkuperäisen aina päällä -toiminnan. |
 | Metsästyspalvelimet | UDP 8770–8775 | Pelaajien. Yksi jokaista enintään neljän hengen ryhmää kohden. Kukin sulkeutuu, kun siihen ei ole ollut kukaan yhteydessä yhteensä 50 sekuntiin. |
@@ -152,11 +152,11 @@ Kolme asetusta osoittaa nykyään osoitteeseen `127.0.0.1`, ja ne on muutettava:
 
 | Asetus | Tiedosto | Uusi arvo | Miksi |
 |:--------|:-----|:----------|:----|
-| `MY_IP` | `UndauntedDeployServer/.env` | `<host 100.x address>` | Ainoa isännän osoite, jonka deploy-palvelin antaa Ramsgatea, Dojoa ja metsästyksiä varten matchmaking-tuloksen kautta. Arvolla `127.0.0.1` kaverin peliohjelma matkaisi omalle koneelleen. |
-| `QOS_TARGET_URL` | `UndauntedMetagame/.env` | `http://<host 100.x address>:61000/QoS` | `/candidate/regions` palauttaa tämän osoitteen alueena, jota pingataan. Arvolla `127.0.0.1` kaverit pingaavat omaa konettaan (localhost). Emme ole testanneet, mitä peliohjelma tekee, kun tuo ping epäonnistuu. |
-| `BIND_HOST` | `UndauntedMetagame/.env` | `<host 100.x address>` | Osoite, jossa metagame kuuntelee. Forkimme oletus on `127.0.0.1`; alkuperäinen projekti kuunteli kaikissa liitännöissä. |
-| `BIND_HOST` | `UndauntedDeployServer/.env` | pysyy arvossa `127.0.0.1` | Ei tunnistautumista. |
-| `DEPLOYSERVER_URL` | `UndauntedMetagame/.env` | pysyy arvossa `127.0.0.1:61001` | Metagame tavoittaa deploy-palvelimen paikallisesti. |
+| `MY_IP` | `legacy/UndauntedDeployServer/.env` | `<host 100.x address>` | Ainoa isännän osoite, jonka deploy-palvelin antaa Ramsgatea, Dojoa ja metsästyksiä varten matchmaking-tuloksen kautta. Arvolla `127.0.0.1` kaverin peliohjelma matkaisi omalle koneelleen. |
+| `QOS_TARGET_URL` | `legacy/UndauntedMetagame/.env` | `http://<host 100.x address>:61000/QoS` | `/candidate/regions` palauttaa tämän osoitteen alueena, jota pingataan. Arvolla `127.0.0.1` kaverit pingaavat omaa konettaan (localhost). Emme ole testanneet, mitä peliohjelma tekee, kun tuo ping epäonnistuu. |
+| `BIND_HOST` | `legacy/UndauntedMetagame/.env` | `<host 100.x address>` | Osoite, jossa metagame kuuntelee. Forkimme oletus on `127.0.0.1`; alkuperäinen projekti kuunteli kaikissa liitännöissä. |
+| `BIND_HOST` | `legacy/UndauntedDeployServer/.env` | pysyy arvossa `127.0.0.1` | Ei tunnistautumista. |
+| `DEPLOYSERVER_URL` | `legacy/UndauntedMetagame/.env` | pysyy arvossa `127.0.0.1:61001` | Metagame tavoittaa deploy-palvelimen paikallisesti. |
 
 **Hankaluus: metagame kuuntelee yhdessä osoitteessa**, ja myös kaksi paikallista osaa puhuu sille.
 
@@ -293,7 +293,7 @@ Invoke-RestMethod -Method Delete -Uri "http://$M/undaunted/api/InviteCode/$code"
 
 Ylläpitäjä on `users`-taulun rivi, jossa `isAdmin = 1`. Mikään rajapinta ei aseta sitä. Muokkaa
 tietokantaa metagamen ollessa pysäytettynä, esimerkiksi pienellä `better-sqlite3`-skriptillä, jota
-ajetaan `UndauntedMetagame`-kansiosta (`UPDATE users SET isAdmin = 1 WHERE userId = ?`). Ylläpitäjän
+ajetaan `legacy/UndauntedMetagame`-kansiosta (`UPDATE users SET isAdmin = 1 WHERE userId = ?`). Ylläpitäjän
 avain on yksinkertaisesti kyseisen käyttäjän tiliavain, joten pidä se palvelinkoneella.
 
 ## Ylläpitorajapinta {#admin-api}
@@ -405,7 +405,7 @@ ylläpitäjäksi ylentämiseen. Nimen vaihto on olemassa (`RenameUser`, katso
   kirjautumisella, mutta jo myönnetty tunniste pysyy voimassa enintään 24 tuntia.
 - **Kaveri kadotti avaimensa.** Sitä ei voi palauttaa, koska vain sen tiiviste on tallessa. Anna uusi
   korvaamalla tiiviste. Uuden avaimen antava ylläpitotoiminto on suunnitteilla. Siihen asti tallenna
-  tämä nimellä `rekey.js` kansioon `UndauntedMetagame`, jotta `require` löytää `better-sqlite3`-kirjaston:
+  tämä nimellä `rekey.js` kansioon `legacy/UndauntedMetagame`, jotta `require` löytää `better-sqlite3`-kirjaston:
 
   ```js
   // node rekey.js <UserId>   (take the UserId from GET /undaunted/api/GetAllUsers)
@@ -431,7 +431,7 @@ ylläpitäjäksi ylentämiseen. Nimen vaihto on olemassa (`RenameUser`, katso
 
 Useat ominaisuudet on rakennettu, mutta ne ovat oletuksena pois päältä, ja muutamalla päällä olevalla
 on kytkin, jolla sen saa pois. Kukin on yksi rivi metagamen asetuksissa: itse pystytetyllä koneella
-`.env` kansiossa `UndauntedMetagame`, palvelinpaketin palvelimella
+`.env` kansiossa `legacy/UndauntedMetagame`, palvelinpaketin palvelimella
 `C:\DauntlessRevived\data\config\metagame.env` (muokkaa järjestelmänvalvojana avatulla editorilla).
 Paketti säilyttää lisäämäsi rivin uudelleenajoissa ja päivityksissä. Käynnistä sitten metagame
 uudelleen **silloin, kun kukaan ei pelaa** (uudelleenkäynnistys pudottaa ryhmät ja jonot): käsin kuten
@@ -466,7 +466,7 @@ Set-Location C:\DauntlessRevived\app\UndauntedMetagame
 node -e "const db = new (require('better-sqlite3'))(process.argv[1], { readonly: true }); console.log(db.prepare('SELECT COUNT(*) AS accountsWithSeveralCharacters FROM (SELECT userId FROM characters GROUP BY userId HAVING COUNT(*) > 1)').get())" C:/DauntlessRevived/data/undaunted.db
 ```
 
-Itse pystytetyllä koneella aja se omasta `UndauntedMetagame`-kansiostasi omalla `DB_FILENAME`-polullasi.
+Itse pystytetyllä koneella aja se omasta `legacy/UndauntedMetagame`-kansiostasi omalla `DB_FILENAME`-polullasi.
 Tulos 0 tarkoittaa, että jokainen osto menee pelaajan ainoalle hahmolle.
 
 ## Käyttäjänimet {#usernames}
@@ -653,7 +653,7 @@ oletusarvoista rollback journal -lokia, joten erillistä `-wal`-tiedostoa ei voi
 
 **Vaihtoehto 2: varmuuskopio käynnissä ollessa.** SQLiten online backup -rajapinta on turvallinen,
 vaikka metagame kirjoittaa samaan aikaan, ja `better-sqlite3` (joka on jo metagamen riippuvuus)
-tarjoaa sen. Tallenna tämä nimellä `backup-db.js` kansioon `UndauntedMetagame`, jotta `require` löytää
+tarjoaa sen. Tallenna tämä nimellä `backup-db.js` kansioon `legacy/UndauntedMetagame`, jotta `require` löytää
 moduulin:
 
 ```js

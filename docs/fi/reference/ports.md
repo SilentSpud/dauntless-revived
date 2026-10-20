@@ -50,16 +50,16 @@ Sivulla toistuu kolme kokoonpanoa:
 
 | Portti | Protokolla | Kuka kuuntelee | Missä | Tavoitettavissa muilta koneilta |
 |:-------|:-----------|:---------------|:------|:--------------------------------|
-| 443 | TCP | Yhdyskäytävä (`UndauntedGateway/`), TLS | Palvelin, vain julkinen tila | Kaikilta. Ainoa julkinen TCP-portti. |
-| 61000 | TCP | Metagame (`UndauntedMetagame/`) | Palvelin | Julkinen tila: ei koskaan suoraan, vain yhdyskäytävän kautta. Yksityinen tila: Tailscale-verkon koneilta. Kehityskone: ei keneltäkään. |
-| 61001 | TCP | Deploy-palvelin (`UndauntedDeployServer/`) | Palvelin | Ei koskaan. |
-| 61002 | TCP | Sisältöpalvelin (`UndauntedContent/`), pelitiedostot käynnistimelle | Palvelin, jos asennettu | Julkinen tila: ei koskaan suoraan, vain yhdyskäytävän kautta. Yksityinen tila: Tailscale-verkon koneilta. |
-| 61005 | TCP | Sallittujen listan apuri (`UndauntedGateway/`, pyörii SYSTEM-tilillä) | Palvelin, vain julkinen tila | Ei koskaan. |
+| 443 | TCP | Yhdyskäytävä (`legacy/UndauntedGateway/`), TLS | Palvelin, vain julkinen tila | Kaikilta. Ainoa julkinen TCP-portti. |
+| 61000 | TCP | Metagame (`legacy/UndauntedMetagame/`) | Palvelin | Julkinen tila: ei koskaan suoraan, vain yhdyskäytävän kautta. Yksityinen tila: Tailscale-verkon koneilta. Kehityskone: ei keneltäkään. |
+| 61001 | TCP | Deploy-palvelin (`legacy/UndauntedDeployServer/`) | Palvelin | Ei koskaan. |
+| 61002 | TCP | Sisältöpalvelin (`legacy/UndauntedContent/`), pelitiedostot käynnistimelle | Palvelin, jos asennettu | Julkinen tila: ei koskaan suoraan, vain yhdyskäytävän kautta. Yksityinen tila: Tailscale-verkon koneilta. |
+| 61005 | TCP | Sallittujen listan apuri (`legacy/UndauntedGateway/`, pyörii SYSTEM-tilillä) | Palvelin, vain julkinen tila | Ei koskaan. |
 | 61099 | TCP | Chat metagamen sisällä (vain kun `CHAT=1`) osoitteessa `127.0.0.1` | Palvelin | Ei koskaan suoraan. Julkinen tila: yhdyskäytävän kautta. Palomuurisääntöä ei ole missään. |
 | 8777 | UDP | Ramsgaten pelipalvelin | Palvelin | Pelaajilta. Julkinen tila: vain kirjautuneiden pelaajien osoitteista. Yksityinen tila: Tailscale-verkon koneilta. |
 | 8776 | UDP | Training Dojon pelipalvelin | Palvelin | Kuten 8777. |
 | 8770-8775 | UDP | Metsästysten ja opetusjakson pelipalvelimet, yksi prosessi ryhmää kohden | Palvelin | Kuten 8777. |
-| 61000 | TCP | Käynnistimen välitin (`UndauntedLauncher/`) | Jokaisen pelaajan kone, julkinen tila, vain pelin ollessa käynnissä | Ei koskaan: se kuuntelee vain osoitteessa `127.0.0.1`. |
+| 61000 | TCP | Käynnistimen välitin (`legacy/UndauntedLauncher/`) | Jokaisen pelaajan kone, julkinen tila, vain pelin ollessa käynnissä | Ei koskaan: se kuuntelee vain osoitteessa `127.0.0.1`. |
 | 22 | TCP | OpenSSH (Windowsin oma, ei osa kokonaisuutta) | Palvelin | Julkinen tila: paketti sallii sen avainpohjaista ylläpitoa varten. Rajaa se palveluntarjoajalla omaan osoitteeseesi. |
 | 3389 | TCP, UDP | Etätyöpöytä (Windows) | Palvelin | Julkinen tila: vain `-AdminIp`-osoitteista. Ilman sitä paketti poistaa käytöstä internetille avoimet säännöt, ellei annettu `-KeepRdpOpen`. |
 
@@ -201,7 +201,7 @@ Kun `CHAT=1`, metagame itse kuuntelee porttia 61099 pelin chattia varten
   voi erota toisistaan. Kun chat on pois päältä, yhdyskäytävä vastaa avaukseen 502, ja peli yrittää
   uudelleen 15-45 sekunnin välein vaarattomasti.
 - **Kehityskone** (yksi kone): peli ottaa yhteyden suoraan osoitteeseen `ws://127.0.0.1:61099`. Aseta
-  `CHAT=1` tiedostoon `UndauntedMetagame/.env` ([Pystytä palvelin]({{ host_page.url | relative_url }})).
+  `CHAT=1` tiedostoon `legacy/UndauntedMetagame/.env` ([Pystytä palvelin]({{ host_page.url | relative_url }})).
 - **Yksityinen tila** (Tailscale): ei vielä tuettu. Peli ottaisi yhteyden osoitteeseen
   `ws://<Tailscale-osoite>:61099`, mutta kuuntelija ei suostu muuhun kuin paikalliseen osoitteeseen,
   joten yhteys epäonnistuu vaarattomasti kuten ennenkin.
@@ -451,12 +451,12 @@ aja koneella vain yksi sarja kerrallaan, äläkä silloin, kun hiekkalaatikkoase
 
 | Sarja | Portit |
 |:------|:-------|
-| `UndauntedMetagame/`, `npm test` | 62014, 62015-62016, 62471-62472, 62481-62483, 62501-62502, 62901-62904, 62921-62922; chat-testien omat kuuntelijat ottavat satunnaisen vapaan portin |
-| `UndauntedDeployServer/`, `npm test` | 62013, 62473 |
-| `UndauntedGateway/`, `npm test` | 62400-62499 (käytössä: 62400-62405, 62409-62417, 62420-62422, 62430-62436) |
-| `UndauntedContent/`, `npm test` | 62011, 62012, 62019 |
-| `UndauntedContent/`, `npm run test:integration` | 62002 ja 62003 (`CONTENT_IT_PORT`, `CONTENT_IT_MOCK_PORT`) |
-| `UndauntedLauncher/`, `npm test` | 62012, 62013, 62401-62404, 62409, 62420-62422, 62429, 62440-62444 |
+| `legacy/UndauntedMetagame/`, `npm test` | 62014, 62015-62016, 62471-62472, 62481-62483, 62501-62502, 62901-62904, 62921-62922; chat-testien omat kuuntelijat ottavat satunnaisen vapaan portin |
+| `legacy/UndauntedDeployServer/`, `npm test` | 62013, 62473 |
+| `legacy/UndauntedGateway/`, `npm test` | 62400-62499 (käytössä: 62400-62405, 62409-62417, 62420-62422, 62430-62436) |
+| `legacy/UndauntedContent/`, `npm test` | 62011, 62012, 62019 |
+| `legacy/UndauntedContent/`, `npm run test:integration` | 62002 ja 62003 (`CONTENT_IT_PORT`, `CONTENT_IT_MOCK_PORT`) |
+| `legacy/UndauntedLauncher/`, `npm test` | 62012, 62013, 62401-62404, 62409, 62420-62422, 62429, 62440-62444 |
 | `deploy/windows-server/tests/Test-KitUnit.ps1` | 62450 ja 62451 (`-Port` ja sitä seuraava portti, 62000-62499) |
 | `-Sandbox`-asennus ja `Test-Sandbox.ps1` | Metagame 62000, sisältöpalvelin 62002, sallittujen listan apuri 62005, yhdyskäytävä 62443, chat (yhdyskäytävän WebSocket-kohde ja metagamen `CHAT_PORT`) 62099. 62001 kirjoitetaan deploy-palvelimelle, joka ei pyöri hiekkalaatikossa. |
 

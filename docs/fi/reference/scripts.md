@@ -183,8 +183,8 @@ kiinnittää palvelimen isäntäavaimen `known_hosts`-tiedostoon. Komennot ajeta
 | `-Ref` | haara, tagi tai commit | `friends-v1` (`$DRRepo.PinnedRef`) | Ref `-Source GitHub`:ia varten. |
 | `-WorkingTree` | valitsin | pois | Lähettää nykyiset tiedostosi `HEAD`:n sijaan: seuratut ja seuraamattomat tiedostot, joita git ei ohita, paitsi kansiot `node_modules`, `dist`, `build`, `out` ja `.vite`, kaikki `.env`- ja `.env.*`-tiedostot paitsi `.env.example`, sekä `*.key`, `*.pem`, `*.db`, `*.db-journal`, `*.db-wal`, `*.db-shm` ja `*.log`. Commit kirjataan muodossa `<commit>-worktree`. Ei yhdistettävissä `-Source GitHub`:iin. |
 
-Julkisessa tilassa `HEAD`:n lähetys torjutaan, jos `HEAD`:sta puuttuu `UndauntedGateway` tai
-`UndauntedContent`. Tarkistus tehdään paketin lähetyksen jälkeen mutta ennen kuin koodi,
+Julkisessa tilassa `HEAD`:n lähetys torjutaan, jos `HEAD`:sta puuttuu `legacy/UndauntedGateway` tai
+`legacy/UndauntedContent`. Tarkistus tehdään paketin lähetyksen jälkeen mutta ennen kuin koodi,
 varmuuskopio ja pelizip lähetetään. Committoi työsi tai lisää `-WorkingTree`. Committoimattomia
 muutoksia ei asenneta ilman `-WorkingTree`:tä, ja skripti varoittaa niistä.
 
@@ -287,11 +287,11 @@ kiinnitetyillä tiivisteillä.
 |:----------|:-------|:-------|:--------------|
 | `-SourceZip` | lähdekoodizipin polku (`git archive`) | ei mitään | Kääntää lähetetystä zipistä. Tämän `Deploy-Remote.ps1` lähettää. |
 | `-SourceCommit` | 7-40 heksamerkkiä, valinnaisesti päätteellä `-dirty` tai `-worktree` | `zip-` ja zipin SHA-256:n 12 ensimmäistä heksamerkkiä | Nimeää `-SourceZip`:n commitin versioraportteja varten. |
-| `-SourceDir` | kansio, jossa on `UndauntedMetagame\package.json` | ei mitään | Kääntää paikallisesta kansiosta. Git-kopiossa commit luetaan gitistä, päätteellä `-dirty`, kun muutoksia on. |
+| `-SourceDir` | kansio, jossa on `legacy\UndauntedMetagame\package.json` | ei mitään | Kääntää paikallisesta kansiosta. Git-kopiossa commit luetaan gitistä, päätteellä `-dirty`, kun muutoksia on. |
 | `-Ref` | haara, tagi tai commit: kirjaimia, numeroita, `.`, `_`, `/`, `-` (1-100) | Katso alta | Lataa tämän refin GitHubista ja kääntää sen. |
 
 Ilman mitään näistä kolmesta asennusohjelma kääntää sen repositoriokopion, josta se ajetaan, jos se
-ajetaan sellaisesta (kun `..\..\UndauntedMetagame\package.json` on olemassa). Muuten se kääntää
+ajetaan sellaisesta (kun `..\..\legacy\UndauntedMetagame\package.json` on olemassa). Muuten se kääntää
 GitHubista `$DRRepo.PinnedRef`:n eli `friends-v1`:n. **Varo:** uusi ajo kansiosta `<root>\bin` ei
 tapahdu repositoriokopiossa, joten ilman lähdeparametria se lataa `friends-v1`:n. Säilyttääksesi
 asennetun koodin asenna uudelleen `Deploy-Remote.ps1`:llä, joka lähettää koodin uudelleen, tai anna
@@ -299,8 +299,8 @@ asennetun koodin asenna uudelleen `Deploy-Remote.ps1`:llä, joka lähettää koo
 uudelleen, ellei sen nimi pääty `-dirty`- tai `-worktree`-päätteeseen tai ole `unknown`.
 Kääntäminen kopioi lähdekoodin kansioon `<root>\app.new` (ilman `node_modules`-kansioita,
 käännöstuloksia, `.git`-kansiota, `.env`-tiedostoja, avaimia, varmenteita, tietokantoja ja lokeja),
-ajaa `npm ci`:n ja `npm run build`:in neljässä palvelinpaketissa (`UndauntedMetagame`,
-`UndauntedDeployServer`, `UndauntedContent` ja `UndauntedGateway`; käynnistintä ei käännetä) ja
+ajaa `npm ci`:n ja `npm run build`:in neljässä palvelinpaketissa (`legacy/UndauntedMetagame`,
+`legacy/UndauntedDeployServer`, `legacy/UndauntedContent` ja `legacy/UndauntedGateway`; käynnistintä ei käännetä) ja
 vaihtaa sen sitten käyttöön. Vanha käännös jää talteen nimellä `app.prev`.
 
 **Omistaja, palautus ja varmenne**
@@ -399,7 +399,7 @@ varmenne, pelitiedostot ja palomuuri pysyvät ennallaan; niitä varten aja asenn
 | `-Ref` | haara, tagi tai commit | `friends-v1` | Lataa tämän refin GitHubista. Tämä on oletusparametrijoukko: ilman yhtään lähdeparametria päivitys kääntää `friends-v1`:n, joka voi olla vanhempi kuin se, mitä palvelin ajaa. **Nimeä lähde aina.** |
 | `-SourceZip` | polku | ei mitään | Kääntää lähdekoodizipistä. `Deploy-Remote.ps1 -Update` välittää tämän. |
 | `-SourceCommit` | 7-40 heksamerkkiä, valinnaisesti päätteellä `-dirty` tai `-worktree` | `zip-<zipin SHA-256:n 12 heksamerkkiä>` | `-SourceZip`:n commit. |
-| `-SourceDir` | kansio, jossa on `UndauntedMetagame\package.json` | ei mitään | Kääntää paikallisesta kansiosta. |
+| `-SourceDir` | kansio, jossa on `legacy\UndauntedMetagame\package.json` | ei mitään | Kääntää paikallisesta kansiosta. |
 | `-Rollback` | valitsin | pois | Vaihtaa käsin takaisin `app.prev`:iin: pysäytys (varmuuskopion kanssa), `app` nimetään `app.rolledback`:ksi ja `app.prev` `app`:ksi, kirjattu commit palautetaan, kansion `<root>\bin` skriptit päivitetään, käynnistys ilman uutta varmuuskopiota ja tarkistus. |
 | `-Force` | valitsin | pois | Kääntää uudelleen, vaikka sama commit on jo asennettu. Commit, jonka nimi päättyy `-dirty`- tai `-worktree`-päätteeseen, käännetään aina uudelleen. |
 | `-HealthTimeoutSec` | sekunteja | `180` | Kuinka kauan uuden käännöksen annetaan tulla toimintakuntoon ennen automaattista paluuta edelliseen. |
@@ -706,7 +706,7 @@ tiedostojen `*.ps1`, `*.vbs` ja `*.md` rivinvaihdot CRLF-muodossa myös `git arc
 
 | Skripti | Parametrit | Mitä se testaa |
 |:--------|:-----------|:---------------|
-| `tests\Test-KitUnit.ps1` | `-WorkDir` (oletus `%TEMP%\dr-kit-unit`; tyhjennetään alussa, poistetaan lopussa); `-Port` (62000-62499, oletus `62450`; suorituskykytesti käyttää myös sitä seuraavaa porttia) | Jokainen paketin skripti jäsentyy PowerShell 5.1:ssä ja on pelkkää ASCIIta; kutsurivit v1 ja v2 ja kaikki, mikä pitää torjua; osoitteet ja `.env`-säännöt; varmenteiden sormenjäljet; TLS-kiinnitys paikallista testipalvelinta vasten; `Get-ServerStatus.ps1` avaimen kanssa ja ilman; avaintiedostot; lähetysapuri; suorituskykymittari (suoritinlaskut, roolit porttialueesta, kiinteä otsikkorivi, päivätiedostot ja niiden karsinta, pelaajamäärät korvikemetagamesta ilman nimiä tai avaimia tiedostossa, desimaalipiste suomenkielisessä Windowsissa sekä liitoskohdan ja kovan linkin torjunta); chat-asetukset (`CHAT_PORT` sama kuin yhdyskäytävän WebSocket-portti tavallisessa asennuksessa ja hiekkalaatikossa, `-Chat` verrattuna tiedostoon `server.json`, avainten säilyminen uudessa ajossa ja `chat`-tilarivi). Tarvitsee `node`:n `PATH`:issa ja `npm ci`:n kansiossa `UndauntedGateway`. |
+| `tests\Test-KitUnit.ps1` | `-WorkDir` (oletus `%TEMP%\dr-kit-unit`; tyhjennetään alussa, poistetaan lopussa); `-Port` (62000-62499, oletus `62450`; suorituskykytesti käyttää myös sitä seuraavaa porttia) | Jokainen paketin skripti jäsentyy PowerShell 5.1:ssä ja on pelkkää ASCIIta; kutsurivit v1 ja v2 ja kaikki, mikä pitää torjua; osoitteet ja `.env`-säännöt; varmenteiden sormenjäljet; TLS-kiinnitys paikallista testipalvelinta vasten; `Get-ServerStatus.ps1` avaimen kanssa ja ilman; avaintiedostot; lähetysapuri; suorituskykymittari (suoritinlaskut, roolit porttialueesta, kiinteä otsikkorivi, päivätiedostot ja niiden karsinta, pelaajamäärät korvikemetagamesta ilman nimiä tai avaimia tiedostossa, desimaalipiste suomenkielisessä Windowsissa sekä liitoskohdan ja kovan linkin torjunta); chat-asetukset (`CHAT_PORT` sama kuin yhdyskäytävän WebSocket-portti tavallisessa asennuksessa ja hiekkalaatikossa, `-Chat` verrattuna tiedostoon `server.json`, avainten säilyminen uudessa ajossa ja `chat`-tilarivi). Tarvitsee `node`:n `PATH`:issa ja `npm ci`:n kansiossa `legacy/UndauntedGateway`. |
 | `tests\Test-DeployRemote.ps1` | `-WorkDir` (oletus `%TEMP%\dr-deploy-test`; tyhjennetään alussa, poistetaan lopussa) | `Deploy-Remote.ps1` ilman palvelinta: parametrien torjunnat, `-WhatIf`, paketin, lähdekoodin ja varmuuskopion lähetys, osissa tehtävä lähetys katkenneella yhteydellä ja vahingoittuneilla osilla sekä `-Chat` (välitetään asennusohjelmalle tai yksinään `Set-Chat.ps1`). Ei verkkoa, ei SSH-avainta. |
 | `tests\Test-Sandbox.ps1` | `-SandboxDir` (oletus `C:\dr\sandbox-ws2019`; kansion nimessä on oltava `sandbox`, koska kansio poistetaan, ja sen on oltava työkopion ulkopuolella, koska asennusohjelma kopioi työkopion); `-KeepSandbox`; `-SkipRestore` | Täysi julkisen tilan `-Sandbox`-asennus chat päällä väliaikaiseen kansioon, sitten kutsut, tila, yhdyskäytävän torjunnat, rekisteröityminen yhdyskäytävän kautta, pelin chat-yhteys yhdyskäytävän kautta (101), päivitys ja paluu edelliseen, `Set-Chat.ps1 -Off` (taas 502), suorituskykymittaus, varmuuskopio, palautus toiseen kansioon ja siivous. Tarvitsee vapaat portit 62000, 62002, 62005, 62099 ja 62443 ja kääntää koodin `npm ci`:llä. Loki kopioidaan tiedostoon `%TEMP%\dr-sandbox-test.log`, ellei annettu `-KeepSandbox`. |
 
@@ -729,7 +729,7 @@ asennuskohtaisesti, nimiä ei.
 | `$DRNames.BackupTask` | `Dauntless Revived backup` | Ajastettu tehtävä: `backup-hidden.vbs` tilillä `dauntless` tunnin välein. |
 | `$DRNames.FirewallGroup` | `Dauntless Revived` | Paketin palomuurisääntöjen ryhmä. |
 | `$DRNames.AllowlistRule` | `Dauntless Revived game ports (allowlist)` | UDP-peliporttisäännön näyttönimi. |
-| `$DRNames.AllowlistRuleName` | `DauntlessRevived-GamePorts-Allowlist` | Saman säännön nimi. Sen on vastattava tiedostoa `UndauntedGateway/src/allowlist/firewall.ts`. |
+| `$DRNames.AllowlistRuleName` | `DauntlessRevived-GamePorts-Allowlist` | Saman säännön nimi. Sen on vastattava tiedostoa `legacy/UndauntedGateway/src/allowlist/firewall.ts`. |
 | `$DRDefaultPorts` | metagame 61000, deploy 61001, content 61002, gateway 443, allowlist 61005 | Oletus-TCP-portit. |
 | `$DRSandboxPorts` | metagame 62000, deploy 62001, content 62002, gateway 62443, allowlist 62005 | `-Sandbox`-asennuksen TCP-portit. |
 | `$DRRelayPort` | 61000 | Kaverikäynnistimen välittimen portti. Julkinen tila lähettää jokaiselle pelaajalle QoS-osoitteen `http://127.0.0.1:61000/QoS`, joten portti on kiinteä. |
@@ -743,8 +743,8 @@ asennuskohtaisesti, nimiä ei.
 | Mikä | SHA-256 | Kiinnitetty myös tiedostoissa |
 |:-----|:--------|:------------------------------|
 | Pelizip, 1.4.4 (`BaseGame144.zip`, 10 479 214 119 tavua) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `UndauntedLauncher/src/main/constants.ts`, sisältöluettelo |
-| `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `UndauntedLauncher/src/main/constants.ts` |
+| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedLauncher/src/main/constants.ts`, sisältöluettelo |
+| `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | samat tiedostot kuin `dxgi.dll`:llä |
 | Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | vain paketissa; sen on vastattava myös nodejs.org:n `SHASUMS256.txt`-tiedostoa |
 | Tailscale 1.102.4 MSI (yksityinen tila) | `80EB007E39DFEBE17299FA1A09C79A8E1D934F76E0246C0817EBE3AF675B7EF6` | vain paketissa; sen on vastattava myös julkaistua `.sha256`-tiedostoa |
@@ -777,7 +777,7 @@ Molemmat skriptit pitävät tiedostonsa kansiossa `%APPDATA%\DauntlessRevived\`:
 Kertaluonteinen asennus, jonka voi ajaa turvallisesti uudelleen. Se tarkistaa pelin exe-tiedoston
 kiinnitettyä tiivistettä vasten, kopioi kaksi DLL-tiedostoa kansioon `Archon\Binaries\Win64`
 (tarkistetaan ennen kopiointia ja sen jälkeen; otetaan paketin `dll\`-kansiosta tai
-repositoriokopiossa kansiosta `..\UndauntedLauncher\assets\`) ja varoittaa, jos Visual C++
+repositoriokopiossa kansiosta `..\legacy\UndauntedLauncher\assets\`) ja varoittaa, jos Visual C++
 -ajonaikainen kirjasto (`MSVCP140.dll`, `VCRUNTIME140_1.dll`) puuttuu. Sitten se tarkistaa, että
 palvelinkone vastaa portissaan, rekisteröityy kerran (vain jos `account.key`-tiedostoa ei vielä ole),
 tarkistaa, että avain toimii, ja tallentaa `settings.json`-tiedoston.
@@ -874,7 +874,7 @@ Rakentaa kaveripaketin zipin.
 Se kokoaa kansion `<Out>\DauntlessRevived-FriendKit\` (poistetaan ensin, jos se on olemassa), jossa
 ovat `setup.ps1`, `play.ps1`, `Setup.cmd`, `Play Dauntless.cmd`, `README.txt`,
 `THIRD-PARTY-NOTICES.txt`, kaksi DLL-tiedostoa kansiossa `dll\` (kopioitu kansiosta
-`UndauntedLauncher\assets` ja tarkistettu kiinnitettyjä tiivisteitä vasten), `LICENSE.txt`,
+`legacy\UndauntedLauncher\assets` ja tarkistettu kiinnitettyjä tiivisteitä vasten), `LICENSE.txt`,
 `SOURCE.txt` ja `SHA256SUMS.txt`. Sitten se pakkaa kaiken tiedostoon
 `<Out>\DauntlessRevived-FriendKit-<7-merkkinen commit>.zip` ja tulostaa zipin polun ja SHA-256:n.
 
@@ -918,7 +918,7 @@ sivun, jota ei ole olemassa.
 
 ### make-game-manifest.js {#make-game-manifestjs}
 
-Rakentaa sisältöluettelon `UndauntedContent/data/dauntless-1.4.4.json` tarkistetusta pelizipistä.
+Rakentaa sisältöluettelon `legacy/UndauntedContent/data/dauntless-1.4.4.json` tarkistetusta pelizipistä.
 Sisältöpalvelin jakaa vain siinä luetellut tiedostot, ja käynnistin kääntää saman tiedoston
 sisäänsä ja torjuu kaikki muut tiedostot. Aja se vain, kun luettelon täytyy muuttua.
 
@@ -930,7 +930,7 @@ node tools/make-game-manifest.js --zip <BaseGame144.zip> [--out <file>] [--compa
 | Argumentti | Oletus | Mitä se tekee |
 |:-----------|:-------|:--------------|
 | `--zip <file>` | **pakollinen** | Tarkistettu 1.4.4-zip. |
-| `--out <file>` | `UndauntedContent/data/dauntless-1.4.4.json` | Minne luettelo kirjoitetaan. |
+| `--out <file>` | `legacy/UndauntedContent/data/dauntless-1.4.4.json` | Minne luettelo kirjoitetaan. |
 | `--compare-dir <folder>` | ei mitään | Tarkistaa lopuksi puretun asennuksen uutta luetteloa vasten: jokaisen tiedoston koon sekä exe-tiedoston ja muutaman muun tiedoston täydet tiivisteet. Vain lukee. |
 | `--compare-all` | pois | `--compare-dir`:n kanssa: laskee tiivisteen jokaisesta tiedostosta. |
 | `--zip-sha256 <hex>` | kiinnitetty zipin tiiviste | Tiiviste, joka zipillä on oltava. |
@@ -942,7 +942,7 @@ kirjainkoon osalta, että `Version.txt` nimeää 1.4.4-koontiversion ja että ex
 tiivistettä. Se tulostaa tiedostojen määrän, tavujen kokonaismäärän ja luettelon oman SHA-256:n. Se
 pyörii matalalla prioriteetilla, lukee zipin kahdesti (noin 21 Gt luettavaa), päättyy paluukoodilla
 `1` missä tahansa virheessä ja tarvitsee `yauzl`-kirjaston: aja ensin `npm ci` kansiossa
-`UndauntedContent` tai `UndauntedLauncher`. Kun olet tuottanut luettelon uudelleen, käännä
+`legacy/UndauntedContent` tai `legacy/UndauntedLauncher`. Kun olet tuottanut luettelon uudelleen, käännä
 käynnistin uudelleen.
 
 ## CI-työnkulut ja -työkalut {#ci-workflows-and-tools}
@@ -956,7 +956,7 @@ muuttuja `LAUNCHER_AUTO_RELEASE`, joka pysäyttää automaattiset julkaisut, on 
 | Työnkulku | Milloin se ajetaan | Syötteet | Mitä se tekee |
 |:----------|:-------------------|:---------|:--------------|
 | `.github/workflows/ci.yml` (**CI**) | Jokaisella pushilla mihin tahansa haaraan, jokaisella pull requestilla ja Actions > **CI** > **Run workflow** | ei mitään | Kääntää ja testaa neljä palvelinohjelmaa, käynnistimen ja Windows-palvelinpaketin, tarkistaa dokumentaation ja repositorion sekä säilyttää käynnistimen julkaisutiedostot 7 päivää (ei forkeista tulevissa pull requesteissa). Kun `mixutin/dauntless-revived`-repositorion `dauntless-revived`-haaraan tehty push on läpäissyt kaikki tarkistukset, se julkaisee sen jälkeen käynnistimen version, jos versiolla ei ole vielä julkaisua, paitsi jos `LAUNCHER_AUTO_RELEASE` on `false`. |
-| `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** `dauntless-revived`-haaralle; `ci.yml` kutsuu sitä | Käsin ei mitään. `ci.yml` antaa `version`-arvon (sen on oltava sama kuin `UndauntedLauncher/package.json`-tiedoston versio kyseisessä commitissa) ja `artifact`-arvon (sen kääntämät julkaisutiedostot). | Julkaisee käynnistimen version julkaisuna `launcher-v<versio>`, luo sen tagin, tekee jokaiselle tiedostolle allekirjoitetun käännöksen alkuperätodistuksen (build provenance attestation) ja osoittaa `launcher-updates`-kanavan siihen. Käsin ajettuna se kääntää ja testaa commitin itse; jo julkaistulla versiolla se vain päivittää kanavan siihen. Se kieltäytyy toimimasta muussa haarassa kuin `dauntless-revived`, joka on oletushaara. |
+| `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** `dauntless-revived`-haaralle; `ci.yml` kutsuu sitä | Käsin ei mitään. `ci.yml` antaa `version`-arvon (sen on oltava sama kuin `legacy/UndauntedLauncher/package.json`-tiedoston versio kyseisessä commitissa) ja `artifact`-arvon (sen kääntämät julkaisutiedostot). | Julkaisee käynnistimen version julkaisuna `launcher-v<versio>`, luo sen tagin, tekee jokaiselle tiedostolle allekirjoitetun käännöksen alkuperätodistuksen (build provenance attestation) ja osoittaa `launcher-updates`-kanavan siihen. Käsin ajettuna se kääntää ja testaa commitin itse; jo julkaistulla versiolla se vain päivittää kanavan siihen. Se kieltäytyy toimimasta muussa haarassa kuin `dauntless-revived`, joka on oletushaara. |
 
 ### tools/ci/check-repo.js {#check-repojs}
 
@@ -976,8 +976,8 @@ tiedoston:
   perusteella);
 - ei tiedostojen sisällä mitään salaisuuden näköistä: tiliavainta, JWT:tä, yksityistä avainta (myös
   base64-koodattuna), Tailscale-avainta eikä GitHub-tunnistetta;
-- kansion `UndauntedLauncher/assets/` kaksi DLL-tiedostoa vastaavat kiinnityksiään käynnistimessä ja
-  palvelinpaketissa, ja `UndauntedLauncher/package.json`-tiedoston käynnistinversio on kelvollinen.
+- kansion `legacy/UndauntedLauncher/assets/` kaksi DLL-tiedostoa vastaavat kiinnityksiään käynnistimessä ja
+  palvelinpaketissa, ja `legacy/UndauntedLauncher/package.json`-tiedoston käynnistinversio on kelvollinen.
 
 | Argumentti | Mitä se tekee |
 |:-----------|:--------------|
@@ -1006,7 +1006,7 @@ päättyy paluukoodilla `2`.
 
 ### collect-release.ps1 {#collect-releaseps1}
 
-Kansiossa `UndauntedLauncher`, komennon `npm run make` jälkeen:
+Kansiossa `legacy/UndauntedLauncher`, komennon `npm run make` jälkeen:
 
 ```powershell
 pwsh -NoProfile -File scripts\collect-release.ps1
@@ -1029,7 +1029,7 @@ testisarjoja ei saa ajaa yhtä aikaa, kerrotaan sivulla [Kehittäjän opas]({{ d
 | Skripti | Ajaa | Mitä se tekee |
 |:--------|:-----|:--------------|
 | `npm run dev` | `tsx watch --env-file=.env src/server.ts` | Ajaa lähdekoodista ja käynnistyy uudelleen muutoksista. Epäonnistuu, jos kansiossa ei ole `.env`-tiedostoa. |
-| `npm run build` | `tsc`, sitten `postbuild` | Kääntää kansioon `dist\`. `postbuild` ajaa `scripts/write-build-info.js`:n, joka kirjoittaa tiedostoon `dist\build-info.json` commitin, npm-paketin version ja käännösajan. Commit tulee gitistä, päätteellä `-dirty`, kun kansiossa `UndauntedMetagame` on muutoksia, tai se on `unknown` ilman gitiä (kuten palvelinpaketin käännöksissä). `.env`-tiedoston `GIT_COMMIT` ja `SERVER_VERSION` ohittavat sen ajon aikana. |
+| `npm run build` | `tsc`, sitten `postbuild` | Kääntää kansioon `dist\`. `postbuild` ajaa `scripts/write-build-info.js`:n, joka kirjoittaa tiedostoon `dist\build-info.json` commitin, npm-paketin version ja käännösajan. Commit tulee gitistä, päätteellä `-dirty`, kun kansiossa `legacy/UndauntedMetagame` on muutoksia, tai se on `unknown` ilman gitiä (kuten palvelinpaketin käännöksissä). `.env`-tiedoston `GIT_COMMIT` ja `SERVER_VERSION` ohittavat sen ajon aikana. |
 | `npm start` | `node --env-file=.env dist/server.js` | Ajaa käännetyn version. Epäonnistuu ilman `.env`-tiedostoa. Käynnistä se npm-paketin kansiosta: tietokannan migraatiot etsitään työhakemiston suhteen. |
 | `npm run db:generate` | `drizzle-kit generate` | Kirjoittaa uuden migraation kansioon `src/drizzle`, kun tiedostoa `src/db/schema.ts` on muutettu. Lukee `DB_FILENAME`:n `.env`-tiedostosta. |
 | `npm test` | `tsc -p tsconfig.test.json`, sitten `node --test` | Poistaa kansion `build\`, kääntää testit ja ajaa ne. |
@@ -1099,11 +1099,11 @@ Palvelinpaketti asentaa palvelimelle Node.js:n version 24.19.0.
 
 | Skripti | Miten ajetaan | Mitä se tekee |
 |:--------|:--------------|:--------------|
-| `UndauntedMetagame/scripts/write-build-info.js [kohdekansio]` | `postbuild`-vaiheena; testit antavat toisen kansion | Kirjoittaa `build-info.json`-tiedoston (oletuskansio: `dist`). |
-| `UndauntedMetagame/scripts/make-hunt-titles.js` | `node scripts/make-hunt-titles.js` kansiossa `UndauntedMetagame` | Rakentaa uudelleen tiedoston `src/vendor/hunt_titles.json`, eli metsästysten nimet, jotka `ServerStatus` näyttää, deploy-palvelimen metsästystaulukoista kansiossa `UndauntedDeployServer/src/vendor`. Aja se uudelleen, kun ne taulukot muuttuvat. |
-| `UndauntedGateway/tools/make-cert.js` | `npm run make-cert -- ...` | Katso yllä. |
-| `UndauntedLauncher/scripts/run-tests.mjs`, `make-icon.mjs` | `npm test`, `npm run icon` | Katso yllä. |
-| `UndauntedLauncher/scripts/collect-release.ps1` | `pwsh -NoProfile -File scripts\collect-release.ps1` kansiossa `UndauntedLauncher`, komennon `npm run make` jälkeen | Kokoaa julkaisutiedostot kansioon `release\`; katso [collect-release.ps1](#collect-releaseps1). |
+| `legacy/UndauntedMetagame/scripts/write-build-info.js [kohdekansio]` | `postbuild`-vaiheena; testit antavat toisen kansion | Kirjoittaa `build-info.json`-tiedoston (oletuskansio: `dist`). |
+| `legacy/UndauntedMetagame/scripts/make-hunt-titles.js` | `node scripts/make-hunt-titles.js` kansiossa `legacy/UndauntedMetagame` | Rakentaa uudelleen tiedoston `src/vendor/hunt_titles.json`, eli metsästysten nimet, jotka `ServerStatus` näyttää, deploy-palvelimen metsästystaulukoista kansiossa `legacy/UndauntedDeployServer/src/vendor`. Aja se uudelleen, kun ne taulukot muuttuvat. |
+| `legacy/UndauntedGateway/tools/make-cert.js` | `npm run make-cert -- ...` | Katso yllä. |
+| `legacy/UndauntedLauncher/scripts/run-tests.mjs`, `make-icon.mjs` | `npm test`, `npm run icon` | Katso yllä. |
+| `legacy/UndauntedLauncher/scripts/collect-release.ps1` | `pwsh -NoProfile -File scripts\collect-release.ps1` kansiossa `legacy/UndauntedLauncher`, komennon `npm run make` jälkeen | Kokoaa julkaisutiedostot kansioon `release\`; katso [collect-release.ps1](#collect-releaseps1). |
 
 ## Ohjeissa olevat skriptit {#scripts-printed-in-the-guides}
 

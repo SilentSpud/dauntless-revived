@@ -342,7 +342,7 @@ npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to revi
 Check the native module:
 
 ```powershell
-Test-Path C:\dr\undaunted\UndauntedMetagame\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+Test-Path C:\dr\undaunted\legacy\UndauntedMetagame\node_modules\better-sqlite3\build\Release\better_sqlite3.node
 ```
 
 **If that prints `False`,** the metagame can't open its database. Review and approve only that

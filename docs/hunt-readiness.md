@@ -93,11 +93,11 @@ the generated SDK's uninstantiated `static_assert(false)` templates.
 
 The central metagame owns the store and inventory; workers use that same backend.
 Set `STORE=free` to enable the shipped catalog. Offers currently cost zero. See
-[`UndauntedMetagame/STORE_PRICING.md`](../UndauntedMetagame/STORE_PRICING.md) before
+[`legacy/UndauntedMetagame/STORE_PRICING.md`](../legacy/UndauntedMetagame/STORE_PRICING.md) before
 changing earned-currency prices. No real-money payment processing is provided.
 
 Set `STORE_CATALOG_PROFILE=curated30` for the 30-cosmetic storefront listed in
-`UndauntedMetagame/src/vendor/store_curated_30.json`. Set `STORE_REPEATABLE_TOKENS=0`;
+`legacy/UndauntedMetagame/src/vendor/store_curated_30.json`. Set `STORE_REPEATABLE_TOKENS=0`;
 the curated profile excludes bounty-token bundles even if that flag is enabled.
 Other offers cannot be purchased by bypassing the listing and requesting their SKU.
 The separate Hunt Pass endpoint remains available.

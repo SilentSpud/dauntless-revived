@@ -51,9 +51,9 @@ Repositorion `.gitignore` pitää jo gitin ulkopuolella `.env`-tiedostot, `*.key
 
 | Tiedosto | Missä | Mikä tekee siitä salaisen |
 |:---------|:------|:--------------------------|
-| Metagamen asetukset | `UndauntedMetagame\.env` (kehityskone tai käsin pystytetty palvelinkone); `C:\DauntlessRevived\data\config\metagame.env` (palvelinpaketti) | Yksityinen avain, jolla istuntotunnisteet allekirjoitetaan: sen haltija voi kirjautua sisään minä tahansa tilinä. Julkisessa tilassa myös yhdyskäytävän salaisuus. |
-| Deploy-palvelimen asetukset | `UndauntedDeployServer\.env`; paketti: `data\config\deployserver.env` | Pelipalvelinavain. |
-| Yhdyskäytävän ja sallittujen listan asetukset | `UndauntedGateway\.env` (kehityskone); paketti: `data\config\gateway.env`, `data\config\allowlist.env` | Yhdyskäytävän salaisuus ja sallittujen listan salaisuus. |
+| Metagamen asetukset | `legacy\UndauntedMetagame\.env` (kehityskone tai käsin pystytetty palvelinkone); `C:\DauntlessRevived\data\config\metagame.env` (palvelinpaketti) | Yksityinen avain, jolla istuntotunnisteet allekirjoitetaan: sen haltija voi kirjautua sisään minä tahansa tilinä. Julkisessa tilassa myös yhdyskäytävän salaisuus. |
+| Deploy-palvelimen asetukset | `legacy\UndauntedDeployServer\.env`; paketti: `data\config\deployserver.env` | Pelipalvelinavain. |
+| Yhdyskäytävän ja sallittujen listan asetukset | `legacy\UndauntedGateway\.env` (kehityskone); paketti: `data\config\gateway.env`, `data\config\allowlist.env` | Yhdyskäytävän salaisuus ja sallittujen listan salaisuus. |
 | `owner.key` | `C:\dr\data\owner.key` (käsin pystytetty palvelinkone); paketti: `data\keys\owner.key` | Ylläpitäjätilin avain. Se on sellaisen tilin salasana, joka voi luoda kutsuja ja käyttää jokaista ylläpitoreittiä. |
 | `gameserver.key` | `C:\dr\data\gameserver.key`; paketti: `data\keys\gameserver.key` | Avain, jolla pelipalvelimet kirjoittavat tallennuksia, etenemistä ja palkintoja. |
 | `gateway-key.pem` | paketti: `data\tls\gateway-key.pem` (julkinen tila) | Yhdyskäytävän varmenteen yksityinen avain. Jokainen kutsu on kiinnitetty tähän varmenteeseen. |
@@ -77,12 +77,12 @@ niiden npm-pakettien nimet ovat muotoa `dauntless-revived-*` (esimerkiksi `daunt
 
 | Kansio | Mitä siinä on | Käännöstulos (gitin ohittama) |
 |:-------|:--------------|:------------------------------|
-| `UndauntedMetagame/` | Taustapalvelu, jonka kanssa peli keskustelee (TypeScript, Express): tilit, tallennukset, eteneminen, matchmaking, ryhmät, kaverit, killat, `/undaunted/api`-ylläpitorajapinta ja pelin tekstichat (`src/realtime/`, XMPP-kuuntelija samassa prosessissa, päällä kun `CHAT=1`). `src/db/schema.ts` määrittelee tietokannan, `src/drizzle/` sisältää sen migraatiot ja `src/vendor/` pelin `progression_config.json`-tiedoston, generoidun `hunt_titles.json`-tiedoston sekä Harmonicin 1.4.4-forkin datan: `escalation/seasons.json` (Escalationin kausiluettelo), `store_catalog.json` (ilmaisen kaupan tarjoukset) ja `store_item_kinds.json` (miten kukin kaupan tavara annetaan). `test/data/store_art_skus.json` luettelee testiä varten kaupan tarjoustunnukset, joiden ruutukuva on 2:1. Käännös kopioi kansion `src/vendor/` kansioon `dist/vendor/`. Kansiossa `scripts/` ovat `write-build-info.js` ja `make-hunt-titles.js`. | `dist/` (jossa `dist/build-info.json`), `build/` (testit), `node_modules/` |
-| `UndauntedDeployServer/` | Käynnistää ja valvoo pelipalvelinprosesseja (Ramsgate, Training Dojo, metsästykset). `src/vendor/` sisältää metsästystaulukot. | `dist/`, `build/` |
-| `UndauntedGateway/` | Vain julkinen tila: TLS-yhdyskäytävä (`dist/server.js`) ja sallittujen listan apuri (`dist/allowlist/server.js`). `tools/make-cert.js` tekee yhdyskäytävän varmenteen. | `dist/`, `build/` |
-| `UndauntedContent/` | Sisältöpalvelin: pelitiedostot, uutiset ja kuvapaketti rekisteröityneille käynnistimille. `data/dauntless-1.4.4.json` on pelin tiedostoluettelo (manifest, 410 tiedostoa), joka käännetään myös käynnistimen sisään. | `dist/`, `build/` |
-| `UndauntedLauncher/` | Tämän forkin käynnistin kavereille (Electron). `assets/` sisältää kuvakkeet (kopiot kansiosta `brand/launcher/`) ja kaksi kiinnitettyä valmiiksi käännettyä DLL-tiedostoa, `dxgi.dll` ja `UndauntedInternalServer.dll`, jotka jokainen asennustapa asentaa (palvelinkone, palvelinpaketti, kaveripaketti ja käynnistin). Kansiossa `src/renderer/brand/` ovat kopiot ikkunassa näkyvistä logo- ja tunnuskuvista. Kansiossa `scripts/` ovat testien ajaja, brändikuvien kopioija (`make-icon.mjs`) ja `collect-release.ps1`. | `.vite/` (`npm start`), `out/` (`npm run package` ja `npm run make`), `.test-build/` (testit), `release/` (julkaisutiedostot, jotka `scripts/collect-release.ps1` kokoaa komennon `npm run make` jälkeen: asennusohjelma, Squirrelin päivitystiedostot, zip ja `SHA256SUMS.txt`). |
-| `native/internal-server/` | Palvelin-DLL:n C++-lähdekoodi: Visual Studio -ratkaisu, `dllmain.cpp` (jossa on osoitetaulukko, josta `Game.ini` generoidaan), pelimoottorin otsaketiedostot kansiossa `SDK/` sekä `MinHook/`. Mikään tämän repositorion skripti tai työnkulku ei käännä sitä; kaikki käyttävät valmiiksi käännettyjä DLL-tiedostoja kansiosta `UndauntedLauncher/assets/`. MinHookin include-korjauksesta (syyskuu 2026) alkaen se kääntyy Visual Studio 2022 Build Toolsilla (Release, x64), mutta täällä käännettyä DLL:ää ei jaeta. | Visual Studion tuotokset (`x64/`, `*.dll` ja vastaavat) |
+| `legacy/UndauntedMetagame/` | Taustapalvelu, jonka kanssa peli keskustelee (TypeScript, Express): tilit, tallennukset, eteneminen, matchmaking, ryhmät, kaverit, killat, `/undaunted/api`-ylläpitorajapinta ja pelin tekstichat (`src/realtime/`, XMPP-kuuntelija samassa prosessissa, päällä kun `CHAT=1`). `src/db/schema.ts` määrittelee tietokannan, `src/drizzle/` sisältää sen migraatiot ja `src/vendor/` pelin `progression_config.json`-tiedoston, generoidun `hunt_titles.json`-tiedoston sekä Harmonicin 1.4.4-forkin datan: `escalation/seasons.json` (Escalationin kausiluettelo), `store_catalog.json` (ilmaisen kaupan tarjoukset) ja `store_item_kinds.json` (miten kukin kaupan tavara annetaan). `test/data/store_art_skus.json` luettelee testiä varten kaupan tarjoustunnukset, joiden ruutukuva on 2:1. Käännös kopioi kansion `src/vendor/` kansioon `dist/vendor/`. Kansiossa `scripts/` ovat `write-build-info.js` ja `make-hunt-titles.js`. | `dist/` (jossa `dist/build-info.json`), `build/` (testit), `node_modules/` |
+| `legacy/UndauntedDeployServer/` | Käynnistää ja valvoo pelipalvelinprosesseja (Ramsgate, Training Dojo, metsästykset). `src/vendor/` sisältää metsästystaulukot. | `dist/`, `build/` |
+| `legacy/UndauntedGateway/` | Vain julkinen tila: TLS-yhdyskäytävä (`dist/server.js`) ja sallittujen listan apuri (`dist/allowlist/server.js`). `tools/make-cert.js` tekee yhdyskäytävän varmenteen. | `dist/`, `build/` |
+| `legacy/UndauntedContent/` | Sisältöpalvelin: pelitiedostot, uutiset ja kuvapaketti rekisteröityneille käynnistimille. `data/dauntless-1.4.4.json` on pelin tiedostoluettelo (manifest, 410 tiedostoa), joka käännetään myös käynnistimen sisään. | `dist/`, `build/` |
+| `legacy/UndauntedLauncher/` | Tämän forkin käynnistin kavereille (Electron). `assets/` sisältää kuvakkeet (kopiot kansiosta `brand/launcher/`) ja kaksi kiinnitettyä valmiiksi käännettyä DLL-tiedostoa, `dxgi.dll` ja `UndauntedInternalServer.dll`, jotka jokainen asennustapa asentaa (palvelinkone, palvelinpaketti, kaveripaketti ja käynnistin). Kansiossa `src/renderer/brand/` ovat kopiot ikkunassa näkyvistä logo- ja tunnuskuvista. Kansiossa `scripts/` ovat testien ajaja, brändikuvien kopioija (`make-icon.mjs`) ja `collect-release.ps1`. | `.vite/` (`npm start`), `out/` (`npm run package` ja `npm run make`), `.test-build/` (testit), `release/` (julkaisutiedostot, jotka `scripts/collect-release.ps1` kokoaa komennon `npm run make` jälkeen: asennusohjelma, Squirrelin päivitystiedostot, zip ja `SHA256SUMS.txt`). |
+| `native/internal-server/` | Palvelin-DLL:n C++-lähdekoodi: Visual Studio -ratkaisu, `dllmain.cpp` (jossa on osoitetaulukko, josta `Game.ini` generoidaan), pelimoottorin otsaketiedostot kansiossa `SDK/` sekä `MinHook/`. Mikään tämän repositorion skripti tai työnkulku ei käännä sitä; kaikki käyttävät valmiiksi käännettyjä DLL-tiedostoja kansiosta `legacy/UndauntedLauncher/assets/`. MinHookin include-korjauksesta (syyskuu 2026) alkaen se kääntyy Visual Studio 2022 Build Toolsilla (Release, x64), mutta täällä käännettyä DLL:ää ei jaeta. | Visual Studion tuotokset (`x64/`, `*.dll` ja vastaavat) |
 | `deploy/windows-server/` | Windows-palvelinpaketti: skriptit, `lib/` (Node-apurit `dr-db.js`, `dr-keys.js` ja `verify-game.js`) ja `tests/`. | ei mitään |
 | `friend-kit/` | Kutsuttujen kavereiden asennus- ja pelaamisskriptit, vain Tailscalen kautta pelaamiseen. | `tools/make-friend-kit.ps1` rakentaa zip-tiedoston repositorion ulkopuolelle |
 | `tools/` | `build-llms.js`, `sync-roadmap.js`, `make-friend-kit.ps1`, `make-game-manifest.js` sekä kansiossa `ci/` CI:n käyttämät `check-repo.js` (repositorion tarkistus) ja `launcher-version.js` (käynnistimen versiosäännöt). | ei mitään |
@@ -107,12 +107,12 @@ ja aja työkalu uudelleen.
 |:---------|:-------|:------|:-------------------|
 | `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` | muutat `ROADMAP.md`-tiedostoa. Suomenkielinen `docs/fi/roadmap.md` on käsin kirjoitettu tiivistelmä, ei generoitu. |
 | `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` (`sync-roadmap.js`-ajon jälkeen) | Dokumentaatiosivujen front matter ja teksti sekä `docs/_data/faq_*.yml` | lisäät sivun, muutat otsikkoa tai kuvausta tai muutat englanninkielisen sivun tekstiä (`llms-full.txt` sisältää jokaisen englanninkielisen sivun kokonaan). |
-| `UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js` kansiossa `UndauntedMetagame` | Deploy-palvelimen `player_hunts_table.json` ja `matchmaker_hunts_table.json` | deploy-palvelimen metsästystaulukot muuttuvat. |
-| `UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | Tarkistettu pelin zip-tiedosto | käytännössä ei koskaan: versio on kiinnitetty. Jos se muuttuu, käännä myös käynnistin uudelleen, sillä sen sisään käännetään sama tiedosto. |
-| `UndauntedMetagame/src/drizzle/*.sql` ja `meta/` | `npm run db:generate` kansiossa `UndauntedMetagame` | `src/db/schema.ts` | muutat skeemaa. Committoi uusi migraatio samaan committiin skeeman muutoksen kanssa. |
+| `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js` kansiossa `legacy/UndauntedMetagame` | Deploy-palvelimen `player_hunts_table.json` ja `matchmaker_hunts_table.json` | deploy-palvelimen metsästystaulukot muuttuvat. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | Tarkistettu pelin zip-tiedosto | käytännössä ei koskaan: versio on kiinnitetty. Jos se muuttuu, käännä myös käynnistin uudelleen, sillä sen sisään käännetään sama tiedosto. |
+| `legacy/UndauntedMetagame/src/drizzle/*.sql` ja `meta/` | `npm run db:generate` kansiossa `legacy/UndauntedMetagame` | `src/db/schema.ts` | muutat skeemaa. Committoi uusi migraatio samaan committiin skeeman muutoksen kanssa. |
 
-Myös `UndauntedMetagame/dist/build-info.json` on generoitu (`npm run build` kirjaa siihen commitin,
-jonka perässä on `-dirty`, jos `UndauntedMetagame`-kansiossa on committoimattomia muutoksia, sekä
+Myös `legacy/UndauntedMetagame/dist/build-info.json` on generoitu (`npm run build` kirjaa siihen commitin,
+jonka perässä on `-dirty`, jos `legacy/UndauntedMetagame`-kansiossa on committoimattomia muutoksia, sekä
 version ja käännösajan), mutta sitä ei committoida.
 
 ## Kehityskone tai käsin pystytetty palvelinkone {#a-developer-or-hand-built-host}
@@ -122,7 +122,7 @@ pakota näihin polkuihin: niitä käyttävät vain ohjeet ja muutaman skriptin o
 
 | Polku | Mikä se on |
 |:------|:-----------|
-| `C:\dr\undaunted\` | Repositorion kopio ([Pystytä palvelin, vaihe 4]({{ host_page.url | relative_url }}#fork)). Asetukset ovat tiedostoissa `UndauntedMetagame\.env` ja `UndauntedDeployServer\.env`, jotka git ohittaa. **Salaisuuksia: älä koskaan jaa niitä äläkä committoi niitä.** Käynnistä jokainen palvelin sen oman kansion sisältä: metagame löytää migraationsa suhteellisella polulla `./src/drizzle`. |
+| `C:\dr\undaunted\` | Repositorion kopio ([Pystytä palvelin, vaihe 4]({{ host_page.url | relative_url }}#fork)). Asetukset ovat tiedostoissa `legacy\UndauntedMetagame\.env` ja `legacy\UndauntedDeployServer\.env`, jotka git ohittaa. **Salaisuuksia: älä koskaan jaa niitä äläkä committoi niitä.** Käynnistä jokainen palvelin sen oman kansion sisältä: metagame löytää migraationsa suhteellisella polulla `./src/drizzle`. |
 | `C:\dr\data\` | Ajonaikainen data repositorion ulkopuolella: `undaunted.db` (`DB_FILENAME=C:/dr/data/undaunted.db`), `owner.key` ja `gameserver.key` (**salaisuuksia: älä koskaan jaa niitä äläkä committoi niitä**), lokit `metagame.log`, `metagame.err`, `deploy.log` ja `deploy.err` sekä pid-tiedostot `metagame.pid`, `deploy.pid` ja `client.pid`. Lokit korvautuvat jokaisella käynnistyksellä, koska ohje käynnistää palvelimet komennolla `Start-Process -RedirectStandardOutput`. |
 | `C:\dr\data\rekey-<UserId>.txt` | Uusi tiliavain, jonka sivun [Palvelin ryhmälle]({{ admin_page.url | relative_url }}) avaimenvaihtoskripti on tehnyt. **Salaisuus**: anna se pelaajalle kahden kesken ja poista tiedosto sitten. |
 | `C:\dr\data\ssh\` | `dauntless_deploy` (vuokrapalvelimen SSH-avain) ja `known_hosts`, `Deploy-Remote.ps1`:n oletukset. **Avain on salaisuus: älä koskaan jaa sitä äläkä committoi sitä.** |
@@ -134,17 +134,17 @@ pakota näihin polkuihin: niitä käyttävät vain ohjeet ja muutaman skriptin o
 | `%LOCALAPPDATA%\Archon\Saved\Config\WindowsClient\` | Tämän Windows-käyttäjän pelin käyttäjäasetukset: `Engine.ini`, `Game.ini` ja `GameUserSettings.ini`. Katso [Pelin asetukset]({{ gamesettings_page.url | relative_url }}). |
 
 Kun `LOG_BODIES=1` on asetettu mutta `BODY_LOG_FILE` ei ole, metagame kirjoittaa `bodies.log`-tiedoston
-työhakemistoonsa, joka on `C:\dr\undaunted\UndauntedMetagame`. **Mikään `.gitignore`-sääntö ei kata
+työhakemistoonsa, joka on `C:\dr\undaunted\legacy/UndauntedMetagame`. **Mikään `.gitignore`-sääntö ei kata
 tätä tiedostoa.** Aseta `BODY_LOG_FILE=C:/dr/data/bodies.log` tai poista tiedosto ennen kuin committoit.
 Metagamen yksikkötestit käyttävät jokaiselle testitiedostolle uutta tietokantaa väliaikaisessa
 `undaunted-test-*`-kansiossa ja poistavat sen lopuksi.
 
 Kun yhdyskäytävä tai sallittujen listan apuri ajetaan repositorion kopiosta (`npm start`,
-`npm run start:allowlist`), ne lukevat tiedoston `UndauntedGateway\.env`, jossa ovat yhdyskäytävän ja
+`npm run start:allowlist`), ne lukevat tiedoston `legacy\UndauntedGateway\.env`, jossa ovat yhdyskäytävän ja
 sallittujen listan salaisuudet (**salaisuus: älä koskaan jaa sitä äläkä committoi sitä**; git ohittaa
 sen). Ilman asetuksia `ALLOWLIST_AUDIT_LOG` ja `ALLOWLIST_STATE_FILE` apuri kirjoittaa tiedostot
 `allowlist-audit.log` ja `allowlist-state.json` työhakemistoonsa; yhdyskäytävän `.gitignore` kattaa
-molemmat. Sisältöpalvelimen `UndauntedContent\.env` ei sisällä salaisuuksia.
+molemmat. Sisältöpalvelimen `legacy\UndauntedContent\.env` ei sisällä salaisuuksia.
 
 ## Windows-palvelinpaketti: `C:\DauntlessRevived` {#kit-install-root}
 
@@ -289,7 +289,7 @@ paitsi. WAL-tilaan jäänyt tiedosto palautetaan tavalliseen tilaan seuraavassa 
 
 Metagame ajaa jokaisella käynnistyksellä kaikki odottavat migraatiot kansiosta `src/drizzle/`, ennen
 kuin se vastaa mihinkään. Polku on suhteellinen sen työhakemistoon, joten käynnistä se
-`UndauntedMetagame`-kansiosta (paketti tekee niin). Kaikki odottavat migraatiot ajetaan yhdessä
+`legacy/UndauntedMetagame`-kansiosta (paketti tekee niin). Kaikki odottavat migraatiot ajetaan yhdessä
 transaktiossa: jos yksi epäonnistuu, yhtäkään ei tehdä eikä metagame käynnisty. drizzle kirjaa
 ajamansa migraatiot omaan tauluunsa `__drizzle_migrations`; älä koskaan muokkaa sitä, koska drizzle
 päättää sen perusteella, mitkä migraatiot on vielä ajettava. **Metagame ei ota varmuuskopiota ennen
@@ -468,7 +468,7 @@ käyttäjänimiä ja julkisessa tilassa pelaajien IP-osoitteita, joten lue loki 
 | Kirjoittaja | Muoto |
 |:------------|:------|
 | Metagame, deploy-palvelin | pino. Asetuksella `NODE_ENV=production` (paketissa aina päällä) yksi JSON-objekti riviä kohden: `level` (30 info, 40 warn, 50 error, 60 fatal), `time` (millisekunteja vuoden 1970 alusta), `pid`, `hostname`, `msg`. Kaikki tasot menevät vakiotulosteeseen (standard output). Ilman `production`-arvoa rivit ovat luettavia ja värillisiä. Metagamen pyyntörivit ovat muotoa `METHOD /path gs=0` (pelaaja) tai `gs=1` (pelipalvelin), ja yhdyskäytävän takana perässä on lisäksi ` via=gateway ip=<pelaajan osoite>`. `LOG_LEVEL` ja `LOG_REQUESTS` ovat sivulla [Asetukset]({{ config_page.url | relative_url }}). |
-| Yhdyskäytävä, sallittujen listan apuri, sisältöpalvelin | Yksi JSON-objekti riviä kohden: `t` (ISO-aika), `level` (`debug`, `info`, `warn` tai `error`), `msg` ja lisäkentät. Varoitukset ja virheet menevät virhetulosteeseen (standard error), muut vakiotulosteeseen. Yhdyskäytävän `request`-rivit ovat sen pääsyloki; kentät on kuvattu [yhdyskäytävän README-tiedostossa]({{ site.github.repository_url }}/blob/dauntless-revived/UndauntedGateway/README.md#access-log) (englanniksi). |
+| Yhdyskäytävä, sallittujen listan apuri, sisältöpalvelin | Yksi JSON-objekti riviä kohden: `t` (ISO-aika), `level` (`debug`, `info`, `warn` tai `error`), `msg` ja lisäkentät. Varoitukset ja virheet menevät virhetulosteeseen (standard error), muut vakiotulosteeseen. Yhdyskäytävän `request`-rivit ovat sen pääsyloki; kentät on kuvattu [yhdyskäytävän README-tiedostossa]({{ site.github.repository_url }}/blob/dauntless-revived/legacy/UndauntedGateway/README.md#access-log) (englanniksi). |
 | Pelipalvelimet, peliohjelma | Ei lokitiedostoa. Pelipalvelin tulostaa vain omaan konsoli-ikkunaansa (Ramsgaten ja Training Dojon ikkunat jäävät näkyviin; deploy-palvelin käynnistää metsästysten pelipalvelimet ikkuna piilotettuna). Peliohjelma kirjoittaa vain kaatumisraportteja kansioon `%LOCALAPPDATA%\Archon\Saved\Crashes\` (katso [Vianetsintä]({{ trouble_page.url | relative_url }})). |
 | Käynnistin | Tekstirivejä: ISO-aika, `INFO`, `WARN` tai `ERROR` ja viesti. |
 

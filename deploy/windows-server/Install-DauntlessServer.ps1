@@ -693,9 +693,9 @@ try {
         $commit = if ($SourceCommit) { $SourceCommit } else { 'zip-' + (Get-DRSha256 $SourceZip).Substring(0, 12).ToLowerInvariant() }
         Write-DROk "source: uploaded zip $SourceZip (commit $commit)"
     } elseif ($SourceDir) { $source = [IO.Path]::GetFullPath($SourceDir); $sourceKind = 'folder' }
-    elseif (-not $Ref -and (Test-Path -LiteralPath (Join-Path $checkout 'UndauntedMetagame\package.json'))) { $source = $checkout; $sourceKind = 'checkout' }
+    elseif (-not $Ref -and (Test-DRSource $checkout)) { $source = $checkout; $sourceKind = 'checkout' }
     if ($source) {
-        if (-not (Test-Path -LiteralPath (Join-Path $source 'UndauntedMetagame\package.json'))) { Stop-DR "$source is not a Dauntless Revived source folder." }
+        if (-not (Test-DRSource $source)) { Stop-DR "$source is not a Dauntless Revived source folder." }
         $git = Get-Command git.exe -ErrorAction SilentlyContinue
         if ($git -and (Test-Path -LiteralPath (Join-Path $source '.git'))) {
             $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'

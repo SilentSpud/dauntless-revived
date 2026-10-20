@@ -86,7 +86,7 @@ lataus), selviää pelitestissä.
 
 ## Valikoima {#catalogue}
 
-Tarjoukset ovat tiedostossa `UndauntedMetagame/src/vendor/store_catalog.json` sen tunnisteen alla,
+Tarjoukset ovat tiedostossa `legacy/UndauntedMetagame/src/vendor/store_catalog.json` sen tunnisteen alla,
 jota peliohjelma pyytää. Mikään peliohjelman lähettämä ei ratkaise, mitä tarjous antaa tai maksaa:
 metagame hakee tarjouksen joka kerta sen tunnuksella.
 
@@ -111,7 +111,7 @@ valikoimasta, Harmonicin työn pohjalta:
   (`StoreItemsTable`, 1 405 riviä tarjouksen tunnuksen mukaan). Tarjous, jonka tunnus ei ole kuvallinen
   rivi, näyttää varakuvan, ja ruudut ovat kiinteästi 2:1-muotoisia, joten neliönmuotoiset Hunt Pass
   -kuvakkeet venyvät. Siksi kauppa myy vain tunnuksia, joiden ruutukuva on 2:1, ja testi pitää jokaisen
-  tarjouksen tällaisten tunnusten luettelossa (`UndauntedMetagame/test/data/store_art_skus.json`, 994
+  tarjouksen tällaisten tunnusten luettelossa (`legacy/UndauntedMetagame/test/data/store_art_skus.json`, 994
   tunnusta, ei kuvia).
 - **Kiillot ja hiusten sävyt ovat oikeuksia** eivätkä tavaroita. Niiden tarjous- ja oikeusparit tulevat
   peliohjelman omista taulukoista (värien kiiltotaulukko ja premium-hiusvärien taulukko): viisi kiiltoa
@@ -127,7 +127,7 @@ pelin sisältöä (grafiikkaa tai muuta); katso [Kiitokset ja lisenssi]({{ '/fi/
 Tavara tulee tavaraluetteloon (inventaario) jommallakummalla tavalla: **pinona** (tavaran tunnus ja
 määrä) tai **yksilönä** (tavara, jolla on oma yksilötunnuksensa). Peliohjelman tavaraluettelo
 ratkaisee, kumpi, kunkin tavaran pinottavuusmerkinnän kautta, ja väärä laji jättää tavaran
-näkymättömäksi tai rikkoo tavaraluettelon. `UndauntedMetagame/src/vendor/store_item_kinds.json` kirjaa
+näkymättömäksi tai rikkoo tavaraluettelon. `legacy/UndauntedMetagame/src/vendor/store_item_kinds.json` kirjaa
 merkinnän kaikille 211 kaupan tavaralle (95 pinottavaa, 116 yksilöllistä), Harmonicin peliohjelman
 tavaraluettelosta lukemana. Nimen alkuun perustuva sääntö menisi yksittäisissä tavaroissa pieleen:
 useimmat aseiden ulkoasut ja muutama saapumisanimaatio ovat yksilöllisiä, kun taas muutama kangas ja

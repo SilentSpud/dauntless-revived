@@ -72,7 +72,11 @@ source_root=$(CDPATH= cd -- "$source_root" && pwd)
 game_dir=$(CDPATH= cd -- "$game_dir" && pwd)
 if [ "$source_root" != "$install_root" ]; then
   mkdir -p "$install_root"
-  (cd "$source_root" && tar --exclude=.git --exclude="*/node_modules" --exclude="*/dist" --exclude="*/build" -cf - deploy UndauntedLauncher/assets) | (cd "$install_root" && tar -xf -)
+  (cd "$source_root" && tar --exclude=.git --exclude="*/node_modules" --exclude="*/dist" --exclude="*/build" -cf - deploy) | (cd "$install_root" && tar -xf -)
+  # The launcher's pinned DLLs: legacy/UndauntedLauncher/assets in the source, UndauntedLauncher/assets installed
+  assets_root=$source_root
+  [ -d "$source_root/legacy/UndauntedLauncher/assets" ] && assets_root=$source_root/legacy
+  (cd "$assets_root" && tar -cf - UndauntedLauncher/assets) | (cd "$install_root" && tar -xf -)
 fi
 chmod +x "$install_root/deploy/linux-server/worker-launch.mjs" "$install_root/deploy/linux-server/ssh-worker-command.sh" "$install_root/deploy/linux-server/prepare-game.sh"
 "$install_root/deploy/linux-server/prepare-game.sh" --game-dir "$game_dir" --repo "$install_root"

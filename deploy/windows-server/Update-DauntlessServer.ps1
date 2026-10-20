@@ -159,7 +159,7 @@ try {
     } elseif ($SourceDir) {
         $kind = 'folder'
         $from = [IO.Path]::GetFullPath($SourceDir)
-        if (-not (Test-Path -LiteralPath (Join-Path $from 'UndauntedMetagame\package.json'))) { Stop-DR "$from is not a Dauntless Revived source folder." }
+        if (-not (Test-DRSource $from)) { Stop-DR "$from is not a Dauntless Revived source folder." }
         $git = Get-Command git.exe -ErrorAction SilentlyContinue
         if ($git -and (Test-Path -LiteralPath (Join-Path $from '.git'))) {
             $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'

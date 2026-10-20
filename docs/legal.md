@@ -137,18 +137,18 @@ MinHook, reproduce MinHook's copyright notice and disclaimer.
 - This site and the repository contain **no files from Dauntless**: no executables, no paks or
   IoStore containers, no assets and no game configuration. They do not link to downloads of the game.
   - One inherited item to be aware of: upstream Undaunted's metagame includes
-    `UndauntedMetagame/src/vendor/progression_config.json` (about 190 KB), which it serves to the
+    `legacy/UndauntedMetagame/src/vendor/progression_config.json` (about 190 KB), which it serves to the
     client as progression and reward data. It has the shape of a recorded Phoenix backend response,
     not of a file from the game install. Our fork carries it unchanged from upstream.
   - Upstream also includes four of the game's data tables as JSON exports,
-    `UndauntedDeployServer/src/vendor/*_table.json` (about 2.2 MB: player hunts, matchmaker hunts and
+    `legacy/UndauntedDeployServer/src/vendor/*_table.json` (about 2.2 MB: player hunts, matchmaker hunts and
     the two Trials tables), which the deploy server reads to pick a hunt's behemoth and map. They are
     exports of table rows, not files from the install. Our fork carries them unchanged, and our
-    `UndauntedMetagame/src/vendor/hunt_titles.json` is generated from them (hunt ids and their English
+    `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` is generated from them (hunt ids and their English
     titles).
-  - From Harmonic's fork we carry four data files: `UndauntedMetagame/src/vendor/escalation/seasons.json`
+  - From Harmonic's fork we carry four data files: `legacy/UndauntedMetagame/src/vendor/escalation/seasons.json`
     (the Escalation seasons), `store_catalog.json` and `store_item_kinds.json` (the free store), and
-    `UndauntedMetagame/test/data/store_art_skus.json` (store SKU ids, for a test). They hold identifiers
+    `legacy/UndauntedMetagame/test/data/store_art_skus.json` (store SKU ids, for a test). They hold identifiers
     and tuning values read from the installed client for interoperability, and about 330 short English
     names; no textures, models, sounds or other assets. `seasons.json` names the game files it was read
     from by their SHA-256, as our game manifest does. Each file says where it comes from in its

@@ -42,8 +42,8 @@ Unless a line says otherwise, every fact here is about **client build 1.4.4**. B
 | Piece | What it is | Listens on |
 |---|---|---|
 | Game client | `Dauntless-Win64-Shipping.exe` plus two DLLs. In client mode the DLL points all 167 backend endpoints at `http://<first command-line argument>` | nothing |
-| Metagame | Node + Express + SQLite (`UndauntedMetagame`). Accounts, characters, inventory, loadouts, matchmaking queue | TCP `127.0.0.1:61000` |
-| Deploy server | Node (`UndauntedDeployServer`). Starts and watches game-server processes when the metagame asks | TCP `127.0.0.1:61001` (never expose it: it has no authentication) |
+| Metagame | Node + Express + SQLite (`legacy/UndauntedMetagame`). Accounts, characters, inventory, loadouts, matchmaking queue | TCP `127.0.0.1:61000` |
+| Deploy server | Node (`legacy/UndauntedDeployServer`). Starts and watches game-server processes when the metagame asks | TCP `127.0.0.1:61001` (never expose it: it has no authentication) |
 | Game servers | More copies of the **same exe**, started with `-server -nullrhi`. The DLL switches them into server mode | UDP 8770-8777 |
 
 A session goes like this:
@@ -205,11 +205,11 @@ git -C C:\dr\undaunted remote add upstream https://github.com/SyST3MDeV/Undaunte
 The repository contains six projects (the `Undaunted*` folders), plus the Windows server kit, the
 friend kit and tools. On the host we use:
 
-- `UndauntedMetagame`: the backend.
-- `UndauntedDeployServer`: the game-server supervisor.
-- The two prebuilt DLLs kept in `UndauntedLauncher/assets/`.
+- `legacy/UndauntedMetagame`: the backend.
+- `legacy/UndauntedDeployServer`: the game-server supervisor.
+- The two prebuilt DLLs kept in `legacy/UndauntedLauncher/assets/`.
 
-The Electron app in `UndauntedLauncher/src` is this fork's friend launcher: players use it to join a
+The Electron app in `legacy/UndauntedLauncher/src` is this fork's friend launcher: players use it to join a
 server from an invite, and it downloads the game from the host's own content server. The host setup
 on this page doesn't need it. The C++ source of the server DLL is in `native/internal-server`. Every
 folder, and what builds where, is listed on [Files and data]({{ files_page.url | relative_url }}).
@@ -232,7 +232,7 @@ Undaunted ships two prebuilt DLLs:
 Copy them only after their hashes match:
 
 ```powershell
-$A = "C:\dr\undaunted\UndauntedLauncher\assets"
+$A = "C:\dr\undaunted\legacy\UndauntedLauncher\assets"
 $W = "C:\D144\Dauntless\Archon\Binaries\Win64"
 $pin = @{
   "dxgi.dll"                    = "9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F"  # 11,264 bytes
@@ -447,7 +447,7 @@ A server-side version of the endpoint hook would remove the need for this file. 
 **Install and build.** `dist/` is git-ignored, so you always build it yourself:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 npm ci --no-audit --no-fund
 npm run build
 Test-Path node_modules\better-sqlite3\build\Release\better_sqlite3.node   # must be True
@@ -472,7 +472,7 @@ MATCHMAKING_MODE=DEPLOYSERVER
 DEPLOYSERVER_URL=127.0.0.1:61001
 REGISTRATION_MODE=OPEN
 NODE_ENV=production
-"@ | Set-Content C:\dr\undaunted\UndauntedMetagame\.env -Encoding ascii
+"@ | Set-Content C:\dr\undaunted\legacy\UndauntedMetagame\.env -Encoding ascii
 ```
 
 **Generate the token-signing keys** and append them without printing them. Use `Add-Content -Encoding
@@ -480,7 +480,7 @@ ascii`, not `>>`: by default, `>>` in Windows PowerShell 5.1 writes UTF-16, whic
 a `.env` file.
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 node -e "const c=require('crypto');const k=c.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});console.log('AUTH_SIGNING_PRIVKEY_B64='+Buffer.from(k.privateKey).toString('base64'));console.log('AUTH_SIGNING_PUBKEY_B64='+Buffer.from(k.publicKey).toString('base64'))" | Add-Content .env -Encoding ascii
 ```
 
@@ -534,7 +534,7 @@ a relative path (`./src/drizzle`). The first start creates the database and runs
 
 ```powershell
 $meta = @{ FilePath = "node"; ArgumentList = "--env-file=.env", "dist/server.js"
-           WorkingDirectory = "C:\dr\undaunted\UndauntedMetagame"; PassThru = $true; WindowStyle = "Hidden"
+           WorkingDirectory = "C:\dr\undaunted\legacy/UndauntedMetagame"; PassThru = $true; WindowStyle = "Hidden"
            RedirectStandardOutput = "C:\dr\data\metagame.log"; RedirectStandardError = "C:\dr\data\metagame.err" }
 $p = Start-Process @meta; Set-Content C:\dr\data\metagame.pid $p.Id
 Start-Sleep 5
@@ -558,7 +558,7 @@ the `x-undaunted-gameserver-apikey` header. The metagame stores only a SHA-256 o
 into a queue table, and the metagame hashes and registers it at the next start:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 $key = node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
 Set-Content C:\dr\data\gameserver.key -Value $key -Encoding ascii -NoNewline
 node -e "new (require('better-sqlite3'))(process.argv[1]).prepare('INSERT INTO gameserverapikeystoregister(key) VALUES (?)').run(process.argv[2])" C:/dr/data/undaunted.db $key
@@ -586,7 +586,7 @@ We use Node's `fetch` with a timeout here, not `Invoke-RestMethod` (see
 `better-sqlite3` resolves, and replace `YourName`:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 node -e "(async () => { const name = process.argv[1]; const base = 'http://127.0.0.1:61000/undaunted/api'; const r = await fetch(base + '/Register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ Username: name }), signal: AbortSignal.timeout(15000) }); if (!r.ok) throw new Error('Register returned HTTP ' + r.status); const { UUK } = await r.json(); require('fs').writeFileSync('C:/dr/data/owner.key', UUK); const info = await (await fetch(base + '/GetUserInfo', { headers: { 'x-undaunted-user-api-key': UUK }, signal: AbortSignal.timeout(15000) })).json(); new (require('better-sqlite3'))('C:/dr/data/undaunted.db').prepare('UPDATE users SET isAdmin = 1 WHERE userId = ?').run(info.UserId); console.log('created ' + name + ' as admin; key saved to C:/dr/data/owner.key (not shown)'); })().catch(e => { console.error(e.message); process.exit(1); })" YourName
 ```
 
@@ -607,7 +607,7 @@ Notes:
 ## 11. Deploy server {#deploy-server}
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedDeployServer
+Set-Location C:\dr\undaunted\legacy/UndauntedDeployServer
 npm ci --no-audit --no-fund
 npm run build
 $key = (Get-Content C:\dr\data\gameserver.key -Raw).Trim()
@@ -645,7 +645,7 @@ Start it:
 
 ```powershell
 $dep = @{ FilePath = "node"; ArgumentList = "--env-file=.env", "dist/server.js"
-          WorkingDirectory = "C:\dr\undaunted\UndauntedDeployServer"; PassThru = $true; WindowStyle = "Hidden"
+          WorkingDirectory = "C:\dr\undaunted\legacy/UndauntedDeployServer"; PassThru = $true; WindowStyle = "Hidden"
           RedirectStandardOutput = "C:\dr\data\deploy.log"; RedirectStandardError = "C:\dr\data\deploy.err" }
 $p = Start-Process @dep; Set-Content C:\dr\data\deploy.pid $p.Id
 ```
@@ -905,8 +905,8 @@ Once steps 1-12 are done, this is the whole routine.
 | 1 | Close heavy programs. If you use WSL, run `wsl --shutdown`. | Several GB of RAM free |
 | 2 | Make sure nothing old is running: no `node` on 61000/61001, no `-server` game processes. | Step 12, commands 1 and 4 show nothing |
 | 3 | `Game.ini` is intact. | Step 8 health check: `167 / 0 / 0` |
-| 4 | Start the metagame from `C:\dr\undaunted\UndauntedMetagame` (`Start-Process @meta`, step 9). | Log: `Dauntless Revived metagame on 127.0.0.1:61000` |
-| 5 | Start the deploy server from `C:\dr\undaunted\UndauntedDeployServer` (`Start-Process @dep`, step 11). | Log: `Dauntless Revived deploy server on port 61001` |
+| 4 | Start the metagame from `C:\dr\undaunted\legacy/UndauntedMetagame` (`Start-Process @meta`, step 9). | Log: `Dauntless Revived metagame on 127.0.0.1:61000` |
+| 5 | Start the deploy server from `C:\dr\undaunted\legacy/UndauntedDeployServer` (`Start-Process @dep`, step 11). | Log: `Dauntless Revived deploy server on port 61001` |
 | 6 | Wait for Ramsgate. | A server console window opens; UDP 8777 bound by `Dauntless-Win64-Shipping` |
 | 7 | `powershell -NoProfile -ExecutionPolicy Bypass -File C:\dr\tools\play.ps1` | Metagame log shows `POST /account/api/oauth/token`, then `POST /login` |
 | 8 | Play. Don't close any console window. | `gs=1` lines appear when a server loads you |

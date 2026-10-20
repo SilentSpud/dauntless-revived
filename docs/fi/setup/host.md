@@ -47,8 +47,8 @@ parissa selittää jonkin valinnan.
 | Osa | Mikä se on | Kuuntelee |
 |---|---|---|
 | Peliohjelma (client) | `Dauntless-Win64-Shipping.exe` ja kaksi DLL-tiedostoa. Tavallisessa client-tilassa DLL ohjaa kaikki 167 taustapalvelun osoitetta (endpoint) osoitteeseen `http://<first command-line argument>` eli komentorivin ensimmäisenä annettuun osoitteeseen | ei mitään |
-| Metagame | Node + Express + SQLite (`UndauntedMetagame`). Tilit, hahmot, tavarat, varustesetit (loadouts) ja matchmaking-jono (pelaajien yhteen sovittaminen) | TCP `127.0.0.1:61000` |
-| Deploy-palvelin | Node (`UndauntedDeployServer`). Käynnistää ja valvoo pelipalvelinprosesseja, kun metagame pyytää | TCP `127.0.0.1:61001` (älä koskaan avaa sitä ulos: siinä ei ole tunnistautumista) |
+| Metagame | Node + Express + SQLite (`legacy/UndauntedMetagame`). Tilit, hahmot, tavarat, varustesetit (loadouts) ja matchmaking-jono (pelaajien yhteen sovittaminen) | TCP `127.0.0.1:61000` |
+| Deploy-palvelin | Node (`legacy/UndauntedDeployServer`). Käynnistää ja valvoo pelipalvelinprosesseja, kun metagame pyytää | TCP `127.0.0.1:61001` (älä koskaan avaa sitä ulos: siinä ei ole tunnistautumista) |
 | Pelipalvelimet | Lisää kopioita **samasta exe-tiedostosta**, käynnistettyinä valitsimilla `-server -nullrhi`. DLL kääntää ne palvelintilaan | UDP 8770–8777 |
 
 Pelikerta etenee näin:
@@ -224,11 +224,11 @@ git -C C:\dr\undaunted remote add upstream https://github.com/SyST3MDeV/Undaunte
 Repositoriossa (koodivarastossa) on kuusi projektia (`Undaunted*`-kansiot) sekä
 Windows-palvelinpaketti, kaveripaketti ja työkalut. Palvelinkoneella käytämme näitä:
 
-- `UndauntedMetagame`: taustapalvelu.
-- `UndauntedDeployServer`: pelipalvelimien valvoja.
-- Kaksi valmiiksi käännettyä DLL-tiedostoa kansiossa `UndauntedLauncher/assets/`.
+- `legacy/UndauntedMetagame`: taustapalvelu.
+- `legacy/UndauntedDeployServer`: pelipalvelimien valvoja.
+- Kaksi valmiiksi käännettyä DLL-tiedostoa kansiossa `legacy/UndauntedLauncher/assets/`.
 
-Kansion `UndauntedLauncher/src` Electron-sovellus on tämän forkin käynnistin kavereille: pelaajat
+Kansion `legacy/UndauntedLauncher/src` Electron-sovellus on tämän forkin käynnistin kavereille: pelaajat
 liittyvät sillä palvelimelle kutsun avulla, ja se lataa pelin isännän omalta sisältöpalvelimelta.
 Tämän sivun palvelinasennus ei tarvitse sitä. Palvelin-DLL:n C++-lähdekoodi on kansiossa
 `native/internal-server`. Jokainen kansio ja se, mitä missäkin käännetään, on lueteltu sivulla
@@ -254,7 +254,7 @@ Undauntedin mukana tulee kaksi valmiiksi käännettyä DLL-tiedostoa:
 Kopioi ne vasta, kun niiden tiivisteet täsmäävät:
 
 ```powershell
-$A = "C:\dr\undaunted\UndauntedLauncher\assets"
+$A = "C:\dr\undaunted\legacy\UndauntedLauncher\assets"
 $W = "C:\D144\Dauntless\Archon\Binaries\Win64"
 $pin = @{
   "dxgi.dll"                    = "9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F"  # 11,264 bytes
@@ -489,7 +489,7 @@ sovittamisen.
 **Asenna ja käännä.** `dist/`-kansio on gitin ohittama, joten käännät sen aina itse:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 npm ci --no-audit --no-fund
 npm run build
 Test-Path node_modules\better-sqlite3\build\Release\better_sqlite3.node   # must be True
@@ -515,7 +515,7 @@ MATCHMAKING_MODE=DEPLOYSERVER
 DEPLOYSERVER_URL=127.0.0.1:61001
 REGISTRATION_MODE=OPEN
 NODE_ENV=production
-"@ | Set-Content C:\dr\undaunted\UndauntedMetagame\.env -Encoding ascii
+"@ | Set-Content C:\dr\undaunted\legacy\UndauntedMetagame\.env -Encoding ascii
 ```
 
 **Luo kirjautumistunnisteiden allekirjoitusavaimet** ja lisää ne tiedoston loppuun tulostamatta niitä.
@@ -523,7 +523,7 @@ Käytä komentoa `Add-Content -Encoding ascii`, älä `>>`-merkkejä: Windows Po
 kirjoittaa oletuksena UTF-16-muodossa, jota Node ei osaa lukea `.env`-tiedostona.
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 node -e "const c=require('crypto');const k=c.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});console.log('AUTH_SIGNING_PRIVKEY_B64='+Buffer.from(k.privateKey).toString('base64'));console.log('AUTH_SIGNING_PUBKEY_B64='+Buffer.from(k.publicKey).toString('base64'))" | Add-Content .env -Encoding ascii
 ```
 
@@ -580,7 +580,7 @@ Ensimmäinen käynnistys luo tietokannan ja ajaa kaikki migraatiot:
 
 ```powershell
 $meta = @{ FilePath = "node"; ArgumentList = "--env-file=.env", "dist/server.js"
-           WorkingDirectory = "C:\dr\undaunted\UndauntedMetagame"; PassThru = $true; WindowStyle = "Hidden"
+           WorkingDirectory = "C:\dr\undaunted\legacy/UndauntedMetagame"; PassThru = $true; WindowStyle = "Hidden"
            RedirectStandardOutput = "C:\dr\data\metagame.log"; RedirectStandardError = "C:\dr\data\metagame.err" }
 $p = Start-Process @meta; Set-Content C:\dr\data\metagame.pid $p.Id
 Start-Sleep 5
@@ -606,7 +606,7 @@ Laitat avaimen jonotauluun, ja metagame laskee sen tiivisteen ja rekisteröi sen
 käynnistyksellä:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 $key = node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
 Set-Content C:\dr\data\gameserver.key -Value $key -Encoding ascii -NoNewline
 node -e "new (require('better-sqlite3'))(process.argv[1]).prepare('INSERT INTO gameserverapikeystoregister(key) VALUES (?)').run(process.argv[2])" C:/dr/data/undaunted.db $key
@@ -634,7 +634,7 @@ Käytämme tässä Noden `fetch`-funktiota aikarajan kanssa emmekä `Invoke-Rest
 kansiosta, jotta `better-sqlite3` löytyy, ja korvaa `YourName` omalla nimelläsi:
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedMetagame
+Set-Location C:\dr\undaunted\legacy/UndauntedMetagame
 node -e "(async () => { const name = process.argv[1]; const base = 'http://127.0.0.1:61000/undaunted/api'; const r = await fetch(base + '/Register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ Username: name }), signal: AbortSignal.timeout(15000) }); if (!r.ok) throw new Error('Register returned HTTP ' + r.status); const { UUK } = await r.json(); require('fs').writeFileSync('C:/dr/data/owner.key', UUK); const info = await (await fetch(base + '/GetUserInfo', { headers: { 'x-undaunted-user-api-key': UUK }, signal: AbortSignal.timeout(15000) })).json(); new (require('better-sqlite3'))('C:/dr/data/undaunted.db').prepare('UPDATE users SET isAdmin = 1 WHERE userId = ?').run(info.UserId); console.log('created ' + name + ' as admin; key saved to C:/dr/data/owner.key (not shown)'); })().catch(e => { console.error(e.message); process.exit(1); })" YourName
 ```
 
@@ -658,7 +658,7 @@ Huomioita:
 Deploy-palvelin on ohjelma, joka käynnistää pelipalvelimet ja pitää niitä silmällä.
 
 ```powershell
-Set-Location C:\dr\undaunted\UndauntedDeployServer
+Set-Location C:\dr\undaunted\legacy/UndauntedDeployServer
 npm ci --no-audit --no-fund
 npm run build
 $key = (Get-Content C:\dr\data\gameserver.key -Raw).Trim()
@@ -697,7 +697,7 @@ Käynnistä se:
 
 ```powershell
 $dep = @{ FilePath = "node"; ArgumentList = "--env-file=.env", "dist/server.js"
-          WorkingDirectory = "C:\dr\undaunted\UndauntedDeployServer"; PassThru = $true; WindowStyle = "Hidden"
+          WorkingDirectory = "C:\dr\undaunted\legacy/UndauntedDeployServer"; PassThru = $true; WindowStyle = "Hidden"
           RedirectStandardOutput = "C:\dr\data\deploy.log"; RedirectStandardError = "C:\dr\data\deploy.err" }
 $p = Start-Process @dep; Set-Content C:\dr\data\deploy.pid $p.Id
 ```
@@ -970,8 +970,8 @@ Kun vaiheet 1–12 on tehty, tämä on koko rutiini.
 | 1 | Sulje raskaat ohjelmat. Jos käytät WSL:ää, aja `wsl --shutdown`. | Useita gigatavuja RAM-muistia vapaana |
 | 2 | Varmista, ettei mitään vanhaa ole käynnissä: ei `node`-prosessia porteissa 61000/61001, ei `-server`-peliprosesseja. | Vaiheen 12 komennot 1 ja 4 eivät näytä mitään |
 | 3 | `Game.ini` on ehjä. | Vaiheen 8 kuntotarkistus: `167 / 0 / 0` |
-| 4 | Käynnistä metagame kansiosta `C:\dr\undaunted\UndauntedMetagame` (`Start-Process @meta`, vaihe 9). | Loki: `Dauntless Revived metagame on 127.0.0.1:61000` |
-| 5 | Käynnistä deploy-palvelin kansiosta `C:\dr\undaunted\UndauntedDeployServer` (`Start-Process @dep`, vaihe 11). | Loki: `Dauntless Revived deploy server on port 61001` |
+| 4 | Käynnistä metagame kansiosta `C:\dr\undaunted\legacy/UndauntedMetagame` (`Start-Process @meta`, vaihe 9). | Loki: `Dauntless Revived metagame on 127.0.0.1:61000` |
+| 5 | Käynnistä deploy-palvelin kansiosta `C:\dr\undaunted\legacy/UndauntedDeployServer` (`Start-Process @dep`, vaihe 11). | Loki: `Dauntless Revived deploy server on port 61001` |
 | 6 | Odota Ramsgatea. | Palvelimen konsoli-ikkuna aukeaa; UDP 8777 on prosessin `Dauntless-Win64-Shipping` varaama |
 | 7 | `powershell -NoProfile -ExecutionPolicy Bypass -File C:\dr\tools\play.ps1` | Metagamen lokissa näkyy `POST /account/api/oauth/token` ja sitten `POST /login` |
 | 8 | Pelaa. Älä sulje yhtään konsoli-ikkunaa. | `gs=1`-rivejä ilmestyy, kun palvelin lataa sinut |

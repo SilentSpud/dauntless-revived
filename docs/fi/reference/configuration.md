@@ -57,12 +57,12 @@ esimerkit ovat paikkamerkkejä.
 
 | Osa | Kansio | Käynnistys | Tiedosto kehityskoneella | Tiedosto paketin palvelimella |
 |:----|:-------|:-----------|:-------------------------|:------------------------------|
-| Metagame | `UndauntedMetagame/` | `npm start` = `node --env-file=.env dist/server.js`; `npm run dev` = `tsx watch --env-file=.env src/server.ts` | `UndauntedMetagame/.env` (pakollinen, muuten Node ei käynnisty) | `data\config\metagame.env` |
-| Deploy-palvelin | `UndauntedDeployServer/` | `npm start` = `node --env-file=.env dist/server.js`; `npm run dev` = `tsx --env-file=.env src/server.ts` | `UndauntedDeployServer/.env` (pakollinen) | `data\config\deployserver.env` |
-| Yhdyskäytävä | `UndauntedGateway/` | `npm start` = `node --env-file-if-exists=.env dist/server.js` | `UndauntedGateway/.env` (valinnainen) | `data\config\gateway.env` (vain julkisessa tilassa) |
-| Sallittujen listan apuri | `UndauntedGateway/` | `npm run start:allowlist` = `node --env-file-if-exists=.env dist/allowlist/server.js` | sama `UndauntedGateway/.env` | `data\config\allowlist.env` (vain julkisessa tilassa) |
-| Sisältöpalvelin | `UndauntedContent/` | `npm start` = `node --env-file-if-exists=.env dist/server.js` (myös `npm run verify`) | `UndauntedContent/.env` (valinnainen) | `data\config\content.env` (kun sisältöpalvelin on asennettu) |
-| Käynnistin | `UndauntedLauncher/` | asennettu sovellus tai `npm start` | ei mitään: se lukee vain oman prosessinsa ympäristön | ei palvelimella |
+| Metagame | `legacy/UndauntedMetagame/` | `npm start` = `node --env-file=.env dist/server.js`; `npm run dev` = `tsx watch --env-file=.env src/server.ts` | `legacy/UndauntedMetagame/.env` (pakollinen, muuten Node ei käynnisty) | `data\config\metagame.env` |
+| Deploy-palvelin | `legacy/UndauntedDeployServer/` | `npm start` = `node --env-file=.env dist/server.js`; `npm run dev` = `tsx --env-file=.env src/server.ts` | `legacy/UndauntedDeployServer/.env` (pakollinen) | `data\config\deployserver.env` |
+| Yhdyskäytävä | `legacy/UndauntedGateway/` | `npm start` = `node --env-file-if-exists=.env dist/server.js` | `legacy/UndauntedGateway/.env` (valinnainen) | `data\config\gateway.env` (vain julkisessa tilassa) |
+| Sallittujen listan apuri | `legacy/UndauntedGateway/` | `npm run start:allowlist` = `node --env-file-if-exists=.env dist/allowlist/server.js` | sama `legacy/UndauntedGateway/.env` | `data\config\allowlist.env` (vain julkisessa tilassa) |
+| Sisältöpalvelin | `legacy/UndauntedContent/` | `npm start` = `node --env-file-if-exists=.env dist/server.js` (myös `npm run verify`) | `legacy/UndauntedContent/.env` (valinnainen) | `data\config\content.env` (kun sisältöpalvelin on asennettu) |
+| Käynnistin | `legacy/UndauntedLauncher/` | asennettu sovellus tai `npm start` | ei mitään: se lukee vain oman prosessinsa ympäristön | ei palvelimella |
 
 Säännöt, jotka koskevat kaikkia osia:
 
@@ -165,7 +165,7 @@ palvelin).
 
 ---
 
-## Metagame (`UndauntedMetagame/`) {#metagame}
+## Metagame (`legacy/UndauntedMetagame/`) {#metagame}
 
 Taustapalvelu, jonka kanssa peli keskustelee: kirjautumiset, hahmot, tavarat, eteneminen, matchmaking
 ja `/undaunted/api`-hallintareitit. Valmis `.env` yhdelle koneelle on sivulla
@@ -250,7 +250,7 @@ Näkymän ohje: `tools/DASHBOARD.md`.
 | `LOG_REQUESTS` | päällä | `0` tai mikä tahansa muu | **Vain forkissa.** Yksi rivi pyyntöä kohden: `METHOD /path gs=0` (`gs=1`, kun pyynnössä oli pelipalvelinavain). Yhdyskäytävän takana rivin loppuun tulee ` via=gateway ip=<pelaajan osoite>`; muut välitetyt pyynnöt saavat lopun ` via=proxy peer=<osoite>`. Lokiin kirjataan vain polku, ei koskaan kyselymerkkijonoa (query string) tai otsakkeita, ja polun tunnisteen näköiset osat korvataan. `0` ottaa sen pois päältä. | Oletuksena ei kukaan |
 | `LOG_BODIES` | pois | `1` tai mikä tahansa muu | **Vain forkissa.** `1` kirjoittaa keskeneräisten reittien (eteneminen, Hunt Pass, palkkiotehtävät, odotusajat, Escalation, oikeudet, varustesarjojen paikkojen avaukset, kauppa (`/product`, `/token`, `/notification`), saldot ja `/reconcile`, Slayer Links, matchmaking, ryhmä, kaverit, tavarat ja tilihaut) pyyntöjen sisällöt tiedoston `BODY_LOG_FILE` loppuun: yksi JSON-olio riviä kohden, `{t, method, url, gs, body, status, ms}`, eli saapumisaika, metodi, URL (kyselymerkkijono mukaan lukien), tieto pelipalvelinavaimen mukanaolosta, sisältö katkaistuna 8 kt:hen (tavaroilla 64 kt), vastauksen tila ja vastaamiseen kulunut aika millisekunteina (`"aborted": true`, jos yhteys katkesi ensin). Rivi kirjoitetaan, kun vastaus on valmis. Tunnisteet, tiliavaimet (`UUK_...`) ja muut pitkät tunnisteen näköiset merkkijonot poistetaan sekä URL:sta että sisällöstä. Kehitysapu: tiedosto tallentaa, mitä pelaajat lähettävät, joten pidä se yksityisenä äläkä koskaan ota asetusta käyttöön julkisella palvelimella. | Oletuksena ei kukaan; paketti: pakotetaan arvoon `0` julkisessa tilassa, säilytetään yksityisessä tilassa |
 | `BODY_LOG_PER_PATH` | `0`: ei rajaa | kokonaisluku | **Vain forkissa.** Asetuksella `LOG_BODIES=1`: enintään näin monta riviä metodia ja tarkkaa polkua kohden (tunnukset mukaan lukien) yhden metagamen ajon aikana; polun viimeisen rivin jälkeen tulee `body log: <METHOD polku> reached BODY_LOG_PER_PATH=N; no more lines for it in this run`. Silmukkaan jääneen peliohjelman varalle. | Oletuksena ei kukaan |
-| `BODY_LOG_FILE` | `bodies.log` työhakemistossa | tiedostopolku | Mihin `LOG_BODIES` kirjoittaa. Tiedostoa ei koskaan kierrätetä (rotate). `UndauntedMetagame/bodies.log` ei ole gitin ohittama: osoita tämä repositorion ulkopuolelle (esimerkiksi `C:/dr/data/bodies.log`) äläkä koskaan tallenna tiedostoa versionhallintaan. | Paketti: aina (`<root>/data/logs/bodies.log`) |
+| `BODY_LOG_FILE` | `bodies.log` työhakemistossa | tiedostopolku | Mihin `LOG_BODIES` kirjoittaa. Tiedostoa ei koskaan kierrätetä (rotate). `legacy/UndauntedMetagame/bodies.log` ei ole gitin ohittama: osoita tämä repositorion ulkopuolelle (esimerkiksi `C:/dr/data/bodies.log`) äläkä koskaan tallenna tiedostoa versionhallintaan. | Paketti: aina (`<root>/data/logs/bodies.log`) |
 
 ### Palvelimen tiedot {#metagame-identity}
 
@@ -393,7 +393,7 @@ Viestien tekstiä, tunnisteita, kirjautumistietoja tai pyyntöjen otsakkeita ei 
 
 ---
 
-## Deploy-palvelin (`UndauntedDeployServer/`) {#deploy-server}
+## Deploy-palvelin (`legacy/UndauntedDeployServer/`) {#deploy-server}
 
 ### Muistin tarkistus ennen käynnistystä
 
@@ -439,11 +439,11 @@ ympäristön, pelipalvelinavain mukaan lukien.
 
 ---
 
-## Yhdyskäytävä (`UndauntedGateway/`, `dist/server.js`) {#gateway}
+## Yhdyskäytävä (`legacy/UndauntedGateway/`, `dist/server.js`) {#gateway}
 
 Julkisen tilan ainoa julkinen TCP-kuuntelija. Se purkaa TLS-salauksen ja välittää pyynnöt metagamelle
 ja sisältöpalvelimelle loopbackissa. Yhdyskäytävän oma
-[README (englanniksi)]({{ site.github.repository_url }}/blob/dauntless-revived/UndauntedGateway/README.md)
+[README (englanniksi)]({{ site.github.repository_url }}/blob/dauntless-revived/legacy/UndauntedGateway/README.md)
 selittää reitityksen, torjunnat ja sen, miten rajat on mitoitettu.
 
 **Milloin luetaan:** kerran, käynnistyessä. Sallitun alueen ulkopuolinen arvo pysäyttää
@@ -491,7 +491,7 @@ kiintiöstä yhden ennen mitään muuta tarkistusta, myös pyynnöt, jotka sitte
 
 ---
 
-## Sallittujen listan apuri (`UndauntedGateway/`, `dist/allowlist/server.js`) {#allowlist-helper}
+## Sallittujen listan apuri (`legacy/UndauntedGateway/`, `dist/allowlist/server.js`) {#allowlist-helper}
 
 Pieni palvelu, joka pitää yhden Windowsin palomuurisäännön auki kirjautuneiden pelaajien osoitteille.
 Se pyörii ylläpitäjän oikeuksin (paketin palvelimella SYSTEM-tilillä), joten sen asetustiedosto on
@@ -518,7 +518,7 @@ nimeää muuttujan. `NODE_ENV` ei vaikuta tässä mitään.
 
 ---
 
-## Sisältöpalvelin (`UndauntedContent/`) {#content-server}
+## Sisältöpalvelin (`legacy/UndauntedContent/`) {#content-server}
 
 Jakaa tarkistetut pelitiedostot rekisteröityneille tileille sekä isännän uutiset ja kuvat
 käynnistimelle. Uutistiedoston ja kuvapaketin (`branding.json`) yksityiskohdat ovat sivulla

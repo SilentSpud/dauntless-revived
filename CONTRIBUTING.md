@@ -31,7 +31,7 @@ Community chat: **[Dauntless Revived Discord](https://discord.gg/ZJRprHzsgu)**. 
    not issues or pull requests. See [SECURITY.md](SECURITY.md).
 7. **Be kind.** See the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-The launcher's Credits page reads every name from one file, `UndauntedLauncher/src/shared/credits.ts`,
+The launcher's Credits page reads every name from one file, `legacy/UndauntedLauncher/src/shared/credits.ts`,
 so crediting a new contributor there is a one-line change (with the note in English and Finnish).
 
 If a problem is in upstream Undaunted's code and not in a change this fork made, consider
@@ -45,9 +45,9 @@ hygiene checks, which need only Node.js.
 
 | Check | Run it yourself |
 | --- | --- |
-| Server packages (`UndauntedMetagame`, `UndauntedGateway`, `UndauntedContent`, `UndauntedDeployServer`): build and unit tests | In the package folder: `npm ci`, `npm run build`, `npm test` |
-| Launcher: typecheck, unit tests, installer | In `UndauntedLauncher`: `npm ci`, `npm run typecheck`, `npm test`, `npm run make` |
-| Windows Server kit, in Windows PowerShell 5.1: every script parses, PSScriptAnalyzer finds no errors, and the kit's tests pass | `npm ci` in `UndauntedGateway` first. Then, in PowerShell from the repository root, `powershell -NoProfile -ExecutionPolicy Bypass -File deploy\windows-server\tests\Test-KitUnit.ps1`, and the same for `Test-DeployRemote.ps1`. Last, the same for `Test-Sandbox.ps1` with `-SandboxDir "$env:TEMP\dr-sandbox"` added (a few minutes; it uses loopback ports 62000-62499 only and deletes that folder at the end) |
+| Server packages (`legacy/UndauntedMetagame`, `legacy/UndauntedGateway`, `legacy/UndauntedContent`, `legacy/UndauntedDeployServer`): build and unit tests | In the package folder: `npm ci`, `npm run build`, `npm test` |
+| Launcher: typecheck, unit tests, installer | In `legacy/UndauntedLauncher`: `npm ci`, `npm run typecheck`, `npm test`, `npm run make` |
+| Windows Server kit, in Windows PowerShell 5.1: every script parses, PSScriptAnalyzer finds no errors, and the kit's tests pass | `npm ci` in `legacy/UndauntedGateway` first. Then, in PowerShell from the repository root, `powershell -NoProfile -ExecutionPolicy Bypass -File deploy\windows-server\tests\Test-KitUnit.ps1`, and the same for `Test-DeployRemote.ps1`. Last, the same for `Test-Sandbox.ps1` with `-SandboxDir "$env:TEMP\dr-sandbox"` added (a few minutes; it uses loopback ports 62000-62499 only and deletes that folder at the end) |
 | Docs: generated files are current, and the site builds the way GitHub Pages builds it | `node tools/sync-roadmap.js` and `node tools/build-llms.js` must leave `git diff` empty |
 | No secrets or game files are committed, not even in a commit that a later one undoes, and the launcher version is valid | `node tools/ci/check-repo.js --history origin/dauntless-revived..HEAD` (without `--history`: the files only) |
 
@@ -56,7 +56,7 @@ Dependabot proposes dependency updates.
 
 Every push shows its launcher installer under the run's **Artifacts** for a week (not for pull
 requests from forks). Launcher releases are published from `dauntless-revived` only, as release
-`launcher-v<version>` for the version in `UndauntedLauncher/package.json`, and installed launchers
+`launcher-v<version>` for the version in `legacy/UndauntedLauncher/package.json`, and installed launchers
 update to it. To release a new launcher, raise that version. Then:
 
 - **Automatically (the default):** a push that passes every check, is still the head of the branch
@@ -97,7 +97,7 @@ Yhteisön chat: **[Dauntless Revived Discord](https://discord.gg/ZJRprHzsgu)**. 
 7. **Ole ystävällinen.** Ks. [käytösohjeet](CODE_OF_CONDUCT.md).
 
 Käynnistimen Tekijät-sivu lukee kaikki nimet yhdestä tiedostosta,
-`UndauntedLauncher/src/shared/credits.ts`, joten uuden osallistujan lisääminen sinne on yhden rivin
+`legacy/UndauntedLauncher/src/shared/credits.ts`, joten uuden osallistujan lisääminen sinne on yhden rivin
 muutos (kuvaus englanniksi ja suomeksi).
 
 ### Tarkistukset
@@ -112,7 +112,7 @@ etsii lisäksi tietoturvaongelmia, ja Dependabot ehdottaa riippuvuuksien päivit
 
 Jokaisen pushin käynnistimen asennusohjelma on ladattavissa ajon kohdasta **Artifacts** viikon ajan
 (ei forkeista tulevissa pull requesteissa). Käynnistin julkaistaan vain `dauntless-revived`-haarasta
-julkaisuna `launcher-v<versio>` sillä versiolla, joka on `UndauntedLauncher/package.json`-tiedostossa,
+julkaisuna `launcher-v<versio>` sillä versiolla, joka on `legacy/UndauntedLauncher/package.json`-tiedostossa,
 ja asennetut käynnistimet päivittyvät siihen. Uuden käynnistimen julkaisemiseksi nosta versiota.
 Sitten:
 

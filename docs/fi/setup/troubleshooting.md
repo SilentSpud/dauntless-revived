@@ -367,7 +367,7 @@ npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to revi
 Tarkista natiivimoduuli:
 
 ```powershell
-Test-Path C:\dr\undaunted\UndauntedMetagame\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+Test-Path C:\dr\undaunted\legacy\UndauntedMetagame\node_modules\better-sqlite3\build\Release\better_sqlite3.node
 ```
 
 **Jos tämä tulostaa `False`,** metagame ei voi avata tietokantaansa. Tarkista ja hyväksy vain se

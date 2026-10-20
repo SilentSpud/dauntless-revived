@@ -63,7 +63,7 @@ Step "Installing the two server DLLs"
 foreach ($name in "dxgi.dll", "UndauntedInternalServer.dll") {
   $target = Join-Path $Win64 $name
   if ((Test-Path -LiteralPath $target) -and ((Hash $target) -eq $Pinned[$name])) { Ok "$name already installed"; continue }
-  $source = @((Join-Path $PSScriptRoot "dll\$name"), (Join-Path $PSScriptRoot "..\UndauntedLauncher\assets\$name")) |
+  $source = @((Join-Path $PSScriptRoot "dll\$name"), (Join-Path $PSScriptRoot "..\legacy\UndauntedLauncher\assets\$name")) |
     Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
   if (-not $source) { Fail "$name is missing from this kit (expected in $PSScriptRoot\dll\)." }
   if ((Hash $source) -ne $Pinned[$name]) { Fail "The kit's $name does not match the pinned hash. Do not use this kit." }

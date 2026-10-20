@@ -3,9 +3,9 @@
 #    update files and SHA256SUMS.txt, with a signed build provenance attestation for every file
 #  - the rolling "launcher-updates" release, which installed launchers read to update themselves
 #    (Squirrel RELEASES file + the newest full package; see UPDATE_FEED_URL in
-#    UndauntedLauncher/src/main/constants.ts)
+#    legacy/UndauntedLauncher/src/main/constants.ts)
 #
-# Two ways in, both for the UndauntedLauncher/package.json version at the head of dauntless-revived:
+# Two ways in, both for the legacy/UndauntedLauncher/package.json version at the head of dauntless-revived:
 #  - ci.yml calls it once every check passed on a push to dauntless-revived, unless the repository variable
 #    LAUNCHER_AUTO_RELEASE is false, when that version has no release yet. It publishes the installer that CI
 #    built and tested (the artifact named by `artifact`).
@@ -24,11 +24,11 @@ on:
   workflow_call:
     inputs:
       version:
-        description: The launcher version to publish; must equal UndauntedLauncher/package.json "version" at this commit.
+        description: The launcher version to publish; must equal legacy/UndauntedLauncher/package.json "version" at this commit.
         type: string
         required: true
       artifact:
-        description: The artifact of the calling run that holds the release files (from UndauntedLauncher/scripts/collect-release.ps1).
+        description: The artifact of the calling run that holds the release files (from legacy/UndauntedLauncher/scripts/collect-release.ps1).
         type: string
         required: true
       linux_artifact:
@@ -59,7 +59,7 @@ jobs:
         with:
           persist-credentials: false
           sparse-checkout: |
-            UndauntedLauncher/package.json
+            legacy/UndauntedLauncher/package.json
             tools/ci/launcher-version.js
           sparse-checkout-cone-mode: false
 
@@ -77,7 +77,7 @@ jobs:
         run: |
           set -euo pipefail
           fail() { echo "::error::$1"; exit 1; }
-          version="$(node -p 'require("./UndauntedLauncher/package.json").version')"
+          version="$(node -p 'require("./legacy/UndauntedLauncher/package.json").version')"
           [ "$REF" = "refs/heads/$DEFAULT_BRANCH" ] || fail "launcher releases are published from $DEFAULT_BRANCH only, not $REF"
           if [ -n "$CALLED_VERSION" ]; then
             [ "$CALLED_VERSION" = "$version" ] || fail "asked to publish $CALLED_VERSION, but package.json at this commit says $version"
@@ -125,7 +125,7 @@ jobs:
     defaults:
       run:
         shell: pwsh
-        working-directory: UndauntedLauncher
+        working-directory: legacy/UndauntedLauncher
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -135,7 +135,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: UndauntedLauncher/package-lock.json
+          cache-dependency-path: legacy/UndauntedLauncher/package-lock.json
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -155,7 +155,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: launcher-release
-          path: UndauntedLauncher/release/
+          path: legacy/UndauntedLauncher/release/
           if-no-files-found: error
           retention-days: 7
 
@@ -170,7 +170,7 @@ jobs:
       contents: read
     defaults:
       run:
-        working-directory: UndauntedLauncher
+        working-directory: legacy/UndauntedLauncher
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -180,7 +180,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: UndauntedLauncher/package-lock.json
+          cache-dependency-path: legacy/UndauntedLauncher/package-lock.json
 
       - name: Install Linux package tools
         run: |
@@ -205,7 +205,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: launcher-linux-release
-          path: UndauntedLauncher/release-linux/
+          path: legacy/UndauntedLauncher/release-linux/
           if-no-files-found: error
           retention-days: 7
 
@@ -341,7 +341,7 @@ jobs:
           create_tag=false
           if [ -z "$tag_commit" ]; then
             [ "$release" = none ] || fail "a release named $TAG exists without its tag (a draft made by hand?). Delete it or publish it by hand, then run this again."
-            [ "$newest" = true ] || skip "launcher $VERSION is not newer than launcher-v$blocking; nothing published. Raise the version in UndauntedLauncher/package.json."
+            [ "$newest" = true ] || skip "launcher $VERSION is not newer than launcher-v$blocking; nothing published. Raise the version in legacy/UndauntedLauncher/package.json."
             api "repos/$GH_REPO/git/ref/heads/$DEFAULT_BRANCH" .object.sha head.txt || fail "could not read the head of $DEFAULT_BRANCH"
             head="$(cat head.txt)"
             [ "$head" = "$COMMIT" ] || skip "$DEFAULT_BRANCH has moved on to ${head:0:12}; nothing published from ${COMMIT:0:12}. The run of the newer commit publishes."
@@ -355,7 +355,7 @@ jobs:
               published) action=done ;;
             esac
           elif [ "$release" = published ]; then
-            skip "$TAG is published already (from ${tag_commit:0:12}); nothing published. Raise the version in UndauntedLauncher/package.json."
+            skip "$TAG is published already (from ${tag_commit:0:12}); nothing published. Raise the version in legacy/UndauntedLauncher/package.json."
           else
             fail "$TAG exists at ${tag_commit:0:12} but has no published release. Publish that tag by hand or delete it, then run this again."
           fi

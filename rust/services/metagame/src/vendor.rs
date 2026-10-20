@@ -9,12 +9,12 @@ use serde_json::Value;
 macro_rules! vendor {
     ($($name:ident => $file:literal),* $(,)?) => {
         /// The vendor files, by the name the Node code imports them under.
-        pub const FILES: &[(&str, &str)] = &[$(($file, include_str!(concat!("../../../../UndauntedMetagame/src/vendor/", $file)))),*];
+        pub const FILES: &[(&str, &str)] = &[$(($file, include_str!(concat!("../../../../legacy/UndauntedMetagame/src/vendor/", $file)))),*];
 
         $(
             pub fn $name() -> &'static Value {
                 static PARSED: OnceLock<Value> = OnceLock::new();
-                PARSED.get_or_init(|| parse(include_str!(concat!("../../../../UndauntedMetagame/src/vendor/", $file))))
+                PARSED.get_or_init(|| parse(include_str!(concat!("../../../../legacy/UndauntedMetagame/src/vendor/", $file))))
             }
         )*
     };

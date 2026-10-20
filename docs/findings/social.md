@@ -561,7 +561,7 @@ token's 24 hours, with no logout and no reconnect loop.
 
 The fixes are tested over HTTP against the real metagame, with the client's own bodies and headers:
 
-- **A model of the client** (`UndauntedMetagame/test/socialclient.ts`) reimplements the parse rules
+- **A model of the client** (`legacy/UndauntedMetagame/test/socialclient.ts`) reimplements the parse rules
   above: the mapping parser, the user-info cache with its first-reply-wins key, the toolkit's Epic id
   check, the Phoenix envelope, the guild error mapping, the friends list and the party invitations.
   Fed the replies our server sent on 22 September 2026, it reproduces what the players saw: the array

@@ -176,11 +176,11 @@ async fn accounts() {
     run_area("accounts").await;
 }
 
-/// Every Rust route is a route of the Node metagame (`UndauntedMetagame/routes.json`, M3), in the
+/// Every Rust route is a route of the Node metagame (`legacy/UndauntedMetagame/routes.json`, M3), in the
 /// same order, so first-match routing picks the same one.
 #[tokio::test(flavor = "multi_thread")]
 async fn route_table_matches_node() {
-    let node: Value = serde_json::from_str(include_str!("../../../../UndauntedMetagame/routes.json")).unwrap();
+    let node: Value = serde_json::from_str(include_str!("../../../../legacy/UndauntedMetagame/routes.json")).unwrap();
     let node: Vec<(String, String)> = node["routes"]
         .as_array()
         .unwrap()

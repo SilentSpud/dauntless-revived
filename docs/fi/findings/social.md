@@ -594,7 +594,7 @@ uloskirjautumista tai yhteyden uudelleenyrityssilmukkaa.
 
 Korjauksia testataan HTTP:n yli oikeaa metagamea vastaan peliohjelman omilla rungoilla ja otsakkeilla:
 
-- **Peliohjelman malli** (`UndauntedMetagame/test/socialclient.ts`) toteuttaa yllä kuvatut
+- **Peliohjelman malli** (`legacy/UndauntedMetagame/test/socialclient.ts`) toteuttaa yllä kuvatut
   jäsennyssäännöt uudelleen: yhdistämisen jäsentimen, käyttäjätietojen välimuistin, jossa ensimmäinen
   vastaus voittaa, työkalupakin Epic-tunnuksen tarkistuksen, Phoenixin kuoren, kiltavirheiden
   muunnoksen, kaverilistan ja ryhmäkutsut. Kun sille syötetään palvelimemme 22.9.2026 lähettämät

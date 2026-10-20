@@ -5,7 +5,7 @@
 const path = require("node:path");
 const fs = require("node:fs");
 const crypto = require("node:crypto");
-const jwt = require(require.resolve("jsonwebtoken", { paths: [path.resolve("UndauntedMetagame")] }));
+const jwt = require(require.resolve("jsonwebtoken", { paths: [path.resolve("legacy/UndauntedMetagame")] }));
 
 const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
   modulusLength: 2048,

@@ -72,9 +72,9 @@ on käännetty mukaan, mutta tavallinen asiakasohjelma ei koskaan kutsu sitä.
 
 | Osa | Kieli | Tehtävä |
 |---|---|---|
-| `UndauntedLauncher` | Electron | Tarkistaa ohjelmatiedoston SHA-256-tiivisteen, kopioi kaksi DLL-tiedostoa kansioon `Archon\Binaries\Win64` ennen jokaista käynnistystä ja käynnistää asiakasohjelman pelaajan tiliavaimella |
-| `UndauntedMetagame` | TypeScript, SQLite (Drizzle) | Taustapalvelu: kirjautuminen, hahmot, tavaraluettelo, varustukset (loadouts), edistyminen, matchmaking-jono, ylläpidon rajapinta (admin API) |
-| `UndauntedDeployServer` | TypeScript (Express) | Käynnistää ja valvoo pelipalvelinprosesseja |
+| `legacy/UndauntedLauncher` | Electron | Tarkistaa ohjelmatiedoston SHA-256-tiivisteen, kopioi kaksi DLL-tiedostoa kansioon `Archon\Binaries\Win64` ennen jokaista käynnistystä ja käynnistää asiakasohjelman pelaajan tiliavaimella |
+| `legacy/UndauntedMetagame` | TypeScript, SQLite (Drizzle) | Taustapalvelu: kirjautuminen, hahmot, tavaraluettelo, varustukset (loadouts), edistyminen, matchmaking-jono, ylläpidon rajapinta (admin API) |
+| `legacy/UndauntedDeployServer` | TypeScript (Express) | Käynnistää ja valvoo pelipalvelinprosesseja |
 | `UndauntedInternalServer.dll` | C++ (MinHook, Dumper-7-SDK) | Ladataan jokaiseen peliprosessiin, myös asiakasohjelmaan. Toimii palvelintilassa tai asiakastilassa. |
 | `dxgi.dll` | valmiiksi käännetty välitys-DLL (proxy) | Lataa DLL:n prosessiin |
 

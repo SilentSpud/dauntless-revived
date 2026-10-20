@@ -18,7 +18,7 @@ updates:
           - "*"
 
   - package-ecosystem: npm
-    directory: /UndauntedMetagame
+    directory: /legacy/UndauntedMetagame
     schedule:
       interval: monthly
     open-pull-requests-limit: 3
@@ -31,7 +31,7 @@ updates:
           - patch
 
   - package-ecosystem: npm
-    directory: /UndauntedGateway
+    directory: /legacy/UndauntedGateway
     schedule:
       interval: monthly
     open-pull-requests-limit: 3
@@ -44,7 +44,7 @@ updates:
           - patch
 
   - package-ecosystem: npm
-    directory: /UndauntedContent
+    directory: /legacy/UndauntedContent
     schedule:
       interval: monthly
     open-pull-requests-limit: 3
@@ -57,7 +57,7 @@ updates:
           - patch
 
   - package-ecosystem: npm
-    directory: /UndauntedDeployServer
+    directory: /legacy/UndauntedDeployServer
     schedule:
       interval: monthly
     open-pull-requests-limit: 3
@@ -70,7 +70,7 @@ updates:
           - patch
 
   - package-ecosystem: npm
-    directory: /UndauntedLauncher
+    directory: /legacy/UndauntedLauncher
     schedule:
       interval: monthly
     open-pull-requests-limit: 3

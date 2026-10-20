@@ -324,7 +324,7 @@ friend session(s), heard of M` and `... offline (<reason>): told N friend sessio
 
 ## Testing without the game {#testing-without-the-game}
 
-`UndauntedMetagame/test/chatclient.ts` is a model of how the client reads chat, with the addresses
+`legacy/UndauntedMetagame/test/chatclient.ts` is a model of how the client reads chat, with the addresses
 above. Fed the first server's replies, it reproduces what Vvoidddd saw: `UID-...` as the sender, the
 join stuck with "Another operation already pending", and `[unknown]`. Fed ours, captured from the real
 server in the test, both players see usernames. Like the client, the model keeps one room member per

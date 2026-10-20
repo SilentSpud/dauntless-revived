@@ -50,13 +50,13 @@ Undauntedista ja tästä forkista.
 
 | Palvelu | Kansio | Kuuntelee (oletus) | Internetistä julkisessa tilassa | Tunnistautuminen |
 |:--------|:-------|:-------------------|:--------------------------------|:-----------------|
-| Metagame | `UndauntedMetagame/` | `BIND_HOST` (`127.0.0.1`) ja `PORT` (koodissa ei oletusta; ohjeet ja paketti käyttävät porttia 61000) | Vain yhdyskäytävän kautta, suodatettuna | Pelaajan tunniste, tiliavain, ylläpitäjän avain tai pelipalvelinavain reitistä riippuen |
-| Chat (metagamen sisällä, `CHAT=1`) | `UndauntedMetagame/src/realtime/` | `127.0.0.1:61099` (`CHAT_BIND_HOST`, `CHAT_PORT`) | Vain yhdyskäytävän kautta (WebSocket-avaus) | Pelaajan tunniste (SASL PLAIN) |
-| Deploy-palvelin | `UndauntedDeployServer/` | `BIND_HOST` (`127.0.0.1`) ja `PORT` (koodissa ei oletusta; ohjeissa ja paketissa 61001) | Ei koskaan | Ei mitään. Se vastaa vain suoraan loopbackin kautta tuleville kutsujille. |
-| Sisältöpalvelin | `UndauntedContent/` | `127.0.0.1:61002` | Yhdyskäytävän kautta (`/content`) | Tiliavain pelitiedostoihin; muu on julkista |
-| Yhdyskäytävä | `UndauntedGateway/` | HTTPS osoitteessa `0.0.0.0:443` | Kyllä: ainoa julkinen TCP-portti | Omat torjuntansa; välittää tunnistetiedot eteenpäin |
-| Sallittujen listan apuri | `UndauntedGateway/` (osa `allowlist`) | `127.0.0.1:61005` | Ei koskaan | Sallittujen listan salaisuus |
-| Käynnistimen välitin | `UndauntedLauncher/` | `127.0.0.1:61000` jokaisen pelaajan omalla koneella | Ei ole palvelimen palvelu | Torjuu kaiken, mikä ei ole paikallinen peli |
+| Metagame | `legacy/UndauntedMetagame/` | `BIND_HOST` (`127.0.0.1`) ja `PORT` (koodissa ei oletusta; ohjeet ja paketti käyttävät porttia 61000) | Vain yhdyskäytävän kautta, suodatettuna | Pelaajan tunniste, tiliavain, ylläpitäjän avain tai pelipalvelinavain reitistä riippuen |
+| Chat (metagamen sisällä, `CHAT=1`) | `legacy/UndauntedMetagame/src/realtime/` | `127.0.0.1:61099` (`CHAT_BIND_HOST`, `CHAT_PORT`) | Vain yhdyskäytävän kautta (WebSocket-avaus) | Pelaajan tunniste (SASL PLAIN) |
+| Deploy-palvelin | `legacy/UndauntedDeployServer/` | `BIND_HOST` (`127.0.0.1`) ja `PORT` (koodissa ei oletusta; ohjeissa ja paketissa 61001) | Ei koskaan | Ei mitään. Se vastaa vain suoraan loopbackin kautta tuleville kutsujille. |
+| Sisältöpalvelin | `legacy/UndauntedContent/` | `127.0.0.1:61002` | Yhdyskäytävän kautta (`/content`) | Tiliavain pelitiedostoihin; muu on julkista |
+| Yhdyskäytävä | `legacy/UndauntedGateway/` | HTTPS osoitteessa `0.0.0.0:443` | Kyllä: ainoa julkinen TCP-portti | Omat torjuntansa; välittää tunnistetiedot eteenpäin |
+| Sallittujen listan apuri | `legacy/UndauntedGateway/` (osa `allowlist`) | `127.0.0.1:61005` | Ei koskaan | Sallittujen listan salaisuus |
+| Käynnistimen välitin | `legacy/UndauntedLauncher/` | `127.0.0.1:61000` jokaisen pelaajan omalla koneella | Ei ole palvelimen palvelu | Torjuu kaiken, mikä ei ole paikallinen peli |
 
 [Porttien viitesivu]({{ ports_page.url | relative_url }}) luettelee jokaisen portin ja kertoo, miten
 sen voi vaihtaa. [Asetusten viitesivu]({{ config_page.url | relative_url }}) kuvaa jokaisen tällä
@@ -910,7 +910,7 @@ hakemistolistausta ole.
 Yhdyskäytävä on olemassa vain julkisessa tilassa. Se on HTTPS-palvelu (TLS 1.2 tai uudempi) itse
 allekirjoitetulla varmenteella, jonka käynnistin kiinnittää sormenjäljen perusteella, osoitteessa `GATEWAY_BIND`
 (`0.0.0.0`) ja portissa `GATEWAY_PORT` (443).
-[UndauntedGateway/README.md]({{ site.github.repository_url }}/blob/dauntless-revived/UndauntedGateway/README.md)
+[legacy/UndauntedGateway/README.md]({{ site.github.repository_url }}/blob/dauntless-revived/legacy/UndauntedGateway/README.md)
 (englanniksi) kertoo tarkemmin sen rajoista, aikakatkaisuista ja pääsylokista.
 
 | Pyyntö | Menee | Oletus |
@@ -1048,13 +1048,13 @@ tunnistetieto**: lähetä se yhdelle kaverille, yksityisesti.
 
 ## Reittien muuttaminen {#changing-the-routes}
 
-- `UndauntedMetagame/test/permissions.test.ts` lukitsee listan metagamen jokaisesta reitistä
+- `legacy/UndauntedMetagame/test/permissions.test.ts` lukitsee listan metagamen jokaisesta reitistä
   pääsytarkistuksineen rekisteröintijärjestyksessä. Reitin lisääminen tai sen tarkistusten
   muuttaminen kaataa testin, kunnes lista päivitetään, mikä pakottaa päättämään, kuka reittiä saa
   kutsua.
-- Yhdyskäytävän testit lukevat tiedoston `UndauntedMetagame/src/routes/undauntedapi.ts`, joten
+- Yhdyskäytävän testit lukevat tiedoston `legacy/UndauntedMetagame/src/routes/undauntedapi.ts`, joten
   jokainen uusi `/undaunted/api`-reitti testataan automaattisesti yhdyskäytävän estämäksi. Vain
-  reitti, joka lisätään `PUBLIC_UNDAUNTED_API`-listaan tiedostossa `UndauntedGateway/src/policy.ts`,
+  reitti, joka lisätään `PUBLIC_UNDAUNTED_API`-listaan tiedostossa `legacy/UndauntedGateway/src/policy.ts`,
   tulee tavoitettavaksi internetistä.
 - Uusi pelireitti on tavoitettavissa yhdyskäytävän kautta heti, kun se on olemassa. Anna sille
   pääsytarkistus.

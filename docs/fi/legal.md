@@ -152,19 +152,19 @@ sisältää MinHookin, toista mukana MinHookin tekijänoikeusilmoitus ja vastuuv
   ohjelmatiedostoja, ei pak-tiedostoja tai IoStore-säiliöitä, ei grafiikkaa tai muuta pelisisältöä
   eikä pelin asetuksia. Ne eivät myöskään linkitä pelin latauksiin.
   - Yksi peritty asia, joka on hyvä tietää: upstream-Undauntedin metagame (taustapalvelu)
-    sisältää tiedoston `UndauntedMetagame/src/vendor/progression_config.json` (noin 190 kt), jonka
+    sisältää tiedoston `legacy/UndauntedMetagame/src/vendor/progression_config.json` (noin 190 kt), jonka
     se antaa peliohjelmalle edistymis- ja palkintotietoina. Se on muodoltaan Phoenixin
     taustapalvelun tallennettu vastaus, ei pelin asennuksesta peräisin oleva tiedosto. Haaramme
     sisältää sen muuttamattomana upstreamista.
   - Upstream sisältää myös neljä pelin datataulukkoa JSON-muotoon vietyinä,
-    `UndauntedDeployServer/src/vendor/*_table.json` (noin 2,2 Mt: pelaajien metsästykset,
+    `legacy/UndauntedDeployServer/src/vendor/*_table.json` (noin 2,2 Mt: pelaajien metsästykset,
     matchmakerin metsästykset ja kaksi Trials-taulukkoa), joista deploy-palvelin valitsee metsästyksen
     hirviön ja kartan. Ne ovat vientejä taulukoiden riveistä, eivät asennuksen tiedostoja. Haaramme
-    sisältää ne muuttamattomina, ja oma `UndauntedMetagame/src/vendor/hunt_titles.json` tuotetaan
+    sisältää ne muuttamattomina, ja oma `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` tuotetaan
     niistä (metsästysten tunnukset ja englanninkieliset nimet).
-  - Harmonicin haarasta mukana on neljä datatiedostoa: `UndauntedMetagame/src/vendor/escalation/seasons.json`
+  - Harmonicin haarasta mukana on neljä datatiedostoa: `legacy/UndauntedMetagame/src/vendor/escalation/seasons.json`
     (Escalation-kaudet), `store_catalog.json` ja `store_item_kinds.json` (ilmainen kauppa) sekä
-    `UndauntedMetagame/test/data/store_art_skus.json` (kaupan tarjoustunnuksia testiä varten). Niissä on
+    `legacy/UndauntedMetagame/test/data/store_art_skus.json` (kaupan tarjoustunnuksia testiä varten). Niissä on
     asennetusta peliohjelmasta yhteentoimivuuden vuoksi luettuja tunnisteita ja viritysarvoja sekä noin
     330 lyhyttä englanninkielistä nimeä; ei tekstuureja, malleja, ääniä tai muuta pelin sisältöä.
     `seasons.json` nimeää pelitiedostot, joista se luettiin, niiden SHA-256-tiivisteillä, kuten

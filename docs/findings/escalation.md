@@ -87,7 +87,7 @@ The payload, and the body of a save, is one season:
 
 ## The season registry {#registry}
 
-`UndauntedMetagame/src/vendor/escalation/seasons.json` lists every season the 1.4.4 client has,
+`legacy/UndauntedMetagame/src/vendor/escalation/seasons.json` lists every season the 1.4.4 client has,
 exported read-only from the client's own Escalation progression table and the talent table each
 season names (by Harmonic, from build CL239827). The metagame checks the file when it starts, and a
 malformed one stops the start.
@@ -197,7 +197,7 @@ registry file on [Game settings]({{ game_page.url | relative_url }}#escalation-s
 
 ## Tests {#tests}
 
-`UndauntedMetagame/test/escalation.test.ts` holds 27 cases: Harmonic's 17 (the registry, reads, the
+`legacy/UndauntedMetagame/test/escalation.test.ts` holds 27 cases: Harmonic's 17 (the registry, reads, the
 version rules, the hard and soft rules, the stub guard), adapted to our answers (a foreign read is 403,
 a replay is an audited 200, a relayed token of another account is logged and accepted, the soft rules
 answer 409 only with `ESCALATION_STRICT=1`, the strict XP case reaches level 25 before its XP grows), a
