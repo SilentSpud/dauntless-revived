@@ -3,7 +3,7 @@
 # Dauntless Revived master migration plan: one Rust codebase
 
 Status: in progress. Written 2026-10-20. The spikes that could run on a development PC ran the same day; their results
-are in section 3.4. Done so far: R1, R2, R3, R4 with M4 (the workspace and `crates/protocol`, starting with the invite
+are in section 3.4. Done so far: R1, R2, R3, R4 with M4, M3 (`UndauntedMetagame/routes.json`) (the workspace and `crates/protocol`, starting with the invite
 types and builder), R8 and the `cargo` entry of X6. Branch protection still has to be switched to require only
 `CI ok` (R8).
 
