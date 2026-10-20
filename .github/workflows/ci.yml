@@ -70,8 +70,9 @@ jobs:
               - .github/workflows/**
             rust:
               - rust/**
-              # The metagame crate embeds the last Drizzle migration and tests against all of them.
+              # The metagame crate embeds the last Drizzle migration and the vendor data, and tests against them.
               - UndauntedMetagame/src/drizzle/**
+              - UndauntedMetagame/src/vendor/**
             native:
               - native/**
             client-mods:

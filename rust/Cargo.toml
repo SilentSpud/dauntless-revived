@@ -42,6 +42,7 @@ subtle = "2"
 thiserror = "2"
 tokio = { version = "1", features = ["rt", "macros"] }
 tower = { version = "0.5", features = ["util"] }
+tower-http = { version = "0.7", features = ["fs"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt", "registry", "std"] }
 uuid = { version = "1", features = ["v4"] }

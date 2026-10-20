@@ -43,6 +43,10 @@ Done so far:
   the lateness of a 20 ms timer on the async runtime, which is what Node measures; `memoryMB.heapUsed` is `null`, as
   there is no GC heap) and M28 (`App::key_revocations`, a broadcast channel). `service_kit::json::js_number` writes
   floats as `JSON.stringify` does (`1`, not `1.0`).
+- Metagame B1: M12 (`metagame::storeimages`, `tower-http` `ServeFile` behind Node's name check), M26
+  (`metagame::progression_config` with Node's checks and messages; the vendor files built in by `metagame::vendor`,
+  typed per area in M29) and the metagame's limiter set (`metagame::limits`; the per-account `PlayerMutation` limit is
+  applied with its routes in M29). Left of B1: M15, which belongs to each area's port.
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.
