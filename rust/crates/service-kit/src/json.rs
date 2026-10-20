@@ -1,5 +1,5 @@
-//! JSON replies as Express's `res.json` sends them (MIGRATION_PLAN.md M7, SB1): the body is
-//! `serde_json`'s compact text and the type is `application/json; charset=utf-8` (axum's own
+//! JSON replies as Express's `res.json` sends them (MIGRATION_PLAN.md M7, SB1): the body is the text
+//! `JSON.stringify` writes (`crate::jsjson`) and the type is `application/json; charset=utf-8` (axum's own
 //! `Json` leaves the charset out). No ETag (D16) and no `X-Powered-By`.
 
 use axum::http::StatusCode;
@@ -13,8 +13,13 @@ pub struct Json<T>(pub T);
 
 impl<T: Serialize> IntoResponse for Json<T> {
     fn into_response(self) -> Response {
-        match serde_json::to_vec(&self.0) {
-            Ok(body) => ([(CONTENT_TYPE, HeaderValue::from_static(JSON_UTF8))], body).into_response(),
+        // Written as JSON.stringify writes it (numbers, escapes, key order): crate::jsjson.
+        match serde_json::to_value(&self.0) {
+            Ok(value) => (
+                [(CONTENT_TYPE, HeaderValue::from_static(JSON_UTF8))],
+                crate::jsjson::stringify(&value),
+            )
+                .into_response(),
             Err(error) => {
                 tracing::error!(err = &error as &dyn std::error::Error, "Could not serialize a reply");
                 StatusCode::INTERNAL_SERVER_ERROR.into_response()
