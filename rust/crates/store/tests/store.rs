@@ -167,3 +167,66 @@ fn a_database_with_unknown_tables_is_refused() {
         Err(Error::Adoption(_))
     ));
 }
+
+#[derive(QueryableByName)]
+struct Text1 {
+    #[diesel(sql_type = Text)]
+    integrity_check: String,
+}
+
+// M17: a backup taken while saves keep coming finishes, is consistent, and the saves aren't blocked.
+#[tokio::test(flavor = "multi_thread")]
+async fn a_backup_under_constant_writes_is_one_consistent_snapshot() {
+    let (dir, store) = open();
+    // About 40 MB, so the copy takes several steps.
+    store
+        .write(|c| {
+            c.batch_execute(
+                "WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 10000)
+                 INSERT INTO items (name) SELECT hex(randomblob(2000)) FROM n",
+            )
+            .map_err(Error::from)
+        })
+        .await
+        .unwrap();
+
+    let writer = store.clone();
+    let stop = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let stop_writer = stop.clone();
+    let saves = tokio::spawn(async move {
+        let mut saves = 0u32;
+        while !stop_writer.load(std::sync::atomic::Ordering::Relaxed) {
+            writer
+                .write(|c| {
+                    c.batch_execute("INSERT INTO items (name) VALUES ('save')")
+                        .map_err(Error::from)
+                })
+                .await
+                .unwrap();
+            saves += 1;
+        }
+        saves
+    });
+
+    let destination = dir.path().join("backup.db");
+    store.backup(&destination, Duration::from_secs(60)).await.unwrap();
+    stop.store(true, std::sync::atomic::Ordering::Relaxed);
+    let saves = saves.await.unwrap();
+    assert!(saves > 0, "saves went on during the backup");
+
+    let mut copy = SqliteConnection::establish(destination.to_str().unwrap()).unwrap();
+    let check = diesel::sql_query("PRAGMA integrity_check")
+        .get_result::<Text1>(&mut copy)
+        .unwrap();
+    assert_eq!(check.integrity_check, "ok");
+    let copied = diesel::sql_query("SELECT count(*) AS n FROM items")
+        .get_result::<Count>(&mut copy)
+        .unwrap()
+        .n;
+    let live = store.read(count).await.unwrap();
+    assert!((10_000..=live).contains(&copied), "copied {copied} of {live}");
+    assert!(
+        store.backup(&destination, Duration::from_secs(60)).await.is_err(),
+        "never overwrites"
+    );
+}

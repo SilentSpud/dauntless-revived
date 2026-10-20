@@ -11,10 +11,12 @@
 //! Drizzle databases are adopted (D11, [`adopt`]), new ones get every migration.
 
 pub mod adopt;
+mod backup;
 pub mod drizzle;
 mod snapshot;
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use std::time::Duration;
 
 use diesel::connection::{Connection as _, SimpleConnection};
@@ -43,6 +45,8 @@ pub enum Error {
     Migration(String),
     #[error("the database can't be adopted: {0}")]
     Adoption(String),
+    #[error("backup: {0}")]
+    Backup(String),
     #[error("the database task panicked")]
     Panicked,
 }
@@ -93,6 +97,8 @@ struct JournalMode {
 pub struct Store {
     write: Pool<Manager>,
     read: Pool<Manager>,
+    path: Arc<PathBuf>,
+    busy_timeout: Duration,
 }
 
 impl Store {
@@ -125,7 +131,12 @@ impl Store {
             adopt::prepare(&mut conn, schema)?;
         }
         let read = pool(options.read_connections.max(1), true)?;
-        Ok(Self { write, read })
+        Ok(Self {
+            write,
+            read,
+            path: Arc::new(path.to_owned()),
+            busy_timeout: options.busy_timeout,
+        })
     }
 
     /// Runs `f` in a deferred transaction on a read connection. Writes fail (`query_only`).
@@ -176,7 +187,7 @@ fn checkout<E: From<Error>>(pool: &Pool<Manager>) -> Result<PooledConnection<Man
     pool.get().map_err(|e| E::from(Error::Pool(e)))
 }
 
-async fn run_blocking<T, E, F>(f: F) -> Result<T, E>
+pub(crate) async fn run_blocking<T, E, F>(f: F) -> Result<T, E>
 where
     F: FnOnce() -> Result<T, E> + Send + 'static,
     T: Send + 'static,

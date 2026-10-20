@@ -27,6 +27,10 @@ Done so far:
   app-wide parsers do, with body-parser's strict JSON, `qs`-style flat forms, gzip/deflate, the 50 MB limit and
   Express's production error page; a hook lets the metagame answer `JSON_ERROR_ROUTES` its own way. Not supported:
   `br` request bodies and charsets other than UTF-8 (415), nested `qs` keys.
+- Metagame B1: M17, `Store::backup`: a read-only `rusqlite` connection copies one snapshot (a read right after
+  `BEGIN`, or each step reads anew and the backup restarts after every save: in the test it never finished under
+  constant writes, and with the snapshot it takes under a second), checks a deadline between steps, never
+  overwrites, and leaves a single-file copy in rollback-journal mode.
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.
