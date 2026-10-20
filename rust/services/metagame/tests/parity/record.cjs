@@ -52,7 +52,9 @@ function normalize(text) {
     .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/g, "<date>")
     .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g, "<uuid>")
     .replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{1,2}, \d{4}\b/g, "<day>")
-    .replace(/[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}/g, "<invite>");
+    .replace(/[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}/g, "<invite>")
+    // The seconds left in a rate-limit window depend on how fast the requests ran
+    .replace(/; t=\d+/g, "; t=<s>");
 }
 
 const HEADERS = ["content-type", "cache-control", "retry-after", "ratelimit", "ratelimit-policy", "content-security-policy", "x-content-type-options"];

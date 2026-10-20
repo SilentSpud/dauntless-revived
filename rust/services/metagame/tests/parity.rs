@@ -52,6 +52,8 @@ fn normalize(text: &str) -> String {
             r"[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}",
             "<invite>",
         ),
+        // The seconds left in a rate-limit window depend on how fast the requests ran
+        (r"; t=\d+", "; t=<s>"),
     ];
     rules.iter().fold(text.to_owned(), |text, (pattern, with)| {
         Regex::new(pattern).unwrap().replace_all(&text, *with).into_owned()

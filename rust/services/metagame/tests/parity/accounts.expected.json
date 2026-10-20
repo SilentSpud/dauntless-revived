@@ -144,7 +144,7 @@
       "status": 200,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"30-in-10min\"; r=29; t=600",
+        "ratelimit": "\"30-in-10min\"; r=29; t=<s>",
         "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"access_token\":\"<jwt>\",\"token_type\":\"bearer\",\"expires_at\":\"<date>\",\"features\":[\"Achievements\",\"AntiCheat\",\"Ecom\",\"Voice\"],\"organization_id\":\"o-krlzxj88qrtb69fredeuaf887bl5az\",\"product_id\":\"prod-jackal\",\"sandbox_id\":\"jackal\",\"deployment_id\":\"53565ba467df4edbb6f5a3d939a8b4f2\",\"expires_in\":86400,\"refresh_token\":\"refresh.token.lol\",\"refresh_expires_at\":\"<date>\",\"account_id\":\"UID-a\"}"
@@ -153,7 +153,7 @@
       "request": "POST /account/api/oauth/token",
       "status": 400,
       "headers": {
-        "ratelimit": "\"30-in-10min\"; r=29; t=600",
+        "ratelimit": "\"30-in-10min\"; r=29; t=<s>",
         "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": ""
@@ -163,7 +163,7 @@
       "status": 403,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"30-in-10min\"; r=28; t=600",
+        "ratelimit": "\"30-in-10min\"; r=28; t=<s>",
         "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"error\":\"account_banned\",\"reason\":\"griefing\"}"
@@ -173,7 +173,7 @@
       "status": 500,
       "headers": {
         "content-type": "text/html; charset=utf-8",
-        "ratelimit": "\"30-in-10min\"; r=27; t=600",
+        "ratelimit": "\"30-in-10min\"; r=27; t=<s>",
         "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:",
         "content-security-policy": "default-src 'none'",
         "x-content-type-options": "nosniff"
@@ -185,7 +185,7 @@
       "status": 200,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=119; t=60",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"active\":true,\"scope\":\"basic_profile friends_list presence\",\"token_type\":\"bearer\",\"expires_in\":86400,\"expires_at\":\"<date>\",\"account_id\":\"9626f441055349ce8cb7d7d5a483eaa2\",\"client_id\":\"xyza7891lhxMVYGCON7LgnKZZ8HQGD5H\",\"application_id\":\"fghi4567O03HROxEjwbn7kgXpBhnhWwv\"}"
@@ -195,7 +195,7 @@
       "status": 200,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=118; t=60",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"active\":true,\"scope\":\"basic_profile friends_list presence\",\"token_type\":\"bearer\",\"expires_in\":86400,\"expires_at\":\"<date>\",\"account_id\":\"UID-a\",\"client_id\":\"xyza7891lhxMVYGCON7LgnKZZ8HQGD5H\",\"application_id\":\"fghi4567O03HROxEjwbn7kgXpBhnhWwv\"}"
@@ -205,7 +205,7 @@
       "status": 200,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=117; t=60",
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"active\":true,\"scope\":\"basic_profile friends_list presence\",\"token_type\":\"bearer\",\"expires_in\":86400,\"expires_at\":\"<date>\",\"account_id\":\"9626f441055349ce8cb7d7d5a483eaa2\",\"client_id\":\"xyza7891lhxMVYGCON7LgnKZZ8HQGD5H\",\"application_id\":\"fghi4567O03HROxEjwbn7kgXpBhnhWwv\"}"
@@ -517,7 +517,7 @@
       "status": 200,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=119; t=60",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"code\":\"<invite>\"}"
@@ -527,7 +527,7 @@
       "status": 400,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=118; t=60",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"error\":\"bad_request\",\"message\":\"uses must be a whole number from 1 to 1000, and name a string\"}"
@@ -537,7 +537,7 @@
       "status": 400,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=117; t=60",
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"error\":\"bad_request\",\"message\":\"uses must be a whole number from 1 to 1000, and name a string\"}"
@@ -547,7 +547,7 @@
       "status": 400,
       "headers": {
         "content-type": "application/json; charset=utf-8",
-        "ratelimit": "\"120-in-1min\"; r=116; t=60",
+        "ratelimit": "\"120-in-1min\"; r=116; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": "{\"error\":\"bad_request\",\"message\":\"uses must be a whole number from 1 to 1000, and name a string\"}"
@@ -556,7 +556,7 @@
       "request": "POST /undaunted/api/CreateInvite",
       "status": 403,
       "headers": {
-        "ratelimit": "\"120-in-1min\"; r=115; t=60",
+        "ratelimit": "\"120-in-1min\"; r=115; t=<s>",
         "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
       },
       "body": ""
