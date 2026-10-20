@@ -58,6 +58,7 @@ pub struct App {
     pub store_sweeps: crate::store::Sweeps,
     /// Each account's recent friend requests, for the request window.
     pub friend_requests: crate::friends::RecentRequests,
+    pub parties: crate::party::Parties,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,
@@ -72,6 +73,14 @@ impl App {
             settings: self.real_progression.clone(),
             config: self.progression_config.clone(),
             entitlement_defaults: self.entitlement_defaults.clone(),
+        }
+    }
+
+    /// How party replies show names and parties of one.
+    pub fn party_settings(&self) -> crate::party::Settings {
+        crate::party::Settings {
+            display_names: self.features.account_display_name,
+            solo_stub: self.features.party_solo_stub,
         }
     }
 

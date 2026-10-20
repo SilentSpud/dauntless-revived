@@ -109,8 +109,13 @@ Done so far:
 - Metagame B2, area 5 of M29, first part: friends (`routes/friends.ts`). The friends list and blocklist
   with their limits and the in-memory request window, blocks that drop the friendship, the guild invites
   and the Slayer Link invites between the two, and the static reads behind `MISC_ROUTES`. Two parity
-  scripts (`friends`, `friends-misc-off`, 64 replies) match Node. Not yet: the block's hook into party
-  invites (comes with party) and the friendship events chat presence listens to (comes with chat).
+  scripts (`friends`, `friends-misc-off`, 64 replies) match Node. Not yet: the friendship events chat
+  presence listens to (comes with chat).
+- Metagame B2, area 5 of M29, second part: parties (`routes/party.ts`). In-memory parties and invites
+  with their limits, the decline cooldown, sweeps of silent members and idle parties, leader eviction,
+  `PARTY_SOLO_STUB`, and a block dropping the party invites between the two. The party candidate is
+  modelled for matchmaking, which fills it in its part. Two parity scripts (`party`, `party-switches`,
+  55 replies) match Node; `tests/party.rs` covers the rules that wait on time.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

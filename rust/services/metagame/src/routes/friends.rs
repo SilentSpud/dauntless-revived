@@ -179,8 +179,13 @@ async fn block(
     player: Player,
     params: Params,
 ) -> Result<Response, AppError> {
-    change(state, parts, player, params, |conn, _, me, them| {
-        friends::block(conn, me, them)
+    change(state, parts, player, params, |conn, state, me, them| {
+        let outcome = friends::block(conn, me, them)?;
+        // The in-memory party invites between the two go too
+        if outcome == Outcome::Done("blocked") {
+            state.parties.lock().drop_invites_between(me, them);
+        }
+        Ok(outcome)
     })
     .await
 }

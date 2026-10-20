@@ -1,0 +1,393 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[]}"
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[]}"
+    },
+    {
+      "request": "POST /party",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"CANDIDATE_ID_LOL\",\"candidateState\":\"QUEUED_FOR_START\",\"gauntletLevel\":null,\"leaderPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"playerHuntId\":null,\"playerStates\":[{\"consoleSessionId\":null,\"displayName\":\"Ada\",\"isMemberOfCandidate\":true,\"platform\":\"win\",\"playerId\":\"UID-a\"}]}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"CANDIDATE_ID_LOL\",\"candidateState\":\"QUEUED_FOR_START\",\"gauntletLevel\":null,\"leaderPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"playerHuntId\":null,\"playerStates\":[{\"consoleSessionId\":null,\"displayName\":\"Ada\",\"isMemberOfCandidate\":true,\"platform\":\"win\",\"playerId\":\"UID-a\"}]}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[{\"recipientPlayerId\":\"UID-b\",\"sendingPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"sendingPlatform\":\"win\",\"sendingDisplayName\":\"Ada\"}]}"
+    },
+    {
+      "request": "PUT /party/invite/accept/nope",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite/accept/{{saved:partyId}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "PUT /party/invite/accept/{{saved:partyId}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "PUT /party/invite/accept/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[]}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[]}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[]}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /friends/api/public/blocklist/UID-d/UID-a",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[]}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /party/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"parties\":[{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}],\"invitations\":[{\"recipientPlayerId\":\"UID-f\",\"sendingPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"sendingPlatform\":\"win\",\"sendingDisplayName\":\"Ada\"}]}"
+    },
+    {
+      "request": "POST /party/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"parties\":[],\"invitations\":[{\"recipientPlayerId\":\"UID-f\",\"sendingPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"sendingPlatform\":\"win\",\"sendingDisplayName\":\"Ada\"}]}"
+    },
+    {
+      "request": "PUT /party/invite/accept/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\",\"UID-f\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Ada\",\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null},{\"playerId\":\"UID-f\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Fi\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "PUT /party/member/promote/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/member/promote/UID-b",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "PUT /party/member/promote/UID-x",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/leader/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/leader/UID-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/member/UID-c",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/member/UID-a",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/member/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"CANDIDATE_ID_LOL\",\"candidateState\":\"QUEUED_FOR_START\",\"gauntletLevel\":null,\"leaderPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"playerHuntId\":null,\"playerStates\":[{\"consoleSessionId\":null,\"displayName\":\"Ada\",\"isMemberOfCandidate\":true,\"platform\":\"win\",\"playerId\":\"UID-a\"}]}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-b\",\"playerIds\":[\"UID-b\",\"UID-f\"],\"playerStates\":[{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Bo\",\"consoleSessionId\":null},{\"playerId\":\"UID-f\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":\"Fi\",\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "DELETE /party/member/UID-f",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"candidateId\":\"CANDIDATE_ID_LOL\",\"candidateState\":\"QUEUED_FOR_START\",\"gauntletLevel\":null,\"leaderPlayerId\":\"UID-b\",\"partyId\":\"<uuid>\",\"playerHuntId\":null,\"playerStates\":[{\"consoleSessionId\":null,\"displayName\":\"Bo\",\"isMemberOfCandidate\":true,\"platform\":\"win\",\"playerId\":\"UID-b\"}]}"
+    },
+    {
+      "request": "DELETE /party/member",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /party/member",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /party/status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"parties\":[{\"candidateId\":\"CANDIDATE_ID_LOL\",\"candidateState\":\"QUEUED_FOR_START\",\"gauntletLevel\":null,\"leaderPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"playerHuntId\":null,\"playerStates\":[{\"consoleSessionId\":null,\"displayName\":\"Ada\",\"isMemberOfCandidate\":true,\"platform\":\"win\",\"playerId\":\"UID-a\"}]}],\"invitations\":[]}"
+    }
+  ]
+}

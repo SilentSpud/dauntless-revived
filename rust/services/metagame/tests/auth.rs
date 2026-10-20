@@ -76,6 +76,7 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         shop: Default::default(),
         store_sweeps: Default::default(),
         friend_requests: Default::default(),
+        parties: Default::default(),
         health: Arc::new(metagame::health::Health::new(false)),
         key_revocations: tokio::sync::broadcast::channel(64).0,
     });

@@ -22,6 +22,7 @@ pub mod limits;
 pub mod loadouts;
 pub mod middleman;
 pub mod origin;
+pub mod party;
 pub mod progression;
 pub mod progression_config;
 pub mod realprogression;

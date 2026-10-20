@@ -361,3 +361,13 @@ async fn friends() {
 async fn friends_misc_off() {
     run_area("friends-misc-off").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn party() {
+    run_area("party").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn party_switches() {
+    run_area("party-switches").await;
+}

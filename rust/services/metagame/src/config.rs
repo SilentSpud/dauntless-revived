@@ -27,6 +27,8 @@ pub struct Features {
     pub account_mapping: bool,
     /// `MISC_ROUTES=0`: the routes that 404'd upstream (the friends service's static reads) 404 again.
     pub misc_routes: bool,
+    /// `PARTY_SOLO_STUB=0`: a party of one answers like a real party that isn't queued.
+    pub party_solo_stub: bool,
 }
 
 impl Default for Features {
@@ -37,6 +39,7 @@ impl Default for Features {
             verify_stub_account: false,
             account_mapping: true,
             misc_routes: true,
+            party_solo_stub: true,
         }
     }
 }
@@ -154,6 +157,7 @@ impl Config {
                 verify_stub_account: on_off(env, "VERIFY_STUB_ACCOUNT", false),
                 account_mapping: env.get("ACCOUNT_MAPPING") != Some("0"),
                 misc_routes: env.raw("MISC_ROUTES") != Some("0"),
+                party_solo_stub: env.raw("PARTY_SOLO_STUB") != Some("0"),
             },
         })
     }

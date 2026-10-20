@@ -1,0 +1,53 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":{},\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "PUT /party/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /party/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"invitations\":[{\"recipientPlayerId\":\"UID-b\",\"sendingPlayerId\":\"UID-a\",\"partyId\":\"<uuid>\",\"sendingPlatform\":\"win\",\"sendingDisplayName\":\"Ada\"}]}"
+    },
+    {
+      "request": "PUT /party/invite/accept/{{saved:partyId}}",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":{},\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":{},\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-a\",\"playerIds\":[\"UID-a\",\"UID-b\"],\"playerStates\":[{\"playerId\":\"UID-a\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":{},\"consoleSessionId\":null},{\"playerId\":\"UID-b\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":{},\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    },
+    {
+      "request": "POST /party",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"partyId\":\"<uuid>\",\"leaderPlayerId\":\"UID-c\",\"playerIds\":[\"UID-c\"],\"playerStates\":[{\"playerId\":\"UID-c\",\"isMemberOfCandidate\":false,\"platform\":\"win\",\"displayName\":{},\"consoleSessionId\":null}],\"candidateState\":null,\"candidateId\":null,\"playerHuntId\":null,\"gauntletLevel\":null}"
+    }
+  ]
+}

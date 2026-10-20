@@ -160,6 +160,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         shop: config.store.clone(),
         store_sweeps: crate::store::Sweeps::default(),
         friend_requests: crate::friends::RecentRequests::default(),
+        parties: crate::party::Parties::default(),
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });
