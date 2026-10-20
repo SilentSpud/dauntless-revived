@@ -2,6 +2,7 @@
 # jobs of the families it changes, and the "CI ok" job sums them up for branch protection. A push to
 # dauntless-revived always runs everything.
 #  - the Rust workspace (rust/): fmt, clippy, tests on Linux and Windows, cargo-deny
+#  - the client mods: client-mods/manifest.json matches the files it lists
 #  - the four server packages: npm ci, build, unit tests
 #  - the launcher: typecheck, unit tests and the Windows installer, kept as a download for 7 days
 #  - the separate Linux and OpenBSD server ports (native Node services, Wine/SSH game launch wrappers, nftables/PF)
@@ -49,6 +50,7 @@ jobs:
     outputs:
       rust: ${{ steps.pick.outputs.rust }}
       native: ${{ steps.pick.outputs.native }}
+      client-mods: ${{ steps.pick.outputs.client-mods }}
       node: ${{ steps.pick.outputs.node }}
       launcher: ${{ steps.pick.outputs.launcher }}
       deploy: ${{ steps.pick.outputs.deploy }}
@@ -70,6 +72,8 @@ jobs:
               - rust/**
             native:
               - native/**
+            client-mods:
+              - client-mods/**
             node:
               - UndauntedMetagame/**
               - UndauntedGateway/**
@@ -102,14 +106,15 @@ jobs:
           ALL: ${{ (github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) || github.event_name == 'workflow_dispatch' || steps.filter.outputs.workflow == 'true' }}
           RUST: ${{ steps.filter.outputs.rust }}
           NATIVE: ${{ steps.filter.outputs.native }}
+          CLIENT_MODS: ${{ steps.filter.outputs.client-mods }}
           NODE: ${{ steps.filter.outputs.node }}
           LAUNCHER: ${{ steps.filter.outputs.launcher }}
           DEPLOY: ${{ steps.filter.outputs.deploy }}
           DOCS: ${{ steps.filter.outputs.docs }}
         run: |
           set -euo pipefail
-          for family in rust native node launcher deploy docs; do
-            var="${family^^}"
+          for family in rust native client-mods node launcher deploy docs; do
+            var="${family^^}"; var="${var//-/_}"
             value="${!var}"
             [ "$ALL" = true ] && value=true
             echo "$family=$value" | tee -a "$GITHUB_OUTPUT"
@@ -168,6 +173,29 @@ jobs:
           manifest-path: rust/Cargo.toml
           command: check
           arguments: --all-features
+
+  client-mods:
+    name: Client mods manifest
+    needs: changes
+    if: needs.changes.outputs.client-mods == 'true'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        # update-manifest.ps1 writes JSON the way Windows PowerShell 5.1 formats it.
+        shell: powershell
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The installers only copy files that match manifest.json (MIGRATION_PLAN.md R3).
+      - name: manifest.json lists every file with its current hash
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File client-mods\update-manifest.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          git diff --exit-code -- client-mods/manifest.json
+          if ($LASTEXITCODE -ne 0) { Write-Output '::error::client-mods/manifest.json is out of date. Run client-mods\update-manifest.ps1 and commit the result.'; exit 1 }
 
   node-packages:
     name: ${{ matrix.package }}
@@ -673,7 +701,7 @@ jobs:
   # as passed; a failed or cancelled job, or a failed change detection, fails it.
   ci-ok:
     name: CI ok
-    needs: [changes, rust, rust-deny, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: [changes, rust, rust-deny, client-mods, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
