@@ -26,13 +26,14 @@ sha2.workspace = true
 store.workspace = true
 subtle.workspace = true
 thiserror.workspace = true
-tokio = { workspace = true, features = ["sync", "time"] }
+tokio = { workspace = true, features = ["sync", "time", "rt-multi-thread", "net"] }
 tower.workspace = true
 tower-http.workspace = true
 tracing.workspace = true
 uuid.workspace = true
 
 [dev-dependencies]
+regex.workspace = true
 http-body-util.workspace = true
 serde_json.workspace = true
 tempfile.workspace = true

@@ -224,7 +224,7 @@ where
     }
 
     /// Fixes the state; requests no route matches get `fallback`.
-    pub fn into_service(self, state: S, fallback: fn() -> Response) -> RouterService {
+    pub fn into_service(self, state: S, fallback: fn(&Request<Body>) -> Response) -> RouterService {
         let routes = self
             .routes
             .into_iter()
@@ -256,7 +256,7 @@ struct Route {
 #[derive(Clone)]
 pub struct RouterService {
     routes: Arc<Vec<Route>>,
-    fallback: fn() -> Response,
+    fallback: fn(&Request<Body>) -> Response,
 }
 
 impl Service<Request<Body>> for RouterService {
@@ -286,8 +286,8 @@ impl Service<Request<Body>> for RouterService {
                 }
             }
         }
-        let fallback = self.fallback;
-        Box::pin(async move { Ok(fallback()) })
+        let response = (self.fallback)(&request);
+        Box::pin(async move { Ok(response) })
     }
 }
 

@@ -42,6 +42,11 @@ impl Env {
         }
     }
 
+    /// The value as set, also when it is empty.
+    pub fn raw(&self, name: &str) -> Option<&str> {
+        self.values.get(name).map(String::as_str)
+    }
+
     /// The value, or `None` when it is unset or empty (the Node code treats both alike).
     pub fn get(&self, name: &str) -> Option<&str> {
         self.values.get(name).map(String::as_str).filter(|v| !v.is_empty())

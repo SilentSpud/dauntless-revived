@@ -1,0 +1,701 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /features/platform/win",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"crossplay\":true,\"crossprogression\":true}}"
+    },
+    {
+      "request": "GET /FEATURES/platform/WIN/",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"crossplay\":true,\"crossprogression\":true}}"
+    },
+    {
+      "request": "GET /account/link/epic/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"isLinked\":true}}"
+    },
+    {
+      "request": "POST /login",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error_code\":\"TicketRateOk\",\"message\":\"\",\"state\":\"OPEN\",\"timeout\":8000,\"title\":\"\"}"
+    },
+    {
+      "request": "POST /login",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /login",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /login",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /accountinfo",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"creationDate\":\"2000-01-01 00:00:00\",\"email\":null,\"preferredLanguage\":null,\"username\":\"Ada\",\"verified\":true}"
+    },
+    {
+      "request": "GET /tags",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"tags\":[]}"
+    },
+    {
+      "request": "GET /tags",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"tags\":[]}"
+    },
+    {
+      "request": "PUT /gamesession/epic",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"error_code\":null,\"sessionid\":\"SESSION_ID_LOL\",\"sessionToken\":\"<jwt>\"}}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-b\",\"username\":\"Bo\",\"linkedAccounts\":[{\"accountId\":\"UID-b\",\"accountType\":\"epic\"}],\"isSubscribed\":true,\"language\":null}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-owner\",\"username\":\"Slayer\",\"linkedAccounts\":[{\"accountId\":\"UID-owner\",\"accountType\":\"epic\"}],\"isSubscribed\":true,\"language\":null}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"username\":\"Ada\",\"linkedAccounts\":[{\"accountId\":\"UID-a\",\"accountType\":\"epic\"}],\"isSubscribed\":true,\"language\":null}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"username\":\"Ada\",\"linkedAccounts\":[{\"accountId\":\"UID-a\",\"accountType\":\"epic\"}],\"isSubscribed\":true,\"language\":null}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /accountinfo/public",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /account/api/oauth/token",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"30-in-10min\"; r=29; t=600",
+        "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"access_token\":\"<jwt>\",\"token_type\":\"bearer\",\"expires_at\":\"<date>\",\"features\":[\"Achievements\",\"AntiCheat\",\"Ecom\",\"Voice\"],\"organization_id\":\"o-krlzxj88qrtb69fredeuaf887bl5az\",\"product_id\":\"prod-jackal\",\"sandbox_id\":\"jackal\",\"deployment_id\":\"53565ba467df4edbb6f5a3d939a8b4f2\",\"expires_in\":86400,\"refresh_token\":\"refresh.token.lol\",\"refresh_expires_at\":\"<date>\",\"account_id\":\"UID-a\"}"
+    },
+    {
+      "request": "POST /account/api/oauth/token",
+      "status": 400,
+      "headers": {
+        "ratelimit": "\"30-in-10min\"; r=29; t=600",
+        "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /account/api/oauth/token",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"30-in-10min\"; r=28; t=600",
+        "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"account_banned\",\"reason\":\"griefing\"}"
+    },
+    {
+      "request": "POST /account/api/oauth/token",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "ratelimit": "\"30-in-10min\"; r=27; t=600",
+        "ratelimit-policy": "\"30-in-10min\"; q=30; w=600; pk=:MTJjYTE3YjQ5YWYy:",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "GET /account/api/oauth/verify",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=119; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"active\":true,\"scope\":\"basic_profile friends_list presence\",\"token_type\":\"bearer\",\"expires_in\":86400,\"expires_at\":\"<date>\",\"account_id\":\"9626f441055349ce8cb7d7d5a483eaa2\",\"client_id\":\"xyza7891lhxMVYGCON7LgnKZZ8HQGD5H\",\"application_id\":\"fghi4567O03HROxEjwbn7kgXpBhnhWwv\"}"
+    },
+    {
+      "request": "GET /account/api/oauth/verify",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=118; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"active\":true,\"scope\":\"basic_profile friends_list presence\",\"token_type\":\"bearer\",\"expires_in\":86400,\"expires_at\":\"<date>\",\"account_id\":\"UID-a\",\"client_id\":\"xyza7891lhxMVYGCON7LgnKZZ8HQGD5H\",\"application_id\":\"fghi4567O03HROxEjwbn7kgXpBhnhWwv\"}"
+    },
+    {
+      "request": "GET /account/api/oauth/verify",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=117; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"active\":true,\"scope\":\"basic_profile friends_list presence\",\"token_type\":\"bearer\",\"expires_in\":86400,\"expires_at\":\"<date>\",\"account_id\":\"9626f441055349ce8cb7d7d5a483eaa2\",\"client_id\":\"xyza7891lhxMVYGCON7LgnKZZ8HQGD5H\",\"application_id\":\"fghi4567O03HROxEjwbn7kgXpBhnhWwv\"}"
+    },
+    {
+      "request": "GET /account/api/public/account/UID-owner",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"UID-owner\",\"displayName\":\"Slayer\",\"externalAuths\":{}}"
+    },
+    {
+      "request": "GET /account/api/public/account/UID-owner",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /account/api/public/account/UID-nobody",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /account/api/public/account/displayName/SLAYER",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"UID-owner\",\"displayName\":\"Slayer\",\"externalAuths\":{}}"
+    },
+    {
+      "request": "GET /account/api/public/account/displayName/nobody",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /account/api/public/account/displayName/Ada",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /account/api/public/account/UID-a/externalAuths",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /account/mapping",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountMappings\":{\"UID-owner\":{\"accountId\":\"UID-owner\",\"accountType\":\"phoenix\"},\"UID-b\":{\"accountId\":\"UID-b\",\"accountType\":\"phoenix\"}},\"code\":\"OK\",\"message\":\"\",\"payload\":{\"accountMappings\":{\"UID-owner\":{\"accountId\":\"UID-owner\",\"accountType\":\"phoenix\"},\"UID-b\":{\"accountId\":\"UID-b\",\"accountType\":\"phoenix\"}}}}"
+    },
+    {
+      "request": "POST /account/mapping",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountMappings\":{\"UID-a\":{\"accountId\":\"UID-a\",\"accountType\":\"epic\"}},\"code\":\"OK\",\"message\":\"\",\"payload\":{\"accountMappings\":{\"UID-a\":{\"accountId\":\"UID-a\",\"accountType\":\"epic\"}}}}"
+    },
+    {
+      "request": "POST /account/mapping",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountMappings\":{},\"code\":\"OK\",\"message\":\"\",\"payload\":{\"accountMappings\":{}}}"
+    },
+    {
+      "request": "DELETE /account/api/oauth/sessions/kill",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /account/api/oauth/sessions/kill/some-token",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /account/api/public/account?accountId=UID-owner&accountId=UID-a&accountId=UID-owner&accountId=nope",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"id\":\"UID-owner\",\"displayName\":\"Slayer\",\"externalAuths\":{}},{\"id\":\"UID-a\",\"displayName\":\"Ada\",\"externalAuths\":{}}]"
+    },
+    {
+      "request": "GET /account/api/public/account?accountId=",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "GET /account/api/public/account",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"id\":\"UID-a\",\"displayName\":\"Ada\",\"name\":\"\",\"lastName\":\"\",\"email\":\"\",\"failedLoginAttempts\":0,\"lastLogin\":\"<date>\",\"numberOfDisplayNameChanges\":0,\"ageGroup\":\"ADULT\",\"headless\":false,\"country\":\"US\",\"lastNameChange\":\"<date>\",\"preferredLanguage\":\"en\",\"canUpdateDisplayName\":false,\"tfaEnabled\":false,\"emailVerified\":true,\"minorVerified\":false,\"minorStatus\":\"NOT_MINOR\"}"
+    },
+    {
+      "request": "GET /undaunted/api/RegistrationStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"RegistrationMode\":\"OPEN\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UUK\":\"<uuk>\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"username_taken\",\"message\":\"That username is taken.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"username_invalid\",\"message\":\"Usernames are 3-16 characters: letters, numbers and underscore.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"bad_request\",\"message\":\"The request body is not JSON, or a field is missing or of the wrong type.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register/",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"bad_request\",\"message\":\"The request body is not valid JSON.\"}"
+    },
+    {
+      "request": "POST /login",
+      "status": 400,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "GET /undaunted/api/UsernameAvailable?Username=ada",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"available\":false,\"error\":\"username_taken\",\"message\":\"That username is taken.\"}"
+    },
+    {
+      "request": "GET /undaunted/api/UsernameAvailable?Username=%20Fresh_Name%20",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"available\":true}"
+    },
+    {
+      "request": "GET /undaunted/api/UsernameAvailable?Username=x",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"available\":false,\"error\":\"username_invalid\",\"message\":\"Usernames are 3-16 characters: letters, numbers and underscore.\"}"
+    },
+    {
+      "request": "GET /undaunted/api/UsernameAvailable",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"available\":false,\"error\":\"username_invalid\",\"message\":\"Usernames are 3-16 characters: letters, numbers and underscore.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/RegistrationStatus",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RegistrationStatus",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RegistrationStatus",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RegistrationStatus",
+      "status": 200,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/RegistrationStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"RegistrationMode\":\"INVITECODE\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invite_invalid\",\"message\":\"That invite code is not valid or has already been used.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invite_invalid\",\"message\":\"That invite code is not valid or has already been used.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"username_taken\",\"message\":\"That username is taken.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UUK\":\"<uuk>\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UUK\":\"<uuk>\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 401,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invite_invalid\",\"message\":\"That invite code is not valid or has already been used.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Register",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UUK\":\"<uuk>\"}"
+    },
+    {
+      "request": "GET /undaunted/api/InviteCodes",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"InviteCodes\":[{\"inviteCode\":\"TEST-CODE-0001\",\"usesRemaining\":0,\"infiniteUses\":false},{\"inviteCode\":\"TEST-OPEN-CODE\",\"usesRemaining\":0,\"infiniteUses\":true}]}"
+    },
+    {
+      "request": "POST /undaunted/api/CreateInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=119; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"code\":\"<invite>\"}"
+    },
+    {
+      "request": "POST /undaunted/api/CreateInvite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=118; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"bad_request\",\"message\":\"uses must be a whole number from 1 to 1000, and name a string\"}"
+    },
+    {
+      "request": "POST /undaunted/api/CreateInvite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=117; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"bad_request\",\"message\":\"uses must be a whole number from 1 to 1000, and name a string\"}"
+    },
+    {
+      "request": "POST /undaunted/api/CreateInvite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "ratelimit": "\"120-in-1min\"; r=116; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"bad_request\",\"message\":\"uses must be a whole number from 1 to 1000, and name a string\"}"
+    },
+    {
+      "request": "POST /undaunted/api/CreateInvite",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=115; t=60",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RegisterInviteCode",
+      "status": 200,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RegisterInviteCode",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "POST /undaunted/api/RegisterInviteCode",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RegisterInviteCode",
+      "status": 200,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /undaunted/api/InviteCode/NEW-CODE-1",
+      "status": 200,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/InviteCodes",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"InviteCodes\":[{\"inviteCode\":\"TEST-CODE-0001\",\"usesRemaining\":0,\"infiniteUses\":false},{\"inviteCode\":\"TEST-OPEN-CODE\",\"usesRemaining\":0,\"infiniteUses\":true},{\"inviteCode\":\"<invite>\",\"usesRemaining\":3,\"infiniteUses\":false},{\"inviteCode\":\"NEW-CODE-3\",\"usesRemaining\":0,\"infiniteUses\":true}]}"
+    },
+    {
+      "request": "GET /undaunted/api/GetAllUsers",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"Users\":[{\"Username\":\"Slayer\",\"UserId\":\"UID-owner\"},{\"Username\":\"Ada\",\"UserId\":\"UID-a\"},{\"Username\":\"Bo\",\"UserId\":\"UID-b\"},{\"Username\":\"Friend_One\",\"UserId\":\"<uid>\"},{\"Username\":\"Invited_A\",\"UserId\":\"<uid>\"},{\"Username\":\"Invited_B\",\"UserId\":\"<uid>\"},{\"Username\":\"Unlimited_1\",\"UserId\":\"<uid>\"}]}"
+    },
+    {
+      "request": "POST /undaunted/api/RenameUser",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UserId\":\"UID-a\",\"OldUsername\":\"Ada\",\"Username\":\"Ada_Two\"}"
+    },
+    {
+      "request": "POST /undaunted/api/RenameUser",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"username_taken\",\"message\":\"That username is taken.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/RenameUser",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/RenameUser",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"bad_request\",\"message\":\"The request body is not JSON, or a field is missing or of the wrong type.\"}"
+    },
+    {
+      "request": "GET /undaunted/api/GetUserInfo",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UserId\":\"UID-a\",\"Username\":\"Ada_Two\",\"IsAdmin\":false}"
+    },
+    {
+      "request": "GET /undaunted/api/GetUserInfo",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"account_banned\",\"reason\":\"griefing\"}"
+    },
+    {
+      "request": "GET /undaunted/api/GetUserInfo",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/GenerateJWTForUserId",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"JWT\":\"<jwt>\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GenerateJWTForUserId",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "GET /nothing/here",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /login",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error_code\":\"TicketRateOk\",\"message\":\"\",\"state\":\"OPEN\",\"timeout\":8000,\"title\":\"\"}"
+    }
+  ]
+}

@@ -34,6 +34,7 @@ jsonwebtoken = { version = "11", default-features = false, features = ["use_pem"
 # Bundled: one SQLite, built with the options in .cargo/config.toml, shared by Diesel and rusqlite (M17).
 libsqlite3-sys = { version = "0.38", features = ["bundled"] }
 percent-encoding = "2"
+regex = "1"
 rusqlite = { version = "0.40", features = ["backup"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -42,7 +43,7 @@ subtle = "2"
 thiserror = "2"
 tokio = { version = "1", features = ["rt", "macros"] }
 tower = { version = "0.5", features = ["util"] }
-tower-http = { version = "0.7", features = ["fs"] }
+tower-http = { version = "0.7", features = ["fs", "catch-panic"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt", "registry", "std"] }
 uuid = { version = "1", features = ["v4"] }

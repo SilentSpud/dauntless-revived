@@ -51,6 +51,6 @@ pub fn js_number_opt<S: serde::Serializer>(value: &Option<f64>, serializer: S) -
 }
 
 /// The reply of a request no route answers: 404 with an empty body, like the Node services' catch-all.
-pub fn not_found() -> Response {
+pub fn not_found(_request: &axum::extract::Request) -> Response {
     StatusCode::NOT_FOUND.into_response()
 }

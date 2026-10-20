@@ -50,6 +50,15 @@ Done so far:
 - Metagame B1: M20-M23 in `metagame::crypto`, tested against tokens and a recovery blob made by the Node
   metagame's own libraries (`tests/fixtures/make-node-crypto.cjs`): Node tokens verify; expired, wrong issuer or
   audience, `alg: none`, HS256 with the public key and bad signatures are refused.
+- Metagame B2, area 1 of M29 (accounts, auth, login, API keys): every route of `routes/login.ts` and `routes/eos.ts`
+  and the account routes of `/undaunted/api` (register, invites, registration mode, rename, user info, JWTs), the
+  keys left by the host scripts registered at start, and `metagame serve --env-file` with the app-wide middleware in
+  `app.ts`'s order. Checked by a parity test: `tests/parity/<area>.requests.json` is run against the Node
+  metagame by `record.cjs` and against Rust by `tests/parity.rs`, and the 87 replies (status, headers, body) are
+  identical; each later area adds its own script. The route table is checked against `routes.json`, and a test runs
+  the binary through start, a request and `shutdown`. Deliberate differences: `AUTH_MODE`, `DB_FILENAME` and valid
+  signing keys are required at start (Node started and then hung or failed every login), and the feature switches
+  are read once at start. Not yet: `LOG_BODIES`.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

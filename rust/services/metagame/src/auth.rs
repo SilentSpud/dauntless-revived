@@ -162,28 +162,38 @@ pub struct UserInfo {
 }
 
 /// The account an account key belongs to (`GetUserInfoForApiKey`).
+/// The account id of a key, comparing every stored hash in constant time; the last match wins, as
+/// in the Node loop (`GetUserIDForAPIKey`). It needn't have a `users` row.
+fn account_for_key(conn: &mut store::Connection, key: &str) -> QueryResult<Option<String>> {
+    let hash = sha256_hex(key);
+    let keys: Vec<(String, String)> = userapikeys::table
+        .select((userapikeys::userId, userapikeys::keyHash))
+        .load(conn)?;
+    Ok(keys.into_iter().fold(None, |found, (user, stored)| {
+        if hashes_equal(&hash, &stored) {
+            Some(user)
+        } else {
+            found
+        }
+    }))
+}
+
+/// [`account_for_key`] on the read pool: the login's key lookup.
+pub async fn user_id_for_key(state: &AppState, key: &str) -> Result<Option<String>, AppError> {
+    let key = key.to_owned();
+    state
+        .store
+        .read(move |conn| account_for_key(conn, &key).map_err(AppError::from))
+        .await
+}
+
 pub async fn user_for_key(state: &AppState, key: &str) -> Result<Option<UserInfo>, AppError> {
     let dev = state.auth.dev_logins();
     let key = key.to_owned();
     state
         .store
         .read(move |conn| {
-            let user_id = if dev {
-                Some(key)
-            } else {
-                let hash = sha256_hex(&key);
-                let keys: Vec<(String, String)> = userapikeys::table
-                    .select((userapikeys::userId, userapikeys::keyHash))
-                    .load(conn)?;
-                // The last match wins, as in the Node loop.
-                keys.into_iter().fold(None, |found, (user, stored)| {
-                    if hashes_equal(&hash, &stored) {
-                        Some(user)
-                    } else {
-                        found
-                    }
-                })
-            };
+            let user_id = if dev { Some(key) } else { account_for_key(conn, &key)? };
             let Some(user_id) = user_id else {
                 return Ok::<_, AppError>(None);
             };

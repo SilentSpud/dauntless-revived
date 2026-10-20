@@ -137,6 +137,43 @@ impl Origin<'_> {
         })
     }
 
+    /// `DescribeOrigin`, for the request log: nothing for a direct request, ` via=gateway` or
+    /// ` via=proxy`. A gateway header the metagame can't trust is warned about at most once a minute.
+    pub fn describe(&self, config: &OriginConfig) -> &'static str {
+        static LAST_WARNING: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        if !self.is_proxied() {
+            return "";
+        }
+        if self.is_trusted_gateway(config) {
+            return " via=gateway";
+        }
+        if self.headers.contains_key(GATEWAY_HEADER) {
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_secs())
+                .unwrap_or(0);
+            let last = LAST_WARNING.load(std::sync::atomic::Ordering::Relaxed);
+            if now.saturating_sub(last) > 60
+                && LAST_WARNING
+                    .compare_exchange(
+                        last,
+                        now,
+                        std::sync::atomic::Ordering::Relaxed,
+                        std::sync::atomic::Ordering::Relaxed,
+                    )
+                    .is_ok()
+            {
+                let why = if config.gateway_secret.is_none() {
+                    "GATEWAY_SECRET is not set"
+                } else {
+                    "not the right secret, or not from loopback"
+                };
+                tracing::warn!("A request carried {GATEWAY_HEADER} but {why}; its forwarding headers are ignored");
+            }
+        }
+        " via=proxy"
+    }
+
     /// A caller on this machine (or in `GAMESERVER_ALLOW_FROM`) that came straight to the metagame.
     pub fn is_direct_local(&self, config: &OriginConfig, own: &OwnAddresses) -> bool {
         if self.is_proxied() {

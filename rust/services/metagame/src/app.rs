@@ -40,6 +40,11 @@ pub struct App {
     pub auth: AuthConfig,
     pub origin: OriginConfig,
     pub own_addresses: OwnAddresses,
+    pub features: crate::config::Features,
+    /// `REGISTRATION_MODE` as set, changed at runtime by POST /undaunted/api/RegistrationStatus.
+    pub registration_mode: std::sync::RwLock<Option<String>>,
+    pub limits: crate::limits::Limits,
+    pub store_images: crate::storeimages::StoreImages,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,
