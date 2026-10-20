@@ -263,7 +263,9 @@ fn after_scheme(value: &str) -> &str {
     value.get(7..).unwrap_or("")
 }
 
-async fn metagame_auth(parts: &Parts, state: &AppState) -> Result<MetagameAuth, Response> {
+/// `HasUndauntedMetagameAuth` on a request's parts, for handlers that check something before auth
+/// (`RealProgressionOnly` runs first).
+pub async fn metagame_auth(parts: &Parts, state: &AppState) -> Result<MetagameAuth, Response> {
     let authorization = header(parts, "authorization");
     if let Some(key) = header(parts, GAMESERVER_KEY) {
         let origin = origin(parts);

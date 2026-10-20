@@ -41,6 +41,14 @@ fn normalize(text: &str) -> String {
         ),
         (r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z", "<date>"),
         (
+            r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+            "<uuid>",
+        ),
+        (
+            r"\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{1,2}, \d{4}\b",
+            "<day>",
+        ),
+        (
             r"[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}",
             "<invite>",
         ),
@@ -212,4 +220,14 @@ async fn route_table_matches_node() {
         );
         last = Some(index);
     }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn characters() {
+    run_area("characters").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn characters_stub() {
+    run_area("characters-stub").await;
 }

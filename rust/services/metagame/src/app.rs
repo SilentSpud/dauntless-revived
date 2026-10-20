@@ -45,6 +45,10 @@ pub struct App {
     pub registration_mode: std::sync::RwLock<Option<String>>,
     pub limits: crate::limits::Limits,
     pub store_images: crate::storeimages::StoreImages,
+    pub progression: crate::progression::ProgressionMode,
+    /// `ENTITLEMENTS_DEFAULT`.
+    pub entitlement_defaults: Vec<String>,
+    pub history: crate::characters::HistorySettings,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,

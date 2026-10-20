@@ -4,13 +4,16 @@
 pub mod accounts;
 pub mod app;
 pub mod auth;
+pub mod characters;
 pub mod config;
 pub mod crypto;
 pub mod db;
 pub mod dbtools;
+pub mod entitlements;
 pub mod health;
 pub mod limits;
 pub mod origin;
+pub mod progression;
 pub mod progression_config;
 pub mod redact;
 pub mod routes;

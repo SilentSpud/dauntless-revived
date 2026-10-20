@@ -59,6 +59,13 @@ Done so far:
   the binary through start, a request and `shutdown`. Deliberate differences: `AUTH_MODE`, `DB_FILENAME` and valid
   signing keys are required at start (Node started and then hung or failed every login), and the feature switches
   are read once at start. Not yet: `LOG_BODIES`.
+- Metagame B2, area 2 of M29, first part: characters (list, create, save with the version check and the
+  `SERIE_dojo` trigger), the active character, save history with its retention and both admin rollbacks, and
+  entitlements (the real-mode routes, the stub replies and fall-throughs of stub mode, and the admin grant and
+  revoke), with the progression-mode and audit-row plumbing the real-mode routes share. Two parity scripts
+  (`characters`, `characters-stub`, 77 replies) match Node. Stored and echoed JSON is rewritten as
+  `JSON.stringify` writes it (`service_kit::jsjson`) and names sort in ICU's `localeCompare` order
+  (`service_kit::collate`). Left of the area: loadouts and inventory.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

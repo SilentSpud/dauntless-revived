@@ -1,8 +1,11 @@
 //! The metagame's routes, one module per Node route file, merged in the order `app.ts` mounts them.
 
 pub mod admin_accounts;
+pub mod admin_history;
+pub mod character;
 pub mod eos;
 pub mod login;
+pub mod system;
 
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
@@ -39,10 +42,20 @@ pub fn query(raw: Option<&str>) -> serde_json::Map<String, Value> {
     }
 }
 
+/// What Express does when a route passes the request on (`next("route")`) and nothing else matches:
+/// the catch-all "Unstubbed route" 404.
+pub fn fall_through(parts: &axum::http::request::Parts) -> Response {
+    tracing::warn!("Unstubbed route {} {}", parts.method, parts.uri.path());
+    empty(StatusCode::NOT_FOUND)
+}
+
 /// Every route of the metagame ported so far, in Node's mount order.
 pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
     service_kit::routing::Router::new()
         .merge(login::routes())
         .merge(eos::routes(state))
+        .merge(system::routes())
+        .merge(character::routes())
         .merge(admin_accounts::routes(state))
+        .merge(admin_history::routes())
 }

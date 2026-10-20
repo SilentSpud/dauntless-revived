@@ -56,6 +56,9 @@ pub struct Config {
     pub backend_health: bool,
     pub log_requests: bool,
     pub store_images_dir: PathBuf,
+    pub progression: crate::progression::ProgressionMode,
+    pub entitlement_defaults: Vec<String>,
+    pub history: crate::characters::HistorySettings,
     pub features: Features,
 }
 
@@ -130,6 +133,12 @@ impl Config {
             backend_health: env.get("BACKEND_HEALTH") == Some("1"),
             log_requests: env.get("LOG_REQUESTS") != Some("0"),
             store_images_dir: raw(env, "STORE_IMAGES_DIR").map_or_else(|| "store-images".into(), PathBuf::from),
+            progression: crate::progression::ProgressionMode::new(
+                env.raw("PROGRESSION_MODE"),
+                env.raw("PROGRESSION_REAL_ACCOUNTS"),
+            ),
+            entitlement_defaults: crate::entitlements::defaults_from(env.raw("ENTITLEMENTS_DEFAULT")),
+            history: crate::characters::HistorySettings::from_env(env),
             features: Features {
                 accountinfo_public_legacy: env.get("ACCOUNTINFO_PUBLIC_LEGACY") == Some("1"),
                 account_display_name: env.get("ACCOUNT_DISPLAY_NAME") != Some("0"),

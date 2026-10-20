@@ -1,0 +1,507 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"level\\\":7}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":3}]"
+    },
+    {
+      "request": "GET /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-b\",\"createdDate\":\"<day>\",\"data\":\"{}\",\"id\":\"<uuid>\",\"lastModifiedDate\":\"<day>\",\"name\":\"Bo\",\"updateVersion\":0}]"
+    },
+    {
+      "request": "GET /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-b\",\"createdDate\":\"<day>\",\"data\":\"{}\",\"id\":\"<uuid>\",\"lastModifiedDate\":\"<day>\",\"name\":\"Bo\",\"updateVersion\":0}]"
+    },
+    {
+      "request": "GET /character",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "GET /character",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "PUT /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{}\",\"id\":\"<uuid>\",\"lastModifiedDate\":\"<day>\",\"name\":\"Second\",\"updateVersion\":0}"
+    },
+    {
+      "request": "PUT /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{}\",\"id\":\"<uuid>\",\"lastModifiedDate\":\"<day>\",\"name\":\"5.0\",\"updateVersion\":0}"
+    },
+    {
+      "request": "PUT /character",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "PUT /character",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "POST /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"1\\\":false,\\\"2\\\":true,\\\"level\\\":8,\\\"b\\\":100,\\\"name\\\":\\\"é\\\"}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":4}"
+    },
+    {
+      "request": "POST /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"1\\\":false,\\\"2\\\":true,\\\"level\\\":8,\\\"b\\\":100,\\\"name\\\":\\\"é\\\"}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":4}"
+    },
+    {
+      "request": "POST /character",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"level\\\":9}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":5}"
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /character",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "POST /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"SERIE_cr19_series_1_ftue\\\":\\\"{\\\\\\\"929A333B40E413C41E47B0A425EC3349\\\\\\\":{\\\\\\\"Status\\\\\\\":3}}\\\",\\\"SERIE_dojo\\\":\\\"{\\\\\\\"ID\\\\\\\":\\\\\\\"Dojo\\\\\\\",\\\\\\\"Status\\\\\\\":0,\\\\\\\"62B91BD94558409B4F7352B5B96F3ED7\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"6CA2C43B46334BC06F73DEB5F2BFFEC1\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0},\\\\\\\"3A7241AA43743647D3C1E39E8976E4F3\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0}},\\\\\\\"816CBFD94D16EDA252BD1D8461209568\\\\\\\":{\\\\\\\"Status\\\\\\\":1},\\\\\\\"B152371947599B3C2D55BE9B91439C37\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"D3F19E2248AECEF5C5C3C8B9E2AC2C67\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0},\\\\\\\"0407C2134FE0BEFE3EC791999632D2BC\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0}},\\\\\\\"DFE54F884C6FC60688B6C494D79ADD29\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"9D1B0D754DBC896034F942AD625F9D93\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0}}}\\\"}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":6}"
+    },
+    {
+      "request": "POST /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"SERIE_cr19_series_1_ftue\\\":\\\"{not json\\\",\\\"level\\\":10}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":7}"
+    },
+    {
+      "request": "GET /undaunted/api/SaveHistory?CharacterId=char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"Characters\":[{\"CharacterId\":\"char-a1\",\"UserId\":\"UID-a\",\"Name\":\"Ada\",\"UpdateVersion\":7,\"CharacterVersions\":[{\"Version\":7,\"SavedDate\":\"<date>\",\"Reason\":\"save:gameserver\",\"Size\":51},{\"Version\":6,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\",\"Size\":813},{\"Version\":5,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\",\"Size\":11}],\"LoadoutVersions\":[{\"Version\":2,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\"},{\"Version\":1,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\"}]}]}"
+    },
+    {
+      "request": "GET /undaunted/api/SaveHistory?UserId=UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"Characters\":[{\"CharacterId\":\"char-a1\",\"UserId\":\"UID-a\",\"Name\":\"Ada\",\"UpdateVersion\":7,\"CharacterVersions\":[{\"Version\":7,\"SavedDate\":\"<date>\",\"Reason\":\"save:gameserver\",\"Size\":51},{\"Version\":6,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\",\"Size\":813},{\"Version\":5,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\",\"Size\":11}],\"LoadoutVersions\":[{\"Version\":2,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\"},{\"Version\":1,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\"}]},{\"CharacterId\":\"<uuid>\",\"UserId\":\"UID-a\",\"Name\":\"Second\",\"UpdateVersion\":0,\"CharacterVersions\":[],\"LoadoutVersions\":[]},{\"CharacterId\":\"<uuid>\",\"UserId\":\"UID-a\",\"Name\":\"5.0\",\"UpdateVersion\":0,\"CharacterVersions\":[],\"LoadoutVersions\":[]}]}"
+    },
+    {
+      "request": "GET /undaunted/api/SaveHistory",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/SaveHistory?CharacterId=nope",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/SaveHistory?UserId=UID-a",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RollbackCharacter",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"CharacterId\":\"char-a1\",\"RolledBackTo\":6,\"PreviousVersion\":7,\"UpdateVersion\":8}"
+    },
+    {
+      "request": "POST /undaunted/api/RollbackCharacter",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RollbackCharacter",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RollbackCharacter",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RollbackCharacter",
+      "status": 500,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "content-security-policy": "default-src 'none'",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Internal Server Error</pre>\n</body>\n</html>\n"
+    },
+    {
+      "request": "GET /character",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{\\\"SERIE_cr19_series_1_ftue\\\":\\\"{\\\\\\\"929A333B40E413C41E47B0A425EC3349\\\\\\\":{\\\\\\\"Status\\\\\\\":3}}\\\",\\\"SERIE_dojo\\\":\\\"{\\\\\\\"ID\\\\\\\":\\\\\\\"Dojo\\\\\\\",\\\\\\\"Status\\\\\\\":0,\\\\\\\"62B91BD94558409B4F7352B5B96F3ED7\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"6CA2C43B46334BC06F73DEB5F2BFFEC1\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0},\\\\\\\"3A7241AA43743647D3C1E39E8976E4F3\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0}},\\\\\\\"816CBFD94D16EDA252BD1D8461209568\\\\\\\":{\\\\\\\"Status\\\\\\\":1},\\\\\\\"B152371947599B3C2D55BE9B91439C37\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"D3F19E2248AECEF5C5C3C8B9E2AC2C67\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0},\\\\\\\"0407C2134FE0BEFE3EC791999632D2BC\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0}},\\\\\\\"DFE54F884C6FC60688B6C494D79ADD29\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"9D1B0D754DBC896034F942AD625F9D93\\\\\\\":{\\\\\\\"Status\\\\\\\":0,\\\\\\\"CurrentAmount\\\\\\\":0,\\\\\\\"LastUpdateAmount\\\\\\\":0}}}\\\"}\",\"id\":\"char-a1\",\"lastModifiedDate\":\"<day>\",\"name\":\"Ada\",\"updateVersion\":8},{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{}\",\"id\":\"<uuid>\",\"lastModifiedDate\":\"<day>\",\"name\":\"Second\",\"updateVersion\":0},{\"accountId\":\"UID-a\",\"createdDate\":\"<day>\",\"data\":\"{}\",\"id\":\"<uuid>\",\"lastModifiedDate\":\"<day>\",\"name\":\"5.0\",\"updateVersion\":0}]"
+    },
+    {
+      "request": "POST /undaunted/api/RollbackLoadout",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"CharacterId\":\"char-a1\",\"RolledBackTo\":1,\"Version\":3}"
+    },
+    {
+      "request": "POST /undaunted/api/RollbackLoadout",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RollbackLoadout",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/SaveHistory?CharacterId=char-a1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"Characters\":[{\"CharacterId\":\"char-a1\",\"UserId\":\"UID-a\",\"Name\":\"Ada\",\"UpdateVersion\":8,\"CharacterVersions\":[{\"Version\":8,\"SavedDate\":\"<date>\",\"Reason\":\"rollback:6\",\"Size\":813},{\"Version\":7,\"SavedDate\":\"<date>\",\"Reason\":\"save:gameserver\",\"Size\":51},{\"Version\":6,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\",\"Size\":813}],\"LoadoutVersions\":[{\"Version\":3,\"SavedDate\":\"<date>\",\"Reason\":\"rollback:1\"},{\"Version\":2,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\"},{\"Version\":1,\"SavedDate\":\"<date>\",\"Reason\":\"save:client\"}]}]}"
+    },
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":[]}"
+    },
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":24,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":36,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":36,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"half\",\"duration\":2,\"activatedDate\":\"<date>\"},{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /entitlementv2/UID-nobody",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/half",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/half",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/season_free_any",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/season_free_any",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/season_free_any",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /undaunted/api/GrantEntitlement",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UserId\":\"UID-a\",\"Entitlements\":[{\"name\":\"admin_one\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /undaunted/api/GrantEntitlement",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UserId\":\"UID-a\",\"Entitlements\":[{\"name\":\"admin_one\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"admin_two\",\"duration\":48,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /undaunted/api/GrantEntitlement",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/GrantEntitlement",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/GrantEntitlement",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RevokeEntitlement",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UserId\":\"UID-a\",\"Revoked\":true,\"Entitlements\":[{\"name\":\"admin_two\",\"duration\":48,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /undaunted/api/RevokeEntitlement",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"UserId\":\"UID-a\",\"Revoked\":false,\"Entitlements\":[{\"name\":\"admin_two\",\"duration\":48,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"test_timed\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"Zeta_thing\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /undaunted/api/RevokeEntitlement",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/RevokeEntitlement",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

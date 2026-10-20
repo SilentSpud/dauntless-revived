@@ -150,6 +150,9 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         registration_mode: RwLock::new(config.registration_mode.clone()),
         limits: Limits::default(),
         store_images: StoreImages::load(&config.store_images_dir),
+        progression: config.progression.clone(),
+        entitlement_defaults: config.entitlement_defaults.clone(),
+        history: config.history,
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });
@@ -182,6 +185,10 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
         .map_err(|e| format!("Could not listen on {}:{}: {e}", config.bind_host, config.port))?;
     let bound = listener.local_addr().map_err(|e| e.to_string())?;
     tracing::info!("Dauntless Revived metagame on {}:{}", bound.ip(), bound.port());
+    if let Some(warning) = config.progression.warning() {
+        tracing::warn!("{warning}");
+    }
+    tracing::info!("Progression mode: {}", config.progression.describe());
     tracing::info!("Progression config: {}", progression.description);
     if config.origin.gateway_secret.is_some() {
         tracing::info!(

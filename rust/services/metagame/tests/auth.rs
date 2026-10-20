@@ -65,6 +65,9 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         registration_mode: std::sync::RwLock::new(Some("OPEN".into())),
         limits: metagame::limits::Limits::default(),
         store_images: metagame::storeimages::StoreImages::load(dir.path()),
+        progression: metagame::progression::ProgressionMode::default(),
+        entitlement_defaults: vec![],
+        history: metagame::characters::HistorySettings::default(),
         health: Arc::new(metagame::health::Health::new(false)),
         key_revocations: tokio::sync::broadcast::channel(64).0,
     });

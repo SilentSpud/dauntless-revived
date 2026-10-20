@@ -12,6 +12,7 @@ publish.workspace = true
 aes-gcm.workspace = true
 axum.workspace = true
 base64.workspace = true
+chrono.workspace = true
 clap.workspace = true
 diesel.workspace = true
 diesel_migrations.workspace = true

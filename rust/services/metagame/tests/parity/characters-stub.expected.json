@@ -1,0 +1,63 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":[]}"
+    },
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":[]}"
+    },
+    {
+      "request": "POST /entitlementv2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"x\",\"duration\":1,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "DELETE /entitlement/UID-b/x",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /entitlement/UID-b/x",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/x",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /entitlement/UID-a/x",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    }
+  ]
+}

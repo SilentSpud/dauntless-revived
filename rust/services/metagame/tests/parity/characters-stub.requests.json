@@ -1,0 +1,25 @@
+{
+  "about": "Entitlements in stub progression mode, where only UID-a gets real progression: stub replies and the routes that fall through to the catch-all 404 (MIGRATION_PLAN.md M29).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "REGISTRATION_MODE": "OPEN",
+    "NODE_ENV": "production",
+    "PROGRESSION_MODE": "stub",
+    "PROGRESSION_REAL_ACCOUNTS": "UID-a"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "requests": [
+    { "method": "GET", "path": "/entitlementsv2", "headers": { "authorization": "{{bearer:UID-b}}" } },
+    { "method": "GET", "path": "/entitlementsv2", "headers": { "authorization": "{{bearer:UID-a}}" } },
+    { "method": "POST", "path": "/entitlementv2/UID-b", "headers": { "authorization": "{{bearer:UID-b}}" }, "json": { "entitlement": "x", "duration": 1 } },
+    { "method": "POST", "path": "/entitlementv2/UID-a", "headers": { "x-undaunted-gameserver-apikey": "{{gs}}" }, "json": { "entitlement": "x", "duration": 1 } },
+    { "method": "DELETE", "path": "/entitlement/UID-b/x" },
+    { "method": "DELETE", "path": "/entitlement/UID-b/x", "headers": { "x-undaunted-gameserver-apikey": "{{gs}}" } },
+    { "method": "DELETE", "path": "/entitlement/UID-a/x" },
+    { "method": "DELETE", "path": "/entitlement/UID-a/x", "headers": { "x-undaunted-gameserver-apikey": "{{gs}}" } }
+  ]
+}
