@@ -1,0 +1,392 @@
+--- a/src/schema.rs
++++ b/src/schema.rs
+@@ -5,10 +5,10 @@
+         account_id -> Text,
+         reason -> Text,
+         address -> Nullable<Text>,
+-        active -> Integer,
+-        updated_at -> Integer,
++        active -> BigInt,
++        updated_at -> BigInt,
+         actor -> Text,
+-        expires_at -> Nullable<Integer>,
++        expires_at -> Nullable<BigInt>,
+     }
+ }
+ 
+@@ -17,7 +17,7 @@
+         account_id -> Text,
+         kind -> Text,
+         signal_hash -> Text,
+-        observed_at -> Integer,
++        observed_at -> BigInt,
+     }
+ }
+ 
+@@ -32,7 +32,7 @@
+ diesel::table! {
+     authepochs (userId) {
+         userId -> Text,
+-        epoch -> Integer,
++        epoch -> BigInt,
+     }
+ }
+ 
+@@ -40,7 +40,7 @@
+     blocks (blockerId, blockedId) {
+         blockerId -> Text,
+         blockedId -> Text,
+-        createdAt -> Integer,
++        createdAt -> BigInt,
+     }
+ }
+ 
+@@ -48,8 +48,8 @@
+     bounties (accountId, bountyId) {
+         accountId -> Text,
+         bountyId -> Text,
+-        slotIndex -> Nullable<Integer>,
+-        updateVersion -> Integer,
++        slotIndex -> Nullable<BigInt>,
++        updateVersion -> BigInt,
+         data -> Text,
+         updatedDate -> Text,
+     }
+@@ -69,16 +69,16 @@
+         userId -> Text,
+         #[sql_name = "breadcrumbs"]
+         breadcrumbs_ -> Text,
+-        updateVersion -> Integer,
++        updateVersion -> BigInt,
+     }
+ }
+ 
+ diesel::table! {
+     characterhistory (id) {
+-        id -> Integer,
++        id -> BigInt,
+         characterId -> Text,
+         userId -> Text,
+-        updateVersion -> Integer,
++        updateVersion -> BigInt,
+         name -> Text,
+         data -> Text,
+         savedDate -> Text,
+@@ -93,7 +93,7 @@
+         createdDate -> Text,
+         lastModifiedDate -> Text,
+         name -> Text,
+-        updateVersion -> Integer,
++        updateVersion -> BigInt,
+         data -> Text,
+     }
+ }
+@@ -137,7 +137,7 @@
+         accountId -> Text,
+         name -> Text,
+         activatedDate -> Text,
+-        duration -> Integer,
++        duration -> BigInt,
+         source -> Text,
+         grantedDate -> Text,
+         revokedDate -> Nullable<Text>,
+@@ -148,9 +148,9 @@
+     escalationprogression (accountId, seasonId) {
+         accountId -> Text,
+         seasonId -> Text,
+-        level -> Integer,
+-        xp -> Integer,
+-        updateVersion -> Integer,
++        level -> BigInt,
++        xp -> BigInt,
++        updateVersion -> BigInt,
+         contentHash -> Text,
+         updatedDate -> Text,
+     }
+@@ -161,7 +161,7 @@
+         accountId -> Text,
+         seasonId -> Text,
+         talentId -> Text,
+-        rank -> Integer,
++        rank -> BigInt,
+     }
+ }
+ 
+@@ -180,14 +180,14 @@
+         userHigh -> Text,
+         requesterId -> Text,
+         status -> Text,
+-        createdAt -> Integer,
+-        updatedAt -> Integer,
++        createdAt -> BigInt,
++        updatedAt -> BigInt,
+     }
+ }
+ 
+ diesel::table! {
+     gameserverapikeys (id) {
+-        id -> Integer,
++        id -> BigInt,
+         keyHash -> Nullable<Text>,
+     }
+ }
+@@ -204,8 +204,8 @@
+         guildId -> Text,
+         inviteeId -> Text,
+         inviterId -> Text,
+-        createdAt -> Integer,
+-        expiresAt -> Integer,
++        createdAt -> BigInt,
++        expiresAt -> BigInt,
+     }
+ }
+ 
+@@ -214,8 +214,8 @@
+         accountId -> Text,
+         guildId -> Text,
+         rank -> Text,
+-        joinedAt -> Integer,
+-        updatedAt -> Integer,
++        joinedAt -> BigInt,
++        updatedAt -> BigInt,
+     }
+ }
+ 
+@@ -227,8 +227,8 @@
+         nameplate -> Text,
+         nameplateKey -> Nullable<Text>,
+         leaderId -> Text,
+-        createdAt -> Integer,
+-        updatedAt -> Integer,
++        createdAt -> BigInt,
++        updatedAt -> BigInt,
+     }
+ }
+ 
+@@ -257,7 +257,7 @@
+ 
+ diesel::table! {
+     inventorylog (id) {
+-        id -> Integer,
++        id -> BigInt,
+         time -> Text,
+         userId -> Text,
+         characterId -> Text,
+@@ -267,20 +267,20 @@
+         operation -> Text,
+         catalogId -> Nullable<Text>,
+         instanceId -> Nullable<Text>,
+-        quantityChange -> Nullable<Integer>,
+-        quantityAfter -> Nullable<Integer>,
+-        updateVersion -> Nullable<Integer>,
++        quantityChange -> Nullable<BigInt>,
++        quantityAfter -> Nullable<BigInt>,
++        updateVersion -> Nullable<BigInt>,
+     }
+ }
+ 
+ diesel::table! {
+     inventorytransactions (id) {
+-        id -> Integer,
++        id -> BigInt,
+         transactionId -> Text,
+         characterId -> Text,
+         userId -> Text,
+         requestHash -> Text,
+-        status -> Integer,
++        status -> BigInt,
+         response -> Text,
+         createdDate -> Text,
+     }
+@@ -289,7 +289,7 @@
+ diesel::table! {
+     invitecodes (invitecode) {
+         invitecode -> Text,
+-        usesRemaining -> Integer,
++        usesRemaining -> BigInt,
+         infiniteUses -> Bool,
+     }
+ }
+@@ -307,10 +307,10 @@
+ 
+ diesel::table! {
+     loadouthistory (id) {
+-        id -> Integer,
++        id -> BigInt,
+         characterId -> Text,
+         userId -> Text,
+-        version -> Integer,
++        version -> BigInt,
+         loadouts -> Text,
+         persistent -> Text,
+         savedDate -> Text,
+@@ -332,22 +332,22 @@
+     loadoutslots (characterId) {
+         characterId -> Text,
+         userId -> Text,
+-        numCharacterSlots -> Integer,
+-        activeIndex -> Integer,
++        numCharacterSlots -> BigInt,
++        activeIndex -> BigInt,
+         updatedDate -> Text,
+     }
+ }
+ 
+ diesel::table! {
+     moderation_events (id) {
+-        id -> Nullable<Integer>,
++        id -> Nullable<BigInt>,
+         account_id -> Text,
+         reason -> Text,
+         address -> Nullable<Text>,
+-        active -> Integer,
+-        created_at -> Integer,
++        active -> BigInt,
++        created_at -> BigInt,
+         actor -> Text,
+-        expires_at -> Nullable<Integer>,
++        expires_at -> Nullable<BigInt>,
+     }
+ }
+ 
+@@ -355,8 +355,8 @@
+     objectives (accountId, objectiveId) {
+         accountId -> Text,
+         objectiveId -> Text,
+-        progress -> Integer,
+-        completedCount -> Integer,
++        progress -> BigInt,
++        completedCount -> BigInt,
+         createdDate -> Text,
+         lastModifiedDate -> Text,
+     }
+@@ -373,7 +373,7 @@
+     player_addresses (account_id, address) {
+         account_id -> Text,
+         address -> Text,
+-        last_seen -> Integer,
++        last_seen -> BigInt,
+     }
+ }
+ 
+@@ -381,9 +381,9 @@
+     progress_tracks (accountId, progressionId) {
+         accountId -> Text,
+         progressionId -> Text,
+-        progress -> Integer,
+-        confirmedFreeRank -> Integer,
+-        confirmedPremiumRank -> Integer,
++        progress -> BigInt,
++        confirmedFreeRank -> BigInt,
++        confirmedPremiumRank -> BigInt,
+         confirmedDate -> Text,
+         updatedDate -> Text,
+     }
+@@ -391,13 +391,13 @@
+ 
+ diesel::table! {
+     progression_events (id) {
+-        id -> Integer,
++        id -> BigInt,
+         time -> Text,
+         accountId -> Text,
+         caller -> Text,
+         route -> Text,
+         body -> Nullable<Text>,
+-        status -> Integer,
++        status -> BigInt,
+         reply -> Nullable<Text>,
+         note -> Nullable<Text>,
+     }
+@@ -409,17 +409,17 @@
+         discordId -> Text,
+         userId -> Nullable<Text>,
+         keyHash -> Nullable<Text>,
+-        expiresAt -> Integer,
+-        used -> Integer,
++        expiresAt -> BigInt,
++        used -> BigInt,
+     }
+ }
+ 
+ diesel::table! {
+     recoveryevents (id) {
+-        id -> Nullable<Integer>,
++        id -> Nullable<BigInt>,
+         discordId -> Text,
+         action -> Text,
+-        createdAt -> Integer,
++        createdAt -> BigInt,
+     }
+ }
+ 
+@@ -436,9 +436,9 @@
+         inviteId -> Text,
+         senderId -> Text,
+         targetId -> Text,
+-        senderSlot -> Integer,
+-        createdAt -> Integer,
+-        expiresAt -> Integer,
++        senderSlot -> BigInt,
++        createdAt -> BigInt,
++        expiresAt -> BigInt,
+         status -> Text,
+     }
+ }
+@@ -448,10 +448,10 @@
+         linkId -> Text,
+         senderId -> Text,
+         targetId -> Text,
+-        senderSlot -> Integer,
+-        targetSlot -> Integer,
+-        createdAt -> Integer,
+-        endsAt -> Integer,
++        senderSlot -> BigInt,
++        targetSlot -> BigInt,
++        createdAt -> BigInt,
++        endsAt -> BigInt,
+     }
+ }
+ 
+@@ -470,15 +470,15 @@
+ 
+ diesel::table! {
+     trialruns (id) {
+-        id -> Integer,
++        id -> BigInt,
+         trialId -> Text,
+-        trialWeek -> Integer,
+-        difficulty -> Integer,
++        trialWeek -> BigInt,
++        difficulty -> BigInt,
+         mode -> Text,
+         runKey -> Text,
+         groupKey -> Text,
+-        completionTime -> Integer,
+-        objectivesCompleted -> Integer,
++        completionTime -> BigInt,
++        objectivesCompleted -> BigInt,
+         sessionId -> Text,
+         entries -> Text,
+         submittedDate -> Text,
+@@ -487,9 +487,9 @@
+ 
+ diesel::table! {
+     trialweeks (week) {
+-        week -> Integer,
++        week -> BigInt,
+         finalizedDate -> Text,
+-        awardedAccounts -> Integer,
++        awardedAccounts -> BigInt,
+     }
+ }
+ 
+@@ -511,7 +511,7 @@
+     users (userId) {
+         userId -> Text,
+         name -> Text,
+-        notes -> Integer,
++        notes -> BigInt,
+         isAdmin -> Bool,
+     }
+ }

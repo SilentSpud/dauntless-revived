@@ -1,0 +1,21 @@
+[package]
+name = "metagame"
+description = "The game's backend: accounts, characters, inventory, progression, matchmaking, chat (MIGRATION_PLAN.md Part B)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+diesel.workspace = true
+diesel_migrations.workspace = true
+store.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread"] }
+
+[lints]
+workspace = true

@@ -2,7 +2,7 @@
 # crates, the services and, from R5, the launcher backend.
 [workspace]
 resolver = "3"
-members = ["crates/*"]
+members = ["crates/*", "services/*"]
 
 [workspace.package]
 version = "0.0.0"
@@ -14,10 +14,19 @@ publish = false
 
 [workspace.dependencies]
 protocol = { path = "crates/protocol" }
+store = { path = "crates/store" }
 
+diesel = { version = "2.3", default-features = false, features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
+diesel_migrations = { version = "2.3", features = ["sqlite"] }
+# Bundled: one SQLite, built with the options in .cargo/config.toml, shared by Diesel and rusqlite (M17).
+libsqlite3-sys = { version = "0.38", features = ["bundled"] }
 percent-encoding = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+sha2 = "0.11"
+thiserror = "2"
+tokio = { version = "1", features = ["rt", "macros"] }
+tempfile = "3"
 
 [workspace.lints.rust]
 unsafe_code = "deny"

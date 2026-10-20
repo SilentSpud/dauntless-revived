@@ -1,0 +1,7 @@
+# Regenerate src/schema.rs from a database at the current schema:
+#   diesel print-schema --database-url <file.db>
+# SQLite keeps every INTEGER as a 64-bit value (timestamps are milliseconds), so the patch maps
+# Integer to BigInt; Diesel would read them as i32 otherwise.
+[print_schema]
+file = "src/schema.rs"
+patch_file = "src/schema.patch"
