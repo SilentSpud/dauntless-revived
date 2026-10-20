@@ -1,0 +1,391 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /friends/api/public/friends/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-d\",\"status\":\"ACCEPTED\",\"direction\":\"INBOUND\",\"created\":\"<date>\"}]"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-a?includePending=true",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-e\",\"status\":\"PENDING\",\"direction\":\"INBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-d\",\"status\":\"ACCEPTED\",\"direction\":\"INBOUND\",\"created\":\"<date>\"}]"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-a?includePending=true&includePending=true",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-d\",\"status\":\"ACCEPTED\",\"direction\":\"INBOUND\",\"created\":\"<date>\"}]"
+    },
+    {
+      "request": "GET /friends/api/public/blocklist/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"blockedUsers\":[]}"
+    },
+    {
+      "request": "GET /friends/api/public/blocklist/UID-e",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"blockedUsers\":[\"UID-c\"]}"
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-b",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-b/UID-c",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/bad%20id",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-none",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-d",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-e",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-e",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-e/UID-c",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-a?includePending=true",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-e\",\"status\":\"ACCEPTED\",\"direction\":\"INBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-d\",\"status\":\"ACCEPTED\",\"direction\":\"INBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-b\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"}]"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-b?includePending=true",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-a\",\"status\":\"PENDING\",\"direction\":\"INBOUND\",\"created\":\"<date>\"}]"
+    },
+    {
+      "request": "DELETE /friends/api/public/friends/UID-a/UID-d",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /friends/api/public/friends/UID-a/UID-d",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/blocklist/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "PUT /friends/api/public/blocklist/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/blocklist/UID-a/UID-a",
+      "status": 400,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/blocklist/UID-a/UID-none",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-b/UID-a",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/public/blocklist/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"blockedUsers\":[\"UID-b\"]}"
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-b?includePending=true",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "DELETE /friends/api/public/blocklist/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /friends/api/public/blocklist/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/blocklist/UID-a/UID-c",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/public/blocklist/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"blockedUsers\":[\"UID-c\"]}"
+    },
+    {
+      "request": "GET /friends/api/public/list/fn/UID-a/recentPlayers",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "GET /friends/api/v1/UID-a/settings",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"acceptInvites\":\"public\"}"
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r0",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r1",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r2",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r3",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r4",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r5",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r6",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r7",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r8",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r9",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r10",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r11",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r12",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r13",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r14",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r15",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r16",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r17",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r18",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r19",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-c/UID-r20",
+      "status": 409,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-r0/UID-c",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/public/friends/UID-c?includePending=true",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"accountId\":\"UID-r0\",\"status\":\"ACCEPTED\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r1\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r2\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r3\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r4\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r5\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r6\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r7\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r8\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r9\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r10\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r11\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r12\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r13\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r14\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r15\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r16\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r17\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r18\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"},{\"accountId\":\"UID-r19\",\"status\":\"PENDING\",\"direction\":\"OUTBOUND\",\"created\":\"<date>\"}]"
+    }
+  ]
+}

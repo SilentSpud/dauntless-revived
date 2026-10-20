@@ -106,6 +106,11 @@ Done so far:
   `fixtures/make-trials-rotation.cjs`). Two parity scripts (`trials`, `trials-switches`, 56 replies) match
   Node; the harness gained `{{trial:…}}` and `{{week:…}}` for this week's Trial, and normalizes what
   depends on the week. Area 4 is done except CapacityTurns, which is in-memory and comes with matchmaking.
+- Metagame B2, area 5 of M29, first part: friends (`routes/friends.ts`). The friends list and blocklist
+  with their limits and the in-memory request window, blocks that drop the friendship, the guild invites
+  and the Slayer Link invites between the two, and the static reads behind `MISC_ROUTES`. Two parity
+  scripts (`friends`, `friends-misc-off`, 64 replies) match Node. Not yet: the block's hook into party
+  invites (comes with party) and the friendship events chat presence listens to (comes with chat).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

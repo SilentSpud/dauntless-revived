@@ -56,6 +56,8 @@ pub struct App {
     pub shop: crate::store::Settings,
     /// When the store purchase table was last swept.
     pub store_sweeps: crate::store::Sweeps,
+    /// Each account's recent friend requests, for the request window.
+    pub friend_requests: crate::friends::RecentRequests,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,

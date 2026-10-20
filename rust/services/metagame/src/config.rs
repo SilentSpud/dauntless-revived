@@ -25,6 +25,8 @@ pub struct Features {
     pub verify_stub_account: bool,
     /// `ACCOUNT_MAPPING=0`: POST /account/mapping maps nothing.
     pub account_mapping: bool,
+    /// `MISC_ROUTES=0`: the routes that 404'd upstream (the friends service's static reads) 404 again.
+    pub misc_routes: bool,
 }
 
 impl Default for Features {
@@ -34,6 +36,7 @@ impl Default for Features {
             account_display_name: true,
             verify_stub_account: false,
             account_mapping: true,
+            misc_routes: true,
         }
     }
 }
@@ -150,6 +153,7 @@ impl Config {
                 account_display_name: env.get("ACCOUNT_DISPLAY_NAME") != Some("0"),
                 verify_stub_account: on_off(env, "VERIFY_STUB_ACCOUNT", false),
                 account_mapping: env.get("ACCOUNT_MAPPING") != Some("0"),
+                misc_routes: env.raw("MISC_ROUTES") != Some("0"),
             },
         })
     }

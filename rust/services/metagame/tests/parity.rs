@@ -351,3 +351,13 @@ async fn trials() {
 async fn trials_switches() {
     run_area("trials-switches").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn friends() {
+    run_area("friends").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn friends_misc_off() {
+    run_area("friends-misc-off").await;
+}

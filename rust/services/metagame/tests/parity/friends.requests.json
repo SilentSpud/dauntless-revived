@@ -1,0 +1,425 @@
+{
+  "about": "Friends list and blocklist over the Epic-style friends routes (MIGRATION_PLAN.md M29, area 5, first part).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0), ('UID-e', 'Ed', 0, 0)",
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-r0', 'R0', 0, 0), ('UID-r1', 'R1', 0, 0), ('UID-r2', 'R2', 0, 0), ('UID-r3', 'R3', 0, 0), ('UID-r4', 'R4', 0, 0), ('UID-r5', 'R5', 0, 0), ('UID-r6', 'R6', 0, 0), ('UID-r7', 'R7', 0, 0), ('UID-r8', 'R8', 0, 0), ('UID-r9', 'R9', 0, 0), ('UID-r10', 'R10', 0, 0), ('UID-r11', 'R11', 0, 0), ('UID-r12', 'R12', 0, 0), ('UID-r13', 'R13', 0, 0), ('UID-r14', 'R14', 0, 0), ('UID-r15', 'R15', 0, 0), ('UID-r16', 'R16', 0, 0), ('UID-r17', 'R17', 0, 0), ('UID-r18', 'R18', 0, 0), ('UID-r19', 'R19', 0, 0), ('UID-r20', 'R20', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO friendships (userLow, userHigh, requesterId, status, createdAt, updatedAt) VALUES ('UID-a', 'UID-d', 'UID-d', 'ACCEPTED', 1700000000000, 1700000000000), ('UID-a', 'UID-e', 'UID-e', 'PENDING', 1600000000000, 1600000000000)",
+    "INSERT INTO blocks (blockerId, blockedId, createdAt) VALUES ('UID-e', 'UID-c', 1700000000000)",
+    "INSERT INTO slayerlinkinvites (inviteId, senderId, targetId, senderSlot, createdAt, expiresAt, status) VALUES ('link-1', 'UID-a', 'UID-d', 0, 1700000000000, 9999999999999, 'PENDING')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a",
+      "headers": {
+        "authorization": "bearer nonsense"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a?includePending=true",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a?includePending=true&includePending=true",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/blocklist/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/blocklist/UID-e",
+      "headers": {
+        "authorization": "{{bearer:UID-e}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-b",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-b/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/bad%20id",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-none",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-a/UID-e",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-e",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-e/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-e}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-a?includePending=true",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-b?includePending=true",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/friends/api/public/friends/UID-a/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/friends/api/public/friends/UID-a/UID-d",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/blocklist/UID-a/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/friends/api/public/blocklist/UID-a/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/blocklist/UID-a/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/blocklist/UID-a/UID-none",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-b/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/blocklist/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-b?includePending=true",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/friends/api/public/blocklist/UID-a/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/friends/api/public/blocklist/UID-a/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/blocklist/UID-a/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/blocklist/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/list/fn/UID-a/recentPlayers",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/v1/UID-a/settings",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r0",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r1",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r2",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r3",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r4",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r5",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r6",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r7",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r8",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r9",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r10",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r11",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r12",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r13",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r14",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r15",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r16",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r17",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r18",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r19",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-c/UID-r20",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/friends/api/public/friends/UID-r0/UID-c",
+      "headers": {
+        "authorization": "{{bearer:UID-r0}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/friends/api/public/friends/UID-c?includePending=true",
+      "headers": {
+        "authorization": "{{bearer:UID-c}}"
+      }
+    }
+  ]
+}

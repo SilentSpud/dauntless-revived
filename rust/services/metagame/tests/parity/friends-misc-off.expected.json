@@ -1,0 +1,35 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /friends/api/public/friends/UID-a",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/public/blocklist/UID-a",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/public/list/fn/UID-a/recentPlayers",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /friends/api/v1/UID-a/settings",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /friends/api/public/friends/UID-a/UID-b",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}
