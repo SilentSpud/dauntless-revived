@@ -208,8 +208,8 @@
                   },
                   {
                       "path":  "ue4ss/LICENSE",
-                      "sha256":  "99e1d8f8b7cb68e8b2313380ae3b0c8115e39dfbc443fcf21fd67ab74ce1d57e",
-                      "size":  1085,
+                      "sha256":  "ddc030e25d0ea87aca4ae84c0ed3f868d69273c00c0c12ea1e26f1c6130f5d2e",
+                      "size":  1064,
                       "keep":  false
                   },
                   {
@@ -232,8 +232,8 @@
                   },
                   {
                       "path":  "ue4ss/Mods/Keybinds/Scripts/main.lua",
-                      "sha256":  "297dd6f7f560e1cebc15cd4509ad481495d9179f5758a8034be4c417a369803a",
-                      "size":  4190,
+                      "sha256":  "6dc767037f55e09f9e04405814ff965b9c9943138509f7d5d2f29e9dfe4c14a8",
+                      "size":  3980,
                       "keep":  false
                   },
                   {
@@ -262,8 +262,8 @@
                   },
                   {
                       "path":  "ue4ss/Mods/shared/UEHelpers/UEHelpers.lua",
-                      "sha256":  "7476f02eef0c87bfeab169f2ffe2e704363faeaae4bf9f1bda574b1e34f4a0e9",
-                      "size":  10237,
+                      "sha256":  "5a8f6609e555eee4a535f51d21fcdef768ac654bf4d4abe283c719b1c12215a7",
+                      "size":  9962,
                       "keep":  false
                   },
                   {
@@ -274,8 +274,8 @@
                   },
                   {
                       "path":  "ue4ss/UE4SS-settings.ini",
-                      "sha256":  "a570cf325e142f5e01c99e72c4fe41dee05cb8980f230be40136e779465a381c",
-                      "size":  9420,
+                      "sha256":  "ea5ba975e0bb3dbb997eded781ab1cc72b4b23dec6c2eb67e7d9c567fcbd1b4f",
+                      "size":  9180,
                       "keep":  true
                   }
               ],

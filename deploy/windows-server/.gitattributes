@@ -1,4 +1,0 @@
-# Windows scripts: CRLF in every checkout and in git archive (Deploy-Remote.ps1 uploads one).
-*.ps1 text eol=crlf
-*.vbs text eol=crlf
-*.md  text eol=crlf

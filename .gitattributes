@@ -1,2 +1,5 @@
+# LF everywhere, in the index and in every checkout (git archive included), whatever core.autocrlf says.
+* text=auto eol=lf
+
 legacy/UndauntedMetagame/src/vendor/progression_config.json linguist-generated=true
-legacy/UndauntedContent/data/*.json linguist-generated=true text eol=lf
+legacy/UndauntedContent/data/*.json linguist-generated=true
