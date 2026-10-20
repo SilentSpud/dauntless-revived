@@ -77,6 +77,10 @@ pub struct Settings {
     pub curated30: bool,
     /// `TRIAL_ROTATION_START`, parsed; `None` when it doesn't parse (the Trials code answers 500).
     pub trial_rotation_start: Option<i64>,
+    /// `TRIALS_LEADERBOARDS` (on): the leaderboard routes and run submissions.
+    pub trials_leaderboards: bool,
+    /// `TRIALS_SCHEDULE` (off): the tuning schedule advertises this week's Trials.
+    pub trials_schedule: bool,
 }
 
 impl Default for Settings {
@@ -111,6 +115,8 @@ impl Settings {
             trial_rotation_start: js::date_parse(
                 env.raw("TRIAL_ROTATION_START").unwrap_or(crate::trials::ROTATION_START),
             ),
+            trials_leaderboards: crate::config::on_off(env, "TRIALS_LEADERBOARDS", true),
+            trials_schedule: crate::config::on_off(env, "TRIALS_SCHEDULE", false),
         }
     }
 

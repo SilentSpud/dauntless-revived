@@ -42,6 +42,7 @@ process.chdir(metagame);
 const { app } = require(path.join(build, "app.js"));
 const { GetDb } = require(path.join(build, "db.js"));
 const { SignMetagameJWTForUid } = require(path.join(build, "controllers", "auth.js"));
+const trials = require(path.join(build, "controllers", "trials.js"));
 
 // Kept in step with normalize() in tests/parity.rs.
 function normalize(text) {
@@ -57,7 +58,21 @@ function normalize(text) {
     .replace(/; t=\d+/g, "; t=<s>")
     // Random tokens (store purchases) and the port the recording server listened on
     .replace(/\b[0-9a-f]{64}\b/g, "<hex64>")
-    .replace(/http:\/\/127\.0\.0\.1:\d+/g, "http://<host>");
+    .replace(/http:\/\/127\.0\.0\.1:\d+/g, "http://<host>")
+    // What depends on the week the script ran in (Trials)
+    .replace(/Arena_MatchmakerHunt_(Hard|Elite)_\d{3}/g, "Arena_MatchmakerHunt_$1_<row>")
+    .replace(/"(trial_start|trial_end|time_to_refresh)":\d+/g, '"$1":<n>')
+    .replace(/revived_trials_marks:-?\d+:/g, "revived_trials_marks:<week>:")
+    .replace(/\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}/g, "<servicedate>");
+}
+
+// This week's Trial row ({{trial:<difficulty>}}, or {{trial:<difficulty>:<weeks back>}}) and the
+// week's number ({{week}}, {{week:<weeks back>}}), as the Trials code computes them now.
+function weekly(value) {
+  const now = trials.TrialWeekAt();
+  return value
+    .replace(/\{\{trial:(\d)(?::(\d+))?\}\}/g, (_, difficulty, back) => trials.TrialIdForWeek(Number(difficulty), now - Number(back ?? 0)))
+    .replace(/\{\{week(?::(\d+))?\}\}/g, (_, back) => String(now - Number(back ?? 0)));
 }
 
 const HEADERS = ["content-type", "cache-control", "retry-after", "ratelimit", "ratelimit-policy", "content-security-policy", "x-content-type-options"];
@@ -66,7 +81,7 @@ const HEADERS = ["content-type", "cache-control", "retry-after", "ratelimit", "r
 const saved = {};
 
 function fill(value) {
-  return value
+  return weekly(value)
     .replace(/\{\{bearer:([^}]+)\}\}/g, (_, id) => `bearer ${SignMetagameJWTForUid(id)}`)
     .replace(/\{\{gs\}\}/g, script.gameServerKey)
     .replace(/\{\{saved:([^}]+)\}\}/g, (_, name) => saved[name] ?? "");
@@ -74,7 +89,7 @@ function fill(value) {
 
 async function main() {
   const db = GetDb();
-  for (const sql of script.setup) db.$client.exec(sql);
+  for (const sql of script.setup) db.$client.exec(weekly(sql));
   const server = await new Promise((resolve, reject) => {
     const started = app.listen(0, "127.0.0.1", (error) => (error ? reject(error) : resolve(started)));
   });

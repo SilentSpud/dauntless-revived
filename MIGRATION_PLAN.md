@@ -97,7 +97,15 @@ Done so far:
   selection, cooldowns (with the 24-hour pruning of gatherable cooldowns) and the bounty board (partial
   upserts by bounty id, slot replacement, draft data, deletes), each with upstream's stub for stub-mode
   accounts; and the admin `/undaunted/api/Progression` and `/undaunted/api/SeedProgression`. Two parity
-  scripts (`progression-extras`, `progression-extras-stub`, 52 replies) match Node. Left of the area: Trials.
+  scripts (`progression-extras`, `progression-extras-stub`, 52 replies) match Node.
+- Metagame B2, area 4 of M29, third part: Trials. The weekly rotation, game-server run submissions with
+  their Mark rewards (receipted as cooldowns), the five leaderboard routes with leaderboard profiles
+  (`/profile/update`), settling finished weeks before each read, and `routes/tuning.ts` (the Trials
+  schedule behind `TRIALS_SCHEDULE`, the Hunt Pass XP config). The rotation, the week windows and the
+  schedule are checked against Node at 424 fixed weeks and five fixed times (`tests/trials.rs`,
+  `fixtures/make-trials-rotation.cjs`). Two parity scripts (`trials`, `trials-switches`, 56 replies) match
+  Node; the harness gained `{{trial:…}}` and `{{week:…}}` for this week's Trial, and normalizes what
+  depends on the week. Area 4 is done except CapacityTurns, which is in-memory and comes with matchmaking.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

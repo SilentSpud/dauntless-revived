@@ -10,6 +10,7 @@ pub mod login;
 pub mod progression;
 pub mod store;
 pub mod system;
+pub mod trials;
 
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
@@ -84,6 +85,7 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
         .merge(character::routes())
         .merge(inventory::routes())
         .merge(store::routes(state))
+        .merge(trials::routes())
         .merge(progression::routes(state))
         .merge(loadout::routes())
         .merge(admin_accounts::routes(state))

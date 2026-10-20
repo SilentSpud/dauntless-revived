@@ -1,0 +1,64 @@
+{
+  "about": "TRIALS_LEADERBOARDS=off and TRIALS_SCHEDULE=on (MIGRATION_PLAN.md M29, area 4, third part).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "TRIALS_LEADERBOARDS": "off",
+    "TRIALS_SCHEDULE": "on"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Sep 21, 2026', 'Ada', 0, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "dauntlessid": "UID-a",
+        "currentdisplayname": "Ada"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/game_tuning/seasonal_event_schedule",
+      "headers": {}
+    }
+  ]
+}

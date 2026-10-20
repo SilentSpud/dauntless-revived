@@ -1,0 +1,31 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 200,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /game_tuning/seasonal_event_schedule",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"ScheduledItems\":[{\"EndTime\":\"<servicedate>\",\"IsRepeatable\":false,\"Name\":\"event_ladyluck_repeatable\",\"RepeatableDetails\":{\"EachDay\":false,\"EachWeek\":false},\"ScheduledItems\":[{\"ID\":\"event_ladyluck_repeatable\",\"MaxCompletionPerInterval\":-1}],\"StartTime\":\"<servicedate>\"},{\"EndTime\":\"<servicedate>\",\"IsRepeatable\":false,\"Name\":\"CR19_PlayerHunt_Arena_Hard\",\"RepeatableDetails\":{\"EachDay\":false,\"EachWeek\":false},\"ScheduledItems\":[{\"ID\":\"CR19_PlayerHunt_Arena_Hard\",\"MaxCompletionPerInterval\":-1}],\"StartTime\":\"<servicedate>\"},{\"EndTime\":\"<servicedate>\",\"IsRepeatable\":false,\"Name\":\"CR19_PlayerHunt_Arena_Elite\",\"RepeatableDetails\":{\"EachDay\":false,\"EachWeek\":false},\"ScheduledItems\":[{\"ID\":\"CR19_PlayerHunt_Arena_Elite\",\"MaxCompletionPerInterval\":-1}],\"StartTime\":\"<servicedate>\"},{\"EndTime\":\"<servicedate>\",\"IsRepeatable\":false,\"Name\":\"Arena_MatchmakerHunt_Hard_<row>\",\"RepeatableDetails\":{\"EachDay\":false,\"EachWeek\":false},\"ScheduledItems\":[{\"ID\":\"Arena_MatchmakerHunt_Hard_<row>\",\"MaxCompletionPerInterval\":-1}],\"StartTime\":\"<servicedate>\"},{\"EndTime\":\"<servicedate>\",\"IsRepeatable\":false,\"Name\":\"Arena_MatchmakerHunt_Elite_<row>\",\"RepeatableDetails\":{\"EachDay\":false,\"EachWeek\":false},\"ScheduledItems\":[{\"ID\":\"Arena_MatchmakerHunt_Elite_<row>\",\"MaxCompletionPerInterval\":-1}],\"StartTime\":\"<servicedate>\"}]}}"
+    }
+  ]
+}

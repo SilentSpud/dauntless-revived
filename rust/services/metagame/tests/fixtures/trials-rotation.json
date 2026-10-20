@@ -1,0 +1,3070 @@
+{
+  "about": "Written by the Node Trials code (TrialBehemothForWeek, TrialIdForWeek, TrialsWindowForWeek, GetSeasonalEventSchedule with TRIALS_SCHEDULE=on, TrialRewardRank); do not edit.",
+  "weeks": [
+    {
+      "week": -3,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": -2,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": -1,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_037",
+      "elite": "Arena_MatchmakerHunt_Elite_037"
+    },
+    {
+      "week": 0,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 1,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 2,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 3,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 4,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 5,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 6,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 7,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 8,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 9,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 10,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_009",
+      "elite": "Arena_MatchmakerHunt_Elite_009"
+    },
+    {
+      "week": 11,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 12,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 13,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 14,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 15,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 16,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 17,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 18,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 19,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 20,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 21,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_073",
+      "elite": "Arena_MatchmakerHunt_Elite_073"
+    },
+    {
+      "week": 22,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_087",
+      "elite": "Arena_MatchmakerHunt_Elite_087"
+    },
+    {
+      "week": 23,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_005",
+      "elite": "Arena_MatchmakerHunt_Elite_005"
+    },
+    {
+      "week": 24,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    },
+    {
+      "week": 25,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 26,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 27,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 28,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 29,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 30,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_065",
+      "elite": "Arena_MatchmakerHunt_Elite_065"
+    },
+    {
+      "week": 31,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_017",
+      "elite": "Arena_MatchmakerHunt_Elite_017"
+    },
+    {
+      "week": 32,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_006",
+      "elite": "Arena_MatchmakerHunt_Elite_006"
+    },
+    {
+      "week": 33,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 34,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 35,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 36,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_062",
+      "elite": "Arena_MatchmakerHunt_Elite_062"
+    },
+    {
+      "week": 37,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 38,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 39,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 40,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 41,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_031",
+      "elite": "Arena_MatchmakerHunt_Elite_031"
+    },
+    {
+      "week": 42,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    },
+    {
+      "week": 43,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 44,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 45,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 46,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_030",
+      "elite": "Arena_MatchmakerHunt_Elite_030"
+    },
+    {
+      "week": 47,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_056",
+      "elite": "Arena_MatchmakerHunt_Elite_056"
+    },
+    {
+      "week": 48,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 49,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 50,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 51,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 52,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 53,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_062",
+      "elite": "Arena_MatchmakerHunt_Elite_062"
+    },
+    {
+      "week": 54,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_017",
+      "elite": "Arena_MatchmakerHunt_Elite_017"
+    },
+    {
+      "week": 55,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 56,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 57,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 58,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 59,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_077",
+      "elite": "Arena_MatchmakerHunt_Elite_077"
+    },
+    {
+      "week": 60,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 61,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_080",
+      "elite": "Arena_MatchmakerHunt_Elite_080"
+    },
+    {
+      "week": 62,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_074",
+      "elite": "Arena_MatchmakerHunt_Elite_074"
+    },
+    {
+      "week": 63,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 64,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_073",
+      "elite": "Arena_MatchmakerHunt_Elite_073"
+    },
+    {
+      "week": 65,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_039",
+      "elite": "Arena_MatchmakerHunt_Elite_039"
+    },
+    {
+      "week": 66,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_009",
+      "elite": "Arena_MatchmakerHunt_Elite_009"
+    },
+    {
+      "week": 67,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 68,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_064",
+      "elite": "Arena_MatchmakerHunt_Elite_064"
+    },
+    {
+      "week": 69,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 70,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 71,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 72,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 73,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_067",
+      "elite": "Arena_MatchmakerHunt_Elite_067"
+    },
+    {
+      "week": 74,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_077",
+      "elite": "Arena_MatchmakerHunt_Elite_077"
+    },
+    {
+      "week": 75,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_010",
+      "elite": "Arena_MatchmakerHunt_Elite_010"
+    },
+    {
+      "week": 76,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_065",
+      "elite": "Arena_MatchmakerHunt_Elite_065"
+    },
+    {
+      "week": 77,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 78,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 79,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 80,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 81,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 82,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_064",
+      "elite": "Arena_MatchmakerHunt_Elite_064"
+    },
+    {
+      "week": 83,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    },
+    {
+      "week": 84,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 85,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_039",
+      "elite": "Arena_MatchmakerHunt_Elite_039"
+    },
+    {
+      "week": 86,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 87,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 88,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 89,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 90,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 91,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_035",
+      "elite": "Arena_MatchmakerHunt_Elite_035"
+    },
+    {
+      "week": 92,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 93,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 94,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 95,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 96,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 97,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_006",
+      "elite": "Arena_MatchmakerHunt_Elite_006"
+    },
+    {
+      "week": 98,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 99,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_005",
+      "elite": "Arena_MatchmakerHunt_Elite_005"
+    },
+    {
+      "week": 100,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_074",
+      "elite": "Arena_MatchmakerHunt_Elite_074"
+    },
+    {
+      "week": 101,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 102,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 103,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 104,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 105,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_012",
+      "elite": "Arena_MatchmakerHunt_Elite_012"
+    },
+    {
+      "week": 106,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 107,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 108,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 109,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 110,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 111,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 112,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 113,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 114,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 115,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 116,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_080",
+      "elite": "Arena_MatchmakerHunt_Elite_080"
+    },
+    {
+      "week": 117,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 118,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_019",
+      "elite": "Arena_MatchmakerHunt_Elite_019"
+    },
+    {
+      "week": 119,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_062",
+      "elite": "Arena_MatchmakerHunt_Elite_062"
+    },
+    {
+      "week": 120,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 121,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 122,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_087",
+      "elite": "Arena_MatchmakerHunt_Elite_087"
+    },
+    {
+      "week": 123,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 124,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 125,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 126,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_065",
+      "elite": "Arena_MatchmakerHunt_Elite_065"
+    },
+    {
+      "week": 127,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 128,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 129,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 130,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 131,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_074",
+      "elite": "Arena_MatchmakerHunt_Elite_074"
+    },
+    {
+      "week": 132,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 133,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 134,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 135,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 136,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 137,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_030",
+      "elite": "Arena_MatchmakerHunt_Elite_030"
+    },
+    {
+      "week": 138,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 139,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 140,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 141,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 142,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    },
+    {
+      "week": 143,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_065",
+      "elite": "Arena_MatchmakerHunt_Elite_065"
+    },
+    {
+      "week": 144,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 145,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 146,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 147,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 148,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 149,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_037",
+      "elite": "Arena_MatchmakerHunt_Elite_037"
+    },
+    {
+      "week": 150,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_017",
+      "elite": "Arena_MatchmakerHunt_Elite_017"
+    },
+    {
+      "week": 151,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 152,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 153,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_073",
+      "elite": "Arena_MatchmakerHunt_Elite_073"
+    },
+    {
+      "week": 154,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 155,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_031",
+      "elite": "Arena_MatchmakerHunt_Elite_031"
+    },
+    {
+      "week": 156,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 157,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 158,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_037",
+      "elite": "Arena_MatchmakerHunt_Elite_037"
+    },
+    {
+      "week": 159,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 160,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 161,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 162,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 163,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 164,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_012",
+      "elite": "Arena_MatchmakerHunt_Elite_012"
+    },
+    {
+      "week": 165,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_017",
+      "elite": "Arena_MatchmakerHunt_Elite_017"
+    },
+    {
+      "week": 166,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 167,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 168,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 169,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 170,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_056",
+      "elite": "Arena_MatchmakerHunt_Elite_056"
+    },
+    {
+      "week": 171,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 172,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 173,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 174,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 175,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 176,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_081",
+      "elite": "Arena_MatchmakerHunt_Elite_081"
+    },
+    {
+      "week": 177,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 178,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 179,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_031",
+      "elite": "Arena_MatchmakerHunt_Elite_031"
+    },
+    {
+      "week": 180,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 181,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_039",
+      "elite": "Arena_MatchmakerHunt_Elite_039"
+    },
+    {
+      "week": 182,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_006",
+      "elite": "Arena_MatchmakerHunt_Elite_006"
+    },
+    {
+      "week": 183,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 184,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 185,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 186,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 187,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 188,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 189,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 190,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 191,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 192,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 193,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 194,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 195,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_010",
+      "elite": "Arena_MatchmakerHunt_Elite_010"
+    },
+    {
+      "week": 196,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 197,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 198,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 199,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 200,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_047",
+      "elite": "Arena_MatchmakerHunt_Elite_047"
+    },
+    {
+      "week": 201,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_038",
+      "elite": "Arena_MatchmakerHunt_Elite_038"
+    },
+    {
+      "week": 202,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 203,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 204,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_005",
+      "elite": "Arena_MatchmakerHunt_Elite_005"
+    },
+    {
+      "week": 205,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_039",
+      "elite": "Arena_MatchmakerHunt_Elite_039"
+    },
+    {
+      "week": 206,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 207,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 208,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 209,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 210,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 211,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 212,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_017",
+      "elite": "Arena_MatchmakerHunt_Elite_017"
+    },
+    {
+      "week": 213,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_062",
+      "elite": "Arena_MatchmakerHunt_Elite_062"
+    },
+    {
+      "week": 214,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_006",
+      "elite": "Arena_MatchmakerHunt_Elite_006"
+    },
+    {
+      "week": 215,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 216,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_038",
+      "elite": "Arena_MatchmakerHunt_Elite_038"
+    },
+    {
+      "week": 217,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 218,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 219,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 220,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 221,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_064",
+      "elite": "Arena_MatchmakerHunt_Elite_064"
+    },
+    {
+      "week": 222,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_067",
+      "elite": "Arena_MatchmakerHunt_Elite_067"
+    },
+    {
+      "week": 223,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_065",
+      "elite": "Arena_MatchmakerHunt_Elite_065"
+    },
+    {
+      "week": 224,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_010",
+      "elite": "Arena_MatchmakerHunt_Elite_010"
+    },
+    {
+      "week": 225,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 226,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 227,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 228,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 229,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 230,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 231,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_064",
+      "elite": "Arena_MatchmakerHunt_Elite_064"
+    },
+    {
+      "week": 232,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 233,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 234,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_074",
+      "elite": "Arena_MatchmakerHunt_Elite_074"
+    },
+    {
+      "week": 235,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 236,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 237,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_012",
+      "elite": "Arena_MatchmakerHunt_Elite_012"
+    },
+    {
+      "week": 238,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 239,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 240,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 241,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 242,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 243,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_016",
+      "elite": "Arena_MatchmakerHunt_Elite_016"
+    },
+    {
+      "week": 244,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_006",
+      "elite": "Arena_MatchmakerHunt_Elite_006"
+    },
+    {
+      "week": 245,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_035",
+      "elite": "Arena_MatchmakerHunt_Elite_035"
+    },
+    {
+      "week": 246,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 247,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 248,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_077",
+      "elite": "Arena_MatchmakerHunt_Elite_077"
+    },
+    {
+      "week": 249,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_038",
+      "elite": "Arena_MatchmakerHunt_Elite_038"
+    },
+    {
+      "week": 250,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 251,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 252,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_030",
+      "elite": "Arena_MatchmakerHunt_Elite_030"
+    },
+    {
+      "week": 253,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 254,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_062",
+      "elite": "Arena_MatchmakerHunt_Elite_062"
+    },
+    {
+      "week": 255,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 256,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 257,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 258,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 259,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 260,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_081",
+      "elite": "Arena_MatchmakerHunt_Elite_081"
+    },
+    {
+      "week": 261,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 262,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 263,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 264,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 265,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_067",
+      "elite": "Arena_MatchmakerHunt_Elite_067"
+    },
+    {
+      "week": 266,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 267,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 268,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_087",
+      "elite": "Arena_MatchmakerHunt_Elite_087"
+    },
+    {
+      "week": 269,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 270,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 271,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_080",
+      "elite": "Arena_MatchmakerHunt_Elite_080"
+    },
+    {
+      "week": 272,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_030",
+      "elite": "Arena_MatchmakerHunt_Elite_030"
+    },
+    {
+      "week": 273,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 274,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 275,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_073",
+      "elite": "Arena_MatchmakerHunt_Elite_073"
+    },
+    {
+      "week": 276,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 277,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 278,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 279,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 280,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_012",
+      "elite": "Arena_MatchmakerHunt_Elite_012"
+    },
+    {
+      "week": 281,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 282,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 283,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_031",
+      "elite": "Arena_MatchmakerHunt_Elite_031"
+    },
+    {
+      "week": 284,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_081",
+      "elite": "Arena_MatchmakerHunt_Elite_081"
+    },
+    {
+      "week": 285,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 286,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_035",
+      "elite": "Arena_MatchmakerHunt_Elite_035"
+    },
+    {
+      "week": 287,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 288,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 289,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_009",
+      "elite": "Arena_MatchmakerHunt_Elite_009"
+    },
+    {
+      "week": 290,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_030",
+      "elite": "Arena_MatchmakerHunt_Elite_030"
+    },
+    {
+      "week": 291,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 292,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 293,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_081",
+      "elite": "Arena_MatchmakerHunt_Elite_081"
+    },
+    {
+      "week": 294,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 295,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_056",
+      "elite": "Arena_MatchmakerHunt_Elite_056"
+    },
+    {
+      "week": 296,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 297,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 298,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 299,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 300,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 301,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 302,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_006",
+      "elite": "Arena_MatchmakerHunt_Elite_006"
+    },
+    {
+      "week": 303,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_074",
+      "elite": "Arena_MatchmakerHunt_Elite_074"
+    },
+    {
+      "week": 304,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_036",
+      "elite": "Arena_MatchmakerHunt_Elite_036"
+    },
+    {
+      "week": 305,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 306,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 307,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 308,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 309,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 310,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 311,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    },
+    {
+      "week": 312,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 313,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_010",
+      "elite": "Arena_MatchmakerHunt_Elite_010"
+    },
+    {
+      "week": 314,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 315,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_088",
+      "elite": "Arena_MatchmakerHunt_Elite_088"
+    },
+    {
+      "week": 316,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 317,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 318,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 319,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 320,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    },
+    {
+      "week": 321,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 322,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 323,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 324,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 325,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 326,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 327,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 328,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 329,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_010",
+      "elite": "Arena_MatchmakerHunt_Elite_010"
+    },
+    {
+      "week": 330,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_042",
+      "elite": "Arena_MatchmakerHunt_Elite_042"
+    },
+    {
+      "week": 331,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_047",
+      "elite": "Arena_MatchmakerHunt_Elite_047"
+    },
+    {
+      "week": 332,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 333,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_019",
+      "elite": "Arena_MatchmakerHunt_Elite_019"
+    },
+    {
+      "week": 334,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 335,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 336,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 337,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_016",
+      "elite": "Arena_MatchmakerHunt_Elite_016"
+    },
+    {
+      "week": 338,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 339,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_073",
+      "elite": "Arena_MatchmakerHunt_Elite_073"
+    },
+    {
+      "week": 340,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 341,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 342,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_047",
+      "elite": "Arena_MatchmakerHunt_Elite_047"
+    },
+    {
+      "week": 343,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_045",
+      "elite": "Arena_MatchmakerHunt_Elite_045"
+    },
+    {
+      "week": 344,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_077",
+      "elite": "Arena_MatchmakerHunt_Elite_077"
+    },
+    {
+      "week": 345,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 346,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 347,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_005",
+      "elite": "Arena_MatchmakerHunt_Elite_005"
+    },
+    {
+      "week": 348,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 349,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 350,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 351,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_077",
+      "elite": "Arena_MatchmakerHunt_Elite_077"
+    },
+    {
+      "week": 352,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_044",
+      "elite": "Arena_MatchmakerHunt_Elite_044"
+    },
+    {
+      "week": 353,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 354,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_003",
+      "elite": "Arena_MatchmakerHunt_Elite_003"
+    },
+    {
+      "week": 355,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 356,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 357,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 358,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 359,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_056",
+      "elite": "Arena_MatchmakerHunt_Elite_056"
+    },
+    {
+      "week": 360,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_012",
+      "elite": "Arena_MatchmakerHunt_Elite_012"
+    },
+    {
+      "week": 361,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 362,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_001",
+      "elite": "Arena_MatchmakerHunt_Elite_001"
+    },
+    {
+      "week": 363,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_048",
+      "elite": "Arena_MatchmakerHunt_Elite_048"
+    },
+    {
+      "week": 364,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 365,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 366,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_004",
+      "elite": "Arena_MatchmakerHunt_Elite_004"
+    },
+    {
+      "week": 367,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 368,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_087",
+      "elite": "Arena_MatchmakerHunt_Elite_087"
+    },
+    {
+      "week": 369,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_073",
+      "elite": "Arena_MatchmakerHunt_Elite_073"
+    },
+    {
+      "week": 370,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 371,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 372,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 373,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_047",
+      "elite": "Arena_MatchmakerHunt_Elite_047"
+    },
+    {
+      "week": 374,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_010",
+      "elite": "Arena_MatchmakerHunt_Elite_010"
+    },
+    {
+      "week": 375,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_032",
+      "elite": "Arena_MatchmakerHunt_Elite_032"
+    },
+    {
+      "week": 376,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_024",
+      "elite": "Arena_MatchmakerHunt_Elite_024"
+    },
+    {
+      "week": 377,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_039",
+      "elite": "Arena_MatchmakerHunt_Elite_039"
+    },
+    {
+      "week": 378,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_069",
+      "elite": "Arena_MatchmakerHunt_Elite_069"
+    },
+    {
+      "week": 379,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_087",
+      "elite": "Arena_MatchmakerHunt_Elite_087"
+    },
+    {
+      "week": 380,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_009",
+      "elite": "Arena_MatchmakerHunt_Elite_009"
+    },
+    {
+      "week": 381,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 382,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_014",
+      "elite": "Arena_MatchmakerHunt_Elite_014"
+    },
+    {
+      "week": 383,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_075",
+      "elite": "Arena_MatchmakerHunt_Elite_075"
+    },
+    {
+      "week": 384,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 385,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_056",
+      "elite": "Arena_MatchmakerHunt_Elite_056"
+    },
+    {
+      "week": 386,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 387,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_031",
+      "elite": "Arena_MatchmakerHunt_Elite_031"
+    },
+    {
+      "week": 388,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_047",
+      "elite": "Arena_MatchmakerHunt_Elite_047"
+    },
+    {
+      "week": 389,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_072",
+      "elite": "Arena_MatchmakerHunt_Elite_072"
+    },
+    {
+      "week": 390,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_026",
+      "elite": "Arena_MatchmakerHunt_Elite_026"
+    },
+    {
+      "week": 391,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 392,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_057",
+      "elite": "Arena_MatchmakerHunt_Elite_057"
+    },
+    {
+      "week": 393,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 394,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 395,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 396,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_013",
+      "elite": "Arena_MatchmakerHunt_Elite_013"
+    },
+    {
+      "week": 397,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_055",
+      "elite": "Arena_MatchmakerHunt_Elite_055"
+    },
+    {
+      "week": 398,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_011",
+      "elite": "Arena_MatchmakerHunt_Elite_011"
+    },
+    {
+      "week": 399,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 400,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_030",
+      "elite": "Arena_MatchmakerHunt_Elite_030"
+    },
+    {
+      "week": 401,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_052",
+      "elite": "Arena_MatchmakerHunt_Elite_052"
+    },
+    {
+      "week": 402,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_050",
+      "elite": "Arena_MatchmakerHunt_Elite_050"
+    },
+    {
+      "week": 403,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_031",
+      "elite": "Arena_MatchmakerHunt_Elite_031"
+    },
+    {
+      "week": 404,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_009",
+      "elite": "Arena_MatchmakerHunt_Elite_009"
+    },
+    {
+      "week": 405,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_040",
+      "elite": "Arena_MatchmakerHunt_Elite_040"
+    },
+    {
+      "week": 406,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_062",
+      "elite": "Arena_MatchmakerHunt_Elite_062"
+    },
+    {
+      "week": 407,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_012",
+      "elite": "Arena_MatchmakerHunt_Elite_012"
+    },
+    {
+      "week": 408,
+      "behemoth": "bullseye_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_029",
+      "elite": "Arena_MatchmakerHunt_Elite_029"
+    },
+    {
+      "week": 409,
+      "behemoth": "snowflake_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_018",
+      "elite": "Arena_MatchmakerHunt_Elite_018"
+    },
+    {
+      "week": 410,
+      "behemoth": "sq_rock_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_037",
+      "elite": "Arena_MatchmakerHunt_Elite_037"
+    },
+    {
+      "week": 411,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_054",
+      "elite": "Arena_MatchmakerHunt_Elite_054"
+    },
+    {
+      "week": 412,
+      "behemoth": "shockmane_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_079",
+      "elite": "Arena_MatchmakerHunt_Elite_079"
+    },
+    {
+      "week": 413,
+      "behemoth": "scissors_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_067",
+      "elite": "Arena_MatchmakerHunt_Elite_067"
+    },
+    {
+      "week": 414,
+      "behemoth": "moonface_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_023",
+      "elite": "Arena_MatchmakerHunt_Elite_023"
+    },
+    {
+      "week": 415,
+      "behemoth": "electroquill_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_027",
+      "elite": "Arena_MatchmakerHunt_Elite_027"
+    },
+    {
+      "week": 416,
+      "behemoth": "host_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_071",
+      "elite": "Arena_MatchmakerHunt_Elite_071"
+    },
+    {
+      "week": 417,
+      "behemoth": "mcbeaver_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_060",
+      "elite": "Arena_MatchmakerHunt_Elite_060"
+    },
+    {
+      "week": 418,
+      "behemoth": "lerawr_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_047",
+      "elite": "Arena_MatchmakerHunt_Elite_047"
+    },
+    {
+      "week": 419,
+      "behemoth": "mcrollin_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_025",
+      "elite": "Arena_MatchmakerHunt_Elite_025"
+    },
+    {
+      "week": 420,
+      "behemoth": "sq_sally_alpha",
+      "hard": "Arena_MatchmakerHunt_Hard_022",
+      "elite": "Arena_MatchmakerHunt_Elite_022"
+    }
+  ],
+  "schedules": [
+    {
+      "at": "2019-07-18T18:00:00.000Z",
+      "week": 0,
+      "window": {
+        "trial_start": 1563472800,
+        "trial_end": 1564077600,
+        "time_to_refresh": 604800
+      },
+      "schedule": {
+        "code": null,
+        "message": "OK",
+        "payload": {
+          "ScheduledItems": [
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "event_ladyluck_repeatable",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "event_ladyluck_repeatable",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Hard",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Hard",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Elite",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Elite",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Hard_045",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Hard_045",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Elite_045",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Elite_045",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": "2019-07-25T17:59:59.999Z",
+      "week": 0,
+      "window": {
+        "trial_start": 1563472800,
+        "trial_end": 1564077600,
+        "time_to_refresh": 1
+      },
+      "schedule": {
+        "code": null,
+        "message": "OK",
+        "payload": {
+          "ScheduledItems": [
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "event_ladyluck_repeatable",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "event_ladyluck_repeatable",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Hard",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Hard",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Elite",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Elite",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Hard_045",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Hard_045",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            },
+            {
+              "EndTime": "2019.07.25-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Elite_045",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Elite_045",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2019.07.18-18.00.00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": "2024-02-29T12:34:56.789Z",
+      "week": 240,
+      "window": {
+        "trial_start": 1708624800,
+        "trial_end": 1709229600,
+        "time_to_refresh": 19504
+      },
+      "schedule": {
+        "code": null,
+        "message": "OK",
+        "payload": {
+          "ScheduledItems": [
+            {
+              "EndTime": "2024.02.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "event_ladyluck_repeatable",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "event_ladyluck_repeatable",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2024.02.22-18.00.00"
+            },
+            {
+              "EndTime": "2024.02.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Hard",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Hard",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2024.02.22-18.00.00"
+            },
+            {
+              "EndTime": "2024.02.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Elite",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Elite",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2024.02.22-18.00.00"
+            },
+            {
+              "EndTime": "2024.02.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Hard_011",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Hard_011",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2024.02.22-18.00.00"
+            },
+            {
+              "EndTime": "2024.02.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Elite_011",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Elite_011",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2024.02.22-18.00.00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T09:00:00.000Z",
+      "week": 378,
+      "window": {
+        "trial_start": 1792087200,
+        "trial_end": 1792692000,
+        "time_to_refresh": 205200
+      },
+      "schedule": {
+        "code": null,
+        "message": "OK",
+        "payload": {
+          "ScheduledItems": [
+            {
+              "EndTime": "2026.10.22-18.00.00",
+              "IsRepeatable": false,
+              "Name": "event_ladyluck_repeatable",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "event_ladyluck_repeatable",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.15-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.22-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Hard",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Hard",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.15-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.22-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Elite",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Elite",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.15-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.22-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Hard_069",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Hard_069",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.15-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.22-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Elite_069",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Elite_069",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.15-18.00.00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": "2026-10-22T18:00:00.000Z",
+      "week": 379,
+      "window": {
+        "trial_start": 1792692000,
+        "trial_end": 1793296800,
+        "time_to_refresh": 604800
+      },
+      "schedule": {
+        "code": null,
+        "message": "OK",
+        "payload": {
+          "ScheduledItems": [
+            {
+              "EndTime": "2026.10.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "event_ladyluck_repeatable",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "event_ladyluck_repeatable",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.22-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Hard",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Hard",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.22-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "CR19_PlayerHunt_Arena_Elite",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "CR19_PlayerHunt_Arena_Elite",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.22-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Hard_087",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Hard_087",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.22-18.00.00"
+            },
+            {
+              "EndTime": "2026.10.29-18.00.00",
+              "IsRepeatable": false,
+              "Name": "Arena_MatchmakerHunt_Elite_087",
+              "RepeatableDetails": {
+                "EachDay": false,
+                "EachWeek": false
+              },
+              "ScheduledItems": [
+                {
+                  "ID": "Arena_MatchmakerHunt_Elite_087",
+                  "MaxCompletionPerInterval": -1
+                }
+              ],
+              "StartTime": "2026.10.22-18.00.00"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "ranks": [
+    {
+      "time": 0,
+      "rank": 2
+    },
+    {
+      "time": 179999,
+      "rank": 2
+    },
+    {
+      "time": 180000,
+      "rank": 1
+    },
+    {
+      "time": 299999,
+      "rank": 1
+    },
+    {
+      "time": 300000,
+      "rank": 0
+    },
+    {
+      "time": 1799999,
+      "rank": 0
+    },
+    {
+      "time": 1800000,
+      "rank": -1
+    },
+    {
+      "time": 86400000,
+      "rank": -1
+    }
+  ]
+}

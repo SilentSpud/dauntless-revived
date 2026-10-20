@@ -1,4 +1,5 @@
-//! The entitlement, progression config, Hunt Pass, cooldown and bounty routes of `routes/system.ts`
+//! The leaderboard profile, entitlement, progression config, Hunt Pass, cooldown and bounty routes of
+//! `routes/system.ts`
 //! (the rest of the file comes with its area).
 
 // Refusals are axum responses, the way the extractors report them; boxing them gains nothing here.
@@ -22,6 +23,7 @@ use crate::progression::{
 
 pub fn routes() -> Router<AppState> {
     Router::new()
+        .post("/profile/update", update_profile)
         .get("/entitlementsv2", list)
         .post("/entitlementv2/:userId", grant)
         .delete("/entitlement/:userId/:entitlement", revoke)
@@ -446,4 +448,27 @@ async fn set_bounties(
         .write(move |conn| crate::bounties::set(conn, &account, body.as_ref(), who).map_err(AppError::from))
         .await?;
     Ok(real_reply(reply.status, reply.body))
+}
+
+// ---- Leaderboard profile ----
+
+/// The public leaderboard identity the 1.4.4 client reports at login (Trials).
+async fn update_profile(State(state): State<AppState>, auth: MetagameAuth, ExpressBody(body): ExpressBody) -> Response {
+    let account = auth.user_id().map(str::to_owned);
+    let now = crate::time::now_ms();
+    let id = account.clone();
+    let result = state
+        .store
+        .write(move |conn| crate::trials::update_profile(conn, id.as_deref(), body.as_ref(), now))
+        .await;
+    match result {
+        Ok(()) => {
+            tracing::info!(
+                "Updated leaderboard profile for {}",
+                account.as_deref().unwrap_or("undefined")
+            );
+            super::empty(StatusCode::OK)
+        }
+        Err(fail) => super::trials::refusal(fail, "Leaderboard profile update failed"),
+    }
 }

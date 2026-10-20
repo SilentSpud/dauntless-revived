@@ -57,10 +57,35 @@ fn normalize(text: &str) -> String {
         // Random tokens (store purchases) and the port the recording server listened on
         (r"\b[0-9a-f]{64}\b", "<hex64>"),
         (r"http://127\.0\.0\.1:\d+", "http://<host>"),
+        // What depends on the week the script ran in (Trials)
+        (
+            r"Arena_MatchmakerHunt_(Hard|Elite)_\d{3}",
+            "Arena_MatchmakerHunt_${1}_<row>",
+        ),
+        (r#""(trial_start|trial_end|time_to_refresh)":\d+"#, r#""${1}":<n>"#),
+        (r"revived_trials_marks:-?\d+:", "revived_trials_marks:<week>:"),
+        (r"\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}", "<servicedate>"),
     ];
     rules.iter().fold(text.to_owned(), |text, (pattern, with)| {
         Regex::new(pattern).unwrap().replace_all(&text, *with).into_owned()
     })
+}
+
+/// This week's Trial row (`{{trial:<difficulty>}}`, or `{{trial:<difficulty>:<weeks back>}}`) and the
+/// week's number (`{{week}}`, `{{week:<weeks back>}}`), as record.cjs fills them.
+fn weekly(state: &metagame::app::AppState, text: &str) -> String {
+    let now = metagame::trials::week_at(state.shop.trial_rotation_start, metagame::time::now_ms()).unwrap();
+    let back = |c: &regex::Captures, at: usize| c.get(at).map_or(0, |m| m.as_str().parse::<i64>().unwrap());
+    let text = Regex::new(r"\{\{trial:(\d)(?::(\d+))?\}\}")
+        .unwrap()
+        .replace_all(text, |c: &regex::Captures| {
+            metagame::trials::trial_id_for_week(c[1].parse().unwrap(), now - back(c, 2)).unwrap()
+        })
+        .into_owned();
+    Regex::new(r"\{\{week(?::(\d+))?\}\}")
+        .unwrap()
+        .replace_all(&text, |c: &regex::Captures| (now - back(c, 1)).to_string())
+        .into_owned()
 }
 
 /// `{{bearer:<account>}}` replaced by a session token for the account, as record.cjs signs them.
@@ -109,7 +134,7 @@ async fn run_area(area: &str) {
     {
         let mut conn = SqliteConnection::establish(db.to_str().unwrap()).unwrap();
         for sql in script["setup"].as_array().unwrap() {
-            conn.batch_execute(sql.as_str().unwrap()).unwrap();
+            conn.batch_execute(&weekly(&state, sql.as_str().unwrap())).unwrap();
         }
     }
     let app = metagame::server::app(state.clone(), false);
@@ -119,9 +144,10 @@ async fn run_area(area: &str) {
     // Values a request saved from an earlier reply ("capture": the reply's JSON field to keep)
     let mut saved = std::collections::HashMap::<String, String>::new();
     let fill = |text: &str, saved: &std::collections::HashMap<String, String>| {
+        let text = weekly(&state, text);
         Regex::new(r"\{\{saved:([^}]+)\}\}")
             .unwrap()
-            .replace_all(text, |c: &regex::Captures| {
+            .replace_all(&text, |c: &regex::Captures| {
                 saved.get(&c[1]).cloned().unwrap_or_default()
             })
             .into_owned()
@@ -314,4 +340,14 @@ async fn progression_extras() {
 #[tokio::test(flavor = "multi_thread")]
 async fn progression_extras_stub() {
     run_area("progression-extras-stub").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn trials() {
+    run_area("trials").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn trials_switches() {
+    run_area("trials-switches").await;
 }

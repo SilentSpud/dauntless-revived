@@ -1,0 +1,411 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /profile/update",
+      "status": 200,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"profile account does not match the authenticated account\"}"
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"dauntlessid is invalid\"}"
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"profile is invalid\"}"
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"epicid is invalid\"}"
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"currentdisplayname is invalid\"}"
+    },
+    {
+      "request": "POST /profile/update",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"profile account does not match the authenticated account\"}"
+    },
+    {
+      "request": "GET /game_tuning/seasonal_event_schedule",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"ScheduledItems\":[]}}"
+    },
+    {
+      "request": "GET /game_tuning/huntpass_xp_config",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"EventConfigs\":[],\"GlobalConfig\":{\"DifficultyBias\":1,\"GlobalMultiplier\":1,\"MaxXPAwarded\":200}}}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"Trials results may only be submitted by a game server\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"Trial session id was already used for a different result\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/all",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"no active character for Trial reward account UID-c\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"trial_id is not the active Trial\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"trial_id is not the active Trial\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"trial_id is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"difficulty is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"completion_time is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"completion_time is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"objectives_completed is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"the same player appears more than once\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"entries must contain one to four players\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"entries must contain one to four players\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"weapon is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"secondary_weapon is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"trial player is missing phx_account_id\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /cooldown/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":{\"revived_trials_marks:<week>:gilded:0\":\"<date>\",\"revived_trials_marks:<week>:gilded:1\":\"<date>\",\"revived_trials_marks:<week>:gilded:2\":\"<date>\",\"revived_trials_marks:<week>:steel:0\":\"<date>\",\"revived_trials_marks:<week>:steel:1\":\"<date>\",\"revived_trials_marks:<week>:steel:2\":\"<date>\"}}"
+    },
+    {
+      "request": "GET /cooldown/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":200,\"message\":\"OK\",\"payload\":{\"revived_trials_marks:<week>:steel:0\":\"<date>\"}}"
+    },
+    {
+      "request": "POST /trials/leaderboards",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":1,\"guild\":{},\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\",\"world\":{\"group\":{\"difficulty\":1,\"entries\":[],\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\"},\"solo\":{\"all\":{\"difficulty\":1,\"entries\":[{\"completion_time\":170000,\"objectives_completed\":2,\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"r1\",\"weapon\":3,\"rank\":1,\"session_id\":\"s1\"},{\"completion_time\":2000000,\"objectives_completed\":0,\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":2,\"session_id\":\"<hex64>\"}]}}}}}"
+    },
+    {
+      "request": "GET /entitlementsv2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"entitlements\":[{\"name\":\"season_free_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season_premium_any\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"season09b_premium\",\"duration\":0,\"activatedDate\":\"<date>\"},{\"name\":\"trials_leaderboard_placement\",\"duration\":0,\"activatedDate\":\"<date>\"}]}"
+    },
+    {
+      "request": "POST /trials/leaderboards/all",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":0,\"guild\":{},\"page\":0,\"page_size\":1,\"trial_id\":\"Arena_MatchmakerHunt_Hard_<row>\",\"world\":{\"group\":{\"difficulty\":0,\"entries\":[{\"completion_time\":400000,\"entries\":[{\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"\",\"weapon\":1},{\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"secondary_weapon\":2}],\"objectives_completed\":0,\"rank\":1,\"session_id\":\"<hex64>\"}],\"page\":0,\"page_size\":1,\"trial_id\":\"Arena_MatchmakerHunt_Hard_<row>\"},\"solo\":{\"all\":{\"difficulty\":0,\"entries\":[]}}}}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":1,\"entries\":[{\"completion_time\":170000,\"objectives_completed\":2,\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"r1\",\"weapon\":3,\"rank\":1,\"session_id\":\"s1\"}],\"page\":0,\"page_size\":1,\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":1,\"entries\":[{\"completion_time\":2000000,\"objectives_completed\":0,\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":2,\"session_id\":\"<hex64>\"}],\"page\":1,\"page_size\":1,\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":1,\"entries\":[{\"completion_time\":2000000,\"objectives_completed\":0,\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":1,\"session_id\":\"<hex64>\"}],\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"target_platforms is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"page_size is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"trial_id does not match difficulty\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"trial_id is outside the recent rotation\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":1,\"entries\":[{\"completion_time\":100000,\"objectives_completed\":1,\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":1,\"session_id\":\"old-a\"},{\"completion_time\":200000,\"objectives_completed\":1,\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":2,\"session_id\":\"old-b\"}],\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"trial_id is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/group",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":0,\"entries\":[{\"completion_time\":400000,\"entries\":[{\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"\",\"weapon\":1},{\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"secondary_weapon\":2}],\"objectives_completed\":0,\"rank\":1,\"session_id\":\"<hex64>\"}],\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Hard_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/group",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":0,\"entries\":[{\"completion_time\":400000,\"entries\":[{\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"\",\"weapon\":1},{\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"secondary_weapon\":2}],\"objectives_completed\":0,\"rank\":1,\"session_id\":\"<hex64>\"}],\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Hard_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/group",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"difficulty\":0,\"entries\":[],\"page\":0,\"page_size\":100,\"trial_id\":\"Arena_MatchmakerHunt_Hard_<row>\",\"trial_start\":<n>,\"trial_end\":<n>,\"time_to_refresh\":<n>}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo/individual",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"completion_time\":170000,\"objectives_completed\":2,\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"r1\",\"weapon\":3,\"rank\":1,\"session_id\":\"s1\",\"difficulty\":\"1\",\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\"}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo/individual",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"completion_time\":2000000,\"objectives_completed\":0,\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":2,\"session_id\":\"<hex64>\",\"difficulty\":\"1\",\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\"}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo/individual",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"phx_account_id is invalid\"}"
+    },
+    {
+      "request": "POST /trials/leaderboards/group/individual",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"completion_time\":400000,\"entries\":[{\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"\",\"weapon\":1},{\"phx_account_id\":\"UID-b\",\"platform\":\"XBOX\",\"platform_name\":\"Bo-X\",\"player_role_id\":\"\",\"weapon\":0,\"secondary_weapon\":2}],\"objectives_completed\":0,\"rank\":1,\"session_id\":\"<hex64>\",\"difficulty\":\"0\",\"trial_id\":\"Arena_MatchmakerHunt_Hard_<row>\"}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/group/individual",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "POST /trials/leaderboards/solo/individual",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"completion_time\":100000,\"objectives_completed\":1,\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"Ada!\",\"player_role_id\":\"\",\"weapon\":0,\"rank\":1,\"session_id\":\"old-a\",\"difficulty\":\"1\",\"trial_id\":\"Arena_MatchmakerHunt_Elite_<row>\"}}"
+    }
+  ]
+}

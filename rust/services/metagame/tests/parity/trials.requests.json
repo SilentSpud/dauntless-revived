@@ -1,0 +1,768 @@
+{
+  "about": "Trials: leaderboard profiles, run submissions with their Mark rewards, the leaderboards, settling last week, and the tuning routes (MIGRATION_PLAN.md M29, area 4, third part). {{trial:\u2026}} and {{week:\u2026}} are this week's.",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO characters (characterId, userId, createdDate, lastModifiedDate, name, updateVersion, data) VALUES ('char-a1', 'UID-a', 'Sep 21, 2026', 'Sep 21, 2026', 'Ada', 0, '{}'), ('char-b1', 'UID-b', 'Sep 21, 2026', 'Sep 21, 2026', 'Bo', 0, '{}')",
+    "INSERT INTO leaderboardprofiles (accountId, epicId, platformId, platform, displayName, updatedDate) VALUES ('UID-b', '', '', 'XBOX', 'Bo-X', '2026-01-01T00:00:00.000Z')",
+    "INSERT INTO trialruns (trialId, trialWeek, difficulty, mode, runKey, groupKey, completionTime, objectivesCompleted, sessionId, entries, submittedDate) VALUES ('{{trial:1:1}}', {{week:1}}, 1, 'solo', 'old-a', 'UID-a', 100000, 1, 'old-a', '[{\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"UID-a\",\"player_role_id\":\"\",\"weapon\":0}]', '2026-01-01T00:00:00.000Z'), ('{{trial:1:1}}', {{week:1}}, 1, 'solo', 'old-b', 'UID-b', 200000, 1, 'old-b', '[{\"phx_account_id\":\"UID-b\",\"platform\":\"PC\",\"platform_name\":\"UID-b\",\"player_role_id\":\"\",\"weapon\":0}]', '2026-01-01T00:00:01.000Z'), ('{{trial:1:1}}', {{week:1}}, 1, 'solo', 'old-a2', 'UID-a', 150000, 1, 'old-a2', '[{\"phx_account_id\":\"UID-a\",\"platform\":\"PC\",\"platform_name\":\"UID-a\",\"player_role_id\":\"\",\"weapon\":0}]', '2026-01-01T00:00:02.000Z')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "dauntlessid": "UID-a",
+        "currentdisplayname": "Ada!",
+        "currentplatform": "PC",
+        "epicid": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "dauntlessid": "UID-b",
+        "currentdisplayname": "x"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {}
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "dauntlessid": "UID-a",
+        "currentdisplayname": "Ada",
+        "epicid": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "dauntlessid": "UID-a",
+        "currentdisplayname": ""
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/profile/update",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "dauntlessid": "UID-a",
+        "currentdisplayname": "x"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/game_tuning/seasonal_event_schedule",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/game_tuning/huntpass_xp_config",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 160000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/all",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": "0",
+        "completion_time": "400000",
+        "entries": [
+          {
+            "phx_account_id": "UID-a",
+            "platform": "PC",
+            "weapon": 1
+          },
+          {
+            "phx_account_id": "UID-b",
+            "platform": "PC",
+            "secondary_weapon": 2
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0,
+        "completion_time": 400000,
+        "entries": [
+          {
+            "phx_account_id": "UID-a"
+          },
+          {
+            "phx_account_id": "UID-c"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s2"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s3"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "x",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 2,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": -1,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 1.5,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 100,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": null,
+        "entries": [
+          {
+            "phx_account_id": "UID-a"
+          },
+          {
+            "phx_account_id": "UID-a"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1",
+        "entries": [
+          {
+            "phx_account_id": "UID-0"
+          },
+          {
+            "phx_account_id": "UID-1"
+          },
+          {
+            "phx_account_id": "UID-2"
+          },
+          {
+            "phx_account_id": "UID-3"
+          },
+          {
+            "phx_account_id": "UID-4"
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1",
+        "entries": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 300,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "UID-a",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1",
+        "secondary_weapon": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 170000,
+        "objectives_completed": 2,
+        "phx_account_id": "",
+        "platform": "PC",
+        "platform_name": "Ada",
+        "player_role_id": "r1",
+        "weapon": 3,
+        "session_id": "s1"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "completion_time": 2000000,
+        "phx_account_id": "UID-b",
+        "platform_name": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cooldown/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/cooldown/UID-b",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/entitlementsv2",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/all",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0,
+        "page_size": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "page_size": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "page_size": 1,
+        "page": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "target_platforms": [
+          "XBOX"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "target_platforms": "PC"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "page_size": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "Arena_MatchmakerHunt_Elite_999",
+        "difficulty": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1:1}}",
+        "difficulty": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/group",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/group",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0,
+        "target_platforms": [
+          "PC",
+          "XBOX"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/group",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0,
+        "target_platforms": [
+          "PC"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo/individual",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "phx_account_id": "UID-a",
+        "page": "x"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo/individual",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1,
+        "phx_account_id": "UID-b"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo/individual",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1}}",
+        "difficulty": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/group/individual",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0,
+        "phx_account_id": "UID-b"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/group/individual",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:0}}",
+        "difficulty": 0,
+        "phx_account_id": "UID-c"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/trials/leaderboards/solo/individual",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "trial_id": "{{trial:1:1}}",
+        "difficulty": 1,
+        "phx_account_id": "UID-a"
+      }
+    }
+  ]
+}
