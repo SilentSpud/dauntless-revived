@@ -42,6 +42,7 @@ mod moderation;
 mod novaunlocker;
 mod party;
 mod partyhttp;
+mod permissions;
 mod platform;
 mod playertracking;
 mod progressiondefault;
