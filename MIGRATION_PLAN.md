@@ -341,6 +341,18 @@ Done so far:
   Offline flows stay with L42–L44. Not ported yet: the Linux secure-storage bootstrap (`main.ts`
   `ensureLinuxSecureStorageDependency`) and the updater (P9). No check yet of the controller in the running app
   with a real profile.
+- Launcher P6, L40 and the page's part of L41: the page imports its backend from `src/renderer/backend.ts`.
+  That module returns `api.ts` when Tauri's `__TAURI_INTERNALS__` is present, and otherwise the
+  `window.launcher` that the Electron preload still sets until L51. The page is the same in both launchers, and
+  the injected `tauri-bridge.ts` script and the global `window.launcher` declaration are gone (`vite-env.d.ts`
+  keeps the Vite types). `src/shared/art.ts` is the one helper for the two art URL forms: `dr-art://bg/<id>` in
+  Electron and WebKitGTK, `http://dr-art.localhost/bg/<id>` in WebView2. Anything else is never loaded
+  (`test/art.test.ts`). Left in L41: the visual check on both webviews and the distro font checks.
+  Checked in the running debug app (WebView2, with the debug-only `DAUNTLESS_REVIVED_DEV_PROFILE` throwaway
+  profile, so a developer's real settings and keys stay untouched). The page draws the controller's snapshot.
+  `set_settings` writes `settings.json` in the Electron layout. Bad invites and register without a server answer
+  as in Electron, and closing the window exits through the controller's shutdown. That check found that sync
+  commands run outside the Tokio runtime, so the controller now spawns on a stored runtime handle, with a test.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

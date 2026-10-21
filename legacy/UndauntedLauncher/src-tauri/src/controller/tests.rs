@@ -948,3 +948,38 @@ async fn change_folder_on_an_existing_game_uses_that_game_and_anything_else_gets
     assert_eq!(hx.c.snapshot().install.dir, empty.path().to_string_lossy());
     hx.c.shutdown().await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn status_polling_starts_and_stops_from_a_thread_outside_the_runtime() {
+    // Tauri runs sync commands such as set_status_polling on the main thread, outside any runtime
+    let meta = host(&[]);
+    let port = serve(meta.clone(), None).await;
+    let hx = Harness::new(free_port().await);
+    let invite = format_invite(&Invite {
+        mode: ServerMode::Private,
+        host: "127.0.0.1".into(),
+        port,
+        code: "POLL-CODE".into(),
+        name: "Friday Hunts".into(),
+        share: None,
+        fp: None,
+    })
+    .unwrap();
+    assert_eq!(hx.c.submit_invite(&invite, false).await, ok());
+    let calls = meta.lock().unwrap().status_calls.len();
+    let c = hx.c.clone();
+    std::thread::spawn(move || c.set_status_polling(true)).join().unwrap();
+    for _ in 0..50 {
+        if meta.lock().unwrap().status_calls.len() > calls {
+            break;
+        }
+        tokio::time::sleep(Duration::from_millis(20)).await;
+    }
+    assert!(
+        meta.lock().unwrap().status_calls.len() > calls,
+        "the first poll is at once"
+    );
+    let c = hx.c.clone();
+    std::thread::spawn(move || c.set_status_polling(false)).join().unwrap();
+    hx.c.shutdown().await;
+}

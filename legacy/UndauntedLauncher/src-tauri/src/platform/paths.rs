@@ -20,6 +20,13 @@ impl Paths {
     /// From the operating system's folders.
     pub fn from_system() -> Option<Self> {
         let home = dirs::home_dir()?;
+        // Debug builds only: a throwaway profile, so a developer's real settings and keys stay untouched
+        if cfg!(debug_assertions)
+            && let Some(dir) = std::env::var_os("DAUNTLESS_REVIVED_DEV_PROFILE").map(PathBuf::from)
+        {
+            let local = dir.join("Local");
+            return Some(Self::with(dir.join("User Data"), dir.join("Documents"), home, &local));
+        }
         let user_data = dirs::config_dir()?.join(PRODUCT_NAME);
         let documents = dirs::document_dir().unwrap_or_else(|| home.join("Documents"));
         let local = std::env::var_os("LOCALAPPDATA").map_or_else(|| home.join("AppData").join("Local"), PathBuf::from);

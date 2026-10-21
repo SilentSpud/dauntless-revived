@@ -6,6 +6,7 @@ import { $, forceRender, githubMark, h, icon, renderRegion, type IconName } from
 import partnerLogo from "./brand/eugamehost-partner.png";
 import newsBadge from "./brand/news-badge.svg";
 import { buildScene } from "./scene";
+import { api, artUrl } from "./backend";
 import { isStringKey, translate, type StringKey } from "../shared/i18n";
 import { localized, PATRONS, PROJECT_PEOPLE, SOFTWARE, UPSTREAM_PEOPLE, type CreditPerson, type CreditRole } from "../shared/credits";
 import { parseInvite } from "../shared/invite";
@@ -26,8 +27,6 @@ type Modal =
   | { kind: "remove_server"; id: string; name: string }
   | { kind: "offline_restore" };
 
-const api = window.launcher;
-const ART_URL = /^dr-art:\/\/bg\/[0-9a-f]{64}$/;
 const TIME_LOCALES: Record<Language, string> = { en: "en-GB", fi: "fi-FI", de: "de-DE", es: "es-ES", fr: "fr-FR", it: "it-IT", ja: "ja-JP", pt: "pt-BR", ru: "ru-RU" };
 const GAME_LANGUAGE_NAMES: Record<Exclude<GameLanguage, "auto">, string> = { "en-US": "English", "de-DE": "Deutsch", "es-ES": "Español", "fr-FR": "Français", "it-IT": "Italiano", "ja-JP": "日本語", "pt-BR": "Português (Brasil)", "ru-RU": "Русский" };
 
@@ -2177,7 +2176,10 @@ async function checkInviteLink(): Promise<void> {
 // ------------------------------------------------------------------ hero art (the host's art pack)
 
 function showArt(index: number): void {
-  const list = state.branding.backgrounds.filter((b) => ART_URL.test(b.url));
+  const list = state.branding.backgrounds.flatMap((b) => {
+    const url = artUrl(b.url);
+    return url ? [{ ...b, url }] : [];
+  });
   const layers = [$("#art-a"), $("#art-b")];
   const credit = $("#art-credit");
   if (list.length === 0) {

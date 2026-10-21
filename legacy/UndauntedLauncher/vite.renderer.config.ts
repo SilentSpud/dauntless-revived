@@ -1,11 +1,10 @@
 import { defineConfig, type Plugin } from "vite";
 
-// The Tauri page (mode "tauri") is today's page with two changes:
-// - The Electron page keeps its Content-Security-Policy in a meta tag. The Tauri page gets the same
-//   policy from tauri.conf.json instead: with the meta tag left in, every call to the backend hangs,
-//   because the tag's default-src 'none' and connect-src 'self' block the isolation frame and the IPC
-//   endpoint (MIGRATION_PLAN.md L10). The meta tag goes once the Electron launcher does (L51).
-// - The Tauri bridge (src/renderer/tauri-bridge.ts) loads before the page's own script (L7).
+// The Tauri page (mode "tauri") is today's page without its Content-Security-Policy meta tag. The Electron
+// page keeps the policy in that tag; the Tauri page gets the same policy from tauri.conf.json instead: with
+// the meta tag left in, every call to the backend hangs, because the tag's default-src 'none' and
+// connect-src 'self' block the isolation frame and the IPC endpoint (MIGRATION_PLAN.md L10). The meta tag
+// goes once the Electron launcher does (L51). The page picks its backend itself (src/renderer/backend.ts).
 function forTauri(): Plugin {
   return {
     name: "dr-tauri-page",
@@ -15,10 +14,7 @@ function forTauri(): Plugin {
       handler(html) {
         const withoutMeta = html.replace(/\s*<meta\s+http-equiv="Content-Security-Policy"[^>]*\/>/, "");
         if (withoutMeta === html) throw new Error("index.html: the Content-Security-Policy meta tag was not found");
-        const page = '<script type="module" src="/src/renderer/index.ts"></script>';
-        if (!withoutMeta.includes(page)) throw new Error("index.html: the page script was not found");
-        const bridge = '<script type="module" src="/src/renderer/tauri-bridge.ts"></script>';
-        return withoutMeta.replace(page, `${bridge}\n    ${page}`);
+        return withoutMeta;
       },
     },
   };

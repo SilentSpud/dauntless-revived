@@ -227,6 +227,8 @@ pub struct Controller {
     state: Mutex<State>,
     /// News and art load in the background; shutdown waits for them.
     background: Mutex<Vec<JoinHandle<()>>>,
+    /// Where background work runs: sync commands run on the main thread, outside any runtime
+    rt: tokio::runtime::Handle,
     me: Weak<Controller>,
 }
 
@@ -245,6 +247,10 @@ impl Controller {
         );
         let verified = VerifiedCache::load(config.user_data.join("verified-files.json"));
         let game = GameProcess::with_spawn(config.spawn.clone());
+        let rt = tokio::runtime::Handle::try_current().unwrap_or_else(|_| {
+            let tauri::async_runtime::RuntimeHandle::Tokio(handle) = tauri::async_runtime::handle();
+            handle
+        });
         let controller = Arc::new_cyclic(|me: &Weak<Controller>| Controller {
             p: platform,
             c: config,
@@ -257,6 +263,7 @@ impl Controller {
                 ..State::default()
             }),
             background: Mutex::new(Vec::new()),
+            rt,
             me: me.clone(),
         });
         let me = Arc::downgrade(&controller);
@@ -286,12 +293,12 @@ impl Controller {
             st.end_playing.take()
         };
         if let Some((endpoint, key)) = end {
-            tokio::spawn(async move {
+            self.rt.spawn(async move {
                 let _ = end_playing(&endpoint, &key).await;
             });
         }
         if let Some(this) = self.me.upgrade() {
-            tokio::spawn(async move {
+            self.rt.spawn(async move {
                 this.stop_relay().await;
                 this.publish();
             });
@@ -367,7 +374,7 @@ impl Controller {
         if self.server().is_some()
             && let Some(this) = self.me.upgrade()
         {
-            tokio::spawn(async move {
+            self.rt.spawn(async move {
                 this.connect().await;
             });
         }
@@ -872,7 +879,7 @@ impl Controller {
             (true, false) => {
                 let me = self.me.clone();
                 let every = self.c.status_poll;
-                st.poll = Some(tokio::spawn(async move {
+                st.poll = Some(self.rt.spawn(async move {
                     // The first tick is at once
                     let mut interval = tokio::time::interval(every);
                     interval.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
@@ -966,7 +973,7 @@ impl Controller {
 
     fn in_background(&self, extras: Extras) {
         let Some(this) = self.me.upgrade() else { return };
-        let task = tokio::spawn(async move {
+        let task = self.rt.spawn(async move {
             match extras {
                 Extras::All => this.load_extras().await,
                 Extras::News => this.refresh_news().await,
@@ -1709,9 +1716,10 @@ impl Controller {
         }));
         let cache = self.verified.clone();
         let verified_dir = dir.to_path_buf();
+        let rt = self.rt.clone();
         options.on_file_verified = Some(Arc::new(move |file| {
             let (cache, dir, file) = (cache.clone(), verified_dir.clone(), file.clone());
-            tokio::spawn(async move {
+            rt.spawn(async move {
                 let mut cache = cache.lock().await;
                 cache.record(&dir, &file).await;
                 let _ = cache.save().await;
