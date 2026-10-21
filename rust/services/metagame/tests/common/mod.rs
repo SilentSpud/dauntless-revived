@@ -341,3 +341,37 @@ pub fn warnings<T>(f: impl FnOnce() -> T) -> (T, Vec<String>) {
     let seen = seen.lock().unwrap().clone();
     (result, seen)
 }
+
+/// Every warning logged anywhere in the test process since the first call, for checks on what the app
+/// logs while it answers requests (its handlers run on other threads). Tests run in parallel, so a
+/// check looks for lines that name its own accounts.
+pub fn logged_warnings() -> Vec<String> {
+    use std::sync::{Arc, Mutex, OnceLock};
+    use tracing_subscriber::layer::SubscriberExt;
+
+    static SEEN: OnceLock<Arc<Mutex<Vec<String>>>> = OnceLock::new();
+    struct Capture(Arc<Mutex<Vec<String>>>);
+    struct Message(String);
+    impl tracing::field::Visit for Message {
+        fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
+            if field.name() == "message" {
+                self.0 = format!("{value:?}");
+            }
+        }
+    }
+    impl<S: tracing::Subscriber> tracing_subscriber::Layer<S> for Capture {
+        fn on_event(&self, event: &tracing::Event<'_>, _: tracing_subscriber::layer::Context<'_, S>) {
+            if *event.metadata().level() == tracing::Level::WARN {
+                let mut message = Message(String::new());
+                event.record(&mut message);
+                self.0.lock().unwrap().push(message.0);
+            }
+        }
+    }
+    let seen = SEEN.get_or_init(|| {
+        let seen = Arc::new(Mutex::new(Vec::new()));
+        let _ = tracing::subscriber::set_global_default(tracing_subscriber::registry().with(Capture(seen.clone())));
+        seen
+    });
+    seen.lock().unwrap().clone()
+}
