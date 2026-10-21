@@ -7,6 +7,7 @@ pub mod eos;
 pub mod friends;
 pub mod guild;
 pub mod inventory;
+pub mod keyrotation;
 pub mod loadout;
 pub mod login;
 pub mod matchmaking;
@@ -84,6 +85,7 @@ pub fn note_unhandled_progression(method: &axum::http::Method, uri: &axum::http:
 pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
     service_kit::routing::Router::new()
         .merge(login::routes())
+        .merge(keyrotation::routes(state))
         .merge(eos::routes(state))
         .merge(system::routes())
         .merge(friends::routes())

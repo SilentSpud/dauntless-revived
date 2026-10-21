@@ -19,6 +19,7 @@ pub mod guild;
 pub mod health;
 pub mod inventory;
 pub mod js;
+pub mod keyrotation;
 pub mod limits;
 pub mod loadouts;
 pub mod matchmaking;

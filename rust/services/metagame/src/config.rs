@@ -69,6 +69,8 @@ pub struct Config {
     pub store: crate::store::Settings,
     pub matchmaking: crate::matchmaking::Settings,
     pub guilds: crate::guild::Settings,
+    /// `KEY_RECOVERY_SERVICE_SECRET`: the Discord bot's key recovery (`routes/keyrotation.rs`).
+    pub key_recovery_secret: Option<String>,
     pub real_progression: crate::realprogression::Settings,
     pub features: Features,
 }
@@ -154,6 +156,7 @@ impl Config {
             store: crate::store::Settings::from_env(env),
             matchmaking: crate::matchmaking::Settings::from_env(env),
             guilds: crate::guild::Settings::from_env(env),
+            key_recovery_secret: env.raw("KEY_RECOVERY_SERVICE_SECRET").map(str::to_owned),
             real_progression: crate::realprogression::Settings::from_env(env),
             features: Features {
                 accountinfo_public_legacy: env.get("ACCOUNTINFO_PUBLIC_LEGACY") == Some("1"),

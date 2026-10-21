@@ -1,0 +1,27 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /internal/key-recovery/begin",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"recovery_unavailable\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/begin",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"recovery_unavailable\"}"
+    }
+  ]
+}

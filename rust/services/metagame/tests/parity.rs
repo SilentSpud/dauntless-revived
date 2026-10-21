@@ -34,6 +34,8 @@ const HEADERS: [&str; 7] = [
 fn normalize(text: &str) -> String {
     let rules = [
         (r"eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+", "<jwt>"),
+        // Recovered keys are longer than registered ones
+        (r"UUK_[0-9a-f]{64}", "<uuk64>"),
         (r"UUK_[0-9a-f]{48}", "<uuk>"),
         (
             r"UID-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
@@ -485,4 +487,14 @@ async fn guild_off() {
 #[tokio::test(flavor = "multi_thread")]
 async fn guild_switches() {
     run_area("guild-switches").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn keyrotation() {
+    run_area("keyrotation").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn keyrotation_off() {
+    run_area("keyrotation-off").await;
 }

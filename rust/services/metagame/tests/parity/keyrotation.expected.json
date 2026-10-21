@@ -1,0 +1,264 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"recovery_unavailable\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"recovery_unavailable\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"recovery_unavailable\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/nope",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=116; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"recovery_unavailable\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=115; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=114; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=113; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=112; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=111; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=110; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":true}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=109; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/begin",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=108; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"challenge\":\"<hex64>\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/begin",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=107; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"challenge\":null}"
+    },
+    {
+      "request": "POST /internal/key-recovery/begin",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=106; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"challenge\":\"<hex64>\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/confirm",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=105; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"key\":null}"
+    },
+    {
+      "request": "POST /internal/key-recovery/confirm",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=104; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"key\":null}"
+    },
+    {
+      "request": "POST /internal/key-recovery/confirm",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=103; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"key\":\"<uuk64>\"}"
+    },
+    {
+      "request": "POST /internal/key-recovery/confirm",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=102; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"key\":null}"
+    },
+    {
+      "request": "POST /internal/key-recovery/begin",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=101; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"challenge\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/GetUserInfo",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=100; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=99; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=98; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    },
+    {
+      "request": "POST /internal/key-recovery/link",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=97; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"verified\":false}"
+    }
+  ]
+}

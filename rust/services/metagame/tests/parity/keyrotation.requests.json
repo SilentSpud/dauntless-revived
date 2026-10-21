@@ -1,0 +1,265 @@
+{
+  "about": "Account key recovery for the Discord bot: the service secret, link proofs, challenges, rotation and the per-id limit (MIGRATION_PLAN.md M29, area 6).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "KEY_RECOVERY_SERVICE_SECRET": "parity-key-recovery-secret-0123456789abcdef"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-k', 'Kay', 0, 0), ('UID-adm', 'Root', 0, 1)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-k', 'f3ceb9e7068d993402126d38aab2e88bf77dafc4438e330870cb20fa26a6f36c'), ('UID-adm', '3990c72b1976c687c9ed73272bcd9e7420bff0dd218a64c952c3a2c725bd8e91')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {},
+      "json": {
+        "discordId": "111111111111111111",
+        "key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "wrong"
+      },
+      "json": {
+        "discordId": "111111111111111111",
+        "key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef",
+        "x-forwarded-for": "1.2.3.4"
+      },
+      "json": {
+        "discordId": "111111111111111111",
+        "key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/nope",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "123",
+        "key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": "UUK_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": "UUK_wrong"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111",
+        "key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "333333333333333333",
+        "key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/begin",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "999999999999999999"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/begin",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": 12345678901234567
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/begin",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111"
+      },
+      "capture": "challenge"
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/confirm",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111",
+        "challenge": "xyz"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/confirm",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "444444444444444444",
+        "challenge": "{{saved:challenge}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/confirm",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111",
+        "challenge": "{{saved:challenge}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/confirm",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111",
+        "challenge": "{{saved:challenge}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/begin",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "111111111111111111"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/GetUserInfo",
+      "headers": {
+        "x-undaunted-user-api-key": "UUK_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": "UUK_wrong"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": "UUK_wrong"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": "UUK_wrong"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/link",
+      "headers": {
+        "x-key-recovery-service": "parity-key-recovery-secret-0123456789abcdef"
+      },
+      "json": {
+        "discordId": "222222222222222222",
+        "key": "UUK_wrong"
+      }
+    }
+  ]
+}

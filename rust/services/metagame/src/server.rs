@@ -164,6 +164,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         matchmaking: crate::matchmaking::Matchmaking::new(config.matchmaking.clone()),
         guilds: config.guilds.clone(),
         guild_memory: crate::guild::Memory::default(),
+        key_recovery_secret: config.key_recovery_secret.clone(),
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });

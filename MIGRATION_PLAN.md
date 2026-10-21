@@ -132,6 +132,10 @@ Done so far:
   (`guild`, `guild-off`, `guild-switches`, 110 replies) match Node; the harnesses gained `capturePath`
   for values below the reply's root. Area 5 is done; the guild host fallbacks (`ListGuilds`,
   `DisbandGuildAsAdmin`) and the chat room check come with undauntedapi and chat.
+- Metagame B2, area 6 of M29, first part: key recovery (`routes/keyrotation.ts`, `discordlinks`). The
+  Discord bot's link proof, challenge and confirmation behind `KEY_RECOVERY_SERVICE_SECRET`, with the
+  per-id limit, the auth epoch bump and the chat revocation. Two parity scripts (`keyrotation`,
+  `keyrotation-off`, 26 replies) match Node; both harnesses normalize recovered 64-digit keys.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

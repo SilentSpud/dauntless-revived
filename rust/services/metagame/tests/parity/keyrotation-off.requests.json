@@ -1,0 +1,32 @@
+{
+  "about": "Account key recovery without a long enough KEY_RECOVERY_SERVICE_SECRET (MIGRATION_PLAN.md M29, area 6).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "KEY_RECOVERY_SERVICE_SECRET": "short"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-k', 'Kay', 0, 0), ('UID-adm', 'Root', 0, 1)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-k', 'f3ceb9e7068d993402126d38aab2e88bf77dafc4438e330870cb20fa26a6f36c'), ('UID-adm', '3990c72b1976c687c9ed73272bcd9e7420bff0dd218a64c952c3a2c725bd8e91')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/begin",
+      "headers": {
+        "x-key-recovery-service": "short"
+      },
+      "json": {
+        "discordId": "111111111111111111"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/key-recovery/begin",
+      "headers": {},
+      "json": {
+        "discordId": "111111111111111111"
+      }
+    }
+  ]
+}
