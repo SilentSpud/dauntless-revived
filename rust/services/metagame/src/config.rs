@@ -80,6 +80,9 @@ pub struct Config {
     pub discord_key_state_file: Option<String>,
     /// `DEVELOPER_ACCOUNT_IDS` (comma-separated), marked in the dashboard's account directory.
     pub developer_accounts: Vec<String>,
+    /// `DEVICE_SIGNAL_HMAC_KEY` (hex, at least 32 bytes): the key the launcher's device claims are
+    /// hashed with; without one they are refused.
+    pub device_signal_key: Option<Vec<u8>>,
     pub real_progression: crate::realprogression::Settings,
     /// The server's name, version and source for the status (`serverstatus.rs`).
     pub server_status: crate::serverstatus::Settings,
@@ -175,6 +178,7 @@ impl Config {
                 .raw("DISCORD_KEY_STATE_FILE")
                 .filter(|f| !f.is_empty())
                 .map(str::to_owned),
+            device_signal_key: crate::moderation::signal_key(env.raw("DEVICE_SIGNAL_HMAC_KEY")),
             developer_accounts: env
                 .raw("DEVELOPER_ACCOUNT_IDS")
                 .unwrap_or("")

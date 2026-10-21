@@ -171,6 +171,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         backup_root: config.backup_root.clone(),
         discord_key_state_file: config.discord_key_state_file.clone(),
         developer_accounts: config.developer_accounts.clone(),
+        device_signal_key: config.device_signal_key.clone(),
         activity: crate::activity::Activity::default(),
         server_status: config.server_status.clone(),
         status_cache: crate::serverstatus::Cache::default(),

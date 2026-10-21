@@ -69,6 +69,7 @@ pub struct App {
     pub backup_root: Option<String>,
     pub discord_key_state_file: Option<String>,
     pub developer_accounts: Vec<String>,
+    pub device_signal_key: Option<Vec<u8>>,
     /// Who is playing, from the clients' heartbeats (in memory).
     pub activity: crate::activity::Activity,
     pub server_status: crate::serverstatus::Settings,

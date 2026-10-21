@@ -28,6 +28,8 @@ pub struct Limits {
     pub login: Arc<Limiter>,
     pub token_verify: Arc<Limiter>,
     pub admin_mutation: Arc<Limiter>,
+    /// Per account, after the key check (`DeviceSignalRateLimit`).
+    pub device_signals: Arc<Limiter>,
     /// Shared by every caller of the backup route (`routes/backup.ts`).
     pub backup: Arc<Limiter>,
 }
@@ -45,6 +47,7 @@ impl Default for Limits {
             // The 1.4.4 client verifies its token about every 30 s.
             token_verify: Arc::new(Limiter::new(120, MINUTE, reply())),
             admin_mutation: Arc::new(Limiter::new(120, MINUTE, reply())),
+            device_signals: Arc::new(Limiter::new(10, MINUTE, json!({"error": "rate_limited"}))),
             backup: Arc::new(Limiter::new(
                 6,
                 60 * MINUTE,
@@ -63,6 +66,7 @@ impl Limits {
             &self.login,
             &self.token_verify,
             &self.admin_mutation,
+            &self.device_signals,
             &self.backup,
         ] {
             drop(limiter.spawn_sweeper());

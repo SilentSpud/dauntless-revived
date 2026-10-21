@@ -69,6 +69,11 @@ fn normalize(text: &str) -> String {
         (r"\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}", "<servicedate>"),
         // How long the server has run (ServerStatus)
         (r#""uptimeSeconds":\d+"#, r#""uptimeSeconds":<n>"#),
+        // When a ban, event or claim was written (moderation)
+        (
+            r#""(last_seen|observedAt|updated_at|created_at|expires_at)":1\d{12}"#,
+            r#""${1}":<ms>"#,
+        ),
     ];
     rules.iter().fold(text.to_owned(), |text, (pattern, with)| {
         Regex::new(pattern).unwrap().replace_all(&text, *with).into_owned()
@@ -576,4 +581,14 @@ async fn undaunted() {
 #[tokio::test]
 async fn undaunted_plain() {
     run_area("undaunted-plain").await;
+}
+
+#[tokio::test]
+async fn moderation() {
+    run_area("moderation").await;
+}
+
+#[tokio::test]
+async fn moderation_off() {
+    run_area("moderation-off").await;
 }

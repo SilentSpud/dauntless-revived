@@ -1,0 +1,36 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 503,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=9; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": "{\"error\":\"device_signals_unavailable\"}"
+    },
+    {
+      "request": "GET /undaunted/api/AccountRecovery/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"key\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/Moderation/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"username\":\"Ada\",\"ban\":null,\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[]},\"addresses\":[]}"
+    }
+  ]
+}

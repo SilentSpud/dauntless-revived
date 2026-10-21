@@ -91,6 +91,7 @@ fn fixture_with(account_key_recovery: bool, backup_root: Option<String>) -> Fixt
         backup_root,
         discord_key_state_file: None,
         developer_accounts: Vec::new(),
+        device_signal_key: None,
         activity: Default::default(),
         server_status: Default::default(),
         status_cache: Default::default(),

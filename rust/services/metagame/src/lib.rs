@@ -27,6 +27,7 @@ pub mod limits;
 pub mod loadouts;
 pub mod matchmaking;
 pub mod middleman;
+pub mod moderation;
 pub mod origin;
 pub mod party;
 pub mod progression;

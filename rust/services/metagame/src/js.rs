@@ -78,6 +78,22 @@ pub fn is_nullish(value: Option<&Value>) -> bool {
     matches!(value, None | Some(Value::Null))
 }
 
+/// JavaScript truthiness, for `!!x`.
+pub fn truthy(value: Option<&Value>) -> bool {
+    match value {
+        None | Some(Value::Null) => false,
+        Some(Value::Bool(b)) => *b,
+        Some(Value::Number(n)) => n.as_f64().is_some_and(|n| n != 0.0 && !n.is_nan()),
+        Some(Value::String(text)) => !text.is_empty(),
+        Some(_) => true,
+    }
+}
+
+/// `String.prototype.trim`: JavaScript's white space (U+FEFF but not U+0085).
+pub fn trim(text: &str) -> &str {
+    text.trim_matches(|c: char| (c.is_whitespace() && c != '\u{85}') || c == '\u{feff}')
+}
+
 /// `typeof x === "number"`.
 pub fn is_number(value: Option<&Value>) -> bool {
     matches!(value, Some(Value::Number(_)))

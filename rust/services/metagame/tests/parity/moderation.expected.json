@@ -1,0 +1,644 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=9; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=8; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=7; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=6; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=5; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=4; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=3; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=2; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": "{\"error\":\"invalid_device_signals\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=1; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:YjJmOTExMTE4OTFl:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "GET /undaunted/api/Moderation/UID-b",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/Moderation/UID-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"username\":\"Bo\",\"ban\":null,\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[{\"kind\":\"smbiosUuid\",\"hash\":\"5c33a52d7a6c\",\"observedAt\":<ms>,\"fresh\":true},{\"kind\":\"tpmEkSha256\",\"hash\":\"06cccd367cea\",\"observedAt\":<ms>,\"fresh\":true}]},\"addresses\":[{\"address\":\"203.0.113.7\",\"last_seen\":<ms>}]}"
+    },
+    {
+      "request": "GET /undaunted/api/Moderation/UID-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"username\":\"Cy\",\"ban\":null,\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[]},\"addresses\":[]}"
+    },
+    {
+      "request": "GET /undaunted/api/Moderation/UID-none",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"username\":null,\"ban\":null,\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[]},\"addresses\":[]}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"moderation_failed\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_device_scope\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_ban\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_ban\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_ban\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_address\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_address\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_address\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_duration\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_duration\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"invalid_duration\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"account_not_found\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"admin_account_protected\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"address_not_observed\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"device_not_observed\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"username\":\"Bo\",\"ban\":{\"reason\":\"r\",\"address\":null,\"active\":1,\"updated_at\":<ms>,\"expires_at\":null},\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[{\"kind\":\"smbiosUuid\",\"hash\":\"5c33a52d7a6c\",\"observedAt\":<ms>,\"fresh\":true},{\"kind\":\"tpmEkSha256\",\"hash\":\"06cccd367cea\",\"observedAt\":<ms>,\"fresh\":true}]},\"addresses\":[{\"address\":\"203.0.113.7\",\"last_seen\":<ms>}]}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"username\":\"Bo\",\"ban\":{\"reason\":\"cheating\",\"address\":\"203.0.113.7\",\"active\":1,\"updated_at\":<ms>,\"expires_at\":<ms>},\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":true,\"signals\":[{\"kind\":\"smbiosUuid\",\"hash\":\"5c33a52d7a6c\",\"observedAt\":<ms>,\"fresh\":true},{\"kind\":\"tpmEkSha256\",\"hash\":\"06cccd367cea\",\"observedAt\":<ms>,\"fresh\":true}]},\"addresses\":[{\"address\":\"203.0.113.7\",\"last_seen\":<ms>}]}"
+    },
+    {
+      "request": "GET /undaunted/api/GetUserInfo",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"account_banned\",\"reason\":\"cheating\"}"
+    },
+    {
+      "request": "GET /undaunted/api/GetUserInfo",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"account_banned\",\"reason\":\"cheating\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=9; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:NTZmMDc5NjgxZTlh:"
+      },
+      "body": "{\"error\":\"device_banned\",\"reason\":\"cheating\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=8; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:NTZmMDc5NjgxZTlh:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/Moderation/UID-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"username\":\"Cy\",\"ban\":null,\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[{\"kind\":\"tpmEkSha256\",\"hash\":\"37d3d659857b\",\"observedAt\":<ms>,\"fresh\":true}]},\"addresses\":[]}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"username\":\"Cy\",\"ban\":{\"reason\":\"spam\",\"address\":null,\"active\":1,\"updated_at\":<ms>,\"expires_at\":<ms>},\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[{\"kind\":\"tpmEkSha256\",\"hash\":\"37d3d659857b\",\"observedAt\":<ms>,\"fresh\":true}]},\"addresses\":[]}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"username\":\"Cy\",\"ban\":{\"reason\":\"spam\",\"address\":null,\"active\":0,\"updated_at\":<ms>,\"expires_at\":null},\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[{\"kind\":\"tpmEkSha256\",\"hash\":\"37d3d659857b\",\"observedAt\":<ms>,\"fresh\":true}]},\"addresses\":[]}"
+    },
+    {
+      "request": "POST /undaunted/api/Moderation",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"username\":\"Di\",\"ban\":{\"reason\":\"old\",\"address\":null,\"active\":1,\"updated_at\":<ms>,\"expires_at\":<ms>},\"devices\":{\"claimed\":true,\"verified\":false,\"enabled\":false,\"signals\":[]},\"addresses\":[]}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_kind\"}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=x",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_kind\"}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=bans",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"rows\":[{\"account_id\":\"UID-d\",\"username\":\"Di\",\"reason\":\"old\",\"updated_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"cheating\",\"updated_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=events",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"rows\":[{\"id\":6,\"account_id\":\"UID-d\",\"username\":\"Di\",\"reason\":\"old\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":5,\"account_id\":\"UID-c\",\"username\":\"Cy\",\"reason\":\"spam\",\"active\":0,\"created_at\":<ms>,\"expires_at\":null,\"actor\":\"UID-owner\"},{\"id\":4,\"account_id\":\"UID-c\",\"username\":\"Cy\",\"reason\":\"spam\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":3,\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"cheating\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":2,\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"r\",\"active\":1,\"created_at\":<ms>,\"expires_at\":null,\"actor\":\"UID-owner\"},{\"id\":1,\"account_id\":\"UID-d\",\"username\":\"Di\",\"reason\":\"expired\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=events&offset=1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"rows\":[{\"id\":5,\"account_id\":\"UID-c\",\"username\":\"Cy\",\"reason\":\"spam\",\"active\":0,\"created_at\":<ms>,\"expires_at\":null,\"actor\":\"UID-owner\"},{\"id\":4,\"account_id\":\"UID-c\",\"username\":\"Cy\",\"reason\":\"spam\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":3,\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"cheating\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":2,\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"r\",\"active\":1,\"created_at\":<ms>,\"expires_at\":null,\"actor\":\"UID-owner\"},{\"id\":1,\"account_id\":\"UID-d\",\"username\":\"Di\",\"reason\":\"expired\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=bans&offset=-1",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_offset\"}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=bans&offset=1.5",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_offset\"}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=events&offset=1000001",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_offset\"}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=events&offset=",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"rows\":[{\"id\":6,\"account_id\":\"UID-d\",\"username\":\"Di\",\"reason\":\"old\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":5,\"account_id\":\"UID-c\",\"username\":\"Cy\",\"reason\":\"spam\",\"active\":0,\"created_at\":<ms>,\"expires_at\":null,\"actor\":\"UID-owner\"},{\"id\":4,\"account_id\":\"UID-c\",\"username\":\"Cy\",\"reason\":\"spam\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":3,\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"cheating\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"},{\"id\":2,\"account_id\":\"UID-b\",\"username\":\"Bo\",\"reason\":\"r\",\"active\":1,\"created_at\":<ms>,\"expires_at\":null,\"actor\":\"UID-owner\"},{\"id\":1,\"account_id\":\"UID-d\",\"username\":\"Di\",\"reason\":\"expired\",\"active\":1,\"created_at\":<ms>,\"expires_at\":<ms>,\"actor\":\"UID-owner\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/ModerationLog?kind=bans",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/PlayingEnded",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/AccountRecovery/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accountId\":\"UID-a\",\"key\":\"test-player-key-a\"}"
+    },
+    {
+      "request": "GET /undaunted/api/AccountRecovery/UID-owner",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accountId\":\"UID-owner\",\"key\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/AccountRecovery/bad",
+      "status": 400,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/AccountRecovery/UID-a",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=116; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/AccountRecovery/UID-none",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=115; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accountId\":\"UID-none\",\"key\":null}"
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=9; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=8; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=7; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=6; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=5; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=4; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=3; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=2; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=1; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 204,
+      "headers": {
+        "cache-control": "no-store",
+        "ratelimit": "\"10-in-1min\"; r=0; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/DeviceSignals",
+      "status": 429,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": "60",
+        "ratelimit": "\"10-in-1min\"; r=0; t=<s>",
+        "ratelimit-policy": "\"10-in-1min\"; q=10; w=60; pk=:M2Y4M2QwZWFiYzU2:"
+      },
+      "body": "{\"error\":\"rate_limited\"}"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('account_id', account_id, 'reason', reason, 'address', address, 'active', active, 'actor', actor, 'expires', expires_at IS NOT NULL)) AS j FROM (SELECT * FROM account_bans ORDER BY account_id)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"account_id\":\"UID-b\",\"reason\":\"cheating\",\"address\":\"203.0.113.7\",\"active\":1,\"actor\":\"UID-owner\",\"expires\":1},{\"account_id\":\"UID-c\",\"reason\":\"spam\",\"address\":null,\"active\":0,\"actor\":\"UID-owner\",\"expires\":0},{\"account_id\":\"UID-d\",\"reason\":\"old\",\"address\":null,\"active\":1,\"actor\":\"UID-owner\",\"expires\":1}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('id', id, 'account_id', account_id, 'reason', reason, 'address', address, 'active', active)) AS j FROM (SELECT * FROM moderation_events ORDER BY id)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"id\":1,\"account_id\":\"UID-d\",\"reason\":\"expired\",\"address\":null,\"active\":1},{\"id\":2,\"account_id\":\"UID-b\",\"reason\":\"r\",\"address\":null,\"active\":1},{\"id\":3,\"account_id\":\"UID-b\",\"reason\":\"cheating\",\"address\":\"203.0.113.7\",\"active\":1},{\"id\":4,\"account_id\":\"UID-c\",\"reason\":\"spam\",\"address\":null,\"active\":1},{\"id\":5,\"account_id\":\"UID-c\",\"reason\":\"spam\",\"address\":null,\"active\":0},{\"id\":6,\"account_id\":\"UID-d\",\"reason\":\"old\",\"address\":null,\"active\":1}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('account_id', account_id, 'kind', kind, 'hash', signal_hash)) AS j FROM (SELECT * FROM account_device_signals ORDER BY account_id, kind)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"account_id\":\"UID-a\",\"kind\":\"tpmEkSha256\",\"hash\":\"<hex64>\"},{\"account_id\":\"UID-b\",\"kind\":\"smbiosUuid\",\"hash\":\"<hex64>\"},{\"account_id\":\"UID-b\",\"kind\":\"tpmEkSha256\",\"hash\":\"<hex64>\"},{\"account_id\":\"UID-c\",\"kind\":\"tpmEkSha256\",\"hash\":\"<hex64>\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('account_id', account_id, 'kind', kind, 'hash', signal_hash)) AS j FROM (SELECT * FROM device_ban_signals ORDER BY account_id, kind)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"account_id\":\"UID-b\",\"kind\":\"smbiosUuid\",\"hash\":\"<hex64>\"},{\"account_id\":\"UID-b\",\"kind\":\"tpmEkSha256\",\"hash\":\"<hex64>\"}]"
+    }
+  ]
+}

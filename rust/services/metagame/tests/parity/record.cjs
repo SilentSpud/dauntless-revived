@@ -85,7 +85,9 @@ function normalize(text) {
     .replace(/revived_trials_marks:-?\d+:/g, "revived_trials_marks:<week>:")
     .replace(/\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}/g, "<servicedate>")
     // How long the server has run (ServerStatus)
-    .replace(/"uptimeSeconds":\d+/g, '"uptimeSeconds":<n>');
+    .replace(/"uptimeSeconds":\d+/g, '"uptimeSeconds":<n>')
+    // When a ban, event or claim was written (moderation)
+    .replace(/"(last_seen|observedAt|updated_at|created_at|expires_at)":1\d{12}/g, '"$1":<ms>');
 }
 
 // This week's Trial row ({{trial:<difficulty>}}, or {{trial:<difficulty>:<weeks back>}}) and the

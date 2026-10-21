@@ -1,6 +1,7 @@
 //! The host and launcher routes of `routes/undauntedapi.ts` (under `/undaunted/api`) that are not
 //! about accounts or save history: hunt regions, Discord links and key statistics, backend health,
-//! the dashboard's account directory, playing addresses, online stats and the server status.
+//! the dashboard's account directory, device signals, moderation, playing addresses, online stats,
+//! the server status, by-name fallbacks for parties, friends and guilds, and account key recovery.
 //! Mounted in pieces so the routes keep Node's order around `admin_accounts.rs` and
 //! `admin_history.rs`.
 
@@ -15,7 +16,7 @@ use diesel::prelude::*;
 use diesel::sql_types::{BigInt, Bool, Nullable, Text};
 use serde_json::{Value, json};
 use service_kit::body::ExpressBody;
-use service_kit::ratelimit::enforce;
+use service_kit::ratelimit::{around, enforce};
 use service_kit::routing::{Params, Router};
 
 use super::{empty, field, json, ok, query};
@@ -25,6 +26,7 @@ use crate::discordstats;
 use crate::keyrotation::{discord_account, is_discord_id, link_discord_account};
 use crate::limits::per_client;
 use crate::matchmaking::region::{self, Region};
+use crate::moderation::{self, Refusal, Reported};
 use crate::time::{iso_now, now_ms};
 
 /// The routes before `RegistrationStatus`.
@@ -32,6 +34,7 @@ pub fn before(state: &AppState) -> Router<AppState> {
     let health_limit = || from_fn_with_state(per_client(&state.limits.health_read, state.origin.clone()), enforce);
     let admin_limit = from_fn_with_state(per_client(&state.limits.admin_mutation, state.origin.clone()), enforce);
     Router::new()
+        .post("/undaunted/api/DeviceSignals", device_signals)
         .get("/undaunted/api/HuntRegion", hunt_region)
         .post("/undaunted/api/HuntRegion", set_hunt_region)
         .get("/undaunted/api/DiscordKeyStats", discord_key_stats)
@@ -45,6 +48,17 @@ pub fn before(state: &AppState) -> Router<AppState> {
         .get("/undaunted/api/DashboardAccounts", dashboard_accounts)
         .layer(health_limit())
         .post("/undaunted/api/PlayingEnded", playing_ended)
+        .get("/undaunted/api/Moderation/:accountId", moderation_info)
+        .get("/undaunted/api/ModerationLog", moderation_log)
+        .post("/undaunted/api/Moderation", set_moderation)
+}
+
+/// After `RevokeEntitlement`, at the end of the file.
+pub fn after(state: &AppState) -> Router<AppState> {
+    let health_limit = from_fn_with_state(per_client(&state.limits.health_read, state.origin.clone()), enforce);
+    Router::new()
+        .get("/undaunted/api/AccountRecovery/:userId", account_recovery)
+        .layer(health_limit)
 }
 
 /// After `GetUserInfo`.
@@ -274,6 +288,119 @@ async fn playing_ended(State(state): State<AppState>, UserKey(user): UserKey) ->
     empty(StatusCode::NO_CONTENT)
 }
 
+// ---- Device signals and moderation ----
+
+/// `{smbiosUuid?, tpmEkSha256?}` from the launcher: 204, or 403 when they match a device ban.
+async fn device_signals(
+    State(state): State<AppState>,
+    UserKey(user): UserKey,
+    ExpressBody(body): ExpressBody,
+) -> Response {
+    let key = format!("device:{}", user.user_id);
+    around(&state.limits.device_signals, Some(&key), async {
+        let (key, account, now) = (state.device_signal_key.clone(), user.user_id.clone(), now_ms());
+        let result = state
+            .store
+            .write(move |conn| {
+                Ok::<_, AppError>(moderation::report_signals(
+                    conn,
+                    key.as_deref(),
+                    &account,
+                    body.as_ref(),
+                    now,
+                ))
+            })
+            .await;
+        no_store(match result {
+            Ok(Ok(Reported::Stored)) => empty(StatusCode::NO_CONTENT),
+            Ok(Ok(Reported::Blocked(reason))) => json(
+                StatusCode::FORBIDDEN,
+                json!({"error": "device_banned", "reason": reason}),
+            ),
+            Ok(Err(Refusal::Code("device_signals_unavailable"))) => json(
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"error": "device_signals_unavailable"}),
+            ),
+            _ => json(StatusCode::BAD_REQUEST, json!({"error": "invalid_device_signals"})),
+        })
+    })
+    .await
+}
+
+async fn moderation_info(
+    State(state): State<AppState>,
+    _admin: AdminKey,
+    params: Params,
+) -> Result<Response, AppError> {
+    let account = params.get("accountId").unwrap_or("").to_owned();
+    let app = state.clone();
+    let info = state
+        .store
+        .read(move |conn| moderation::info(conn, &mut app.activity.lock(), &account, now_ms()).map_err(AppError::from))
+        .await?;
+    Ok(no_store(ok(info)))
+}
+
+/// `?kind=bans|events&offset=`.
+async fn moderation_log(
+    State(state): State<AppState>,
+    _admin: AdminKey,
+    RawQuery(raw): RawQuery,
+) -> Result<Response, AppError> {
+    let query = query(raw.as_deref());
+    let events = match query.get("kind").and_then(Value::as_str) {
+        Some("bans") => false,
+        Some("events") => true,
+        _ => {
+            return Ok(no_store(json(
+                StatusCode::BAD_REQUEST,
+                json!({"error": "invalid_kind"}),
+            )));
+        }
+    };
+    let offset = match query.get("offset") {
+        None => 0.0,
+        Some(value) => crate::js::number(Some(value)),
+    };
+    let log = state
+        .store
+        .read(move |conn| Ok::<_, AppError>(moderation::log(conn, events, offset, now_ms())))
+        .await?;
+    Ok(no_store(match log {
+        Ok(log) => ok(log),
+        Err(_) => json(StatusCode::BAD_REQUEST, json!({"error": "invalid_offset"})),
+    }))
+}
+
+/// `{accountId, reason, active, address?, durationHours?, includeDevice?}`.
+async fn set_moderation(
+    State(state): State<AppState>,
+    AdminKey(admin): AdminKey,
+    ExpressBody(body): ExpressBody,
+) -> Result<Response, AppError> {
+    let app = state.clone();
+    let result = state
+        .store
+        .write(move |conn| {
+            Ok::<_, AppError>(moderation::set_ban(
+                conn,
+                &mut app.activity.lock(),
+                body.as_ref(),
+                &admin.user_id,
+                now_ms(),
+            ))
+        })
+        .await?;
+    Ok(match result {
+        Ok(info) => ok(info),
+        Err(Refusal::Code(code)) => json(StatusCode::BAD_REQUEST, json!({"error": code})),
+        Err(Refusal::Db(error)) => {
+            tracing::error!("Moderation failed: {error}");
+            json(StatusCode::BAD_REQUEST, json!({"error": "moderation_failed"}))
+        }
+    })
+}
+
 // ---- Who is online ----
 
 /// `GetRecentPlayerData`: heartbeats of the last 90 s. Nothing records hunt locations any more, so
@@ -316,4 +443,53 @@ pub async fn server_status(
         HeaderValue::from_static("x-undaunted-user-api-key, authorization"),
     );
     Ok(response)
+}
+
+// ---- Account key recovery ----
+
+#[derive(QueryableByName)]
+struct Ciphertext {
+    #[diesel(sql_type = Text)]
+    ciphertext: String,
+}
+
+/// An admin reads back a player's account key (`ACCOUNT_KEY_RECOVERY=1`), only while it is still the
+/// account's key; `null` when there is none to give.
+async fn account_recovery(
+    State(state): State<AppState>,
+    _admin: AdminKey,
+    params: Params,
+) -> Result<Response, AppError> {
+    let id = params.get("userId").unwrap_or("").to_owned();
+    if !crate::keyrotation::is_link_user_id(&id) {
+        return Ok(no_store(empty(StatusCode::BAD_REQUEST)));
+    }
+    if !state.auth.account_key_recovery {
+        return Ok(no_store(ok(json!({"accountId": id, "key": null}))));
+    }
+    let account = id.clone();
+    let row = state
+        .store
+        .read(move |conn| {
+            diesel::sql_query(
+                "SELECT r.ciphertext FROM accountkeyrecovery r JOIN userapikeys k ON k.userId = r.userId AND k.keyHash = r.keyHash                  JOIN users u ON u.userId = r.userId WHERE r.userId = ? AND u.isAdmin = 0",
+            )
+            .bind::<Text, _>(&account)
+            .load::<Ciphertext>(conn)
+            .map_err(AppError::from)
+        })
+        .await?;
+    let key = match row.first() {
+        None => None,
+        Some(row) => match crate::crypto::open_recovery(&state.auth.signing_key_b64, &id, &row.ciphertext) {
+            Ok(key) => Some(key),
+            Err(_) => {
+                return Ok(no_store(json(
+                    StatusCode::SERVICE_UNAVAILABLE,
+                    json!({"error": "recovery_unavailable"}),
+                )));
+            }
+        },
+    };
+    Ok(no_store(ok(json!({"accountId": id, "key": key}))))
 }

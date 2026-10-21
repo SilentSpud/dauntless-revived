@@ -119,4 +119,5 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
         .merge(admin_accounts::routes(state))
         .merge(undaunted::online_stats())
         .merge(admin_history::routes())
+        .merge(undaunted::after(state))
 }
