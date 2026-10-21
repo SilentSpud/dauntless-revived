@@ -328,6 +328,9 @@ function errorText(e: LauncherError): string {
       return t("err_relay_port_busy", { port: e.detail && /^\d+$/.test(e.detail) ? e.detail : "61000" });
     case "server_unreachable":
       return t(state.snap?.server?.mode === "public" ? "err_server_unreachable_public" : "err_server_unreachable");
+    case "offline_unavailable":
+      // The Tauri launcher 0.2.0 ships without offline play (MIGRATION_PLAN.md L42)
+      return t(e.detail === "later_update" ? "err_offline_later" : "err_offline_unavailable");
     case 'launch_failed':
     case 'windows_runtime_missing':
       return `${tk(`err_${e.code}`)}${e.detail ? ` ${e.detail}` : ''}`;

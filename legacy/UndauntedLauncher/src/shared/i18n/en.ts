@@ -433,6 +433,7 @@ const en = {
   err_compat_runtime_missing: "Linux needs Proton or Wine to run the Windows game client. Install Steam Proton, Proton-GE, Wine, or Lutris Wine and try again.",
   err_config_failed: "The game settings couldn't be written.",
   err_offline_unavailable: "Offline play isn't available right now. Restart the launcher and try again.",
+  err_offline_later: "Offline play is not part of this version of the launcher. It returns in a later update; your offline saves stay on this PC.",
   err_offline_insufficient_memory: "Offline Play needs about 4.5 GiB of memory currently available. Close some applications and try again.",
   err_busy: "Something else is still running. Try again in a moment.",
   err_cancelled: "Cancelled.",

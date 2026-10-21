@@ -431,6 +431,7 @@ const es: Record<StringKey, string> = {
   err_compat_runtime_missing: "Linux necesita Proton o Wine para ejecutar el cliente de Windows del juego. Instala Steam Proton, Proton-GE, Wine o Lutris Wine y vuelve a intentarlo.",
   err_config_failed: "No se han podido guardar los ajustes del juego.",
   err_offline_unavailable: "El modo offline no está disponible ahora mismo. Reinicia el launcher e inténtalo de nuevo.",
+  err_offline_later: "El modo offline no forma parte de esta versión del launcher. Volverá en una próxima actualización; tus partidas offline siguen en este PC.",
   err_offline_insufficient_memory: "El modo offline necesita unos 4,5 GiB de memoria disponible en este momento. Cierra algunas aplicaciones e inténtalo de nuevo.",
   err_busy: "Hay otra tarea en marcha. Vuelve a intentarlo en un momento.",
   err_cancelled: "Cancelado.",

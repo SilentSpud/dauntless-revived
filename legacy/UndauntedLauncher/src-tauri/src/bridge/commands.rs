@@ -150,13 +150,20 @@ pub async fn play(app: AppHandle) -> ActionResult {
     controller(&app).play().await
 }
 
-/// Offline play is off in 0.2.0 (row L42, D1); it returns with the Rust services (X2).
+/// Offline play is off in 0.2.0 (row L42, D1); it returns with the Rust services (X2). The page says so.
+fn offline_off() -> ActionResult {
+    ActionResult::Err(LauncherError {
+        code: ErrorCode::OfflineUnavailable,
+        detail: Some("later_update".into()),
+    })
+}
+
 #[tauri::command]
 pub fn start_offline(username: Option<String>) -> ActionResult {
     if username.as_deref().is_some_and(|name| !fits(name, USERNAME_MAX)) {
         return ActionResult::err(ErrorCode::UsernameInvalid);
     }
-    ActionResult::err(ErrorCode::OfflineUnavailable)
+    offline_off()
 }
 
 #[tauri::command]
@@ -239,12 +246,12 @@ pub fn dismiss_error(app: AppHandle) {
 
 #[tauri::command]
 pub fn offline_export_save() -> ActionResult {
-    ActionResult::err(ErrorCode::OfflineUnavailable)
+    offline_off()
 }
 
 #[tauri::command]
 pub fn offline_import_save() -> ActionResult {
-    ActionResult::err(ErrorCode::OfflineUnavailable)
+    offline_off()
 }
 
 #[tauri::command]

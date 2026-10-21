@@ -353,6 +353,11 @@ Done so far:
   `set_settings` writes `settings.json` in the Electron layout. Bad invites and register without a server answer
   as in Electron, and closing the window exits through the controller's shutdown. That check found that sync
   commands run outside the Tokio runtime, so the controller now spawns on a stored runtime handle, with a test.
+- Launcher P7, L42: offline play and the offline save backup and restore answer `offline_unavailable` with the
+  detail `later_update`. The page shows `err_offline_later` for that detail ("returns in a later update; your
+  offline saves stay on this PC"; en, es and fi, like the other offline strings). The Tauri backend never names
+  the `offline/` folder, so a profile's offline data and `.drsave` files stay as they were. The Cargo feature
+  `offline` comes with L43, which has code to put behind it.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

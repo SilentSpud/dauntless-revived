@@ -433,6 +433,7 @@ const fi: Record<StringKey, string> = {
   err_compat_runtime_missing: "Linux tarvitsee Protonin tai Winen Windows-peliasiakasohjelman ajamiseen. Asenna Steam Proton, Proton-GE, Wine tai Lutris Wine ja yritä uudelleen.",
   err_config_failed: "Pelin asetuksia ei voitu kirjoittaa.",
   err_offline_unavailable: "Offline-pelaaminen ei ole juuri nyt käytettävissä. Käynnistä käynnistin uudelleen ja yritä uudelleen.",
+  err_offline_later: "Offline-pelaaminen ei kuulu tähän käynnistimen versioon. Se palaa myöhemmässä päivityksessä; offline-tallennuksesi pysyvät tällä PC:llä.",
   err_offline_insufficient_memory: "Offline-pelaaminen tarvitsee noin 4,5 GiB vapaata muistia. Sulje joitakin sovelluksia ja yritä uudelleen.",
   err_busy: "Jokin muu on vielä kesken. Yritä hetken päästä.",
   err_cancelled: "Peruttu.",
