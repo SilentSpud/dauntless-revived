@@ -1252,4 +1252,298 @@ mod tests {
         assert_eq!(dedupe_key(Some(&json!(5))), None);
         assert_eq!(dedupe_key(Some(&json!("abc-1"))), Some("abc-1".into()));
     }
+
+    // ---- inventory.test.ts (M31): ParseStackQuantity, ApplyStackedChanges, the retry keys ----
+
+    fn stack(catalog: &str, quantity: Value) -> Value {
+        json!({"catalogId": catalog, "quantity": quantity})
+    }
+
+    struct Stacked {
+        stored: Vec<Value>,
+        touched: Vec<Value>,
+        overspent: Vec<String>,
+        log: Vec<Value>,
+    }
+
+    /// `ApplyStackedChanges(Stacks, Removes, Adds, Refuse)`.
+    fn stacked_changes(
+        stored: Value,
+        removes: Value,
+        adds: Value,
+        refuse: bool,
+        report_removals: bool,
+    ) -> Result<Stacked, Fail> {
+        let (mut arena, mut stacked, adds) = arena(stored, adds);
+        let settings = Settings {
+            refuse_overspend: refuse,
+            report_removals,
+            ..Settings::default()
+        };
+        let result = apply_stacked(&mut arena, &mut stacked, removes.as_array().unwrap(), &adds, &settings)?;
+        Ok(Stacked {
+            stored: stacked.iter().map(|id| arena.items[*id].clone()).collect(),
+            touched: result
+                .touched
+                .iter()
+                .map(|t| match t {
+                    Touched::Shared(id) => arena.items[*id].clone(),
+                    Touched::New(value) => value.clone(),
+                })
+                .collect(),
+            overspent: result.overspent,
+            log: result
+                .log
+                .iter()
+                .map(|e| json!([e.operation, e.catalog_id, e.quantity_change, e.quantity_after]))
+                .collect(),
+        })
+    }
+
+    fn refused(stored: Value, removes: Value, adds: Value) -> String {
+        match stacked_changes(stored, removes, adds, true, true) {
+            Err(Fail::Insufficient(message)) => message,
+            Err(other) => panic!("expected a refusal, got {other:?}"),
+            Ok(result) => panic!("expected a refusal, got {:?}", result.stored),
+        }
+    }
+
+    #[test]
+    fn accepts_whole_numbers_and_numeric_strings() {
+        assert_eq!(parse_quantity(&stack("A", json!(5)), "add"), Ok(5.0));
+        assert_eq!(parse_quantity(&stack("A", json!(0)), "add"), Ok(0.0));
+        assert_eq!(parse_quantity(&stack("A", json!("12")), "add"), Ok(12.0));
+    }
+
+    #[test]
+    fn refuses_negative_fractional_non_numeric_quantities_and_a_missing_catalogid() {
+        for bad in [json!(-1), json!(1.5), json!("abc"), json!("-3"), Value::Null] {
+            match parse_quantity(&stack("A", bad.clone()), "remove") {
+                Err(Fail::Validation(message)) => assert!(message.contains("quantity"), "{message}"),
+                other => panic!("{bad}: {other:?}"),
+            }
+        }
+        // NaN and Infinity reach JSON as null; a missing quantity is undefined
+        assert!(parse_quantity(&json!({"catalogId": "A"}), "remove").is_err());
+        match parse_quantity(&json!({"quantity": 1}), "add") {
+            Err(Fail::Validation(message)) => assert!(message.contains("catalogId"), "{message}"),
+            other => panic!("{other:?}"),
+        }
+    }
+
+    #[test]
+    fn refuses_removing_5_of_an_item_held_3_times_and_changes_nothing() {
+        let message = refused(
+            json!([stack("ORB", json!(3))]),
+            json!([stack("ORB", json!(5))]),
+            json!([stack("NOTES", json!(10))]),
+        );
+        assert!(message.contains("removes 5 of ORB"), "{message}");
+    }
+
+    #[test]
+    fn reports_a_pure_spend_an_upgrade_so_the_game_server_s_cached_counts_go_down() {
+        let result = stacked_changes(
+            json!([stack("NOTES", json!(1060)), stack("ORB", json!(7))]),
+            json!([stack("NOTES", json!(40)), stack("ORB", json!(7))]),
+            json!([]),
+            false,
+            true,
+        )
+        .unwrap();
+        assert_eq!(result.stored, [stack("NOTES", json!(1020))]);
+        assert_eq!(result.touched, [stack("NOTES", json!(1020)), stack("ORB", json!(0))]);
+    }
+
+    #[test]
+    fn with_inventory_report_removals_0_reports_only_additions_as_upstream_did() {
+        let result = stacked_changes(
+            json!([stack("NOTES", json!(1060)), stack("ORB", json!(7))]),
+            json!([stack("NOTES", json!(40)), stack("ORB", json!(7))]),
+            json!([stack("NEW", json!(1))]),
+            false,
+            false,
+        )
+        .unwrap();
+        assert_eq!(result.touched, [stack("NEW", json!(1))]);
+    }
+
+    #[test]
+    fn lets_a_transaction_spend_what_it_grants_0_held_add_5_remove_2_leaves_3() {
+        let result = stacked_changes(
+            json!([]),
+            json!([stack("ORB", json!(2))]),
+            json!([stack("ORB", json!(5))]),
+            true,
+            true,
+        )
+        .unwrap();
+        assert_eq!(result.stored, [stack("ORB", json!(3))]);
+        assert_eq!(result.touched, [stack("ORB", json!(3))]);
+        assert!(result.overspent.is_empty());
+        assert_eq!(
+            result.log,
+            [json!(["add", "ORB", 5.0, 5.0]), json!(["remove", "ORB", -2.0, 3.0])]
+        );
+    }
+
+    #[test]
+    fn takes_what_the_stack_holds_first_and_the_rest_from_the_same_transaction_s_grant() {
+        let result = stacked_changes(
+            json!([stack("ORB", json!(1))]),
+            json!([stack("ORB", json!(2))]),
+            json!([stack("ORB", json!(3))]),
+            true,
+            true,
+        )
+        .unwrap();
+        assert_eq!(result.stored, [stack("ORB", json!(2))]);
+        let message = refused(
+            json!([stack("ORB", json!(1))]),
+            json!([stack("ORB", json!(5))]),
+            json!([stack("ORB", json!(3))]),
+        );
+        assert_eq!(message, "removes 5 of ORB but only 1 held and 3 added");
+    }
+
+    #[test]
+    fn counts_a_grant_only_for_its_own_item() {
+        let message = refused(
+            json!([stack("ORB", json!(1))]),
+            json!([stack("ORB", json!(2))]),
+            json!([stack("NOTES", json!(3))]),
+        );
+        assert_eq!(message, "removes 2 of ORB but only 1 held");
+    }
+
+    #[test]
+    fn without_the_refusal_clamps_an_overspend_as_before_applies_the_rest_and_reports_it() {
+        let result = stacked_changes(
+            json!([stack("ORB", json!(1))]),
+            json!([stack("ORB", json!(2))]),
+            json!([stack("NOTES", json!(3))]),
+            false,
+            true,
+        )
+        .unwrap();
+        assert_eq!(result.stored, [stack("NOTES", json!(3))]);
+        assert_eq!(result.overspent, ["removes 2 of ORB but only 1 held"]);
+    }
+
+    #[test]
+    fn adds_up_several_removals_of_the_same_item_before_comparing() {
+        let message = refused(
+            json!([stack("ORB", json!(5))]),
+            json!([stack("ORB", json!(3)), stack("ORB", json!(3))]),
+            json!([]),
+        );
+        assert_eq!(message, "removes 6 of ORB but only 5 held");
+    }
+
+    #[test]
+    fn refuses_removing_an_item_that_is_not_held_at_all() {
+        let message = refused(json!([]), json!([stack("ORB", json!(1))]), json!([]));
+        assert!(message.contains("only 0 held"), "{message}");
+    }
+
+    #[test]
+    fn removes_the_stack_at_exactly_0_merges_additions_reports_every_touched_stack_with_its_final_count() {
+        let result = stacked_changes(
+            json!([stack("ORB", json!(3)), stack("NOTES", json!(10))]),
+            json!([stack("ORB", json!(3)), stack("NOTES", json!(4))]),
+            json!([stack("NOTES", json!(1)), stack("NEW", json!(2))]),
+            true,
+            true,
+        )
+        .unwrap();
+        assert_eq!(result.stored, [stack("NOTES", json!(7)), stack("NEW", json!(2))]);
+        assert_eq!(
+            result.touched,
+            [stack("NOTES", json!(7)), stack("NEW", json!(2)), stack("ORB", json!(0))]
+        );
+        assert_eq!(
+            result.log,
+            [
+                json!(["remove", "ORB", -3.0, 0.0]),
+                json!(["remove", "NOTES", -4.0, 6.0]),
+                json!(["add", "NOTES", 1.0, 7.0]),
+                json!(["add", "NEW", 2.0, 2.0]),
+            ]
+        );
+    }
+
+    #[test]
+    fn with_the_refusal_switched_off_keeps_the_old_clamp_and_delete_behaviour() {
+        let result = stacked_changes(
+            json!([stack("ORB", json!(3))]),
+            json!([stack("ORB", json!(5)), stack("MISSING", json!(1))]),
+            json!([]),
+            false,
+            true,
+        )
+        .unwrap();
+        assert!(result.stored.is_empty());
+        assert_eq!(result.overspent.len(), 2);
+    }
+
+    #[test]
+    fn refuses_only_with_inventory_refuse_overspend_1() {
+        let refuse = |value: Option<&str>| {
+            let pairs: Vec<(&str, &str)> = value.map(|v| ("INVENTORY_REFUSE_OVERSPEND", v)).into_iter().collect();
+            Settings::from_env(&service_kit::env::Env::from_pairs(pairs), true).refuse_overspend
+        };
+        assert_eq!(
+            [refuse(None), refuse(Some("0")), refuse(Some("1"))],
+            [false, false, true]
+        );
+    }
+
+    #[test]
+    fn stores_a_numeric_string_quantity_as_a_number_instead_of_concatenating() {
+        let result = stacked_changes(
+            json!([stack("ORB", json!(3))]),
+            json!([]),
+            json!([stack("ORB", json!("2")), stack("NEW", json!("4"))]),
+            true,
+            true,
+        )
+        .unwrap();
+        assert_eq!(result.stored, [stack("ORB", json!(5)), stack("NEW", json!(4))]);
+    }
+
+    #[test]
+    fn uses_a_guid_transactionid_and_ignores_empty_or_all_zero_ids() {
+        assert_eq!(
+            dedupe_key(Some(&json!("BC9A30844B16C925F10C588601BBDC67"))).as_deref(),
+            Some("BC9A30844B16C925F10C588601BBDC67")
+        );
+        for bad in [
+            json!(""),
+            json!("00000000000000000000000000000000"),
+            json!("00000000-0000-0000-0000-000000000000"),
+            Value::Null,
+            json!(5),
+        ] {
+            assert_eq!(dedupe_key(Some(&bad)), None, "{bad}");
+        }
+        assert_eq!(dedupe_key(None), None);
+    }
+
+    #[test]
+    fn hashes_the_same_request_the_same_way_and_a_different_one_differently() {
+        let request = |character: &str, quantity: i64| TransactionRequest {
+            user_id: None,
+            character_id: Some(json!(character)),
+            transaction_id: None,
+            add_instanced: Some(json!([])),
+            add_stacked: Some(json!([stack("A", json!(quantity))])),
+            remove_instanced: Some(json!([])),
+            remove_stacked: Some(json!([])),
+            save_instanced: Some(json!([])),
+        };
+        let a = request_hash(&request("c", 1));
+        assert_eq!(a, request_hash(&request("c", 1)));
+        assert_ne!(a, request_hash(&request("c", 2)));
+        assert_ne!(a, request_hash(&request("d", 1)));
+    }
 }
