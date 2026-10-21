@@ -380,7 +380,24 @@ pub fn logged_infos() -> Vec<String> {
     logged(tracing::Level::INFO)
 }
 
+/// Every info, warning and error line since the first call to one of these, as the Node tests'
+/// `CaptureLogs` wrote them: the level in lower case, a space, the message ("info chat: ...").
+pub fn logged_lines() -> Vec<String> {
+    logged_all()
+        .into_iter()
+        .map(|(level, message)| format!("{} {message}", level.as_str().to_lowercase()))
+        .collect()
+}
+
 fn logged(level: tracing::Level) -> Vec<String> {
+    logged_all()
+        .into_iter()
+        .filter(|(l, _)| *l == level)
+        .map(|(_, m)| m)
+        .collect()
+}
+
+fn logged_all() -> Vec<(tracing::Level, String)> {
     use std::sync::{Arc, Mutex, OnceLock};
     use tracing_subscriber::layer::SubscriberExt;
 
@@ -398,7 +415,7 @@ fn logged(level: tracing::Level) -> Vec<String> {
     impl<S: tracing::Subscriber> tracing_subscriber::Layer<S> for Capture {
         fn on_event(&self, event: &tracing::Event<'_>, _: tracing_subscriber::layer::Context<'_, S>) {
             let level = *event.metadata().level();
-            if level == tracing::Level::WARN || level == tracing::Level::INFO {
+            if level <= tracing::Level::INFO {
                 let mut message = Message(String::new());
                 event.record(&mut message);
                 self.0.lock().unwrap().push((level, message.0));
@@ -410,10 +427,5 @@ fn logged(level: tracing::Level) -> Vec<String> {
         let _ = tracing::subscriber::set_global_default(tracing_subscriber::registry().with(Capture(seen.clone())));
         seen
     });
-    seen.lock()
-        .unwrap()
-        .iter()
-        .filter(|(l, _)| *l == level)
-        .map(|(_, m)| m.clone())
-        .collect()
+    seen.lock().unwrap().clone()
 }

@@ -112,9 +112,10 @@ async fn same_hunt_queues_fill_independently_in_each_region() {
         join(&app, "ISLAND", "Hunt_Test_A", &format!("AUS{i}"), false).await;
         join(&app, "ISLAND", "Hunt_Test_A", &format!("MAIN{i}"), false).await;
     }
-    settle(20).await;
-    let calls = deploy.calls();
-    assert_eq!(calls.len(), 2);
+    deploy.wait_for_calls(2).await;
+    // The two queues launch at once, so their calls can arrive in either order
+    let mut calls = deploy.calls();
+    calls.sort_by_key(|call| call.get("Region").is_none());
     assert_eq!(calls[0]["ExpectedPlayers"], json!(["AUS0", "AUS1", "AUS2", "AUS3"]));
     assert_eq!(calls[0]["Region"], "us");
     assert_eq!(calls[1]["ExpectedPlayers"], json!(["MAIN0", "MAIN1", "MAIN2", "MAIN3"]));

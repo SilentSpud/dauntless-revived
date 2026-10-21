@@ -62,17 +62,23 @@ impl Chat {
     /// The online sessions of the account's ACCEPTED friends who have not blocked it and are not
     /// blocked by it. Never one of the account's own sessions.
     async fn friend_sessions(&mut self, uid: &str) -> Vec<u64> {
-        let lookup = uid.to_owned();
-        let friends = self
-            .app
-            .store
-            .read(move |conn| crate::friends::list_friends(conn, &lookup, false).map_err(AppError::from))
-            .await;
+        let friends = match self.friends.clone() {
+            Some(lookup) => Ok(lookup.friends_of(uid)),
+            None => {
+                let lookup = uid.to_owned();
+                self.app
+                    .store
+                    .read(move |conn| crate::friends::list_friends(conn, &lookup, false).map_err(AppError::from))
+                    .await
+                    .map(|list| {
+                        list.iter()
+                            .filter_map(|f| f.get("accountId").and_then(|v| v.as_str()).map(str::to_owned))
+                            .collect()
+                    })
+            }
+        };
         let friends: Vec<String> = match friends {
-            Ok(list) => list
-                .iter()
-                .filter_map(|f| f.get("accountId").and_then(|v| v.as_str()).map(str::to_owned))
-                .collect(),
+            Ok(list) => list,
             Err(_) => {
                 if self.log_once(&format!("presence-friends|{uid}"), Some(60 * 1000)) {
                     tracing::warn!("chat: presence: could not read the friends of {uid}; nothing relayed");
@@ -97,12 +103,7 @@ impl Chat {
             if online.is_empty() {
                 continue;
             }
-            let (a, b) = (uid.to_owned(), friend.clone());
-            let blocked = self
-                .app
-                .store
-                .read(move |conn| crate::friends::blocked_either_way(conn, &a, &b).map_err(AppError::from))
-                .await;
+            let blocked = self.blocked_either_way(uid, &friend).await;
             match blocked {
                 Ok(false) => sessions.extend(online),
                 Ok(true) => {}
@@ -115,6 +116,18 @@ impl Chat {
             }
         }
         sessions
+    }
+
+    /// Either player blocked the other: from the test's lookup when there is one, else the database
+    async fn blocked_either_way(&self, a: &str, b: &str) -> Result<bool, AppError> {
+        if let Some(lookup) = &self.friends {
+            return Ok(lookup.blocked_either_way(a, b));
+        }
+        let (a, b) = (a.to_owned(), b.to_owned());
+        self.app
+            .store
+            .read(move |conn| crate::friends::blocked_either_way(conn, &a, &b).map_err(AppError::from))
+            .await
     }
 
     fn listening_of(&self, uid: &str) -> Vec<u64> {
@@ -408,13 +421,7 @@ impl Chat {
         if same_account(Some(requester), Some(accepter)) {
             return;
         }
-        let (a, b) = (requester.to_owned(), accepter.to_owned());
-        let blocked = self
-            .app
-            .store
-            .read(move |conn| crate::friends::blocked_either_way(conn, &a, &b).map_err(AppError::from))
-            .await
-            .unwrap_or(true);
+        let blocked = self.blocked_either_way(requester, accepter).await.unwrap_or(true);
         if blocked {
             return;
         }
@@ -470,5 +477,111 @@ impl Chat {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::sync::{Arc, Mutex};
+
+    use service_kit::env::Env;
+    use tokio::sync::mpsc;
+    use tracing_subscriber::layer::SubscriberExt;
+
+    use super::super::{Chat, FriendsLookup, Options, Out, Outbox, Settings};
+    use crate::chat::xmpp::{escape, parse_frame};
+
+    /// The error lines logged while it runs.
+    struct Errors(Arc<Mutex<Vec<String>>>);
+    struct Message(String);
+    impl tracing::field::Visit for Message {
+        fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
+            if field.name() == "message" {
+                self.0 = format!("{value:?}");
+            }
+        }
+    }
+    impl<S: tracing::Subscriber> tracing_subscriber::Layer<S> for Errors {
+        fn on_event(&self, event: &tracing::Event<'_>, _: tracing_subscriber::layer::Context<'_, S>) {
+            if *event.metadata().level() == tracing::Level::ERROR {
+                let mut message = Message(String::new());
+                event.record(&mut message);
+                self.0.lock().unwrap().push(message.0);
+            }
+        }
+    }
+
+    /// A broken host's friends lookup: it names a friend whose sessions are the player's own.
+    struct Broken;
+    impl FriendsLookup for Broken {
+        fn friends_of(&self, _: &str) -> Vec<String> {
+            vec!["UID-guard-friend".into()]
+        }
+        fn blocked_either_way(&self, _: &str, _: &str) -> bool {
+            false
+        }
+    }
+
+    fn outbox() -> (Outbox, mpsc::UnboundedReceiver<Out>) {
+        let (sender, receiver) = mpsc::unbounded_channel();
+        let out = Outbox {
+            sender,
+            queued: Arc::default(),
+            closed: Arc::default(),
+            terminate: Arc::default(),
+        };
+        (out, receiver)
+    }
+
+    /// presence.test.ts: "the last guard: a stanza that would reach a session of its own sender's
+    /// account is refused and logged"
+    #[tokio::test]
+    async fn a_stanza_to_a_session_of_its_own_senders_account_is_refused_and_logged() {
+        let keys: serde_json::Value =
+            serde_json::from_str(include_str!("../../tests/fixtures/node-crypto.json")).unwrap();
+        let dir = tempfile::tempdir().unwrap();
+        let db = dir.path().join("undaunted.db").to_string_lossy().into_owned();
+        let env = Env::from_pairs([
+            ("PORT", "0"),
+            ("AUTH_MODE", "APIKEY"),
+            ("NODE_ENV", "production"),
+            ("DB_FILENAME", db.as_str()),
+            ("AUTH_SIGNING_PRIVKEY_B64", keys["privB64"].as_str().unwrap()),
+            ("AUTH_SIGNING_PUBKEY_B64", keys["pubB64"].as_str().unwrap()),
+        ]);
+        let config = crate::config::Config::from_env(&env).unwrap();
+        let state = crate::server::prepare(&config, crate::progression_config::from_env(&env).unwrap())
+            .unwrap()
+            .state;
+        let mut options = Options::from_settings(&Settings::from_env(&env));
+        options.friends = Some(Arc::new(Broken));
+        let mut chat = Chat::new(state, options);
+        let (mine_out, _mine_heard) = outbox();
+        let (twin_out, mut twin_heard) = outbox();
+        let mine = chat.connected("127.0.0.1".into(), "direct", mine_out);
+        let twin = chat.connected("127.0.0.1".into(), "direct", twin_out);
+        for (id, uid) in [(mine, "UID-guard"), (twin, "uid-GUARD")] {
+            let session = chat.sessions.get_mut(&id).unwrap();
+            session.uid = Some(uid.into());
+            session.resource = Some(format!("V2:test:WIN::{id}"));
+            session.last_presence = Some(Default::default());
+        }
+        // The broken host files the player's own second session under the friend
+        chat.by_uid.insert("UID-guard-friend".into(), vec![twin]);
+
+        let errors = Arc::new(Mutex::new(Vec::new()));
+        let _logging = tracing::subscriber::set_default(tracing_subscriber::registry().with(Errors(errors.clone())));
+        let status = r#"{"Status":"Dauntless - In the city","Note_s":"<&'\">"}"#;
+        let node = parse_frame(&format!("<presence><status>{}</status></presence>", escape(status))).unwrap();
+        chat.presence_broadcast(mine, &node).await;
+        chat.presence_unavailable(mine, "test").await;
+
+        assert!(twin_heard.try_recv().is_err(), "nothing reached the twin");
+        assert_eq!(
+            *errors.lock().unwrap(),
+            [format!(
+                "chat: presence: refused to send c={twin} a stanza from its own account"
+            )]
+        );
     }
 }

@@ -326,6 +326,8 @@ pub enum Event {
         size: bool,
     },
     Shutdown(oneshot::Sender<()>),
+    /// One tick now (`Tick()`), for a test that turned the timer off
+    Tick(oneshot::Sender<()>),
 }
 
 /// Log keys -> when last logged, oldest first (at most `LOG_ONCE_MAX`).
@@ -376,6 +378,15 @@ impl LogOnce {
 /// The clock chat reads: the real one, or a test's.
 pub type Clock = Arc<dyn Fn() -> i64 + Send + Sync>;
 
+/// Sees every stanza sent, with the receiving session's account (`ObserveChatOutputForTests`).
+pub type Observer = Arc<dyn Fn(Option<&str>, &str) + Send + Sync>;
+
+/// Who a presence goes to, in place of the database (a test's `Friends`).
+pub trait FriendsLookup: Send + Sync {
+    fn friends_of(&self, uid: &str) -> Vec<String>;
+    fn blocked_either_way(&self, a: &str, b: &str) -> bool;
+}
+
 /// Everything chat holds. One task owns it (`run`).
 pub struct Chat {
     pub app: AppState,
@@ -398,6 +409,11 @@ pub struct Chat {
     next_id: u64,
     next_ping: u64,
     last_sweep: i64,
+    auto_tick: bool,
+    observe: Option<Observer>,
+    friends: Option<Arc<dyn FriendsLookup>>,
+    /// The most unsent output held for one session (`LargestBacklog`)
+    pub largest_backlog: Arc<AtomicUsize>,
 }
 
 /// What a test may change.
@@ -408,6 +424,10 @@ pub struct Options {
     pub presence: bool,
     pub clock: Clock,
     pub output_limit: usize,
+    /// Ticks every second (false: only when asked, `AutoTick: false`)
+    pub auto_tick: bool,
+    pub observe: Option<Observer>,
+    pub friends: Option<Arc<dyn FriendsLookup>>,
 }
 
 impl Options {
@@ -418,6 +438,9 @@ impl Options {
             presence: settings.presence,
             clock: Arc::new(crate::time::now_ms),
             output_limit: OUTPUT_LIMIT,
+            auto_tick: true,
+            observe: None,
+            friends: None,
         }
     }
 }
@@ -442,6 +465,10 @@ impl Chat {
             next_id: 1,
             next_ping: 1,
             last_sweep: 0,
+            auto_tick: options.auto_tick,
+            observe: options.observe,
+            friends: options.friends,
+            largest_backlog: Arc::default(),
         }
     }
 
@@ -487,7 +514,11 @@ impl Chat {
         if trace {
             tracing::info!("chat: trace c={} out {}", session.id, redact_frame(stanza));
         }
-        session.out.queued.fetch_add(stanza.len(), Ordering::Relaxed);
+        if let Some(observe) = &self.observe {
+            observe(session.uid.as_deref(), stanza);
+        }
+        let queued = session.out.queued.fetch_add(stanza.len(), Ordering::Relaxed) + stanza.len();
+        self.largest_backlog.fetch_max(queued, Ordering::Relaxed);
         if session.out.sender.send(Out::Text(stanza.to_owned())).is_err() {
             session.open = false;
         }
@@ -1411,10 +1442,29 @@ pub fn blockers_among(
 pub async fn run(mut chat: Chat, mut events: mpsc::UnboundedReceiver<Event>) {
     let mut revocations = chat.app.key_revocations.subscribe();
     let mut friendships = chat.app.friendships.subscribe();
+    let auto_tick = chat.auto_tick;
     let mut ticker = tokio::time::interval(std::time::Duration::from_secs(1));
     ticker.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
+        // Biased: a key revocation or friendship change that came first is handled before the
+        // frames after it, as Node handled them in order
         tokio::select! {
+            biased;
+            revoked = revocations.recv() => {
+                if let Ok(uid) = revoked {
+                    let ids: Vec<u64> = chat.sessions.values().filter(|s| s.uid.as_deref() == Some(uid.as_str())).map(|s| s.id).collect();
+                    for id in ids {
+                        chat.end(id, EndReason::Replaced).await;
+                    }
+                }
+            }
+            changed = friendships.recv() => {
+                if let Ok(event) = changed
+                    && chat.presence
+                {
+                    chat.friendship(event).await;
+                }
+            }
             event = events.recv() => match event {
                 None => return,
                 Some(Event::Admit { address, via, reply }) => {
@@ -1445,23 +1495,12 @@ pub async fn run(mut chat: Chat, mut events: mpsc::UnboundedReceiver<Event>) {
                     let _ = done.send(());
                     return;
                 }
+                Some(Event::Tick(done)) => {
+                    chat.tick().await;
+                    let _ = done.send(());
+                }
             },
-            _ = ticker.tick() => chat.tick().await,
-            revoked = revocations.recv() => {
-                if let Ok(uid) = revoked {
-                    let ids: Vec<u64> = chat.sessions.values().filter(|s| s.uid.as_deref() == Some(uid.as_str())).map(|s| s.id).collect();
-                    for id in ids {
-                        chat.end(id, EndReason::Replaced).await;
-                    }
-                }
-            }
-            changed = friendships.recv() => {
-                if let Ok(event) = changed
-                    && chat.presence
-                {
-                    chat.friendship(event).await;
-                }
-            }
+            _ = ticker.tick(), if auto_tick => chat.tick().await,
         }
     }
 }

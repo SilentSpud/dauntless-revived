@@ -37,9 +37,19 @@ pub struct Running {
     server: tokio::task::JoinHandle<()>,
     stop_listening: oneshot::Sender<()>,
     pub port: u16,
+    /// The most unsent output held for one session so far
+    pub largest_backlog: Arc<AtomicUsize>,
 }
 
 impl Running {
+    /// One tick now, for a chat started with `auto_tick` off.
+    pub async fn tick(&self) {
+        let (done, finished) = oneshot::channel();
+        if self.events.send(Event::Tick(done)).is_ok() {
+            let _ = finished.await;
+        }
+    }
+
     /// Shutdown: `<close/>` to every session, at most 1 s for them to go, then the listener stops.
     pub async fn stop(self) {
         let (done, finished) = oneshot::channel();
@@ -108,6 +118,7 @@ pub async fn start_with(app: AppState, settings: &Settings, options: Options) ->
     }
     let (events, receiver) = mpsc::unbounded_channel();
     let chat = Chat::new(app.clone(), options);
+    let largest_backlog = chat.largest_backlog.clone();
     let task = tokio::spawn(super::run(chat, receiver));
     let router = axum::Router::new().fallback(upgrade).with_state(Listener {
         app,
@@ -132,6 +143,7 @@ pub async fn start_with(app: AppState, settings: &Settings, options: Options) ->
         server,
         stop_listening,
         port,
+        largest_backlog,
     })
 }
 
