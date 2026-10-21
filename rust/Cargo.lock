@@ -2515,14 +2515,23 @@ dependencies = [
 name = "launcher"
 version = "0.1.39"
 dependencies = [
+ "bytes",
  "chrono",
+ "http-body-util",
+ "hyper",
+ "hyper-util",
  "protocol",
+ "rcgen",
+ "rustls",
  "serde",
  "serde_json",
  "sha2 0.11.1",
  "sys-locale",
  "tauri",
  "tauri-build",
+ "tokio",
+ "tokio-rustls",
+ "tokio-util",
  "ts-rs",
  "url",
 ]

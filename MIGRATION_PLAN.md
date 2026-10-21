@@ -235,6 +235,14 @@ Done so far:
   compiled-in manifest is malformed, and writes its fingerprint as a constant; `core/manifest.rs` holds the
   manifest (`include_bytes!`, read once) and `resolve_inside`. `test/cases/manifest.json` (34 validations,
   10 comparisons, 35 paths, made from the TypeScript) runs on both sides. The DLLs are `bundle.resources`.
+- Launcher P3, L19 and L20: `net/pinned.rs` is a rustls `ServerCertVerifier` that accepts only the certificate
+  whose SHA-256 is the invite's fingerprint (the handshake signature is still checked with its key; SNI only for
+  names; ALPN `http/1.1`), so nothing is written to a wrong server, and a mismatch stays its own error with the
+  fingerprint the server showed. `net/http.rs` is `http.ts`: the endpoint rules (plain HTTP only into the tailnet or
+  to loopback), the `Host` header, one connection per request, no redirects, a size cap, one deadline for the whole
+  request, and cancelling. It is built on hyper 1 and tokio-rustls rather than reqwest: reqwest 0.13's rustls
+  feature brings the platform certificate verifier the launcher never uses, and the relay (L22) needs a hyper
+  client over the same pinned connector. Tests: rcgen certificates, right, wrong and rotated, against local servers.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
