@@ -26,7 +26,12 @@ tauri-build = { version = "2.7", features = ["isolation"] }
 [dependencies]
 protocol.workspace = true
 serde.workspace = true
-serde_json.workspace = true
+# preserve_order: settings.json keeps its key order (L28); workspace builds unify it on anyway
+serde_json = { workspace = true, features = ["preserve_order"] }
+dirs = "6"
+regex.workspace = true
+tracing.workspace = true
+tracing-subscriber = { workspace = true, features = ["registry"] }
 sha2.workspace = true
 chrono.workspace = true
 sys-locale = "0.3"

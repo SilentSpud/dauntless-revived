@@ -266,6 +266,13 @@ Done so far:
   writes). `net/autoregion.rs` is `autoregion.ts`. Tests: the downloader and CDN suites against Rust fakes of the
   content server (resume, corrupt transfer, damaged part, repair, cache, pause/resume, cancel, a server that ignores
   Range, wrong key, missing file, wrong ETag, attempts running out).
+- Launcher P4, L26, L28 and L29: `platform/paths.rs` uses the Electron launcher's folders (userData under the
+  roaming app data folder or `$XDG_CONFIG_HOME`, the default game folder), not Tauri's. `platform/settings.rs` is
+  `settings.ts`: every value checked when read, the servers list rules, and the file written with the same key
+  order and indent, so `test/cases/settings.json` (66 inputs on both platforms, made from the TypeScript) matches
+  byte for byte. `platform/log.rs` is `log.ts`: registered secrets and anything shaped like a key, an
+  `-AUTH_PASSWORD=` argument or a key header masked (with JavaScript's `\s`), `launcher.log` moving to
+  `launcher.old.log` past 2 MiB, and library events and panics through the same mask (`test/cases/log.json`).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

@@ -4,6 +4,7 @@
 mod bridge;
 mod core;
 mod net;
+mod platform;
 mod window;
 
 use bridge::backend::{Backend, initial_snapshot};
