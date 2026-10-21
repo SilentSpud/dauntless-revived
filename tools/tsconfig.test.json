@@ -1,0 +1,14 @@
+// The tests' fixtures are loose on purpose (extra fields, nulls, partial responses); the tools stay strict.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

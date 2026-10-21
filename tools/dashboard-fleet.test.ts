@@ -1,6 +1,6 @@
-import { test } from 'node:test';
+import { test } from "bun:test";
 import assert from 'node:assert/strict';
-import { fleetSummary } from './dashboard-fleet.mjs';
+import { fleetSummary } from './dashboard-fleet.ts';
 const now=Date.now(), at=new Date(now).toISOString();
 const main={at,cpu:50,logicalCpus:5,ramUsedMB:6000,ramTotalMB:12000,performance:{at,stale:false,processes:[{role:'ramsgate'},{role:'hunt'},{role:'tutorial'}]}};
 const worker={configured:true,online:true,sample:{at,cpu:5,logicalCpus:2,ramUsedMB:2000,ramTotalMB:8000,hunts:[{}]}};

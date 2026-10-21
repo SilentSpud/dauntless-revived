@@ -88,6 +88,11 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
 
 - [ ] Regenerate the game manifest from the real 1.4.4 zip with `bun tools/make-game-manifest.ts --zip
       <BaseGame144.zip>`: `git diff` stays empty. [T5]
+- [ ] On a Windows server that runs the Node dashboard and Discord status worker: run
+      `Install-OwnerDashboard.ps1` and `Install-DiscordStatus.ps1` from the updated kit. Bun lands in
+      `C:\Program Files\Bun`, both tasks run `bun.exe`, the old `.mjs` copies are gone, the page lists the fleet and
+      the Discord message keeps updating (the same message, not a new one). [T6, T8]
+- [ ] `worker-health.ts` on a hunt worker through its tunnel: the Server #2 tab fills in. [T6]
 
 ## Later work
 

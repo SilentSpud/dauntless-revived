@@ -827,9 +827,10 @@ Jokaisella käynnistyksellä se kirjoittaa uudelleen tiedoston
 
 ## tools/ {#tools}
 
-### dashboard.mjs
+### dashboard.ts
 
-Valinnainen ylläpitäjän näkymä: aja VPS:llä Node.js 24:llä `node tools/dashboard.mjs`.
+Valinnainen ylläpitäjän näkymä: aja VPS:llä Bunilla `bun --no-env-file tools/dashboard.ts`.
+`Install-OwnerDashboard.ps1` asentaa kiinnitetyn Bunin kansioon `C:\Program Files\Bun` ja ajaa sitä tehtävänä.
 `DASHBOARD_OWNER_KEY_FILE` on nykyisen ylläpitoavaimen tiedosto, `DASHBOARD_BACKEND` oletuksena
 `http://127.0.0.1:61000`, `DASHBOARD_PORT` oletuksena `61110` ja `DASHBOARD_LOG_FILES` oletuksena
 `{}` (JSON-olio: nimi ja lokitiedoston polku). Kuuntelu on vain loopback-osoitteessa.
@@ -840,12 +841,12 @@ CPU-, RAM-, pelaajamäärä- ja paikallisen HTTP-viiveen kuvaajat päivittyvät 
 Muistissa säilyy tunti historiaa. Tilimäärä sisältää ylläpitäjät; uusien tilien laskuri kertoo vain
 ensimmäisen mittauksen jälkeen havaitut lisäykset, koska rekisteröintipäiviä ei tallenneta.
 Lokit päivitetään painikkeella, enintään 32 KB / 150 riviä; tunnistetietoja sisältävät rivit poistetaan.
-HTTP-viive ei ole pelin ping. Käynnistys nollaa historian. Testit: `node --test tools/dashboard.test.mjs`.
+HTTP-viive ei ole pelin ping. Käynnistys nollaa historian. Testit: `bun test dashboard` kansiossa `tools/`.
 
-### summarize-performance.mjs
+### summarize-performance.ts
 
-Aja repositorion juuressa Node.js 24:llä:
-`node tools/summarize-performance.mjs "C:\DauntlessRevived\data\logs\performance\performance-2026-09-28.csv"`.
+Aja repositorion juuressa Bunilla:
+`bun tools/summarize-performance.ts "C:\DauntlessRevived\data\logs\performance\performance-2026-09-28.csv"`.
 Voit antaa useita saman palvelimen CSV-tiedostoja. Työkalu lukee tiedostot ja tulostaa JSON-raportin;
 se ei ota yhteyttä palvelimeen eikä muuta tiedostoja. Virheellinen rivi keskeyttää ajon virhekoodiin.
 Syötteen on oltava palvelinpaketin mittaajan tuottamaa lainausmerkitöntä CSV:tä.
@@ -858,7 +859,7 @@ yhtä prosessia. Ramsgaten peruskulut estävät laskemasta lisäpelaajan hintaa 
 pelaajamäärällä. Turvallista kapasiteettia ei vielä arvioida: tarvitaan vertailukelpoisia pelisessioita
 eri pelaajamäärillä. Pidä raportit paikallisina kuten muutkin palvelinlokit.
 
-Testit: `node --test tools/summarize-performance.test.mjs`.
+Testit: `bun test summarize-performance` kansiossa `tools/`.
 
 Aja nämä repositoriokopiosta Node.js:llä, Bunilla tai Windows PowerShellillä, kuten kunkin kohdalla
 kerrotaan. `.ts`-työkalut ajetaan Bunilla, sillä versiolla, joka on tiedostossa `tools/package.json`

@@ -1,10 +1,10 @@
-import { test } from 'node:test';
+import { test } from "bun:test";
 import assert from 'node:assert/strict';
-import { startDashboard, scrubLog, tailLog } from './dashboard.mjs';
+import { startDashboard, scrubLog, tailLog } from './dashboard.ts';
 import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { parsePerformance, readPerformance } from './dashboard-performance.mjs';
+import { parsePerformance, readPerformance } from './dashboard-performance.ts';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 
@@ -13,7 +13,7 @@ test('chart inspection selects timestamps, preserves selection on refresh and ha
   const renderer = source.slice(source.indexOf('  function graph('), source.indexOf('  function renderDiscord('));
   const labels=[];
   const ctx=new Proxy({measureText:()=>({width:50}),fillText:text=>labels.push(text)}, {get:(target,key)=>target[key]??(()=>{})});
-  const canvas={clientWidth:300,style:{},dataset:{},parentElement:{querySelector:()=>({textContent:'CPU · %'})},getContext:()=>ctx,setAttribute:()=>{},getBoundingClientRect:()=>({left:0})};
+  const canvas:any={clientWidth:300,style:{},dataset:{},parentElement:{querySelector:()=>({textContent:'CPU · %'})},getContext:()=>ctx,setAttribute:()=>{},getBoundingClientRect:()=>({left:0})};
   const history=[{at:'2026-10-17T01:00:00Z',cpu:12},{at:'2026-10-17T01:00:05Z',cpu:null},{at:'2026-10-17T01:00:10Z',cpu:24}];
   const scope={el:()=>canvas,window:{devicePixelRatio:1},history};
   runInNewContext(renderer+"\ngraph('cpu',history);",scope);
@@ -45,13 +45,13 @@ test('optional IP bans use backend observations, ignore submitted IPs, and fail 
     return {ok:true,json:async()=>({Users:[],players:[],instances:[],playersOnline:0})};
   }});
   try{
-    const base=`http://127.0.0.1:${server.address().port}`;
+    const base=`http://127.0.0.1:${server.port}`;
     const send=body=>fetch(base+'/api/moderation',{method:'POST',headers:{'x-dashboard-key':key,'content-type':'application/json',origin:base},body:JSON.stringify({accountId:'UID-test',reason:'verified test',active:true,address:'198.51.100.99',...body})});
     assert.equal((await send({includeDevice:true})).status,200);assert.equal(writes.at(-1).address,null);assert.equal(writes.at(-1).includeDevice,true);
     assert.equal((await send({includeIp:true})).status,200);assert.equal(writes.at(-1).address,address);assert.equal(writes.at(-1).durationHours,168);assert.equal(writes.at(-1).includeIp,undefined);
     address=null;assert.equal((await send({includeIp:true})).status,409);assert.equal(writes.length,2);
     assert.equal((await send({includeIp:true,active:false})).status,200);assert.equal(writes.at(-1).address,null);
-  }finally{await new Promise(resolve=>server.close(resolve));}
+  }finally{await server.stop();}
 });
 
 test('moderation history requires owner auth and bounded pagination',async()=>{
@@ -61,12 +61,12 @@ test('moderation history requires owner auth and bounded pagination',async()=>{
     return {ok:true,json:async()=>({Users:[],players:[],instances:[],playersOnline:0})};
   }});
   try {
-    const base=`http://127.0.0.1:${server.address().port}`;
+    const base=`http://127.0.0.1:${server.port}`;
     assert.equal((await fetch(base+'/api/moderation-log?kind=events')).status,401);
     assert.equal((await fetch(base+'/api/moderation-log?kind=events&offset=-1',{headers:{'x-dashboard-key':key}})).status,400);
     const response=await fetch(base+'/api/moderation-log?kind=events&offset=0',{headers:{'x-dashboard-key':key}});
     assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(reads,1);
-  }finally{await new Promise(resolve=>server.close(resolve));}
+  }finally{await server.stop();}
 });
 
 test('moderation writes require owner authentication and same origin and never retry',async()=>{
@@ -76,12 +76,12 @@ test('moderation writes require owner authentication and same origin and never r
     return {ok:true,json:async()=>({Users:[],players:[],instances:[],playersOnline:0})};
   }});
   try{
-    const base=`http://127.0.0.1:${server.address().port}`,body=JSON.stringify({accountId:'UID-test',reason:'test',active:true});
+    const base=`http://127.0.0.1:${server.port}`,body=JSON.stringify({accountId:'UID-test',reason:'test',active:true});
     assert.equal((await fetch(base+'/api/moderation',{method:'POST',body})).status,401);
     assert.equal((await fetch(base+'/api/moderation',{method:'POST',headers:{'x-dashboard-key':key,'content-type':'application/json'},body})).status,403);
     assert.equal((await fetch(base+'/api/moderation',{method:'POST',headers:{'x-dashboard-key':key,'content-type':'application/json',origin:base},body})).status,200);
     assert.equal(writes,1);
-  }finally{await new Promise(resolve=>server.close(resolve));}
+  }finally{await server.stop();}
 });
 test('dashboard isolates owner data and only polls read routes', async () => {
   const routes = [];
@@ -96,7 +96,7 @@ test('dashboard isolates owner data and only polls read routes', async () => {
     return {ok: true, json: async () => url.pathname.endsWith('GetAllUsers') ? {Users: [{UserId: 'fixture', Username: 'Tester'}]} : {players: [{name: 'Tester', where: 'city'}], instances: [], playersOnline: 1, uptimeSeconds: 60, name: 'Test'} };
   }});
   try {
-    const base = `http://127.0.0.1:${server.address().port}`;
+    const base = `http://127.0.0.1:${server.port}`;
     assert.equal((await fetch(base + '/api/status')).status, 401);
     assert.equal((await fetch(base + '/api/status', {headers: {'x-dashboard-key': key, origin: 'https://untrusted.example'}})).status, 403);
     const response = await fetch(base + '/api/status', {headers: {'x-dashboard-key': key}});
@@ -111,7 +111,7 @@ test('dashboard isolates owner data and only polls read routes', async () => {
     assert.equal(data.fleet.totals.hunts, 4);
     assert.equal(data.fleet.rows[0].capacity.pending, 1);
     assert.deepEqual(routes.sort(), ['/gameservers', '/undaunted/api/BackendHealth', '/undaunted/api/DiscordKeyStats', '/undaunted/api/GetAllUsers', '/undaunted/api/ServerStatus']);
-  } finally { await new Promise(resolve => server.close(resolve)); }
+  } finally { await server.stop(); }
 });
 test('redacts credential lines and caps log line count', () => {
   assert.equal(scrubLog('ready\nAuthorization: Bearer secret\nUUK_test\npassword=hello').includes('hello'), false);
@@ -135,11 +135,11 @@ test('backend failure returns an explicit unavailable state without fabricated r
   const key = 'test-owner-key-not-a-real-secret';
   const server = await startDashboard({key, port: 0, backend: 'http://127.0.0.1:61000', fetcher: async () => { throw new Error('offline'); }});
   try {
-    const response = await fetch(`http://127.0.0.1:${server.address().port}/api/status`, {headers: {'x-dashboard-key': key}});
+    const response = await fetch(`http://127.0.0.1:${server.port}/api/status`, {headers: {'x-dashboard-key': key}});
     const data = await response.json();
     assert.equal(data.sample, null);
     assert.match(data.error, /unavailable/);
-  } finally { await new Promise(resolve => server.close(resolve)); }
+  } finally { await server.stop(); }
 });
 
 test('invites require owner authentication, same origin, bounded input and fixed server destination', async () => {
@@ -151,7 +151,7 @@ test('invites require owner authentication, same origin, bounded input and fixed
     return {ok: true, json: async () => url.pathname.endsWith('GetAllUsers') ? {Users: []} : {players: [], instances: [], playersOnline: 0}};
   }});
   try {
-    const base = `http://127.0.0.1:${server.address().port}`;
+    const base = `http://127.0.0.1:${server.port}`;
     const send = (body, extra = {}) => fetch(base + '/api/invites', {method: 'POST', headers: {'x-dashboard-key': key, origin: base, 'content-type': 'application/json', ...extra}, body: JSON.stringify(body)});
     assert.equal((await send({uses: 1, name: ''}, {'x-dashboard-key': 'wrong'})).status, 401);
     assert.equal((await send({uses: 1, name: ''}, {origin: 'https://evil.example'})).status, 403);
@@ -169,7 +169,7 @@ test('invites require owner authentication, same origin, bounded input and fixed
     assert.equal(writes[0].url.pathname, '/undaunted/api/CreateInvite');
     assert.deepEqual(JSON.parse(writes[0].options.body), {uses: 2, name: 'Friends'});
     assert.equal(JSON.stringify(result).includes(key), false);
-  } finally { await new Promise(resolve => server.close(resolve)); }
+  } finally { await server.stop(); }
 });
 
 test('invite writes are never automatically retried after an ambiguous failure', async () => {
@@ -177,12 +177,12 @@ test('invite writes are never automatically retried after an ambiguous failure',
   let writes = 0;
   const server = await startDashboard({key, port: 0, backend: 'http://127.0.0.1:61000', serverConfig: {Mode: 'Public', PublicHost: '203.0.113.10', Ports: {gateway: 443}, CertFingerprint: 'a'.repeat(64)}, fetcher: async (_url, options) => { if (options.method === 'POST') writes++; throw new Error('offline'); }});
   try {
-    const base = `http://127.0.0.1:${server.address().port}`;
+    const base = `http://127.0.0.1:${server.port}`;
     const response = await fetch(base + '/api/invites', {method: 'POST', headers: {'x-dashboard-key': key, origin: base, 'content-type': 'application/json'}, body: JSON.stringify({uses: 1, name: ''})});
     assert.equal(response.status, 502);
     assert.match((await response.json()).error, /result unknown/);
     assert.equal(writes, 1);
-  } finally { await new Promise(resolve => server.close(resolve)); }
+  } finally { await server.stop(); }
 });
 
 test('performance reads numeric kit rows with whole-host CPU and explicit staleness', async () => {
@@ -211,7 +211,7 @@ test('account proxy strips unexpected fields, validates paging, and preserves un
     return {ok: true, json: async () => url.pathname.endsWith('GetAllUsers') ? {Users: []} : {players: [], instances: [], playersOnline: 0}};
   }});
   try {
-    const base = `http://127.0.0.1:${server.address().port}`;
+    const base = `http://127.0.0.1:${server.port}`;
     assert.equal((await fetch(base + '/api/accounts?offset=0')).status, 401);
     const headers = {'x-dashboard-key': key};
     assert.equal((await fetch(base + '/api/accounts?offset=-1', {headers})).status, 400);
@@ -221,7 +221,7 @@ test('account proxy strips unexpected fields, validates paging, and preserves un
     const status = await (await fetch(base + '/api/status', {headers})).json();
     assert.equal(status.sample.requestsPerSecond, null);
     assert.match(status.sample.healthError, /BACKEND_HEALTH/);
-  } finally { await new Promise(resolve => server.close(resolve)); }
+  } finally { await server.stop(); }
 });
 
 test('account recovery requires owner authentication and is never cached',async()=>{
@@ -231,11 +231,11 @@ test('account recovery requires owner authentication and is never cached',async(
    return {ok:true,json:async()=>({Users:[],players:[],instances:[],playersOnline:0})};
  }});
  try {
-   const base=`http://127.0.0.1:${server.address().port}`,route='/api/account-key?accountId=UID-test';
+   const base=`http://127.0.0.1:${server.port}`,route='/api/account-key?accountId=UID-test';
    assert.equal((await fetch(base+route)).status,401);assert.equal(recovered,0);
    const response=await fetch(base+route,{headers:{'x-dashboard-key':key}});
    assert.equal(response.headers.get('cache-control'),'no-store');assert.equal((await response.json()).key,'fixture-login-key');assert.equal(recovered,1);
- }finally{await new Promise(resolve=>server.close(resolve));}
+ }finally{await server.stop();}
 });
 
 test('slow moderation completes once and account totals are cached across polls', async () => {
@@ -252,11 +252,11 @@ test('slow moderation completes once and account totals are cached across polls'
     return {ok:true,json:async()=>url.pathname.endsWith('GetAllUsers')?{Users:[]}:{players:[],instances:[],playersOnline:0}};
   }});
   try {
-    const base='http://127.0.0.1:'+server.address().port;
+    const base='http://127.0.0.1:'+server.port;
     const response=await fetch(base+'/api/moderation',{method:'POST',headers:{'x-dashboard-key':key,'content-type':'application/json',origin:base},body:JSON.stringify({accountId:'UID-fixture',active:false,reason:'test'})});
     assert.equal(response.status,200);
     assert.equal((await response.json()).active,false);
     assert.equal(writes,1);
     assert.equal(users,1);
-  } finally {await new Promise(resolve=>server.close(resolve));}
-});
+  } finally {await server.stop();}
+}, 20000);

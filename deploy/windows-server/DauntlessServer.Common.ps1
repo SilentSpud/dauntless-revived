@@ -25,6 +25,12 @@ $script:DRPinned = @{
     # the installer also re-reads that file and requires both to agree.
     NodeVersion     = '24.19.0'
     NodeMsiSha256   = 'F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351'
+    # Bun: runs the operator tools (tools/*.ts: owner dashboard, Discord status, worker health). The
+    # baseline build, which runs on any x64 CPU, from github.com/oven-sh/bun; SHA-256 from that
+    # release's SHASUMS256.txt, which Install-DRBun also re-reads and requires to agree. Keep the
+    # version equal to tools/package.json ("packageManager").
+    BunVersion      = '1.4.3'
+    BunZipSha256    = 'D7A7D3EB216614544AAB0CDE2D8D9F2E4E87839BF5A30A1CD11D077F02D84E0C'
     # Tailscale (private mode only): official MSI from pkgs.tailscale.com; SHA-256 from the .sha256
     # file next to it.
     TailscaleVersion   = '1.102.4'
@@ -912,6 +918,44 @@ function Save-DRDownload([string]$Url, [string]$OutFile) {
     $old = $ProgressPreference; $ProgressPreference = 'SilentlyContinue'
     try { Invoke-WebRequest -Uri $Url -OutFile $OutFile -UseBasicParsing -TimeoutSec 900 }
     finally { $ProgressPreference = $old }
+}
+
+# The pinned Bun in Program Files\Bun, installed or replaced when it is missing or another version;
+# returns bun.exe's path. Stop the tools' tasks first: a running bun.exe cannot be replaced.
+function Install-DRBun($Paths) {
+    $dir = Join-Path $env:ProgramFiles 'Bun'
+    $exe = Join-Path $dir 'bun.exe'
+    $ver = $DRPinned.BunVersion
+    if (Test-Path -LiteralPath $exe) {
+        $v = (& $exe --version 2>$null | Out-String).Trim()
+        if ($v -eq $ver) { Write-DROk "Bun $v"; return $exe }
+        Write-DRWarn "Bun $v found; installing the pinned $ver"
+    }
+    $name = 'bun-windows-x64-baseline.zip'
+    $base = "https://github.com/oven-sh/bun/releases/download/bun-v$ver"
+    New-Item -ItemType Directory -Force -Path $Paths.Downloads | Out-Null
+    $zip = Join-Path $Paths.Downloads "bun-v$ver-$name"
+    $sums = Join-Path $Paths.Downloads "bun-v$ver-SHASUMS256.txt"
+    Save-DRDownload "$base/$name" $zip
+    # A file, not text: GitHub serves release assets as application/octet-stream
+    Save-DRDownload "$base/SHASUMS256.txt" $sums
+    $line = Get-Content -LiteralPath $sums | Where-Object { $_ -match "\s$([regex]::Escape($name))\s*$" } | Select-Object -First 1
+    $published = if ($line) { ($line.Trim() -split '\s+')[0].ToUpperInvariant() } else { '' }
+    if ($published -ne $DRPinned.BunZipSha256) { Stop-DR "SHASUMS256.txt for Bun $ver does not list the pinned hash for $name. Not installing." }
+    if ((Get-DRSha256 $zip) -ne $DRPinned.BunZipSha256) { Stop-DR "$name does not match its pinned SHA-256. Not installing." }
+    Write-DROk "$name matches the pinned SHA-256 and SHASUMS256.txt"
+    $unpack = Join-Path $Paths.Downloads "bun-v$ver"
+    if (Test-Path -LiteralPath $unpack) { Remove-Item -LiteralPath $unpack -Recurse -Force }
+    Expand-Archive -LiteralPath $zip -DestinationPath $unpack
+    $found = Get-ChildItem -LiteralPath $unpack -Recurse -File -Filter 'bun.exe' | Select-Object -First 1
+    if (-not $found) { Stop-DR "$name holds no bun.exe" }
+    New-Item -ItemType Directory -Force -Path $dir | Out-Null
+    Copy-Item -LiteralPath $found.FullName -Destination $exe -Force
+    Remove-Item -LiteralPath $unpack -Recurse -Force
+    $v = (& $exe --version 2>$null | Out-String).Trim()
+    if ($v -ne $ver) { Stop-DR "Bun reports version '$v' after installing $ver" }
+    Write-DROk "Bun $ver installed ($exe)"
+    return $exe
 }
 
 function Get-DRDownloadText([string]$Url) {

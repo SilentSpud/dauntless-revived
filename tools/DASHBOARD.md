@@ -1,6 +1,7 @@
 # Owner dashboard
 
-Run this separate Node.js 24 process **on the VPS**, from a checkout of the repository.
+Run this separate Bun process **on the VPS**, from a checkout of the repository (Bun's version is in
+`tools/package.json`; the kit installer below brings its own).
 It listens only on `127.0.0.1:61110`. Monitoring does not change the database, game routes, firewall,
 server configuration or running game processes. The optional owner-only invite button creates
 registration codes through the existing backend API. Stopping the dashboard does not stop the game.
@@ -10,7 +11,7 @@ In PowerShell, use the actual path of the existing administrator account key:
 ```powershell
 $env:DASHBOARD_OWNER_KEY_FILE = 'C:\DauntlessRevived\data\keys\owner.key'
 $env:DASHBOARD_BACKEND = 'http://127.0.0.1:61000'
-node tools/dashboard.mjs
+bun --no-env-file tools/dashboard.ts
 ```
 
 Open `http://127.0.0.1:61110` in a browser on the VPS. Enter the same owner account key.
@@ -33,7 +34,8 @@ After updating the server code, run elevated on the VPS:
 C:\DauntlessRevived\bin\Install-OwnerDashboard.ps1 -OpenOnLogon
 ```
 
-This installs a separate **LocalService** scheduled task at boot, gives it read access to the
+This installs the pinned Bun in `C:\Program Files\Bun` (checked against its SHA-256 pin) and a
+separate **LocalService** scheduled task at boot, gives it read access to the
 owner key, server configuration and operational logs, and enables `BACKEND_HEALTH=1` for the next
 metagame restart. It does not restart games or change the firewall. `Stack.ps1 start` / full
 `restart` also starts the installed dashboard. A dashboard failure does not stop the stack.
@@ -151,12 +153,12 @@ Settings are listed in `tools/dashboard.env.example`. `DASHBOARD_PORT` may be ch
 The dashboard limits requests to 300 per minute across browsers. Multiple browser tabs share
 backend polling, but many tabs can reach that limit.
 
-Tests: `node --test tools/dashboard.test.mjs`. The tests use a fake read-only backend; they cover
+Tests: `bun test` in `tools/`. The tests use a fake read-only backend; they cover
 authentication, foreign origins, log path rejection, redaction and external-backend rejection.
 # Server #2 monitoring
 
-Run `worker-health.mjs` with `worker-processes.ps1` beside it on the Windows hunt
-worker. Load the worker's allowlist secret from its protected environment file and
+Run `worker-health.ts` with Bun (`bun --no-env-file --env-file=<file> worker-health.ts`) and
+`worker-processes.ps1` beside it on the Windows hunt worker. Load the worker's allowlist secret from its protected environment file and
 set `WORKER_ROOT` to its installation root. The monitor binds only
 `127.0.0.1:61111`; tunnel it onto the main server and set
 `DASHBOARD_WORKER_URL=http://127.0.0.1:61112` in the dashboard environment.

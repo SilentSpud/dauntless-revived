@@ -1,7 +1,7 @@
-import {test} from 'node:test';
+import { test } from "bun:test";
 import assert from 'node:assert/strict';
-import {payload, Publisher, sampleBackend, webhookUrl} from './discord-status.mjs';
-import {sampleFleet, sampleLocalCapacity, applyLocalCapacity} from './discord-status.mjs';
+import {payload, Publisher, sampleBackend, webhookUrl} from './discord-status.ts';
+import {sampleFleet, sampleLocalCapacity, applyLocalCapacity} from './discord-status.ts';
 
 test('four-server fleet remains visible when one monitor is stale', async () => {
  const row={at:new Date().toISOString(),online:true,cpu:50,ramUsedMB:1024,ramTotalMB:4096,hunts:2};
@@ -16,7 +16,7 @@ test('four-server fleet remains visible when one monitor is stale', async () => 
 });
 const url = 'https://discord.com/api/webhooks/123/test-token';
 test('only aggregate status leaves the machine; timestamps are Discord-localized', () => {
-  const body = payload({players: 4, uptime: 3600, ms: 12.3, ip: 'SECRET_IP', names: ['SECRET_NAME']}, 1700000000000);
+  const body = payload({players: 4, uptime: 3600, ms: 12.3, ip: 'SECRET_IP', names: ['SECRET_NAME']} as any, 1700000000000);
   const json = JSON.stringify(body);
   assert.ok(!json.includes('SECRET'));
   assert.ok(json.includes('<t:1700000000:F>'));
@@ -38,7 +38,7 @@ test('backend sample validates full status and never forwards private fields', a
 });
 test('creates once, persists ID and edits after 15 seconds', async () => {
   const calls = [], saved = [];
-  const p = new Publisher(url, {}, async value => saved.push({...value}), async (u, opts) => { calls.push([u, opts.method]); return Response.json({id: '1234'}); });
+  const p = new Publisher(url, {}, async value => { saved.push({...value}); }, async (u, opts) => { calls.push([u, opts.method]); return Response.json({id: '1234'}); });
   await p.send(payload(null), 1000); await p.send(payload(null), 6000); await p.send(payload(null), 16000);
   assert.deepEqual(calls, [[`${url}?wait=true`, 'POST'], [`${url}/messages/1234`, 'PATCH']]);
   assert.deepEqual(saved.slice(0,2), [{creating: true}, {id: '1234'}]);
@@ -66,7 +66,7 @@ test('existing message recovers after rejection without replacement',async()=>{
 });
 
 test('fleet status projects metrics and public embed never includes host labels, addresses or secrets',async()=>{
- const {sampleFleet}=await import('./discord-status.mjs');
+ const {sampleFleet}=await import('./discord-status.ts');
  const row={at:new Date().toISOString(),name:'SECRET_NAME',host:'192.0.2.44',online:true,cpu:25,ramUsedMB:1024,ramTotalMB:8192,hunts:2,token:'SECRET_TOKEN'};
  const fleet=await sampleFleet('http://127.0.0.1:61110','test',async()=>Response.json({fleet:{rows:[row,row,row]}}));
  assert.equal(fleet.hunts,6);assert.equal(fleet.online,3);
@@ -102,7 +102,7 @@ test('stale timestamps cannot claim healthy hosts or complete hunt totals',async
 test('main hunt count comes from local admission, never the aggregated fleet list',async()=>{
  const c=await sampleLocalCapacity('http://127.0.0.1:61001',async()=>Response.json({capacity:{running:4,pending:1,limit:10,cpu:{blocked:true}},servers:Array(80).fill({kind:'hunt'})}));
  assert.deepEqual(c,{running:4,pending:1,limit:10,blocked:true,percent:null,cpuLimit:null,resume:null});
- const f={rows:[{id:1,online:true,hunts:null},{id:5,online:true,hunts:30}]};
+ const f:any={rows:[{id:1,online:true,hunts:null},{id:5,online:true,hunts:30}]};
  applyLocalCapacity(f,c);assert.equal(f.hunts,34);assert.equal(f.knownHunts,34);
  f.rows[1].online=false;applyLocalCapacity(f,c);assert.equal(f.hunts,null);assert.equal(f.knownHunts,4);
  assert.equal(await sampleLocalCapacity('http://127.0.0.1:61001',async()=>Response.json({capacity:{running:-1,pending:0,limit:10}})),null);
@@ -127,6 +127,6 @@ test('worker admission is fresh, allowlisted and distinguishes CPU pressure from
 test('missing CPU admission is not advertised as accepting and unavailable RAM is not zero',async()=>{
  const c=await sampleLocalCapacity('http://127.0.0.1:61001',async()=>Response.json({capacity:{running:1,pending:0,limit:10}}));
  assert.equal(c.blocked,null);
- const s=JSON.stringify(payload(null,Date.now(),{online:1,servers:1,rows:[{id:3,at:Date.now(),online:true,hunts:1,capacity:c,ramUsedMB:null,ramTotalMB:null}],knownHunts:1,hunts:1,meanCpu:null,ramUsedMB:null,ramTotalMB:null}));
+ const s=JSON.stringify(payload(null,Date.now(),<any>{online:1,servers:1,rows:[{id:3,at:Date.now(),online:true,hunts:1,capacity:c,ramUsedMB:null,ramTotalMB:null}],knownHunts:1,hunts:1,meanCpu:null,ramUsedMB:null,ramTotalMB:null}));
  assert.ok(s.includes('CPU status unknown'));assert.ok(!s.includes('0.0 GB'));assert.ok(!s.includes('Below CPU/count limits'));
 });

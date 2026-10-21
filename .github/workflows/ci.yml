@@ -627,24 +627,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 24
-
       # The version in tools/package.json ("packageManager")
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version-file: tools/package.json
-
-      - name: Performance report tests
-        run: node --test tools/summarize-performance.test.mjs tools/dashboard.test.mjs tools/discord-status.test.mjs
 
       - name: Tools type check and tests
         working-directory: tools
         run: |
           bun install --frozen-lockfile
           bun run typecheck
-          bun --no-env-file test zip.test.ts
+          bun --no-env-file test
 
       # sync-roadmap first: build-llms reads the roadmap page it writes.
       - name: Generated files are current (docs/roadmap.md, docs/llms.txt, docs/llms-full.txt)

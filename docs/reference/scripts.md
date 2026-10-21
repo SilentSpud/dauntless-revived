@@ -793,9 +793,10 @@ game's command line (`-AUTH_PASSWORD=<key>`), where other programs on the same P
 
 ## tools/
 
-### dashboard.mjs
+### dashboard.ts
 
-Optional owner dashboard, run on the VPS with Node.js 24: `node tools/dashboard.mjs`.
+Optional owner dashboard, run on the VPS with Bun: `bun --no-env-file tools/dashboard.ts`.
+`Install-OwnerDashboard.ps1` installs the pinned Bun in `C:\Program Files\Bun` and runs it as a task.
 Set `DASHBOARD_OWNER_KEY_FILE` to the existing owner key file; `DASHBOARD_BACKEND` defaults to
 `http://127.0.0.1:61000`, `DASHBOARD_PORT` to `61110`, and `DASHBOARD_LOG_FILES` to `{}`
 (an explicit JSON map of labels to log paths). The listener is loopback-only. Open it through
@@ -808,12 +809,12 @@ historical registration dates do not exist. Logs refresh on demand, capped at 32
 with credential-bearing lines omitted. Backend latency is not game ping. The dashboard reads only
 `GetAllUsers` and `ServerStatus`; it performs no writes. History resets on restart.
 
-Tests: `node --test tools/dashboard.test.mjs`.
+Tests: `bun test dashboard` in `tools/`.
 
-### summarize-performance.mjs
+### summarize-performance.ts
 
-Run `node tools/summarize-performance.mjs "C:\DauntlessRevived\data\logs\performance\performance-2026-09-28.csv"`
-from a checkout with Node.js 24. Pass additional CSV paths to combine days from the same host.
+Run `bun tools/summarize-performance.ts "C:\DauntlessRevived\data\logs\performance\performance-2026-09-28.csv"`
+from a checkout with Bun. Pass additional CSV paths to combine days from the same host.
 The tool only reads files and prints JSON; it does not contact or modify the server. Invalid rows
 fail with a nonzero exit code. Input must use the kit sampler's unquoted CSV format.
 
@@ -825,7 +826,7 @@ Hunt figures describe one process. Ramsgate's fixed overhead prevents interpreti
 by players as the cost of adding a player. No safe capacity estimate is made yet; collect comparable
 sessions at different player counts. Keep reports local with the other operational logs.
 
-Tests: `node --test tools/summarize-performance.test.mjs`.
+Tests: `bun test summarize-performance` in `tools/`.
 
 Run these from a checkout, with Node.js, Bun or Windows PowerShell as noted. The `.ts` tools run on
 Bun, the version in `tools/package.json` (`packageManager`); they need no `bun install`, which only

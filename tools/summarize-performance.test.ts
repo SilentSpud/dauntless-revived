@@ -1,9 +1,9 @@
-import { test } from 'node:test';
+import { test } from "bun:test";
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { parseSamples, statistics, summarize } from './summarize-performance.mjs';
+import { parseSamples, statistics, summarize } from './summarize-performance.ts';
 
 const header = 'timestamp_utc,role,cpu_core_percent,working_set_mb,players,host_cpu_percent,ram_free_mb,players_online';
 test('missing readings are excluded while measured zero remains', () => {
@@ -31,7 +31,7 @@ test('reads the current kit header and does not expose process identifiers', () 
   assert.ok(!JSON.stringify(report).includes('12345'));
 });
 test('CLI exits with an actionable usage error without inputs', () => {
-  const result = spawnSync(process.execPath, [fileURLToPath(new URL('./summarize-performance.mjs', import.meta.url))], {encoding: 'utf8'});
+  const result = spawnSync(process.execPath, [fileURLToPath(new URL('./summarize-performance.ts', import.meta.url))], {encoding: 'utf8'});
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Usage:/);
 });

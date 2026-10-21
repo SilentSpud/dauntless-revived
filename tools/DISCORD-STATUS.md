@@ -1,6 +1,6 @@
 # Private Discord status worker
 
-A separate, dependency-free Node worker checks the loopback backend every five
+A separate, dependency-free Bun worker checks the loopback backend every five
 seconds and edits one Discord message no more than once per 15 seconds. It honors
 Discord's 429 retry delay and exhausted-bucket reset headers; transient edit failures
 use exponential backoff. It never changes game state or restarts game processes.
@@ -26,8 +26,9 @@ password. Then, from an elevated PowerShell prompt:
 C:\DauntlessRevived\bin\Install-DiscordStatus.ps1 -Root C:\DauntlessRevived
 ```
 
-The source must be available in `app\tools\discord-status.mjs`. The installer copies
-it to a protected runtime directory and starts a boot-triggered LocalService task
+The source must be available in `app\tools\discord-status.ts`. The installer installs the pinned
+Bun in `C:\Program Files\Bun` (checked against its SHA-256 pin), copies the worker to a protected
+runtime directory as `worker.ts` (removing the Node version's `worker.mjs`), and starts a boot-triggered LocalService task
 named `Dauntless Revived Discord status`. It reads the existing owner key locally
 to obtain the authenticated aggregate count. The owner key never goes to Discord.
 Only `discord-status\state` is writable by the worker. Error logs contain generic
@@ -60,4 +61,4 @@ blind reuse of the last server would be unsafe. This worker does not implement i
 
 References: [Discord webhooks](https://docs.discord.com/developers/resources/webhook),
 [rate limits](https://docs.discord.com/developers/topics/rate-limits),
-[Node memory tuning](https://nodejs.org/en/learn/diagnostics/memory/understanding-and-tuning-memory).
+[Bun](https://bun.com/docs).
