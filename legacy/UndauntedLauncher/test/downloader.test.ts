@@ -1,4 +1,4 @@
-// Download / verify / resume against a local fake content server on 127.0.0.1:62012.
+// Download / verify / resume against a local fake content server on a free 127.0.0.1 port.
 import { test, before, after, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -7,7 +7,7 @@ import path from "node:path";
 import { DownloadError, DownloadJob, fileUrlPath, SpeedMeter, type DownloadProgress } from "../src/main/downloader";
 import { validateManifest, type GameManifest } from "../src/main/manifest";
 import { verifyInstall, VerifiedCache } from "../src/main/verify";
-import { CONTENT_PORT, FakeContentServer, makeFiles, manifestFor, TEST_BUILD, type FakeFile } from "./fakes";
+import { FakeContentServer, makeFiles, manifestFor, TEST_BUILD, type FakeFile } from "./fakes";
 
 const KEY = "UUK_" + "c".repeat(48);
 const files = makeFiles();
@@ -16,7 +16,8 @@ const manifest: GameManifest = (() => {
   if (!r.ok) throw new Error(r.reason);
   return r.manifest;
 })();
-const endpoint = { host: "127.0.0.1", port: CONTENT_PORT, pin: null };
+// The port the system gives the fake server: a fixed one can be reserved on Windows (EACCES)
+const endpoint = { host: "127.0.0.1", port: 0, pin: null };
 let server: FakeContentServer;
 let dir: string;
 
@@ -42,7 +43,7 @@ function assertInstalled(): void {
 
 before(async () => {
   server = new FakeContentServer({ key: KEY, files });
-  await server.start();
+  endpoint.port = await server.start(0);
 });
 
 after(async () => {

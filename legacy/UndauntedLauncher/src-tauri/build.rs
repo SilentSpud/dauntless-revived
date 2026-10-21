@@ -9,12 +9,11 @@ fn command_names() -> Vec<&'static str> {
     let spec = fs::read_to_string("src/bridge/spec.rs").unwrap_or_default();
     let list = spec.split_once("pub const COMMANDS").map_or("", |(_, rest)| rest);
     let list = list.split_once("];").map_or("", |(list, _)| list);
-    list.split("command(\"")
+    // rustfmt may put the name on the next line: `command(` then `"name",`
+    list.split("command(")
         .skip(1)
-        .filter_map(|item| {
-            item.split_once('"')
-                .map(|(name, _)| &*Box::leak(name.to_owned().into_boxed_str()))
-        })
+        .filter_map(|item| item.trim_start().strip_prefix('"')?.split_once('"'))
+        .map(|(name, _)| &*Box::leak(name.to_owned().into_boxed_str()))
         .collect()
 }
 
