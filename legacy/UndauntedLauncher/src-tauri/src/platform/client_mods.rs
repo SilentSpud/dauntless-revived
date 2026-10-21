@@ -141,6 +141,7 @@ pub fn install_pinned_dlls(resources_dir: &Path, install_dir: &Path) -> Result<(
 pub struct ClientModFile {
     pub path: String,
     pub sha256: String,
+    #[expect(dead_code, reason = "part of the bundle's format; the hash decides")]
     pub size: u64,
     pub keep: bool,
 }
@@ -148,6 +149,7 @@ pub struct ClientModFile {
 #[derive(Debug, Clone, Deserialize)]
 pub struct ClientModsManifest {
     pub version: u32,
+    #[expect(dead_code, reason = "part of the bundle's format")]
     pub target: String,
     pub files: Vec<ClientModFile>,
     #[serde(default)]

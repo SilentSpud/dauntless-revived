@@ -91,11 +91,7 @@ pub fn create(app: &AppHandle) -> tauri::Result<WebviewWindow> {
             let window = handle.clone();
             tauri::async_runtime::spawn(async move {
                 let app = window.app_handle().clone();
-                let language = app
-                    .state::<crate::bridge::backend::Backend>()
-                    .snapshot()
-                    .settings
-                    .language;
+                let language = app.state::<crate::controller::ControllerHandle>().language();
                 if crate::platform::dialogs::confirm_keep_open(&app, language, reason).await {
                     let _ = window.minimize();
                     if reason == KeepOpen::Relay {
@@ -117,9 +113,9 @@ pub fn create(app: &AppHandle) -> tauri::Result<WebviewWindow> {
 
 type KeepOpenReason = Box<dyn Fn() -> Option<KeepOpen> + Send + Sync>;
 
-/// What decides whether closing the window needs the player's confirmation: the controller (L38) says
-/// whether the relay or the offline services carry a running game, and what to do when the player keeps
-/// the launcher open (the "keep open" notice in public mode).
+/// What decides whether closing the window needs the player's confirmation: the controller says whether
+/// the relay or the offline services carry a running game, and what to do when the player keeps the
+/// launcher open (the "keep open" notice in public mode).
 #[derive(Default)]
 pub struct CloseGuard {
     reason: Mutex<Option<KeepOpenReason>>,
@@ -128,7 +124,6 @@ pub struct CloseGuard {
 }
 
 impl CloseGuard {
-    #[allow(dead_code, reason = "the controller (L38) sets it")]
     pub fn set(
         &self,
         reason: impl Fn() -> Option<KeepOpen> + Send + Sync + 'static,

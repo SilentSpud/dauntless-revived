@@ -11,7 +11,6 @@ use crate::core::game_language::launch_locale;
 use crate::core::invite::is_valid_host;
 use crate::core::pins::EXE_NAME;
 use crate::core::username::is_plausible_account_key;
-use crate::platform::log;
 
 pub const FIXED_ARGS: [&str; 12] = [
     "-AUTH_LOGIN=unused",
@@ -100,14 +99,34 @@ pub struct LaunchRuntime {
 
 type Listener = Box<dyn Fn(bool, Option<i32>) + Send + Sync>;
 
+/// Starts a stand-in for the game instead of the exe (tests): (Win64 folder, arguments, runtime, extra
+/// environment) to the stand-in's process id. The stand-in ends with `GameProcess::ended`.
+pub type Spawn =
+    Arc<dyn Fn(&Path, &[String], Option<&LaunchRuntime>, &[(&str, &str)]) -> std::io::Result<u32> + Send + Sync>;
+
 /// The one game process this launcher started.
 #[derive(Clone, Default)]
 pub struct GameProcess {
     pid: Arc<Mutex<Option<u32>>>,
     listeners: Arc<Mutex<Vec<Listener>>>,
+    spawn: Option<Spawn>,
 }
 
 impl GameProcess {
+    pub fn with_spawn(spawn: Option<Spawn>) -> Self {
+        Self {
+            spawn,
+            ..Self::default()
+        }
+    }
+
+    /// The game a `Spawn` started has exited.
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
+    pub fn ended(&self, code: Option<i32>) {
+        *self.pid.lock().unwrap_or_else(|poisoned| poisoned.into_inner()) = None;
+        self.tell(false, code);
+    }
+
     pub fn running(&self) -> bool {
         self.pid().is_some()
     }
@@ -149,6 +168,12 @@ impl GameProcess {
                 std::io::ErrorKind::AlreadyExists,
                 "already running",
             ));
+        }
+        if let Some(spawn) = &self.spawn {
+            *pid = Some(spawn(win64_dir, args, runtime, extra_env)?);
+            drop(pid);
+            self.tell(true, None);
+            return Ok(());
         }
         let exe = win64_dir.join(EXE_NAME);
         let mut command = match runtime {
@@ -310,11 +335,6 @@ pub fn game_exit_detail(code: i32) -> String {
             "{hex}: The game closed unexpectedly. Use Repair game files; if it repeats, send the latest Archon game log to support."
         ),
     }
-}
-
-/// Logs a launch without the key.
-pub fn log_launch(exe: &str, args: &[String]) {
-    log::info(&format!("launching {}", describe_launch(exe, args)));
 }
 
 #[cfg(test)]

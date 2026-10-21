@@ -321,6 +321,26 @@ Done so far:
   `no-store` and `nosniff`, and an empty 404 for anything else. Left in P4: the KWallet route on Plasma 5 (L27),
   the manual checks with real profiles and desktops (L2, L5, L34, L36), and the page's one URL helper for the two art
   forms (with L41).
+- Launcher P5, L38 and L39 (P5 done in code): `src-tauri/src/controller/` is `controller.ts`. The state sits behind
+  one mutex that is held only between awaits, so each locked stretch is one synchronous stretch of the TypeScript
+  controller on Node's event loop. That allows the same interleavings and no others, without an actor task
+  (row L38's sketch). The `busy`/`task` checks and the actions that follow them happen under one lock.
+  `controller/stored.rs` is a typed view of the settings map, which `platform/settings.rs` keeps as JSON so it
+  writes the Electron launcher's bytes. `controller/platform.rs` is the `Platform` interface: the dialogs, the
+  browser, snapshot and progress pushes, the art store, Tailscale, running clients, the Linux runtime and device
+  signals; the app passes `TauriPlatform`. Every command except offline (L42) now forwards to the controller, and
+  the backend keeps only the progress channel and the waiting invite link. The close guard asks the controller
+  whether the relay carries a game, and "keep open" sets its notice. On exit the controller stops polling, the
+  task and the relay, then waits for the background news and art loads. Status polling (L39) is a
+  `tokio::time::interval` task that the page switches on and off, as today. `GameProcess` takes an optional
+  stand-in spawn (as `Platform.spawn` did), so 11 controller tests run the whole public-mode flow (join, register,
+  install, device ban, play through the relay, Engine.ini, game exit and exit codes, key rejected) and more:
+  settings at PLAY, saved servers, certificate mismatch and change, busy relay port, the ServerStatus key rules,
+  logout overtaking a status request, private mode with news, and Change folder. They run against a fake TLS
+  gateway; on Windows the relay's netstat owner check passes because the test process is the stand-in game.
+  Offline flows stay with L42–L44. Not ported yet: the Linux secure-storage bootstrap (`main.ts`
+  `ensureLinuxSecureStorageDependency`) and the updater (P9). No check yet of the controller in the running app
+  with a real profile.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

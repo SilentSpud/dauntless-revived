@@ -14,6 +14,7 @@ use serde_json::Value;
 use super::Encryptor;
 
 /// The AES key in `Local State`, unwrapped with `unprotect` (DPAPI's `CryptUnprotectData`).
+#[cfg_attr(not(windows), allow(dead_code, reason = "Windows only"))]
 pub fn windows_master_key(local_state: &str, unprotect: impl Fn(&[u8]) -> Option<Vec<u8>>) -> Option<[u8; 32]> {
     let state: Value = serde_json::from_str(local_state).ok()?;
     let encoded = state.get("os_crypt")?.get("encrypted_key")?.as_str()?;
@@ -56,7 +57,9 @@ pub fn decrypt_linux(blob: &[u8], secret: Option<&[u8]>) -> Option<String> {
 
 /// The Electron launcher's safeStorage, for reading only.
 pub enum ElectronStorage {
+    #[cfg_attr(not(windows), allow(dead_code, reason = "Windows only"))]
     Windows { master: [u8; 32] },
+    #[cfg_attr(windows, allow(dead_code, reason = "Linux only"))]
     Linux { secret: Option<Vec<u8>> },
 }
 

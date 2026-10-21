@@ -48,6 +48,7 @@ impl Encryptor for SealedKey {
 }
 
 /// No key storage on this desktop: keys cannot be saved ("unavailable").
+#[cfg_attr(windows, expect(dead_code, reason = "Linux only"))]
 struct Unavailable;
 
 impl Encryptor for Unavailable {

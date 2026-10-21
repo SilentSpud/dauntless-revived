@@ -294,6 +294,7 @@ struct CacheFile {
 /// Remembers which files were hashed (by size and modification time), so an interrupted install does
 /// not re-hash gigabytes it already checked. Repair ignores it and hashes everything. The file is the
 /// one the Electron launcher writes.
+#[derive(Clone)]
 pub struct VerifiedCache {
     file: PathBuf,
     dir: Option<String>,

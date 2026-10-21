@@ -40,10 +40,7 @@ impl Paths {
         }
     }
 
-    pub fn settings_dir(&self) -> &Path {
-        &self.user_data
-    }
-
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
     pub fn keys_dir(&self) -> PathBuf {
         self.user_data.join("keys")
     }

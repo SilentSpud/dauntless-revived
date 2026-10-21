@@ -41,6 +41,7 @@ impl ArtStore {
         }
     }
 
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
     pub fn clear(&self) {
         self.files.lock().unwrap_or_else(|p| p.into_inner()).clear();
     }

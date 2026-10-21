@@ -818,6 +818,7 @@ impl DownloadJob {
         })
     }
 
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
     pub fn paused(&self) -> bool {
         self.inner.state().paused
     }
@@ -864,6 +865,7 @@ impl DownloadJob {
         self.inner.changed.notify_waiters();
     }
 
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
     pub fn progress(&self) -> DownloadProgress {
         self.inner.progress()
     }

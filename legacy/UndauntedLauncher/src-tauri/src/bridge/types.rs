@@ -298,10 +298,7 @@ impl Serialize for InviteCheck {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RegisterOutcome {
-    #[cfg_attr(not(test), expect(dead_code, reason = "the controller (L38) answers with it"))]
-    Ok {
-        username: String,
-    },
+    Ok { username: String },
     Err(LauncherError),
 }
 
@@ -408,35 +405,6 @@ pub struct SettingsPatch {
     pub game_language: Option<GameLanguage>,
     pub show_console: Option<bool>,
     pub streamer_mode: Option<bool>,
-}
-
-impl Settings {
-    pub fn apply(&mut self, patch: SettingsPatch) {
-        if patch.hunt_region.is_some() {
-            self.hunt_region = patch.hunt_region;
-        }
-        if let Some(graphics) = patch.graphics {
-            self.graphics = graphics;
-        }
-        if let Some(exposure) = patch.exposure {
-            self.exposure = exposure;
-        }
-        if let Some(windowed) = patch.windowed {
-            self.windowed = windowed;
-        }
-        if let Some(language) = patch.language {
-            self.language = language;
-        }
-        if let Some(game_language) = patch.game_language {
-            self.game_language = game_language;
-        }
-        if let Some(show_console) = patch.show_console {
-            self.show_console = show_console;
-        }
-        if patch.streamer_mode.is_some() {
-            self.streamer_mode = patch.streamer_mode;
-        }
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

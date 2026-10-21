@@ -340,6 +340,7 @@ pub struct ApplyConfig<'a> {
 }
 
 impl<'a> ApplyConfig<'a> {
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
     pub fn new(host: &'a str, graphics: GraphicsPreset) -> Self {
         Self {
             host,

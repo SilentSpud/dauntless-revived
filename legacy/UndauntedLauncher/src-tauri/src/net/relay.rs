@@ -336,6 +336,7 @@ impl Relay {
     }
 
     /// TLS connections opened to the server so far (kept-alive ones are reused).
+    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
     pub fn tls_connections(&self) -> u64 {
         self.shared.tls_connections.load(Ordering::Relaxed)
     }

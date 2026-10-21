@@ -1,6 +1,5 @@
-//! What the commands talk to until the controller exists (row L38): the snapshot the page draws, the
-//! settings it changes, and the progress channel. Everything that needs the network, the key store or
-//! the game folder answers "not in this build yet" until its row is ported (P2 to P5).
+//! What the commands keep besides the controller (row L38 owns the rest): the progress channel the page
+//! subscribed, and an invite link waiting for the page.
 
 use std::sync::{Mutex, MutexGuard};
 use std::time::Instant;
@@ -9,91 +8,14 @@ use tauri::ipc::Channel;
 use tauri::{AppHandle, Emitter};
 
 use super::progress::Throttle;
-use super::types::{
-    ActionResult, ErrorCode, ExposureMode, GameLanguage, GraphicsPreset, LauncherError, Phase, Settings, SettingsPatch,
-    Snapshot, SnapshotAccount, SnapshotApp, SnapshotConnect, SnapshotGame, SnapshotInstall, TaskProgress,
-};
+use super::types::TaskProgress;
 use crate::window::MAIN;
 
 /// Pushed to the page whenever the snapshot changes.
 pub const SNAPSHOT_EVENT: &str = "snapshot";
 
-pub fn default_settings() -> Settings {
-    Settings {
-        hunt_region: None,
-        graphics: GraphicsPreset::DEFAULT,
-        exposure: ExposureMode::Game,
-        windowed: false,
-        language: crate::core::i18n::os_language(),
-        game_language: GameLanguage::Auto,
-        show_console: false,
-        streamer_mode: None,
-    }
-}
-
-pub fn initial_snapshot(version: &str, packaged: bool) -> Snapshot {
-    Snapshot {
-        phase: Phase::Join,
-        busy: false,
-        server: None,
-        saved_servers: Vec::new(),
-        connect: SnapshotConnect {
-            checking: false,
-            problem: None,
-            tailscale_installed: false,
-            last_checked_at: None,
-        },
-        account: SnapshotAccount {
-            username: None,
-            has_key: false,
-            offer_backup: false,
-        },
-        install: SnapshotInstall {
-            dir: String::new(),
-            default_dir: String::new(),
-            installed: false,
-            missing_files: 0,
-            verified: false,
-            dlls_ok: false,
-            free_bytes: None,
-            required_bytes: 0,
-            total_bytes: 0,
-            vc_runtime_missing: Vec::new(),
-            direct_x_missing: None,
-            content_available: false,
-        },
-        task: None,
-        game: SnapshotGame {
-            running: false,
-            relay_port: None,
-        },
-        settings: default_settings(),
-        app: SnapshotApp {
-            version: version.to_owned(),
-            packaged,
-            update_ready: false,
-        },
-        status: None,
-        status_unsupported: false,
-        last_error: None,
-        notice: None,
-    }
-}
-
-/// The answer of every call whose row is not ported yet.
-pub fn not_yet() -> ActionResult {
-    ActionResult::Err(not_yet_error())
-}
-
-pub fn not_yet_error() -> LauncherError {
-    LauncherError {
-        code: ErrorCode::Unknown,
-        detail: Some("not in the Tauri launcher yet".into()),
-    }
-}
-
+#[derive(Default)]
 pub struct Backend {
-    snapshot: Mutex<Snapshot>,
     progress: Mutex<Option<(Channel<TaskProgress>, Throttle)>>,
     /// An invite link the launcher was started with or handed, until the page takes it
     invite_link: Mutex<Option<String>>,
@@ -108,14 +30,6 @@ fn lock<T>(mutex: &Mutex<T>) -> MutexGuard<'_, T> {
 }
 
 impl Backend {
-    pub fn new(snapshot: Snapshot) -> Self {
-        Self {
-            snapshot: Mutex::new(snapshot),
-            progress: Mutex::new(None),
-            invite_link: Mutex::new(None),
-        }
-    }
-
     /// Keeps an invite link for the page and tells it one is waiting.
     pub fn deliver_invite_link(&self, app: Option<&AppHandle>, link: Option<String>) {
         let Some(link) = link else { return };
@@ -129,34 +43,11 @@ impl Backend {
         lock(&self.invite_link).take()
     }
 
-    pub fn snapshot(&self) -> Snapshot {
-        lock(&self.snapshot).clone()
-    }
-
-    /// Changes the snapshot and pushes the new one to the page.
-    pub fn update(&self, app: &AppHandle, change: impl FnOnce(&mut Snapshot)) -> Snapshot {
-        let snapshot = {
-            let mut snapshot = lock(&self.snapshot);
-            change(&mut snapshot);
-            snapshot.clone()
-        };
-        let _ = app.emit_to(MAIN, SNAPSHOT_EVENT, &snapshot);
-        snapshot
-    }
-
-    pub fn set_settings(&self, app: &AppHandle, patch: SettingsPatch) -> Settings {
-        self.update(app, |snapshot| snapshot.settings.apply(patch)).settings
-    }
-
     pub fn subscribe_progress(&self, channel: Channel<TaskProgress>) {
         *lock(&self.progress) = Some((channel, Throttle::default()));
     }
 
     /// Sends a progress value to the page, unless the last one went out too recently.
-    #[cfg_attr(
-        not(test),
-        expect(dead_code, reason = "the downloader (L23) and verify (L24) report progress")
-    )]
     pub fn push_progress(&self, progress: &TaskProgress) {
         if let Some((channel, throttle)) = lock(&self.progress).as_mut()
             && throttle.pass(Instant::now(), progress)
@@ -181,7 +72,7 @@ mod tests {
             lock(&sink).push(format!("{body:?}"));
             Ok(())
         });
-        let backend = Backend::new(initial_snapshot("0.0.0", false));
+        let backend = Backend::default();
         let mut progress = TaskProgress {
             kind: TaskKind::Download,
             paused: false,

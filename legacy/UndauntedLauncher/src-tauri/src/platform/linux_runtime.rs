@@ -461,6 +461,7 @@ pub async fn prepare_linux_game_launch(
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DependencyKind {
     Runtime,
+    #[allow(dead_code, reason = "the secure-storage bootstrap (main.ts) is not ported yet")]
     SecureStorage,
 }
 

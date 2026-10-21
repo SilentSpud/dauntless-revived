@@ -45,6 +45,7 @@ fn peer_pid(table: &str, local: SocketAddr, remote: SocketAddr) -> Option<i64> {
     }
 }
 
+#[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
 pub fn tcp_table_owns_peer(table: &str, local: SocketAddr, remote: SocketAddr, pid: u32) -> bool {
     pid > 0 && peer_pid(table, local, remote) == Some(i64::from(pid))
 }
