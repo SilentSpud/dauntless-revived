@@ -29,9 +29,9 @@
       "instrumentation keeps HTTP replies intact, counts once and excludes monitoring polls": "tests/health.rs::requests_count_once_and_monitoring_polls_never"
     },
     "backup.test.ts": {
-      "live backup refuses proxy callers, wrong keys, traversal, duplicate copies and overwrites": "todo",
-      "backup budget limits authenticated copies before filesystem work, not rejected callers": "todo",
-      "writer-connection backup finishes while saves continue": "todo"
+      "live backup refuses proxy callers, wrong keys, traversal, duplicate copies and overwrites": "tests/m31/backup.rs::live_backup_refuses_proxy_callers_wrong_keys_traversal_duplicate_copies_and_overwrites",
+      "backup budget limits authenticated copies before filesystem work, not rejected callers": "tests/m31/backup.rs::backup_budget_limits_authenticated_copies_before_filesystem_work_not_rejected_callers",
+      "writer-connection backup finishes while saves continue": "../../crates/store/tests/store.rs::a_backup_under_constant_writes_is_one_consistent_snapshot"
     },
     "bountiesported.test.ts": {
       "bounties persist across a read": "todo",
@@ -393,12 +393,12 @@
       "sets every character to the daily amounts once, adding missing stacks and keeping the rest": "todo"
     },
     "inventoryauthority.test.ts": {
-      "player cannot mint currency by forging a gameserver source": "todo",
-      "player cannot insert an unearned item through saveInstancedItems": "todo",
-      "authenticated native reward still succeeds and identical retry grants once": "todo",
-      "Rams purchases refuse stale balances atomically even with legacy material clamping": "todo",
-      "foreign character, invented catalog, negative quantity and impossible upgrade cannot mutate inventory": "todo",
-      "mutation quota is per player and does not stop native rewards or reads": "todo"
+      "player cannot mint currency by forging a gameserver source": "tests/m31/inventoryauthority.rs::player_cannot_mint_currency_by_forging_a_gameserver_source",
+      "player cannot insert an unearned item through saveInstancedItems": "tests/m31/inventoryauthority.rs::player_cannot_insert_an_unearned_item_through_saveinstanceditems",
+      "authenticated native reward still succeeds and identical retry grants once": "tests/m31/inventoryauthority.rs::authenticated_native_reward_still_succeeds_and_identical_retry_grants_once",
+      "Rams purchases refuse stale balances atomically even with legacy material clamping": "tests/m31/inventoryauthority.rs::rams_purchases_refuse_stale_balances_atomically_even_with_legacy_material_clamping",
+      "foreign character, invented catalog, negative quantity and impossible upgrade cannot mutate inventory": "tests/m31/inventoryauthority.rs::foreign_character_invented_catalog_negative_quantity_and_impossible_upgrade_cannot_mutate_inventory",
+      "mutation quota is per player and does not stop native rewards or reads": "tests/m31/inventoryauthority.rs::mutation_quota_is_per_player_and_does_not_stop_native_rewards_or_reads"
     },
     "inventoryported.test.ts": {
       "grants a stacked item": "todo",
@@ -599,8 +599,8 @@
       "trusted IP logging, account/IP bans, required reasons, JWT revocation and unban": "todo"
     },
     "novaunlocker.test.ts": {
-      "Nova ${name} is refused, including forged authority and changed retry IDs": "todo",
-      "Nova empty probe remains harmless and does not authorize a subsequent grant": "todo"
+      "Nova ${name} is refused, including forged authority and changed retry IDs": "tests/m31/novaunlocker.rs::nova_name_is_refused_including_forged_authority_and_changed_retry_ids",
+      "Nova empty probe remains harmless and does not authorize a subsequent grant": "tests/m31/novaunlocker.rs::nova_empty_probe_remains_harmless_and_does_not_authorize_a_subsequent_grant"
     },
     "party.test.ts": {
       "fails every party member after one minute of unavailable capacity": "todo",
@@ -890,15 +890,15 @@
       "VERIFY_STUB_ACCOUNT=1 answers the stub to everyone again": "todo"
     },
     "storage.test.ts": {
-      "keeps the rollback journal, so a copy of the file alone is complete": "todo",
-      "switches a file left in WAL mode (stopped without a checkpoint) back, keeping every commit": "todo",
-      "uses WAL only when asked (DB_WAL=1)": "todo",
-      "has the save-history tables and the append-only triggers after migrating": "todo",
-      "has the real-progression tables and the audit triggers after migrating": "todo",
-      "keeps every entry when many are added at once (a lost update before)": "todo",
-      "creates the breadcrumbs row once under concurrent reads": "todo",
-      "lets only one of two breadcrumb writes with the same version win": "todo",
-      "refuses another player's character": "todo"
+      "keeps the rollback journal, so a copy of the file alone is complete": "n/a: the Rust metagame runs SQLite in WAL mode (D17); its backups go through metagame db backup, which checkpoints into a single-file copy",
+      "switches a file left in WAL mode (stopped without a checkpoint) back, keeping every commit": "tests/dbtools.rs::backup_checks_its_copy_and_journal_switches_for_a_rollback",
+      "uses WAL only when asked (DB_WAL=1)": "n/a: WAL is always on in the Rust metagame (D17); there is no DB_WAL switch",
+      "has the save-history tables and the append-only triggers after migrating": "tests/m31/storage.rs::has_the_save_history_tables_and_the_append_only_triggers_after_migrating",
+      "has the real-progression tables and the audit triggers after migrating": "tests/m31/storage.rs::has_the_real_progression_tables_and_the_audit_triggers_after_migrating",
+      "keeps every entry when many are added at once (a lost update before)": "tests/m31/storage.rs::keeps_every_entry_when_many_are_added_at_once_a_lost_update_before",
+      "creates the breadcrumbs row once under concurrent reads": "tests/m31/storage.rs::creates_the_breadcrumbs_row_once_under_concurrent_reads",
+      "lets only one of two breadcrumb writes with the same version win": "tests/m31/storage.rs::lets_only_one_of_two_breadcrumb_writes_with_the_same_version_win",
+      "refuses another player's character": "tests/m31/storage.rs::refuses_another_player_s_character"
     },
     "store-maintenance.test.ts": {
       "curated shop has exactly 30 free cosmetics and blocks excluded direct purchases": "todo",
@@ -924,9 +924,9 @@
       "returns 404 while the feature switch is off": "todo"
     },
     "unlocker-detection.test.ts": {
-      "exact nonempty mutation suspends only authenticated actor for seven days and records bounded evidence": "todo",
-      "generic reads, empty probes, marker lookalikes, game servers and missing auth are never detections": "todo",
-      "all supplied exact mutation signatures detected, existing permanent bans preserved and admins blocked without ban": "todo"
+      "exact nonempty mutation suspends only authenticated actor for seven days and records bounded evidence": "tests/m31/unlocker_detection.rs::exact_nonempty_mutation_suspends_only_authenticated_actor_for_seven_days_and_records_bounded_evidence",
+      "generic reads, empty probes, marker lookalikes, game servers and missing auth are never detections": "tests/m31/unlocker_detection.rs::generic_reads_empty_probes_marker_lookalikes_game_servers_and_missing_auth_are_never_detections",
+      "all supplied exact mutation signatures detected, existing permanent bans preserved and admins blocked without ban": "tests/m31/unlocker_detection.rs::all_supplied_exact_mutation_signatures_detected_existing_permanent_bans_preserved_and_admins_blocked_without_ban"
     }
   }
 }

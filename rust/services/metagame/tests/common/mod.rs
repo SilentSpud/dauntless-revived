@@ -177,6 +177,12 @@ impl TestApp {
         }
     }
 
+    /// A session token for `user`, signed now (`SignMetagameJWTForUid`); kept by a test that goes on
+    /// using it after the account is banned, as the Node tests did.
+    pub async fn token(&self, user: &str) -> String {
+        metagame::auth::sign_token(&self.state, user).await.unwrap().unwrap()
+    }
+
     pub async fn get(&self, path: &str, req: Req) -> Reply {
         self.call("GET", path, req).await
     }
