@@ -555,4 +555,189 @@ mod tests {
         assert_eq!(clean_text(Some("  a\u{7}b  "), 64), Some("ab".into()));
         assert_eq!(clean_commit(Some("abc def")), None);
     }
+
+    // serverstatus.test.ts's helper-level cases (M31)
+
+    #[test]
+    fn reads_the_heartbeat_s_map_as_a_package_path_or_a_bare_name() {
+        let cases: [(Value, Option<&str>, &str); 16] = [
+            (json!("/Game/Maps/Map_LoginMenu"), None, "menu"),
+            (json!("Map_LoginMenu"), None, "menu"),
+            (json!("/Game/Maps/ramsgate/ramsgate_01_persistent"), None, "city"),
+            (json!("ramsgate_01_persistent"), None, "city"),
+            (json!("/Game/Maps/islands/dojo/training_dojo_persistent"), None, "dojo"),
+            (json!("/Game/Maps/islands/1705/dia_moss_triforce"), None, "tutorial"),
+            (json!("/Game/Maps/islands/1705/dia_moss_triforce_2"), None, "hunt"),
+            (json!("/Game/Maps/islands/1702/cora_jamima"), None, "hunt"),
+            (json!("/Game/Maps/islands/arenas/arena_ramsgate_00"), None, "hunt"),
+            (json!("cora_jamima"), None, "hunt"),
+            (json!(""), Some("city"), "city"),
+            (Value::Null, Some("menu"), "menu"),
+            (Value::Null, Some("lobby"), "menu"),
+            (Value::Null, Some("island"), "hunt"),
+            (Value::Null, None, "unknown"),
+            (json!({}), None, "unknown"),
+        ];
+        for (map, state, expected) in cases {
+            let map = (!map.is_null()).then_some(map);
+            assert_eq!(classify_place(map.as_ref(), state), expected, "{map:?} / {state:?}");
+        }
+    }
+
+    fn server(
+        kind: &'static str,
+        map: &str,
+        behemoth: Option<&str>,
+        hunt_id: Option<&str>,
+        matchmaker: Option<&str>,
+        port: i64,
+    ) -> Gameserver {
+        Gameserver {
+            connected_players: None,
+            id: format!("server-{port}"),
+            port,
+            kind,
+            map: map.into(),
+            behemoth: behemoth.map(str::to_owned),
+            hunt_id: hunt_id.map(str::to_owned),
+            matchmaker_hunt_id: matchmaker.map(str::to_owned),
+            expected_players: Vec::new(),
+            max_players: None,
+            started_at: String::new(),
+        }
+    }
+
+    #[test]
+    fn names_behemoths_from_the_hunt_tables_else_by_codename() {
+        let name = |behemoth: Option<&str>, matchmaker: Option<&str>| {
+            behemoth_name(&server("hunt", "", behemoth, None, matchmaker, 1))
+        };
+        assert_eq!(
+            name(
+                Some("/Game/Monsters/lerawr/lerawr_beta_bp.lerawr_beta_bp_C"),
+                Some("CR19_MatchmakerHunt_Lerawr_Beta")
+            )
+            .as_deref(),
+            Some("Lesser Embermane")
+        );
+        assert_eq!(
+            name(
+                Some("/Game/Monsters/mcrollin/mcbeaver_alpha_bp.mcbeaver_alpha_bp_C"),
+                Some("CR19_MatchmakerHunt_Beaver_Heroic")
+            )
+            .as_deref(),
+            Some("Heroic Ragetail Gnasher")
+        );
+        assert_eq!(
+            name(
+                Some("/Game/Monsters/mcrollin/mcbeaver_alpha_bp.mcbeaver_alpha_bp_C"),
+                None
+            )
+            .as_deref(),
+            Some("Ragetail Gnasher")
+        );
+        assert_eq!(
+            name(
+                Some("/Game/Monsters/sq/electroquill/electroquill_alpha_bp.electroquill_alpha_bp_C"),
+                Some("Arena_MatchmakerHunt_Hard_001")
+            )
+            .as_deref(),
+            Some("Shockjaw Nayzaga")
+        );
+        assert_eq!(
+            name(
+                Some("/Game/Monsters/mcrollin/mcbeaver_tutorial_bp.mcbeaver_tutorial_bp_C"),
+                None
+            )
+            .as_deref(),
+            Some("Gnasher")
+        );
+        assert_eq!(
+            name(Some("/Game/Monsters/fulgar/fulgar_umbral_bp.fulgar_umbral_bp_C"), None).as_deref(),
+            Some("fulgar_umbral")
+        );
+        assert_eq!(name(None, None), None);
+        assert_eq!(name(None, Some("toString")), None);
+    }
+
+    #[test]
+    fn titles_ramsgate_the_dojo_the_tutorial_and_hunts() {
+        let title = |kind: &'static str, map: &str, hunt: Option<&str>, behemoth: Option<&str>| {
+            instance_title(&server(kind, map, None, hunt, None, 1), behemoth)
+        };
+        assert_eq!(
+            title("city", "/Game/Maps/ramsgate/ramsgate_01_persistent", None, None),
+            "Ramsgate"
+        );
+        assert_eq!(
+            title("dojo", "/Game/Maps/islands/dojo/training_dojo_persistent", None, None),
+            "Training Dojo"
+        );
+        assert_eq!(
+            title(
+                "tutorial",
+                "/Game/Maps/islands/1705/dia_moss_triforce",
+                None,
+                Some("Gnasher")
+            ),
+            "Tutorial"
+        );
+        assert_eq!(
+            title(
+                "hunt",
+                "/Game/Maps/islands/1702/cora_jamima",
+                None,
+                Some("Lesser Embermane")
+            ),
+            "Hunt: Lesser Embermane"
+        );
+        assert_eq!(
+            title(
+                "hunt",
+                "/Game/Maps/islands/1702/cora_jamima",
+                Some("CR19_PlayerHunt_Escalation_Randall_Easy"),
+                None
+            ),
+            "Hunt: Umbral Escalation"
+        );
+        assert_eq!(
+            title("hunt", "/Game/Maps/islands/1702/cora_jamima?game=X", None, None),
+            "Hunt: cora_jamima"
+        );
+    }
+
+    /// Node's default version is its package.json's 0.0.5; Rust's is this build's version.
+    #[test]
+    fn has_defaults_and_takes_server_name_server_version_git_commit_and_source_url() {
+        let defaults = Settings::from_env(&Env::from_pairs([]));
+        assert_eq!(defaults.name, "Dauntless Revived");
+        assert_eq!(defaults.source_url, "https://github.com/mixutin/dauntless-revived");
+        assert_eq!(defaults.version, env!("CARGO_PKG_VERSION"));
+        assert_eq!(defaults.commit, "unknown");
+        let set = Settings::from_env(&Env::from_pairs([
+            ("SERVER_NAME", "Friday Hunts"),
+            ("SERVER_VERSION", "friends-v1"),
+            ("GIT_COMMIT", "0123456789abcdef0123456789abcdef01234567-dirty"),
+            ("SOURCE_URL", "https://example.org/src"),
+        ]));
+        assert_eq!(
+            Value::Object(set.identity()),
+            json!({"name": "Friday Hunts", "version": "friends-v1", "commit": "0123456789abcdef0123456789abcdef01234567-dirty", "sourceUrl": "https://example.org/src"})
+        );
+        let odd = Settings::from_env(&Env::from_pairs([("GIT_COMMIT", "not a commit; rm -rf")]));
+        assert_ne!(odd.commit, "not a commit; rm -rf");
+    }
+
+    #[test]
+    fn attributes_multiple_ramsgates_by_the_player_s_allocated_port() {
+        let (main, worker) = (
+            server("city", "", None, None, None, 8777),
+            server("city", "", None, None, None, 8761),
+        );
+        let worlds = [&main, &worker];
+        assert_eq!(select_persistent(&worlds, Some(8761)).map(|s| s.port), Some(8761));
+        assert_eq!(select_persistent(&worlds, Some(8777)).map(|s| s.port), Some(8777));
+        assert_eq!(select_persistent(&worlds, None).map(|s| s.port), Some(8777));
+        assert!(select_persistent(&[], Some(8761)).is_none());
+    }
 }

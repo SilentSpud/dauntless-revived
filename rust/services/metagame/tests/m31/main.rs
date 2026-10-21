@@ -6,6 +6,7 @@
 mod common;
 
 mod accountrecovery;
+mod accounts;
 mod backup;
 mod bountiesported;
 mod branding;
@@ -48,6 +49,7 @@ mod progressionrank;
 mod ramspricing;
 mod realprogression;
 mod regionprobes;
+mod serverstatus;
 mod shoplayout;
 mod shutdown;
 mod slayerlinks;

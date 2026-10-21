@@ -69,8 +69,15 @@ pub(crate) fn origin(parts: &Parts) -> Origin<'_> {
     }
 }
 
+/// A header as Node's request reads it: a repeated `authorization` keeps its first value; any other
+/// repeated header is the values joined with ", ", which never matches a key (", " stands for it).
 fn header<'a>(parts: &'a Parts, name: &str) -> Option<&'a str> {
-    parts.headers.get(name).map(|value| value.to_str().unwrap_or(""))
+    let mut values = parts.headers.get_all(name).iter();
+    let first = values.next()?;
+    if name != "authorization" && values.next().is_some() {
+        return Some(", ");
+    }
+    Some(first.to_str().unwrap_or(""))
 }
 
 /// The active ban of an account or address (`BanFor`).

@@ -48,7 +48,7 @@ async fn accept(app: &TestApp, who: &str, id: &str) -> Reply {
 }
 
 /// A token signed with the app's key (or `secret`, an HMAC key), `expires_in` seconds from now.
-fn sign_with(user: &str, expires_in: i64, secret: Option<&str>) -> String {
+pub(crate) fn sign_with(user: &str, expires_in: i64, secret: Option<&str>) -> String {
     use jsonwebtoken::{Algorithm, EncodingKey, Header, encode};
     let now = metagame::time::now_ms() / 1000;
     let claims = json!({"userId": user, "iat": now, "exp": now + expires_in, "iss": "undaunted-metagame", "aud": "undaunted-metagame"});
