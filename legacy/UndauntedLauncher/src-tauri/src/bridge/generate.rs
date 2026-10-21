@@ -89,28 +89,21 @@ fn hook_commands() -> String {
     for line in HEADER.lines() {
         let _ = writeln!(out, "// {line}");
     }
-    let commands: serde_json::Map<String, serde_json::Value> = COMMANDS
-        .iter()
-        .map(|command| {
-            let args: serde_json::Map<String, serde_json::Value> = command
-                .args
-                .iter()
-                .map(|(name, arg)| ((*name).to_owned(), serde_json::json!(arg)))
-                .collect();
-            (command.name.to_owned(), serde_json::Value::Object(args))
-        })
-        .collect();
-    let json = |value: &serde_json::Value| serde_json::to_string_pretty(value).unwrap_or_default();
-    let _ = writeln!(
-        out,
-        "window.__DR_COMMANDS__ = {};",
-        json(&serde_json::Value::Object(commands))
-    );
-    let _ = writeln!(
-        out,
-        "window.__DR_SETTINGS_KEYS__ = {};",
-        json(&serde_json::json!(SETTINGS_KEYS))
-    );
+    // Written by hand, in the list's order: a serde_json map's order depends on whether another crate in
+    // the build turns on its `preserve_order` feature
+    let quote = |text: &str| serde_json::to_string(text).unwrap_or_default();
+    out.push_str("window.__DR_COMMANDS__ = {\n");
+    for command in COMMANDS {
+        let args: Vec<String> = command
+            .args
+            .iter()
+            .map(|(name, arg)| format!("{}: {}", quote(name), serde_json::to_string(arg).unwrap_or_default()))
+            .collect();
+        let _ = writeln!(out, "  {}: {{ {} }},", quote(command.name), args.join(", "));
+    }
+    out.push_str("};\n");
+    let keys: Vec<String> = SETTINGS_KEYS.iter().map(|key| quote(key)).collect();
+    let _ = writeln!(out, "window.__DR_SETTINGS_KEYS__ = [{}];", keys.join(", "));
     out
 }
 
