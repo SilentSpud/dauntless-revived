@@ -219,6 +219,10 @@ Done so far:
   were made from the TypeScript functions' own answers. Differences kept on purpose: `startedAt` in a format other
   than ECMAScript's (which a browser's own date parser might still read) and years past ±262143 are refused. The
   invite, register and key commands check with these now.
+- Launcher P2, L13 and L15: `src/shared/i18n.ts` is now `src/shared/i18n/<lang>.ts`, moved verbatim, with
+  `index.ts` holding the registry that `Language` and `LANGUAGES` (re-exported by `types.ts`) come from;
+  `STRINGS` is byte-identical before and after (287,444 bytes of JSON). `src/shared/i18n/README.md` is the
+  checklist for a new language: the file and one registry line. The game's text languages stay a fixed list.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

@@ -650,7 +650,7 @@ Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 | Yhteydet palvelimeen | `main/http.ts` (pyynnöt vain kutsussa nimettyyn palvelimeen: salaamaton HTTP Tailscaleen tai loopbackiin tai kiinnitetty TLS yhdyskäytävälle), `main/pinned.ts` (kiinnitetty TLS), `main/hostapi.ts` (metagamen ja sisältöpalvelimen kutsut) | |
 | Tila ja kulku | `main/controller.ts` | Ei tuo mitään Electronista, joten testit ajavat sitä pelkällä Nodella. |
 | Avaimet, asetukset, pelin valmistelu | `main/keystore.ts` (Windows DPAPI), `main/settings.ts`, `main/engineini.ts`, `main/launch.ts`, `main/dlls.ts`, `main/constants.ts` (DLL-kiinnitykset ja päivityskanava) | |
-| Kutsut ja käyttöliittymän tekstit | `shared/invite.ts`, `shared/i18n.ts` (kaikki käyttöliittymän tekstit englanniksi ja suomeksi) | |
+| Kutsut ja käyttöliittymän tekstit | `shared/invite.ts`, `shared/i18n/` (kaikki käyttöliittymän tekstit, yksi tiedosto kieltä kohden; siellä oleva `README.md` kertoo, miten kieli lisätään) | |
 | Ikkuna ja sivu | `main.ts`, `preload.ts`, `renderer/` | |
 
 **Muualla**

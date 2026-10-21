@@ -9945,7 +9945,7 @@ Paths in each table are relative to the folder named above it.
 | Connections to the host | `main/http.ts` (requests to the invite's host only: plain HTTP to Tailscale or loopback, or pinned TLS to a gateway), `main/pinned.ts` (pinned TLS), `main/hostapi.ts` (metagame and content calls) | |
 | State and flow | `main/controller.ts` | Imports nothing from Electron, so the tests drive it with plain Node. |
 | Keys, settings, game setup | `main/keystore.ts` (Windows DPAPI), `main/settings.ts`, `main/engineini.ts`, `main/launch.ts`, `main/dlls.ts`, `main/constants.ts` (the DLL pins and the update feed) | |
-| Invites and UI text | `shared/invite.ts`, `shared/i18n.ts` (every UI text in English and Finnish) | |
+| Invites and UI text | `shared/invite.ts`, `shared/i18n/` (every UI text, one file per language; `README.md` there says how to add a language) | |
 | Window and page | `main.ts`, `preload.ts`, `renderer/` | |
 
 **Elsewhere**
