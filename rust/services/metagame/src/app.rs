@@ -59,6 +59,8 @@ pub struct App {
     /// Each account's recent friend requests, for the request window.
     pub friend_requests: crate::friends::RecentRequests,
     pub parties: crate::party::Parties,
+    /// The clock parties and matchmaking run on (`PartyNow`).
+    pub party_clock: crate::time::Clock,
     pub matchmaking: crate::matchmaking::Matchmaking,
     pub guilds: crate::guild::Settings,
     pub escalation: crate::escalation::Settings,

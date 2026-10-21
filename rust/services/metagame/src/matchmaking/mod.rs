@@ -25,7 +25,6 @@ use service_kit::env::Env;
 use crate::app::{AppError, AppState};
 use crate::js;
 use crate::party::{self, Candidate, CandidateState, LAST_CANDIDATE_REJOIN_MS};
-use crate::time::now_ms;
 use capacity::CapacityTurns;
 use region::{Region, player_region, queue_key};
 use roster::{Removal, Roster, Seat};
@@ -699,15 +698,19 @@ async fn launch_finish(app: &AppState, start: LaunchStart) -> Launched {
             tracing::error!("DeployServer allocation failed: {error}");
             Launched::failed()
         }
-        Ok(reply) => read_launch(reply),
+        Ok(reply) => read_launch(reply, app.party_clock.now()),
     };
     if let Some(turn) = turn {
-        app.parties.lock().mm.turns.finish(&turn, result.capacity, now_ms());
+        app.parties
+            .lock()
+            .mm
+            .turns
+            .finish(&turn, result.capacity, app.party_clock.now());
     }
     result
 }
 
-fn read_launch(reply: deploy::Reply) -> Launched {
+fn read_launch(reply: deploy::Reply, now: i64) -> Launched {
     let body = reply.body.unwrap_or(Value::Null);
     if reply.status == 503 {
         let reason = body.get("error").and_then(Value::as_str) == Some("capacity_unavailable")
@@ -767,7 +770,7 @@ fn read_launch(reply: deploy::Reply) -> Launched {
         host: host.to_owned(),
         port: port as i64,
         session_id: session.map(str::to_owned),
-        allocated_at: Some(now_ms()),
+        allocated_at: Some(now),
     }
 }
 
@@ -775,7 +778,7 @@ fn read_launch(reply: deploy::Reply) -> Launched {
 async fn allocation_health(app: &AppState, entry: &Entry) -> Option<bool> {
     let session = entry.session_id.as_ref()?;
     let allocated = entry.allocated_at.unwrap_or(0);
-    if now_ms() - allocated < HEALTH_CACHE_MS {
+    if app.party_clock.now() - allocated < HEALTH_CACHE_MS {
         return None;
     }
     let fresh = |app: &AppState| {
@@ -784,12 +787,12 @@ async fn allocation_health(app: &AppState, entry: &Entry) -> Option<bool> {
             .mm
             .health
             .as_ref()
-            .is_some_and(|h| h.until > now_ms())
+            .is_some_and(|h| h.until > app.party_clock.now())
     };
     if !fresh(app) {
         let _turn = app.matchmaking.health_refresh.lock().await;
         if !fresh(app) {
-            let started_at = now_ms();
+            let started_at = app.party_clock.now();
             let authority = app
                 .matchmaking
                 .settings
@@ -820,7 +823,7 @@ async fn allocation_health(app: &AppState, entry: &Entry) -> Option<bool> {
             }
             app.parties.lock().mm.health = Some(Health {
                 started_at,
-                until: now_ms() + HEALTH_CACHE_MS,
+                until: app.party_clock.now() + HEALTH_CACHE_MS,
                 complete,
                 sessions,
             });
@@ -844,7 +847,7 @@ async fn ready_allocation_usable(app: &AppState, player: &str, entry: &Entry) ->
         if entry.failed {
             return false;
         }
-        if entry.party_candidate && allocation_expired(entry, now_ms()) {
+        if entry.party_candidate && allocation_expired(entry, app.party_clock.now()) {
             fail_candidate(&mut s, &entry.candidate_id, "allocation reuse expired");
             return false;
         }
@@ -863,7 +866,7 @@ async fn ready_allocation_usable(app: &AppState, player: &str, entry: &Entry) ->
             .unwrap_or_else(|| entry.clone());
     // Positive session identity keeps a healthy running hunt reusable; without it, polls can't
     // keep extending the original lease
-    if health != Some(true) && allocation_expired(&current, now_ms()) {
+    if health != Some(true) && allocation_expired(&current, app.party_clock.now()) {
         fail_candidate(&mut s, &entry.candidate_id, "allocation reuse expired");
         return false;
     }
@@ -957,7 +960,7 @@ fn pop_queue_begin(s: &mut party::State, settings: &Settings, hunt: &str, id: u6
 /// joiners); anything else answers its players.
 async fn pop_queue_finish(app: AppState, ticket: PopTicket) {
     let game = launch_finish(&app, ticket.launch).await;
-    let now = now_ms();
+    let now = app.party_clock.now();
     let mut guard = app.parties.lock();
     let s = &mut *guard;
     let id = ticket.queue;
@@ -1159,7 +1162,7 @@ async fn party_try_finish(app: &AppState, launch: &PartyLaunch, start: TryStart)
         return (true, None);
     };
     let game = launch_finish(app, request).await;
-    let now = now_ms();
+    let now = app.party_clock.now();
     let mut guard = app.parties.lock();
     let s = &mut *guard;
     let wait_over = s.mm.waits.get(&launch.candidate_id).is_some_and(|w| w.deadline <= now);
@@ -1248,7 +1251,7 @@ async fn party_launch(app: AppState, launch: PartyLaunch, start: TryStart) {
         &launch.candidate_id,
         Retry::Party(launch.clone()),
         retry_ms,
-        now_ms(),
+        app.party_clock.now(),
     ) {
         finish_party_candidate(
             s,
@@ -1256,7 +1259,7 @@ async fn party_launch(app: AppState, launch: PartyLaunch, start: TryStart) {
             &launch.candidate_id,
             &launch.members,
             &Launched::failed(),
-            now_ms(),
+            app.party_clock.now(),
         );
     }
 }
@@ -1305,7 +1308,7 @@ async fn direct_try_finish(app: &AppState, launch: &DirectLaunch, start: TryStar
         return (true, None);
     };
     let game = launch_finish(app, request).await;
-    let now = now_ms();
+    let now = app.party_clock.now();
     let mut guard = app.parties.lock();
     let s = &mut *guard;
     if game.succeeded {
@@ -1349,7 +1352,7 @@ async fn direct_launch(app: AppState, launch: DirectLaunch, start: TryStart) {
             &launch.candidate_id,
             Retry::Direct(launch.clone()),
             retry_ms.unwrap_or(CAPACITY_RETRY_MS),
-            now_ms(),
+            app.party_clock.now(),
         )
     {
         fail_candidate(s, &launch.candidate_id, "capacity wait unavailable");
@@ -1372,7 +1375,7 @@ async fn retry_wait(app: AppState, candidate: String, wait: u64, retry: Retry, s
     {
         let delay = new_delay.unwrap_or(retry_ms);
         found.retry_ms = delay;
-        found.next = now_ms() + delay;
+        found.next = app.party_clock.now() + delay;
         found.busy = false;
     }
 }
@@ -1405,7 +1408,7 @@ enum Next {
 pub async fn check_and_update(app: &AppState, player: &str) -> Option<Entry> {
     let next = {
         let mut guard = app.parties.lock();
-        status_step(&mut guard, &app.matchmaking.settings, player, now_ms())
+        status_step(&mut guard, &app.matchmaking.settings, player, app.party_clock.now())
     };
     match next {
         Next::Done(entry) => return entry,
@@ -1539,7 +1542,7 @@ pub async fn decide_status(app: &AppState, player: &str) -> Decision {
     let Some(entry) = check_and_update(app, player).await else {
         return Decision::Unknown;
     };
-    let now = now_ms();
+    let now = app.party_clock.now();
     let mut guard = app.parties.lock();
     let s = &mut *guard;
     // A player polling for their party's candidate is still there
@@ -1782,7 +1785,7 @@ pub async fn join(
         let mut s = app.parties.lock();
         // A player going somewhere on their own no longer counts in their party's candidate
         if let Some(entry) = s.mm.results.get(player).filter(|e| e.party_candidate).cloned() {
-            s.remove_from_candidate(player, &entry.candidate_id, now_ms());
+            s.remove_from_candidate(player, &entry.candidate_id, app.party_clock.now());
         }
     }
     match hunt.as_ref().and_then(Value::as_str) {
@@ -1834,7 +1837,8 @@ async fn direct_join(
     if let Some(previous) = previous.filter(|p| p.direct_key.as_deref() == Some(key.as_str()) && !p.failed) {
         let ready = {
             let mut s = app.parties.lock();
-            s.mm.roster.touch_candidate(player, &previous.candidate_id, now_ms());
+            s.mm.roster
+                .touch_candidate(player, &previous.candidate_id, app.party_clock.now());
             if !previous.ready
                 && (previous.launch_deadline.is_some() || s.mm.waits.contains_key(&previous.candidate_id))
             {
@@ -1852,7 +1856,17 @@ async fn direct_join(
     let (launch, start) = {
         let mut guard = app.parties.lock();
         let s = &mut *guard;
-        let now = now_ms();
+        // A concurrent join with the same key may have started its launch while this one read the
+        // region: Node ran up to here without a wait, so the second join found the first one's entry
+        if let Some(current) = s.mm.results.get(player)
+            && current.direct_key.as_deref() == Some(key.as_str())
+            && !current.failed
+            && !current.ready
+            && (current.launch_deadline.is_some() || s.mm.waits.contains_key(&current.candidate_id))
+        {
+            return Ok(true);
+        }
+        let now = app.party_clock.now();
         let candidate = crate::crypto::random_uuid();
         let mut entry = Entry::new(candidate.clone(), hunt.clone());
         entry.region = Some(region);
@@ -1888,7 +1902,7 @@ async fn queue_player(app: &AppState, hunt: &str, player: &str, private: bool) -
     let current = {
         let mut guard = app.parties.lock();
         let s = &mut *guard;
-        let now = now_ms();
+        let now = app.party_clock.now();
         let current = s.mm.results.get(player).cloned();
         if let Some(entry) = &current {
             s.mm.roster.touch_candidate(player, &entry.candidate_id, now);
@@ -1923,7 +1937,7 @@ async fn queue_player(app: &AppState, hunt: &str, player: &str, private: bool) -
             return Ok(true);
         }
         if usable {
-            let now = now_ms();
+            let now = app.party_clock.now();
             if let Some(entry) = s.mm.results.get_mut(player)
                 && entry.first_sent_at.is_some()
             {
@@ -1941,7 +1955,7 @@ async fn queue_player(app: &AppState, hunt: &str, player: &str, private: bool) -
             player,
             private,
             region,
-            now_ms(),
+            app.party_clock.now(),
         )
     };
     spawn_pops(&shared, tickets);
@@ -2185,7 +2199,7 @@ pub async fn join_candidate(app: &AppState, player: &str, candidate_id: &str) ->
         .read(move |conn| {
             let mut guard = shared.parties.lock();
             let s = &mut *guard;
-            let now = now_ms();
+            let now = shared.party_clock.now();
             let Some(party_id) = s.party_for_matchmaking(conn, &player, now)? else {
                 return Ok(None);
             };
@@ -2246,7 +2260,7 @@ async fn party_join(
         .read(move |conn| {
             let mut guard = shared.parties.lock();
             let s = &mut *guard;
-            let now = now_ms();
+            let now = shared.party_clock.now();
             let Some(party_id) = s.party_for_matchmaking(conn, &id, now)? else {
                 return Ok(None);
             };
@@ -2289,7 +2303,7 @@ async fn party_join(
         .read(move |conn| {
             let mut guard = shared.parties.lock();
             let s = &mut *guard;
-            let now = now_ms();
+            let now = shared.party_clock.now();
             if let Some(candidate) = rejoin_candidate {
                 return Ok(Err(rejoin(s, &party_id, &candidate, &id, now)));
             }

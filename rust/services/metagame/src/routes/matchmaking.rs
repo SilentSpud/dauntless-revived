@@ -13,7 +13,6 @@ use super::{empty, fall_through, json, query};
 use crate::app::{AppError, AppState};
 use crate::auth::{MetagameAuth, metagame_auth};
 use crate::matchmaking::{self, Decision, Entry, roster};
-use crate::time::now_ms;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
@@ -46,7 +45,7 @@ async fn cancel(State(state): State<AppState>, parts: Parts) -> Response {
     };
     let cancelled = auth
         .user_id()
-        .and_then(|user| matchmaking::cancel(&mut state.parties.lock(), user, now_ms()));
+        .and_then(|user| matchmaking::cancel(&mut state.parties.lock(), user, state.party_clock.now()));
     let user = shown(&auth);
     match cancelled {
         Some(entry) => tracing::info!(
@@ -74,7 +73,7 @@ async fn leave(State(state): State<AppState>, parts: Parts) -> Response {
     };
     let left = auth
         .user_id()
-        .and_then(|user| matchmaking::leave(&mut state.parties.lock(), user, now_ms()));
+        .and_then(|user| matchmaking::leave(&mut state.parties.lock(), user, state.party_clock.now()));
     let user = shown(&auth);
     match left {
         Some(entry) => tracing::info!("userId {user} left matchmaking for {}", entry.hunt_text()),
@@ -174,7 +173,7 @@ async fn alive(
                 allocation_id: None,
                 connected_player_ids: connected,
             };
-            matchmaking::reconcile_expected(&mut state.parties.lock(), &players, &context, now_ms())
+            matchmaking::reconcile_expected(&mut state.parties.lock(), &players, &context, state.party_clock.now())
         }
         _ => players,
     };

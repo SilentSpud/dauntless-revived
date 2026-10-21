@@ -15,7 +15,6 @@ use super::json;
 use crate::app::{AppError, AppState};
 use crate::auth::{Player, SoftPlayer};
 use crate::party::Reply;
-use crate::time::now_ms;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
@@ -52,7 +51,7 @@ async fn poll(State(state): State<AppState>, player: Player) -> Result<Response,
             shared
                 .parties
                 .lock()
-                .poll(conn, settings, &player.user_id, now_ms())
+                .poll(conn, settings, &player.user_id, shared.party_clock.now())
                 .map_err(AppError::from)
         })
         .await?;
@@ -69,7 +68,7 @@ async fn invites(State(state): State<AppState>, parts: Parts) -> Result<Response
         Err(refused) => return Ok(refused),
     };
     let Some(user) = claims.map(|c| c.user_id) else {
-        let now = now_ms();
+        let now = state.party_clock.now();
         if now - LAST_ANONYMOUS_INVITES_WARNING.load(Ordering::Relaxed) > 60 * 1000 {
             LAST_ANONYMOUS_INVITES_WARNING.store(now, Ordering::Relaxed);
             tracing::warn!("GET /party/invites without a valid player token: answering an empty list");
@@ -83,7 +82,7 @@ async fn invites(State(state): State<AppState>, parts: Parts) -> Result<Response
             shared
                 .parties
                 .lock()
-                .list_invites(conn, &user, now_ms())
+                .list_invites(conn, &user, shared.party_clock.now())
                 .map_err(AppError::from)
         })
         .await?;
@@ -108,7 +107,7 @@ async fn invite(
                     &player.user_id,
                     field(&body, "recipientPlayerId"),
                     field(&body, "partyId"),
-                    now_ms(),
+                    shared.party_clock.now(),
                 )
                 .map_err(AppError::from)
         })
@@ -143,7 +142,7 @@ async fn accept(
             shared
                 .parties
                 .lock()
-                .accept(conn, settings, &player.user_id, &invite, now_ms())
+                .accept(conn, settings, &player.user_id, &invite, shared.party_clock.now())
                 .map_err(AppError::from)
         })
         .await?;
@@ -152,28 +151,48 @@ async fn accept(
 
 /// `{sendingPlayerId, recipientPlayerId, partyId}`: decline (or withdraw one's own invite).
 async fn decline(State(state): State<AppState>, player: Player, ExpressBody(body): ExpressBody) -> Response {
-    send(state.parties.lock().decline(&player.user_id, body.as_ref(), now_ms()))
+    send(
+        state
+            .parties
+            .lock()
+            .decline(&player.user_id, body.as_ref(), state.party_clock.now()),
+    )
 }
 
 /// No body: the caller leaves their party.
 async fn leave(State(state): State<AppState>, player: Player) -> Response {
-    send(state.parties.lock().leave(&player.user_id, now_ms()))
+    send(state.parties.lock().leave(&player.user_id, state.party_clock.now()))
 }
 
 async fn kick(State(state): State<AppState>, player: Player, params: Params) -> Response {
     let member = params.get("memberId").unwrap_or("");
-    send(state.parties.lock().kick(&player.user_id, member, now_ms()))
+    send(
+        state
+            .parties
+            .lock()
+            .kick(&player.user_id, member, state.party_clock.now()),
+    )
 }
 
 async fn promote(State(state): State<AppState>, player: Player, params: Params) -> Response {
     let member = params.get("memberId").unwrap_or("");
-    send(state.parties.lock().promote(&player.user_id, member, now_ms()))
+    send(
+        state
+            .parties
+            .lock()
+            .promote(&player.user_id, member, state.party_clock.now()),
+    )
 }
 
 /// Only the client's auto-eviction of a leader it thinks is offline sends this.
 async fn evict_leader(State(state): State<AppState>, player: Player, params: Params) -> Response {
     let leader = params.get("leaderId").unwrap_or("");
-    send(state.parties.lock().evict_leader(&player.user_id, leader, now_ms()))
+    send(
+        state
+            .parties
+            .lock()
+            .evict_leader(&player.user_id, leader, state.party_clock.now()),
+    )
 }
 
 /// `{playerIds: [...]}` -> `{parties, invitations}`.
@@ -190,7 +209,13 @@ async fn status(
             shared
                 .parties
                 .lock()
-                .status(conn, settings, &player.user_id, field(&body, "playerIds"), now_ms())
+                .status(
+                    conn,
+                    settings,
+                    &player.user_id,
+                    field(&body, "playerIds"),
+                    shared.party_clock.now(),
+                )
                 .map_err(AppError::from)
         })
         .await?;

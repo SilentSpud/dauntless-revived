@@ -10,6 +10,29 @@ pub fn now_ms() -> i64 {
         .unwrap_or(0)
 }
 
+/// A clock the real time unless a test sets it (Node's `SetPartyClockForTests`).
+#[derive(Debug, Default)]
+pub struct Clock(std::sync::atomic::AtomicI64);
+
+impl Clock {
+    /// The set time, or the real time while none is set.
+    pub fn now(&self) -> i64 {
+        match self.0.load(std::sync::atomic::Ordering::Relaxed) {
+            0 => now_ms(),
+            set => set,
+        }
+    }
+
+    pub fn set_for_tests(&self, ms: i64) {
+        self.0.store(ms, std::sync::atomic::Ordering::Relaxed);
+    }
+
+    /// Moves a set clock on.
+    pub fn advance_for_tests(&self, ms: i64) {
+        self.0.fetch_add(ms, std::sync::atomic::Ordering::Relaxed);
+    }
+}
+
 /// `new Date(ms).toISOString()`: `2026-10-20T15:04:05.123Z`.
 pub fn iso(ms: i64) -> String {
     let days = ms.div_euclid(86_400_000);

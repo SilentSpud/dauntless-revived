@@ -38,6 +38,7 @@ mod middleman;
 mod middleman_rotation;
 mod middleman_store;
 mod novaunlocker;
+mod party;
 mod playertracking;
 mod progressiondefault;
 mod progressionextras;

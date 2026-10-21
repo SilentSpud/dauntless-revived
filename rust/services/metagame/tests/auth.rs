@@ -82,6 +82,7 @@ fn fixture_with(account_key_recovery: bool, backup_root: Option<String>) -> Fixt
         store_sweeps: Default::default(),
         friend_requests: Default::default(),
         parties: Default::default(),
+        party_clock: Default::default(),
         matchmaking: Default::default(),
         guilds: Default::default(),
         escalation: Default::default(),

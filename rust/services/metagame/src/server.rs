@@ -168,6 +168,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         store_sweeps: crate::store::Sweeps::default(),
         friend_requests: crate::friends::RecentRequests::default(),
         parties: crate::party::Parties::default(),
+        party_clock: crate::time::Clock::default(),
         matchmaking: crate::matchmaking::Matchmaking::new(config.matchmaking.clone()),
         guilds: config.guilds.clone(),
         escalation: config.escalation,
