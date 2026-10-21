@@ -128,6 +128,8 @@ impl TestApp {
             pairs.retain(|(k, _)| k != name);
             pairs.push(((*name).to_owned(), (*value).to_owned()));
         }
+        // A test may point a second app at another app's database
+        let db = pairs.iter().find(|(k, _)| k == "DB_FILENAME").map_or(db, |(_, v)| v.into());
         let env = Env::from_pairs(pairs.iter().map(|(k, v)| (k.as_str(), v.as_str())));
         let config = Config::from_env(&env).unwrap();
         let progression = metagame::progression_config::from_env(&env).unwrap();
@@ -139,7 +141,7 @@ impl TestApp {
             _dir: dir,
         };
         let hash = sha256_hex(GS_KEY);
-        app.exec(&format!("INSERT INTO gameserverapikeys (keyHash) VALUES ('{hash}')"));
+        app.exec(&format!("INSERT OR IGNORE INTO gameserverapikeys (keyHash) VALUES ('{hash}')"));
         app
     }
 
