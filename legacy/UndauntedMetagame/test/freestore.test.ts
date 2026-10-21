@@ -4,7 +4,7 @@ import { WithEnv } from "./appenv";
 import { after, before, beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { and, eq } from "drizzle-orm";
-import { Call, StartApp, StopApp } from "./appclient";
+import { Call, NodeOnly, StartApp, StopApp } from "./appclient";
 import { GetDb } from "../src/db";
 import { characters, inventory, storepurchases, users } from "../src/db/schema";
 import { CreateStorePurchase, GetStoreOffer, GrantKind, ListStoreOffers, MAX_TOKENS_PER_WINDOW, PruneExpiredStorePurchases, RECEIPT_DAYS, RedeemStorePurchase, SetExtraOffersForTests, SetStoreTokenLimitForTests, StoreOffer } from "../src/controllers/freestore";
@@ -777,7 +777,7 @@ describe("over HTTP", () => {
     });
 });
 
-describe("non-platinum currency pricing (mechanism only; the shipped catalogue stays free)", () => {
+describe("non-platinum currency pricing (mechanism only; the shipped catalogue stays free)", NodeOnly("hands the store extra offers"), () => {
     const CellDustOffer: StoreOffer = {
         id: "test_celldust_offer",
         tags: ["webstore"],

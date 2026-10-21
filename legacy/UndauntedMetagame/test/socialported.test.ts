@@ -4,7 +4,7 @@ import { WithEnv } from "./appenv";
 import { after, before, beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import jwt from "jsonwebtoken";
-import { Call, StartApp, StopApp } from "./appclient";
+import { Call, ResetAppMemory, StartApp, StopApp } from "./appclient";
 import { GetDb } from "../src/db";
 import { users } from "../src/db/schema";
 import { ResetPartiesForTests } from "../src/controllers/party";
@@ -32,8 +32,9 @@ after(async () => {
     RemoveTestDb(() => GetDb().$client.close());
 });
 
-beforeEach(() => {
+beforeEach(async () => {
     ResetPartiesForTests();
+    await ResetAppMemory();
 });
 
 const John = "UID-soc-john", Manda = "UID-soc-manda", Todd = "UID-soc-todd";

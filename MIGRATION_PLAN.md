@@ -170,6 +170,15 @@ Done so far:
   `byname-guilds-off`, 43 replies) match Node, stored rows included. With this, every route in
   `routes.json` (175 and the `/progression` fallback) has its Rust port, in Node's order. Left of B2:
   M30 and M31 (the TS tests against the Rust binary).
+- Metagame B2, M31, first part: `test/appclient.ts` runs its calls against the Rust binary when
+  `METAGAME_RUST_BIN` names it (same database, same environment; restarted when a test changes the
+  environment or resets what the app keeps in memory). The 16 test files on it: Node 256/256; Rust 246
+  pass, 0 fail, and 10 marked Node-only (`NodeOnly`: they move the app's clock or hand it store offers
+  in process). Found on the way: the Rust listener now sets `TCP_NODELAY` like Node's; and Node's
+  `fetch` (undici) waits for its half-second timer before reusing a keep-alive connection to hyper,
+  so the Rust calls go through `node:http` (the game's libcurl and the Tauri launcher don't use
+  undici). Left: the HTTP tests with their own servers (friends, party, guild, matchmaking,
+  moderation, backup, health, platform; chat after M32), then the port to Rust tests.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

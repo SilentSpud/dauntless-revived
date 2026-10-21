@@ -4,7 +4,7 @@ import { WithEnv } from "./appenv";
 import { after, afterEach, before, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { eq } from "drizzle-orm";
-import { Call, Reply, StartApp, StopApp } from "./appclient";
+import { Call, NodeOnly, Reply, StartApp, StopApp } from "./appclient";
 import { GetDb } from "../src/db";
 import { slayerlinkinvites, slayerlinks, users } from "../src/db/schema";
 import { INVITE_EXPIRY_HOURS, INVITE_WINDOW_MS, LINK_DURATION_HOURS, MAX_INVITES_PER_WINDOW, SetSlayerLinkClockForTests } from "../src/controllers/slayerlinks";
@@ -217,7 +217,7 @@ describe("Slayer Links", () => {
         assert.equal(Count("slayerlinks", "senderSlot not between 1 and 3 or targetSlot not between 1 and 3"), 0);
     });
 
-    it("an invite runs out after 24 hours and a link after a week", async () => {
+    it("an invite runs out after 24 hours and a link after a week", NodeOnly("moves the Slayer Link clock"), async () => {
         const Ola = Player("Ola"), Pia = Player("Pia");
         let Now = Date.now();
 
@@ -271,7 +271,7 @@ describe("Slayer Links", () => {
         assert.equal(Count("slayerlinkinvites", "senderId = ? and status = 'CANCELED'", Uma), 1);
     });
 
-    it("a player sends at most 20 new invites in 10 minutes; declined and cancelled invites go after their day", async () => {
+    it("a player sends at most 20 new invites in 10 minutes; declined and cancelled invites go after their day", NodeOnly("moves the Slayer Link clock"), async () => {
         const Nia = Player("Nia"), Oto = Player("Oto");
         let Now = Date.now();
 

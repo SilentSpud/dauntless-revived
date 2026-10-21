@@ -3,7 +3,7 @@ import "./authenv";
 import { after, before, beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { eq } from "drizzle-orm";
-import { Call, StartApp, StopApp } from "./appclient";
+import { Call, ResetAppMemory, StartApp, StopApp } from "./appclient";
 import { GetDb } from "../src/db";
 import { inventory } from "../src/db/schema";
 import { CreateStorePurchase, GetStoreOffer, GrantKind, ListStoreOffers, RedeemStorePurchase } from "../src/controllers/freestore";
@@ -177,6 +177,7 @@ it('store images reject encoded path escapes and enforce their independent reque
             assert.equal((await Call('GET','/store-images/'+value)).status,404);
         }
         StoreImageRateLimit.resetKey('127.0.0.1');
+        await ResetAppMemory();
         for(let i=0;i<600;i++) assert.equal((await Call('GET','/store-images/not_an_item.png')).status,404);
         assert.equal((await Call('GET','/store-images/not_an_item.png')).status,429);
     } finally { StoreImageRateLimit.resetKey('127.0.0.1'); }

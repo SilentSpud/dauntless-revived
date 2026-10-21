@@ -8,7 +8,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { eq } from "drizzle-orm";
-import { Call, StartApp, StopApp, Warnings } from "./appclient";
+import { Call, NodeOnly, StartApp, StopApp, Warnings } from "./appclient";
 import { GetDb } from "../src/db";
 import { inventory } from "../src/db/schema";
 import { CheckProgressionConfig, GetActiveHuntPass, GetProgressionConfigPayload } from "../src/controllers/progressionconfig";
@@ -185,7 +185,7 @@ describe("the retry guard of POST /progression/:uid (PROGRESSION_REPLAY_WINDOW_S
         });
     });
 
-    it("the default window is shorter than the game server's 10 s grant flush: the same body at the next flush adds its XP", async () => {
+    it("the default window is shorter than the game server's 10 s grant flush: the same body at the next flush adds its XP", NodeOnly("moves Date.now"), async () => {
         // UProgressionComponent sends its queued grants at most once per QueuedGrantTimeout (10 s,
         // DefaultGame.ini), so two grants it meant can be 10 s apart and still identical. The guard reads
         // the clock through Date.now; the audit rows (append-only) keep the real time.
