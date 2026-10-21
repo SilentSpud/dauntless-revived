@@ -259,6 +259,7 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
     }
     tracing::info!("Progression mode: {}", config.progression.describe());
     tracing::info!("Progression config: {}", progression.description);
+    tracing::info!("{}", config.describe_features());
     let stub = config.progression.is_stub();
     match state
         .store

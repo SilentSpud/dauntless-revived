@@ -84,15 +84,33 @@ impl Settings {
             .raw("BODY_LOG_FILE")
             .filter(|f| !f.is_empty())
             .unwrap_or("bodies.log");
-        let per_path = env
-            .get("BODY_LOG_PER_PATH")
-            .filter(|v| (1..=9).contains(&v.len()) && v.bytes().all(|b| b.is_ascii_digit()))
-            .and_then(|v| v.parse().ok())
-            .unwrap_or(0);
         Some(Self {
             file: file.into(),
-            per_path,
+            per_path: per_path_from_env(env),
         })
+    }
+}
+
+/// `BodyLogPerPath`: `BODY_LOG_PER_PATH` as a count (`ParseCount`), 0 (no cap) when unset, empty or
+/// invalid; an invalid value is warned about.
+pub fn per_path_from_env(env: &Env) -> u64 {
+    let Some(raw) = env.get("BODY_LOG_PER_PATH") else {
+        return 0;
+    };
+    let value = raw.trim();
+    if value.is_empty() {
+        return 0;
+    }
+    match value
+        .parse::<u64>()
+        .ok()
+        .filter(|_| (1..=9).contains(&value.len()) && value.bytes().all(|b| b.is_ascii_digit()))
+    {
+        Some(count) => count,
+        None => {
+            tracing::warn!("BODY_LOG_PER_PATH={raw:?} is not a valid value; using the default (no-cap)");
+            0
+        }
     }
 }
 

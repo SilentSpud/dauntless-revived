@@ -372,11 +372,21 @@ pub fn warnings<T>(f: impl FnOnce() -> T) -> (T, Vec<String>) {
 /// logs while it answers requests (its handlers run on other threads). Tests run in parallel, so a
 /// check looks for lines that name its own accounts.
 pub fn logged_warnings() -> Vec<String> {
+    logged(tracing::Level::WARN)
+}
+
+/// Every info line logged since the first call to this or [`logged_warnings`].
+pub fn logged_infos() -> Vec<String> {
+    logged(tracing::Level::INFO)
+}
+
+fn logged(level: tracing::Level) -> Vec<String> {
     use std::sync::{Arc, Mutex, OnceLock};
     use tracing_subscriber::layer::SubscriberExt;
 
-    static SEEN: OnceLock<Arc<Mutex<Vec<String>>>> = OnceLock::new();
-    struct Capture(Arc<Mutex<Vec<String>>>);
+    type Lines = Arc<Mutex<Vec<(tracing::Level, String)>>>;
+    static SEEN: OnceLock<Lines> = OnceLock::new();
+    struct Capture(Lines);
     struct Message(String);
     impl tracing::field::Visit for Message {
         fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
@@ -387,17 +397,23 @@ pub fn logged_warnings() -> Vec<String> {
     }
     impl<S: tracing::Subscriber> tracing_subscriber::Layer<S> for Capture {
         fn on_event(&self, event: &tracing::Event<'_>, _: tracing_subscriber::layer::Context<'_, S>) {
-            if *event.metadata().level() == tracing::Level::WARN {
+            let level = *event.metadata().level();
+            if level == tracing::Level::WARN || level == tracing::Level::INFO {
                 let mut message = Message(String::new());
                 event.record(&mut message);
-                self.0.lock().unwrap().push(message.0);
+                self.0.lock().unwrap().push((level, message.0));
             }
         }
     }
     let seen = SEEN.get_or_init(|| {
-        let seen = Arc::new(Mutex::new(Vec::new()));
+        let seen: Lines = Arc::default();
         let _ = tracing::subscriber::set_global_default(tracing_subscriber::registry().with(Capture(seen.clone())));
         seen
     });
-    seen.lock().unwrap().clone()
+    seen.lock()
+        .unwrap()
+        .iter()
+        .filter(|(l, _)| *l == level)
+        .map(|(_, m)| m.clone())
+        .collect()
 }

@@ -594,9 +594,9 @@
       "keeps every row of a released database, adds empty tables, and the previous build's migrator still runs": "tests/baseline.rs::a_node_database_is_adopted_with_its_data"
     },
     "moderation.test.ts": {
-      "temporary account-only bans expire, preserve history and reject invalid durations": "todo",
-      "temporary observed-IP bans expire and revoke with the account sanction": "todo",
-      "trusted IP logging, account/IP bans, required reasons, JWT revocation and unban": "todo"
+      "temporary account-only bans expire, preserve history and reject invalid durations": "tests/m31/moderation.rs::temporary_account_only_bans_expire_preserve_history_and_reject_invalid_durations",
+      "temporary observed-IP bans expire and revoke with the account sanction": "tests/m31/moderation.rs::temporary_observed_ip_bans_expire_and_revoke_with_the_account_sanction",
+      "trusted IP logging, account/IP bans, required reasons, JWT revocation and unban": "tests/m31/moderation.rs::trusted_ip_logging_account_ip_bans_required_reasons_jwt_revocation_and_unban"
     },
     "novaunlocker.test.ts": {
       "Nova ${name} is refused, including forged authority and changed retry IDs": "tests/m31/novaunlocker.rs::nova_name_is_refused_including_forged_authority_and_changed_retry_ids",
@@ -699,16 +699,16 @@
       "passes the client's real requests through unchanged": "todo"
     },
     "platform.test.ts": {
-      "a bogus or missing bearer and a wrong game-server key get 401": "todo",
-      "a valid token gets 200 and the plain-text 20000": "todo",
-      "records the answer's status and duration with the request": "todo",
-      "also records the store, Slayer Link and reconcile routes, and still leaves other routes out": "todo",
-      "blanks account keys (UUK_ and 48 hex characters) in the url and the body": "todo",
-      "BODY_LOG_PER_PATH caps the lines per method and path; unset (0) is no cap": "todo",
-      "Redact keeps the old rules for tokens and long runs": "todo",
-      "parses on/off, counts and choices, and refuses anything else": "todo",
-      "uses the default for an unset, empty or invalid value, with one warning per invalid value": "todo",
-      "describes every switch in one boot line": "todo"
+      "a bogus or missing bearer and a wrong game-server key get 401": "tests/m31/platform.rs::a_bogus_or_missing_bearer_and_a_wrong_game_server_key_get_401",
+      "a valid token gets 200 and the plain-text 20000": "tests/m31/platform.rs::a_valid_token_gets_200_and_the_plain_text_20000",
+      "records the answer's status and duration with the request": "tests/m31/platform.rs::records_the_answer_s_status_and_duration_with_the_request",
+      "also records the store, Slayer Link and reconcile routes, and still leaves other routes out": "tests/m31/platform.rs::also_records_the_store_slayer_link_and_reconcile_routes_and_still_leaves_other_routes_out",
+      "blanks account keys (UUK_ and 48 hex characters) in the url and the body": "tests/m31/platform.rs::blanks_account_keys_uuk_and_48_hex_characters_in_the_url_and_the_body",
+      "BODY_LOG_PER_PATH caps the lines per method and path; unset (0) is no cap": "tests/m31/platform.rs::body_log_per_path_caps_the_lines_per_method_and_path_unset_0_is_no_cap",
+      "Redact keeps the old rules for tokens and long runs": "tests/m31/platform.rs::redact_keeps_the_old_rules_for_tokens_and_long_runs",
+      "parses on/off, counts and choices, and refuses anything else": "tests/m31/platform.rs::parses_on_off_counts_and_choices_and_refuses_anything_else",
+      "uses the default for an unset, empty or invalid value, with one warning per invalid value": "tests/m31/platform.rs::uses_the_default_for_an_unset_empty_or_invalid_value_with_one_warning_per_invalid_value",
+      "describes every switch in one boot line": "tests/m31/platform.rs::describes_every_switch_in_one_boot_line"
     },
     "playertracking.test.ts": {
       "inactive tracking expires without removing a live long-running hunt": "tests/m31/playertracking.rs::inactive_tracking_expires_without_removing_a_live_long_running_hunt"
@@ -813,7 +813,7 @@
       "fresh: every track at 0 and the objectives cleared; unknown accounts refused": "tests/m31/realprogression.rs::fresh_every_track_at_0_and_the_objectives_cleared_unknown_accounts_refused"
     },
     "region-rejoin.test.ts": {
-      "changing from EU to US cannot reuse a ready solo EU candidate": "todo"
+      "changing from EU to US cannot reuse a ready solo EU candidate": "tests/m31/region_rejoin.rs::changing_from_eu_to_us_cannot_reuse_a_ready_solo_eu_candidate"
     },
     "regionprobes.test.ts": {
       "only configured enabled regions advertise probes; invalid ports are refused": "tests/m31/regionprobes.rs::only_configured_enabled_regions_advertise_probes_invalid_ports_are_refused",

@@ -63,6 +63,8 @@ pub struct Config {
     pub log_requests: bool,
     /// `LOG_BODIES=1`, `BODY_LOG_FILE`, `BODY_LOG_PER_PATH` (`bodylog.rs`).
     pub body_log: Option<crate::bodylog::Settings>,
+    /// `BODY_LOG_PER_PATH`, for the features line (the body log reads it too).
+    pub body_log_per_path: u64,
     /// `CHAT`, `CHAT_PORT`, `CHAT_BIND_HOST`, `CHAT_NICK_CHECK`, `CHAT_TRACE`, `CHAT_PRESENCE` (`chat`).
     pub chat: crate::chat::Settings,
     pub store_images_dir: PathBuf,
@@ -121,6 +123,54 @@ pub struct Checks {
 }
 
 impl Config {
+    /// `DescribeFeatures`: one boot line with the switches the server runs with.
+    pub fn describe_features(&self) -> String {
+        let on_off = |on: bool| if on { "on" } else { "off" };
+        let per_path = match self.body_log_per_path {
+            0 => "no-cap".to_owned(),
+            n => n.to_string(),
+        };
+        let replay = match self.real_progression.replay_window_s {
+            0 => "off".to_owned(),
+            n => format!("{n}s"),
+        };
+        let switches = [
+            ("bodyLogPerPath", per_path),
+            (
+                "escalation",
+                if self.escalation.real { "real" } else { "stub" }.to_owned(),
+            ),
+            ("escalationStrict", on_off(self.escalation.strict).to_owned()),
+            ("store", if self.store.free { "free" } else { "off" }.to_owned()),
+            ("storeRepeatableTokens", on_off(self.store.repeatable_tokens).to_owned()),
+            ("trialsStore", on_off(self.store.trials_store).to_owned()),
+            ("middlemanStore", on_off(self.store.middleman_store).to_owned()),
+            ("replayWindow", replay),
+            (
+                "confirmEntitlements",
+                on_off(self.real_progression.confirm_entitlements).to_owned(),
+            ),
+            (
+                "balanceFromInventory",
+                on_off(self.store.balance_from_inventory).to_owned(),
+            ),
+            ("middlemanFusionGuards", on_off(self.inventory.fusion_guards).to_owned()),
+            ("trialsLeaderboards", on_off(self.store.trials_leaderboards).to_owned()),
+            ("trialsSchedule", on_off(self.store.trials_schedule).to_owned()),
+            ("slayerLinks", on_off(self.slayer_links).to_owned()),
+            ("chatPresence", on_off(self.chat.presence).to_owned()),
+            (
+                "verifyStubAccount",
+                on_off(self.features.verify_stub_account).to_owned(),
+            ),
+        ];
+        let shown: Vec<String> = switches
+            .iter()
+            .map(|(label, value)| format!("{label}={value}"))
+            .collect();
+        format!("features: {}", shown.join(" "))
+    }
+
     pub fn from_env(env: &Env) -> Result<Self, String> {
         let port = match env.raw("PORT") {
             None => return Err("PORT is not set".into()),
@@ -164,6 +214,7 @@ impl Config {
             backend_health: env.get("BACKEND_HEALTH") == Some("1"),
             log_requests: env.get("LOG_REQUESTS") != Some("0"),
             body_log: crate::bodylog::Settings::from_env(env),
+            body_log_per_path: crate::bodylog::per_path_from_env(env),
             chat: crate::chat::Settings::from_env(env),
             store_images_dir: raw(env, "STORE_IMAGES_DIR").map_or_else(|| "store-images".into(), PathBuf::from),
             progression: crate::progression::ProgressionMode::new(
