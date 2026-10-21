@@ -60,22 +60,22 @@
       "cancelled and disconnected waiters cannot block the next hunt": "tests/m31/capacityturns.rs::cancelled_and_disconnected_waiters_cannot_block_the_next_hunt"
     },
     "character.test.ts": {
-      "injects SERIE_dojo when the FTUE objective is complete": "todo",
-      "saves unchanged when the FTUE objective is missing (this used to throw and block every save)": "todo",
-      "saves unchanged when the FTUE value is not JSON": "todo",
-      "never overwrites an existing SERIE_dojo": "todo",
-      "refuses data that is not a JSON object": "todo",
-      "acknowledges identical committed retries without writing another history entry": "todo",
-      "answers not_found for a character that is not the caller's": "todo",
-      "refuses a version that is not newer, and the second of two saves racing for one version": "todo",
-      "refuses invalid data without touching the stored character": "todo",
-      "sets lastModifiedDate in the createdDate format": "todo",
-      "keeps a baseline plus each saved version, pruned to SAVE_HISTORY_KEEP": "todo",
-      "also keeps the last version of each hour (48 h) and of each day (30 days)": "todo",
-      "rolls a character back one version under a new, higher updateVersion": "todo",
-      "can undo a rollback": "todo",
-      "answers version_not_found and not_found without changing anything": "todo",
-      "records the version found in the table before the first tracked save": "todo"
+      "injects SERIE_dojo when the FTUE objective is complete": "tests/m31/character.rs::injects_serie_dojo_when_the_ftue_objective_is_complete",
+      "saves unchanged when the FTUE objective is missing (this used to throw and block every save)": "tests/m31/character.rs::saves_unchanged_when_the_ftue_objective_is_missing_this_used_to_throw_and_block_every_save",
+      "saves unchanged when the FTUE value is not JSON": "tests/m31/character.rs::saves_unchanged_when_the_ftue_value_is_not_json",
+      "never overwrites an existing SERIE_dojo": "tests/m31/character.rs::never_overwrites_an_existing_serie_dojo",
+      "refuses data that is not a JSON object": "tests/m31/character.rs::refuses_data_that_is_not_a_json_object",
+      "acknowledges identical committed retries without writing another history entry": "tests/m31/character.rs::acknowledges_identical_committed_retries_without_writing_another_history_entry",
+      "answers not_found for a character that is not the caller's": "tests/m31/character.rs::answers_not_found_for_a_character_that_is_not_the_caller_s",
+      "refuses a version that is not newer, and the second of two saves racing for one version": "tests/m31/character.rs::refuses_a_version_that_is_not_newer_and_the_second_of_two_saves_racing_for_one_version",
+      "refuses invalid data without touching the stored character": "tests/m31/character.rs::refuses_invalid_data_without_touching_the_stored_character",
+      "sets lastModifiedDate in the createdDate format": "tests/m31/character.rs::sets_lastmodifieddate_in_the_createddate_format",
+      "keeps a baseline plus each saved version, pruned to SAVE_HISTORY_KEEP": "tests/m31/character.rs::keeps_a_baseline_plus_each_saved_version_pruned_to_save_history_keep",
+      "also keeps the last version of each hour (48 h) and of each day (30 days)": "tests/m31/character.rs::also_keeps_the_last_version_of_each_hour_48_h_and_of_each_day_30_days",
+      "rolls a character back one version under a new, higher updateVersion": "tests/m31/character.rs::rolls_a_character_back_one_version_under_a_new_higher_updateversion",
+      "can undo a rollback": "tests/m31/character.rs::can_undo_a_rollback",
+      "answers version_not_found and not_found without changing anything": "tests/m31/character.rs::answers_version_not_found_and_not_found_without_changing_anything",
+      "records the version found in the table before the first tracked save": "tests/m31/character.rs::records_the_version_found_in_the_table_before_the_first_tracked_save"
     },
     "chat.test.ts": {
       "rejects a token for another account": "todo",
@@ -445,23 +445,23 @@
       "grants both reported Trials unlocks as equipable instances and never stacks or duplicates them": "todo"
     },
     "loadout.test.ts": {
-      "fails when no loadout row matches (it used to report success and drop the save)": "todo",
-      "fails for another player's character": "todo",
-      "refuses data that is not JSON instead of storing an unloadable loadout": "todo",
-      "still refuses unsupported slot indexes": "todo",
-      "saves slot 0 and persistent, keeping each version": "todo",
-      "can read persistent data before /all and creates one consistent row": "todo",
-      "rolls the loadouts back one version": "todo"
+      "fails when no loadout row matches (it used to report success and drop the save)": "tests/m31/loadout.rs::fails_when_no_loadout_row_matches_it_used_to_report_success_and_drop_the_save",
+      "fails for another player's character": "tests/m31/loadout.rs::fails_for_another_player_s_character",
+      "refuses data that is not JSON instead of storing an unloadable loadout": "tests/m31/loadout.rs::refuses_data_that_is_not_json_instead_of_storing_an_unloadable_loadout",
+      "still refuses unsupported slot indexes": "tests/m31/loadout.rs::still_refuses_unsupported_slot_indexes",
+      "saves slot 0 and persistent, keeping each version": "tests/m31/loadout.rs::saves_slot_0_and_persistent_keeping_each_version",
+      "can read persistent data before /all and creates one consistent row": "tests/m31/loadout.rs::can_read_persistent_data_before_all_and_creates_one_consistent_row",
+      "rolls the loadouts back one version": "tests/m31/loadout.rs::rolls_the_loadouts_back_one_version"
     },
     "loadoutslots.test.ts": {
-      "starts at 1 character slot, max 5 plus the account slot, all four counts numbers": "todo",
-      "unlock/3 adds 3 (the game server sends the difference), and /all, /slotcount and the reply agree": "todo",
-      "caps at 5 character slots so the account slot keeps the client total at 6": "todo",
-      "saves any unlocked slot by its slot index, refuses slots not unlocked yet": "todo",
-      "creates the loadout row when a valid slot save arrives before the initial /all read": "todo",
-      "supports all six client slots without advertising a seventh": "todo",
-      "stores the active slot, only below the number of slots": "todo",
-      "an element stored past the slot count is not sent": "todo"
+      "starts at 1 character slot, max 5 plus the account slot, all four counts numbers": "tests/m31/loadoutslots.rs::starts_at_1_character_slot_max_5_plus_the_account_slot_all_four_counts_numbers",
+      "unlock/3 adds 3 (the game server sends the difference), and /all, /slotcount and the reply agree": "tests/m31/loadoutslots.rs::unlock_3_adds_3_the_game_server_sends_the_difference_and_all_slotcount_and_the_reply_agree",
+      "caps at 5 character slots so the account slot keeps the client total at 6": "tests/m31/loadoutslots.rs::caps_at_5_character_slots_so_the_account_slot_keeps_the_client_total_at_6",
+      "saves any unlocked slot by its slot index, refuses slots not unlocked yet": "tests/m31/loadoutslots.rs::saves_any_unlocked_slot_by_its_slot_index_refuses_slots_not_unlocked_yet",
+      "creates the loadout row when a valid slot save arrives before the initial /all read": "tests/m31/loadoutslots.rs::creates_the_loadout_row_when_a_valid_slot_save_arrives_before_the_initial_all_read",
+      "supports all six client slots without advertising a seventh": "tests/m31/loadoutslots.rs::supports_all_six_client_slots_without_advertising_a_seventh",
+      "stores the active slot, only below the number of slots": "tests/m31/loadoutslots.rs::stores_the_active_slot_only_below_the_number_of_slots",
+      "an element stored past the slot count is not sent": "tests/m31/loadoutslots.rs::an_element_stored_past_the_slot_count_is_not_sent"
     },
     "masteryported.test.ts": {
       "a fresh account starts at Slayer level 1 with no weapon or behemoth mastery": "todo",
