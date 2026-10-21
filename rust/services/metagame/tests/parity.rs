@@ -31,6 +31,17 @@ const HEADERS: [&str; 7] = [
     "x-content-type-options",
 ];
 
+/// A rate-limit window's Retry-After is its `t=`, which the `ratelimit` rule above already
+/// normalises: how many seconds are left depends on how fast the requests ran (a second boundary
+/// passed mid-run turns 60 into 59).
+fn windowed(reply: &Value) -> Value {
+    let mut reply = reply.clone();
+    if reply["headers"].get("ratelimit").is_some() && reply["headers"].get("retry-after").is_some() {
+        reply["headers"]["retry-after"] = json!("<s>");
+    }
+    reply
+}
+
 fn normalize(text: &str) -> String {
     let rules = [
         (r"eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+", "<jwt>"),
@@ -317,7 +328,7 @@ async fn run_area(area: &str) {
         .iter()
         .zip(&actual)
         .enumerate()
-        .filter(|(_, (want, got))| want != got)
+        .filter(|(_, (want, got))| windowed(want) != windowed(got))
         .map(|(index, (want, got))| {
             format!(
                 "#{index} {}\n  node: {want}\n  rust: {got}",

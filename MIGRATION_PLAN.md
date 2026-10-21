@@ -219,6 +219,25 @@ Done so far:
   test are ported. Throughput, 4 parallel downloads of a 512 MB file on loopback: Rust about
   5.5 GB/s, Node about 3.8 GB/s. `service_kit::js` now holds the JavaScript-semantics helpers the
   metagame had, shared with the content server. Left: the launcher downloader tests (L23) against it.
+- Part C, S2: the gateway (`rust/services/gateway`, binary `gateway`: `serve` and `make-cert`). TLS 1.2
+  and 1.3 with `rustls` (`aws-lc-rs`), HTTP/1.1 only; the same policy (admin-route block, game-server
+  key refusal, path checks), per-address rate limits and connection limits, redaction, allowlist
+  feed, forwarded headers and WebSocket tunnelling. `serve` loads the existing certificate and key,
+  checks that they belong together, and never makes new ones, so invites keep their `fp`. `make-cert`
+  (RSA-2048, SHA-256, ten years, as `tools/make-cert.js`) is for new installs and still refuses to
+  overwrite without `--force`. X5 landed with it: `crates/proxy` holds the hop-by-hop rules and the
+  tunnel, and `service_kit::linelog` the JSON-lines log shared with the content server. The keep-alive
+  (65 s), header (10 s) and idle timers are the gateway's own, because hyper's header timer also runs
+  between keep-alive requests and would cut idle connections at 10 s; a head that is too slow still
+  gets Node's 408. Tests: the unit tests of `ip`, `policy`, `redact`, `ratelimit`, `config` and the
+  feed, and the over-TLS suites `gateway.test.ts` and `limits.test.ts` ported (pinning, routing,
+  forwarded headers, the feed, the access log, upgrades and the 1.4.4 chat request, body caps,
+  100-continue, rate limits, connection limits, slow heads and bodies, keep-alive, shutdown). Parity:
+  `tests/parity` runs 40 raw requests through the Node and the Rust gateway against the same fake
+  upstreams: statuses, headers, bodies, access-log lines and the feed's addresses equal. Known
+  difference: requests the HTTP parser rejects (bad syntax, oversized heads) get hyper's own 400 or
+  431 with an empty body instead of Node's JSON one. Left: traffic capture (M2), the allowlist helper
+  (S3) and the process-level e2e tests with it, and connecting a 0.1.x and a 0.2.x launcher through it.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

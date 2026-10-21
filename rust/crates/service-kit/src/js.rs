@@ -89,9 +89,14 @@ pub fn truthy(value: Option<&Value>) -> bool {
     }
 }
 
-/// `String.prototype.trim`: JavaScript's white space (U+FEFF but not U+0085).
+/// A regular expression's `\s`: JavaScript's white space (U+FEFF but not U+0085).
+pub fn is_space(c: char) -> bool {
+    (c.is_whitespace() && c != '\u{85}') || c == '\u{feff}'
+}
+
+/// `String.prototype.trim`.
 pub fn trim(text: &str) -> &str {
-    text.trim_matches(|c: char| (c.is_whitespace() && c != '\u{85}') || c == '\u{feff}')
+    text.trim_matches(is_space)
 }
 
 /// `typeof x === "number"`.
@@ -127,6 +132,32 @@ pub fn date_parse(text: &str) -> Option<i64> {
         .ok()
         .and_then(|day| day.and_hms_opt(0, 0, 0))
         .map(|when| Utc.from_utc_datetime(&when).timestamp_millis())
+}
+
+/// `decodeURIComponent(text)`: every `%XX` decoded, the bytes read as UTF-8. `None` where JavaScript
+/// throws a URIError: a `%` without two hex digits after it, or bytes that are not UTF-8.
+pub fn decode_uri_component(text: &str) -> Option<String> {
+    if !text.contains('%') {
+        return Some(text.to_owned());
+    }
+    let raw = text.as_bytes();
+    let mut out = Vec::with_capacity(raw.len());
+    let mut index = 0;
+    while index < raw.len() {
+        if raw[index] != b'%' {
+            out.push(raw[index]);
+            index += 1;
+            continue;
+        }
+        let hex = raw.get(index + 1..index + 3)?;
+        let hex = std::str::from_utf8(hex).ok()?;
+        if !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+            return None;
+        }
+        out.push(u8::from_str_radix(hex, 16).ok()?);
+        index += 3;
+    }
+    String::from_utf8(out).ok()
 }
 
 #[cfg(test)]

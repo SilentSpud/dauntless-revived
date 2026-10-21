@@ -8,6 +8,7 @@ pub mod env;
 pub mod js;
 pub mod jsjson;
 pub mod json;
+pub mod linelog;
 pub mod log;
 pub mod ratelimit;
 pub mod routing;
