@@ -15,6 +15,9 @@ pub fn run() -> tauri::Result<()> {
     let context = tauri::generate_context!();
     let version = context.package_info().version.to_string();
     tauri::Builder::default()
+        // Called from Rust only: the page has no dialog permission (L36)
+        .plugin(tauri_plugin_dialog::init())
+        .manage(window::CloseGuard::default())
         .manage(Backend::new(initial_snapshot(&version, !cfg!(dev))))
         .invoke_handler(tauri::generate_handler![
             commands::get_snapshot,

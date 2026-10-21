@@ -300,6 +300,15 @@ Done so far:
   (`DAUNTLESS_REVIVED_WINE`, the PATH, Lutris), each with its own prefix under userData and `dxgi=n,b`, GNOME's
   XWayland authority when `XAUTHORITY` is unset, the first-start prefix setup, and Wine or gnome-keyring installed
   through the package manager and pkexec when missing. Its tests run on Linux (WSL here, the Rust job in CI).
+- Launcher P4, L35 and L36, and the rest of L5: `platform/links.rs` is `links.ts` (the fixed pages, the allow-list,
+  the host's own source link), opened from Rust with the `open` crate (ShellExecuteW, xdg-open) rather than
+  `tauri-plugin-opener`, which brings zbus 5 on Linux; `test/cases/links.json` (the TS
+  test's 51 refused URLs and every fixed page, against five host links) runs on both sides. `platform/dialogs.rs`
+  shows the folder, open and save dialogs (`tauri-plugin-dialog`) and the close confirmation with the backend's
+  text; only a press of "Close anyway" closes. The window's `CloseRequested` hook asks when the controller says the
+  relay or the offline services carry a running game, minimises on "keep open" and lets the controller show its
+  notice. The page has no dialog permission, and in the running app a page call to any plugin outside the list never
+  settles.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

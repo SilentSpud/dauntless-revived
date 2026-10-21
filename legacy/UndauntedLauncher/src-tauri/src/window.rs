@@ -1,10 +1,15 @@
 //! The launcher's one window: frameless, sized to fit the screen, and locked to the app's own page
 //! (rows L5 and L10).
 
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::webview::{NewWindowResponse, PageLoadEvent};
 use tauri::window::Color;
-use tauri::{AppHandle, Emitter, Monitor, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent};
+
+use tauri::{AppHandle, Emitter, Manager, Monitor, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent};
 use url::Url;
+
+use crate::platform::dialogs::KeepOpen;
 
 pub const MAIN: &str = "main";
 
@@ -70,13 +75,76 @@ pub fn create(app: &AppHandle) -> tauri::Result<WebviewWindow> {
         .build()?;
 
     let handle = window.clone();
-    window.on_window_event(move |event| {
-        if let WindowEvent::Resized(_) = event {
+    window.on_window_event(move |event| match event {
+        WindowEvent::Resized(_) => {
             let maximized = handle.is_maximized().unwrap_or(false);
             let _ = handle.emit_to(MAIN, WINDOW_STATE_EVENT, maximized);
         }
+        WindowEvent::CloseRequested { api, .. } => {
+            let guard = handle.state::<CloseGuard>();
+            if guard.closing.load(Ordering::SeqCst) {
+                return;
+            }
+            let Some(reason) = guard.keep_open() else { return };
+            // Closing would cut the running game's connection: ask first (row L5)
+            api.prevent_close();
+            let window = handle.clone();
+            tauri::async_runtime::spawn(async move {
+                let app = window.app_handle().clone();
+                let language = app
+                    .state::<crate::bridge::backend::Backend>()
+                    .snapshot()
+                    .settings
+                    .language;
+                if crate::platform::dialogs::confirm_keep_open(&app, language, reason).await {
+                    let _ = window.minimize();
+                    if reason == KeepOpen::Relay {
+                        let guard = app.state::<CloseGuard>();
+                        if let Some(kept) = guard.on_kept.lock().unwrap_or_else(|p| p.into_inner()).as_ref() {
+                            kept();
+                        }
+                    }
+                } else {
+                    app.state::<CloseGuard>().closing.store(true, Ordering::SeqCst);
+                    let _ = window.close();
+                }
+            });
+        }
+        _ => {}
     });
     Ok(window)
+}
+
+type KeepOpenReason = Box<dyn Fn() -> Option<KeepOpen> + Send + Sync>;
+
+/// What decides whether closing the window needs the player's confirmation: the controller (L38) says
+/// whether the relay or the offline services carry a running game, and what to do when the player keeps
+/// the launcher open (the "keep open" notice in public mode).
+#[derive(Default)]
+pub struct CloseGuard {
+    reason: Mutex<Option<KeepOpenReason>>,
+    on_kept: Mutex<Option<Box<dyn Fn() + Send + Sync>>>,
+    closing: AtomicBool,
+}
+
+impl CloseGuard {
+    #[allow(dead_code, reason = "the controller (L38) sets it")]
+    pub fn set(
+        &self,
+        reason: impl Fn() -> Option<KeepOpen> + Send + Sync + 'static,
+        on_kept: impl Fn() + Send + Sync + 'static,
+    ) {
+        *self.reason.lock().unwrap_or_else(|p| p.into_inner()) = Some(Box::new(reason));
+        *self.on_kept.lock().unwrap_or_else(|p| p.into_inner()) = Some(Box::new(on_kept));
+    }
+
+    fn keep_open(&self) -> Option<KeepOpen> {
+        self.reason
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .as_ref()
+            .and_then(|reason| reason())
+    }
 }
 
 #[cfg(test)]

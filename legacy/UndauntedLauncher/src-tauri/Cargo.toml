@@ -58,6 +58,8 @@ sha1 = "0.11"
 base64.workspace = true
 tower-service = "0.3"
 tauri = { version = "2.12", features = ["isolation"] }
+open = { version = "5.4", features = ["shellexecute-on-windows"] }
+tauri-plugin-dialog = "2.8"
 url.workspace = true
 
 [dev-dependencies]

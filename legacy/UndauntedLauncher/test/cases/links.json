@@ -1,0 +1,994 @@
+{
+  "fixed": {
+    "tailscale_download": "https://tailscale.com/download",
+    "vc_redist": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+    "directx_runtime": "https://www.microsoft.com/en-us/download/details.aspx?id=35",
+    "project_source": "https://github.com/mixutin/dauntless-revived",
+    "project_license": "https://github.com/mixutin/dauntless-revived/blob/dauntless-revived/LICENSE.txt",
+    "project_contributors": "https://github.com/mixutin/dauntless-revived/graphs/contributors",
+    "upstream_source": "https://github.com/SyST3MDeV/Undaunted",
+    "upstream_contributors": "https://github.com/SyST3MDeV/Undaunted/graphs/contributors",
+    "eugamehost": "https://www.eugamehost.com/",
+    "eugamehost_game1": "https://www.eugamehost.com/clients/cart.php?a=add&pid=238&promocode=SIGNUP6MONTH&skipconfig=1",
+    "eugamehost_game2": "https://www.eugamehost.com/clients/cart.php?a=add&pid=239&promocode=SIGNUP6MONTH&skipconfig=1",
+    "eugamehost_game3": "https://www.eugamehost.com/clients/cart.php?a=add&pid=240&promocode=SIGNUP6MONTH&skipconfig=1",
+    "eugamehost_game5": "https://www.eugamehost.com/clients/cart.php?a=add&pid=242&promocode=SIGNUP6MONTH&skipconfig=1",
+    "eugamehost_5800x": "https://www.eugamehost.com/clients/cart.php?a=add&pid=500",
+    "discord": "https://discord.gg/dauntlessrevived",
+    "patreon": "https://patreon.com/DauntlessRevived"
+  },
+  "names": [
+    {
+      "name": "tailscale_download",
+      "url": "https://tailscale.com/download"
+    },
+    {
+      "name": "vc_redist",
+      "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+    },
+    {
+      "name": "directx_runtime",
+      "url": "https://www.microsoft.com/en-us/download/details.aspx?id=35"
+    },
+    {
+      "name": "project_source",
+      "url": "https://github.com/mixutin/dauntless-revived"
+    },
+    {
+      "name": "project_license",
+      "url": "https://github.com/mixutin/dauntless-revived/blob/dauntless-revived/LICENSE.txt"
+    },
+    {
+      "name": "project_contributors",
+      "url": "https://github.com/mixutin/dauntless-revived/graphs/contributors"
+    },
+    {
+      "name": "upstream_source",
+      "url": "https://github.com/SyST3MDeV/Undaunted"
+    },
+    {
+      "name": "upstream_contributors",
+      "url": "https://github.com/SyST3MDeV/Undaunted/graphs/contributors"
+    },
+    {
+      "name": "eugamehost",
+      "url": "https://www.eugamehost.com/"
+    },
+    {
+      "name": "eugamehost_game1",
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=238&promocode=SIGNUP6MONTH&skipconfig=1"
+    },
+    {
+      "name": "eugamehost_game2",
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=239&promocode=SIGNUP6MONTH&skipconfig=1"
+    },
+    {
+      "name": "eugamehost_game3",
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=240&promocode=SIGNUP6MONTH&skipconfig=1"
+    },
+    {
+      "name": "eugamehost_game5",
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=242&promocode=SIGNUP6MONTH&skipconfig=1"
+    },
+    {
+      "name": "eugamehost_5800x",
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=500"
+    },
+    {
+      "name": "discord",
+      "url": "https://discord.gg/dauntlessrevived"
+    },
+    {
+      "name": "patreon",
+      "url": "https://patreon.com/DauntlessRevived"
+    },
+    {
+      "name": "tailscale_share",
+      "url": null
+    },
+    {
+      "name": "server_source",
+      "url": null
+    },
+    {
+      "name": "__proto__",
+      "url": null
+    },
+    {
+      "name": "constructor",
+      "url": null
+    },
+    {
+      "name": "PROJECT_SOURCE",
+      "url": null
+    },
+    {
+      "name": "project-source",
+      "url": null
+    },
+    {
+      "name": "project_source ",
+      "url": null
+    },
+    {
+      "name": "repo",
+      "url": null
+    },
+    {
+      "name": "https://github.com.evil.example/mixutin/dauntless-revived",
+      "url": null
+    },
+    {
+      "name": "https://github.com@evil.example/mixutin/dauntless-revived",
+      "url": null
+    },
+    {
+      "name": "https://evil.example@github.com/mixutin/dauntless-revived",
+      "url": null
+    },
+    {
+      "name": "https://github.com:x@github.com/mixutin/dauntless-revived",
+      "url": null
+    },
+    {
+      "name": "https://evil.example/https://github.com/mixutin/dauntless-revived",
+      "url": null
+    }
+  ],
+  "urls": [
+    {
+      "url": "https://github.com.evil.example/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com@evil.example/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://evil.example@github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com:x@github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://evil.example/https://github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "http://github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "http://github.com/SyST3MDeV/Undaunted/graphs/contributors",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "javascript:alert(1)",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "JavaScript:alert(1)//https://github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "data:text/html,<script>alert(1)</script>",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "file:///C:/Windows/System32/calc.exe",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "dauntless-revived://join?v=1",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/other-repo",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/evil/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived-evil",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/SyST3MDeV/Undaunted-evil",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/SyST3MDeV/Other",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/issues",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/releases/download/launcher-updates/evil.exe",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/../../evil/repo",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/%2e%2e/%2e%2e/evil/repo",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/graphs/contributors/%2e%2e/%2e%2e/%2e%2e/evil",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin%2Fdauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/%6Dixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://GITHUB.COM/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "HTTPS://github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/MIXUTIN/DAUNTLESS-REVIVED",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/syst3mdev/undaunted",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com:443/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com:8443/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com./mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com%2eevil.example/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://xn--gthub-n4a.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://gіthub.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived?x=1",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived#readme",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": " https://github.com/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived ",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived\n",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://tailscale.com.evil.example/download/windows",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://login.tailscale.com@evil.example/",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://aka.ms/evil",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com.evil.example/",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=999",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://eugamehost.com/",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://discord.gg.evil.example/ZJRprHzsgu",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://discord.gg/dauntlessrevived/extra",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://discord.com/invite/ZJRprHzsgu",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://evil.example/",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://tailscale.com/download",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.microsoft.com/en-us/download/details.aspx?id=35",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/blob/dauntless-revived/LICENSE.txt",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://github.com/mixutin/dauntless-revived/graphs/contributors",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://github.com/SyST3MDeV/Undaunted",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://github.com/SyST3MDeV/Undaunted/graphs/contributors",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=238&promocode=SIGNUP6MONTH&skipconfig=1",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=239&promocode=SIGNUP6MONTH&skipconfig=1",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=240&promocode=SIGNUP6MONTH&skipconfig=1",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=242&promocode=SIGNUP6MONTH&skipconfig=1",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://www.eugamehost.com/clients/cart.php?a=add&pid=500",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://discord.gg/dauntlessrevived",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://patreon.com/DauntlessRevived",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://git.example.org/friday/server",
+      "static": false,
+      "external": [
+        false,
+        true,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://git.example.org:3000/friday/server",
+      "static": false,
+      "external": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "http://git.example.org/friday/server",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "javascript:alert(1)",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://github.com:3000/mixutin/dauntless-revived",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://tailscale.com/anything",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://login.tailscale.com/admin/invite/x",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://aka.ms/vs/other",
+      "static": true,
+      "external": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "url": "https://aka.ms/other",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "url": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "static": false,
+      "external": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "hosts": [
+    null,
+    "https://git.example.org/friday/server",
+    "https://git.example.org:3000/friday/server",
+    "http://git.example.org/friday/server",
+    "javascript:alert(1)"
+  ]
+}
