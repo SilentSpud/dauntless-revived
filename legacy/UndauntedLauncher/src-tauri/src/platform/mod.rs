@@ -7,6 +7,7 @@ pub mod game_config;
 pub mod game_folder;
 pub mod keystore;
 pub mod launch;
+pub mod linux_runtime;
 pub mod log;
 pub mod paths;
 pub mod settings;

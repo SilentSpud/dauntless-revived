@@ -295,6 +295,11 @@ Done so far:
   one retry for a missing row, 64 waiting at most, closed elsewhere; checked against a real loopback socket on
   Windows) and `platform/system.rs` (Tailscale's usual places, free space via `fs4`, the device signals' two fixed
   PowerShell queries and their placeholders).
+- Launcher P4, L32: `platform/linux_runtime.rs` is `linux-runtime.ts` and `linux-dependencies.ts`: Proton from
+  Steam's compatibility tools (native or Flatpak Steam, newest by number) or `DAUNTLESS_REVIVED_PROTON`, else Wine
+  (`DAUNTLESS_REVIVED_WINE`, the PATH, Lutris), each with its own prefix under userData and `dxgi=n,b`, GNOME's
+  XWayland authority when `XAUTHORITY` is unset, the first-start prefix setup, and Wine or gnome-keyring installed
+  through the package manager and pkexec when missing. Its tests run on Linux (WSL here, the Rust job in CI).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
