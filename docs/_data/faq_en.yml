@@ -1,6 +1,6 @@
 # Frequently asked questions, English. Rendered by docs/faq.md, and turned into FAQPage structured data by
 # _includes/head_custom.html, so the visible answers and the structured data cannot drift apart.
-# tools/build-llms.js also reads this file for llms-full.txt.
+# tools/build-llms.ts also reads this file for llms-full.txt.
 #
 # Format (keep to it, the llms builder has a small parser):
 #   - id: the heading anchor

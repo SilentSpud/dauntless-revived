@@ -636,17 +636,17 @@ lataamisen turvallisena.
 | Pelimoottori | Unreal Engine `4.25.3-239827+++dauntless+rel-1.4.4`, versio, josta DLL:n SDK-otsaketiedostot on generoitu |
 | Exe | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe`, SHA-256 `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4`, 103 673 520 tavua |
 | Pelin zip | `BaseGame144.zip`, SHA-256 `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D`, 10 479 214 119 tavua. Sen ylin kansio on `Dauntless\`, jonka sisällä on `Archon\`. |
-| Sisältöluettelo | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 tiedostoa, 10 893 512 875 tavua, ja `build`-kenttä, joka on sama kuin versiomerkkijono. Se ei listaa ini-tiedostoja (pelin mukana tulleet asetukset ovat pak-tiedostojen sisällä, ja käyttäjän asetukset ovat pelikansion ulkopuolella) eikä kahta DLL-tiedostoa. Luotu työkalulla `tools/make-game-manifest.js`. |
+| Sisältöluettelo | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 tiedostoa, 10 893 512 875 tavua, ja `build`-kenttä, joka on sama kuin versiomerkkijono. Se ei listaa ini-tiedostoja (pelin mukana tulleet asetukset ovat pak-tiedostojen sisällä, ja käyttäjän asetukset ovat pelikansion ulkopuolella) eikä kahta DLL-tiedostoa. Luotu työkalulla `tools/make-game-manifest.ts`. |
 | Phoenixin oma luettelo | `Manifest.bin.json` pelikansiossa: 406 merkintää. Meidän 410 tiedostoamme ovat nämä sekä itse `Manifest.bin.json`, `Manifest.bin` ja kaksi tyhjää `debug.log`-tiedostoa. Miten tarkistimme sen, kerrotaan sivun [Pystytä palvelin vaiheessa 2]({{ host_page.url | relative_url }}#verify-the-build) ja sivulla [Pelitiedostojen tarkistaminen]({{ verification_page.url | relative_url }}). |
 
 ### Kuka tarkistaa kiinnitykset {#pin-checks}
 
 | Tarkistus | Käynnistin | Kaveripaketti | Palvelinpaketin asennusohjelma | Muualla |
 |:----------|:-----------|:--------------|:-------------------------------|:--------|
-| Pelin zipin SHA-256 | Ei koske: se lataa yksittäisiä tiedostoja, ei zipiä | `setup.ps1 -Zip` | Jatkettava lataus tarkistetaan sitä vasten; zipin tiiviste lasketaan uudelleen ennen purkamista | `tools/make-game-manifest.js` hylkää minkä tahansa muun zipin, ellei sitä ajeta valinnalla `--zip-sha256` tai `--skip-zip-hash`; silloinkin se hylkää zipin, jonka `Version.txt` tai exe poikkeaa kiinnityksistä |
-| Exen SHA-256 | Ennen jokaista PELAA-painallusta | `setup.ps1`, ja `play.ps1` jokaisella käynnistyksellä | Ennen kuin pelikansiosta ajetaan mitään; pysähtyy, jos tiiviste on väärä (ei pakoteta `-Sandbox`-asennuksessa) | `tools/make-game-manifest.js` |
+| Pelin zipin SHA-256 | Ei koske: se lataa yksittäisiä tiedostoja, ei zipiä | `setup.ps1 -Zip` | Jatkettava lataus tarkistetaan sitä vasten; zipin tiiviste lasketaan uudelleen ennen purkamista | `tools/make-game-manifest.ts` hylkää minkä tahansa muun zipin, ellei sitä ajeta valinnalla `--zip-sha256` tai `--skip-zip-hash`; silloinkin se hylkää zipin, jonka `Version.txt` tai exe poikkeaa kiinnityksistä |
+| Exen SHA-256 | Ennen jokaista PELAA-painallusta | `setup.ps1`, ja `play.ps1` jokaisella käynnistyksellä | Ennen kuin pelikansiosta ajetaan mitään; pysähtyy, jos tiiviste on väärä (ei pakoteta `-Sandbox`-asennuksessa) | `tools/make-game-manifest.ts` |
 | DLL-tiedostojen SHA-256 | Asennuksessa ja ennen jokaista PELAA-painallusta (korjaa ne) | `setup.ps1` ennen kopiointia ja sen jälkeen; `play.ps1` jokaisella käynnistyksellä | Ennen kopiointia ja sen jälkeen | `tools/make-friend-kit.ps1` ennen pakkaamista |
-| Versiomerkkijono | Käynnistimeen käännetyssä sisältöluettelossa on oltava se, tai käynnistin hylkää luettelon | Ei tarkisteta | Varoittaa, jos `Version.txt` nimeää toisen version | `tools/make-game-manifest.js` tarkistaa zipin sisällä olevan `Version.txt`-tiedoston; sisältöpalvelin vain kirjaa varoituksen, jos luettelossa on toinen versio |
+| Versiomerkkijono | Käynnistimeen käännetyssä sisältöluettelossa on oltava se, tai käynnistin hylkää luettelon | Ei tarkisteta | Varoittaa, jos `Version.txt` nimeää toisen version | `tools/make-game-manifest.ts` tarkistaa zipin sisällä olevan `Version.txt`-tiedoston; sisältöpalvelin vain kirjaa varoituksen, jos luettelossa on toinen versio |
 | Jokainen pelitiedosto | Jokainen lataus tarkistetaan käynnistimeen käännettyä sisältöluetteloa vasten; Korjaa-toiminto laskee jokaisen tiedoston tiivisteen uudelleen | Ei tarkisteta | `lib/verify-game.js` tarkistaa jokaisen tiedoston tiivisteen luetteloa vasten | Sisältöpalvelin tarkistaa koot käynnistyessään ja jakaa vain luettelossa olevia tiedostoja |
 
 ### Missä kiinnitykset ovat {#pin-locations}
@@ -656,11 +656,11 @@ vain samalla kertaa niiden tiedostojen kanssa, joita ne kuvaavat.
 
 | Arvo | Tiedostot |
 |:-----|:----------|
-| Exen SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (ja sen testi) |
+| Exen SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (ja sen testi) |
 | Exen koko | `legacy/UndauntedLauncher/src/main/constants.ts` ja `legacy/UndauntedContent/data/dauntless-1.4.4.json` (ja sen testi). Muut tiedostot tarkistavat vain tiivisteen. |
 | DLL-tiedostojen SHA-256:t | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-friend-kit.ps1` |
-| Zipin SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (tavumäärän kanssa), `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| Versiomerkkijono | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.js`, sisältöluettelon JSON-tiedosto |
+| Zipin SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (tavumäärän kanssa), `friend-kit/setup.ps1`, `tools/make-game-manifest.ts` |
+| Versiomerkkijono | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.ts`, sisältöluettelon JSON-tiedosto |
 | Muutoslista | `deploy/windows-server/DauntlessServer.Common.ps1`, joka kirjoittaa metagamen `TARGET_CHANGELIST`-arvon |
 
 ---

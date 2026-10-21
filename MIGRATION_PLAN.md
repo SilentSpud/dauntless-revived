@@ -300,6 +300,18 @@ Done so far:
   processes. Tests: the runner, worker payload, SSH and config tests, and an invite into a real
   database. Not done: the kits' install scripts and service files still start the Node tools, and
   the two-machine worker launch in a CI container; both belong to the kits' cutover (B5).
+- Part E, T1-T5: `tools/` is a Bun project (`package.json` with Bun 1.4.3 in `packageManager`, `bun.lock`,
+  strict `tsconfig.json`, `bunfig.toml`; TypeScript and `@types/bun` are its only packages, both for the type
+  check). `check-repo.ts` and `launcher-version.ts` give the JS versions' findings and output (compared on the
+  tree and on a planted token); `sync-roadmap.ts` and `build-llms.ts` regenerate the docs files byte for
+  byte apart from the generator's own name in `docs/roadmap.md`. `make-game-manifest.ts` no longer needs
+  `yauzl` from another project's `node_modules`: `tools/zip.ts` reads the central directory (Zip64
+  included) and streams stored or deflated entries, refusing what yauzl's strict mode refused, and
+  `zip.test.ts` covers it on archives it writes; an archive from Python's `zipfile` with forced Zip64
+  reads back with the source files' hashes. CI runs the type check, the tests and the generators on
+  Bun (`oven-sh/setup-bun` pinned by commit, the version read from `tools/package.json`), the release
+  workflow calls `launcher-version.ts`, and Dependabot has a `bun` entry for `tools/`. Not done: T5's
+  regeneration from the real 1.4.4 zip (it is not on this machine); T6-T10.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

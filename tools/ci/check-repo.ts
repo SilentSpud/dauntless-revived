@@ -13,7 +13,7 @@
 //   - the two prebuilt server DLLs in legacy/UndauntedLauncher/assets/ differ from the SHA-256 pins in the launcher
 //     and the Windows Server kit;
 //   - legacy/UndauntedLauncher/package.json "version" is not a launcher version (a semantic version without build
-//     metadata; it names the launcher release tag launcher-v<version>; see tools/ci/launcher-version.js).
+//     metadata; it names the launcher release tag launcher-v<version>; see tools/ci/launcher-version.ts).
 //
 // With --history <revision range> (CI passes the commits of the push or pull request, e.g. abc123..HEAD),
 // every file version those commits added or changed gets the name, game-file and content checks too: a
@@ -22,20 +22,17 @@
 // Test fixtures that look like secrets on purpose are allowed by path below; an allow-list entry that no
 // longer matches anything in the checked-out files fails too, so the list stays exact. Nothing is printed
 // of what a match contains. No dependencies. Usage (from anywhere in the checkout):
-//   node tools/ci/check-repo.js [--history <revision range>]      (--history HEAD: the whole history)
-"use strict";
-const { execFileSync } = require("child_process");
-const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
-const { isLauncherVersion } = require("./launcher-version.js");
+//   bun tools/ci/check-repo.ts [--history <revision range>]      (--history HEAD: the whole history)
+import { lstatSync } from "node:fs";
+import path from "node:path";
+import { isLauncherVersion } from "./launcher-version.ts";
 
-const ROOT = path.resolve(__dirname, "..", "..");
+const ROOT = path.resolve(import.meta.dir, "..", "..");
 const LAUNCHER_PACKAGE = "legacy/UndauntedLauncher/package.json";
 const GAME_MANIFEST = "legacy/UndauntedContent/data/dauntless-1.4.4.json";
 
 // Tracked files that trip a content check on purpose: path -> the checks it may trip.
-const ALLOWED_CONTENT = {
+const ALLOWED_CONTENT: Record<string, string[]> = {
     // A made-up token (its signature part reads "signature-not-real-...") for the gateway's redaction tests.
     "legacy/UndauntedGateway/test/gateway.test.ts": ["jwt"],
     "legacy/UndauntedGateway/test/redact-ratelimit-config.test.ts": ["jwt"],
@@ -67,7 +64,7 @@ const DLL_PIN_SOURCES = [
 ];
 
 // Forbidden by name. Tested against the lower-cased path with forward slashes.
-const NAME_RULES = [
+const NAME_RULES: { why: string; test: (p: string, base: string) => boolean }[] = [
     { why: "a .env file (secrets)", test: (p, base) => (base === ".env" || base.startsWith(".env.") || base.endsWith(".env")) && base !== ".env.example" },
     { why: "a key or certificate file", test: (p, base) => /\.(key|pem|pfx|p12|jks|keystore|ppk)$/.test(base) || /^id_(rsa|dsa|ecdsa|ed25519)(_sk)?$/.test(base) },
     { why: "a database", test: (p, base) => /\.(db|db-wal|db-shm|db-journal|sqlite|sqlite3)$/.test(base) },
@@ -82,7 +79,7 @@ const NAME_RULES = [
 ];
 
 // Content shapes. Each regex is global; `confirm` can reject a candidate match.
-const CONTENT_RULES = [
+const CONTENT_RULES: { id: string; why: string; re: RegExp; confirm?: (match: string) => boolean }[] = [
     { id: "account-key", why: "an account key (UUK_ + 48 hex)", re: /UUK_[0-9a-fA-F]{48}(?![0-9a-fA-F])/g },
     { id: "jwt", why: "a JWT", re: /eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{16,}/g },
     { id: "private-key", why: "a private key block", re: /-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY(?: BLOCK)?-----/g },
@@ -98,16 +95,16 @@ const CONTENT_RULES = [
 ];
 
 const args = process.argv.slice(2);
-let historyRange = null;
-if (args.length === 2 && args[0] === "--history" && args[1] !== "") historyRange = args[1];
+let historyRange: string | null = null;
+if (args.length === 2 && args[0] === "--history" && args[1] !== "") historyRange = args[1]!;
 else if (args.length !== 0) {
-    console.error("usage: node tools/ci/check-repo.js [--history <revision range>]");
+    console.error("usage: bun tools/ci/check-repo.ts [--history <revision range>]");
     process.exit(2);
 }
 
-const problems = [];
-const seenProblems = new Set();
-function fail(file, message) {
+const problems: string[] = [];
+const seenProblems = new Set<string>();
+function fail(file: string | null, message: string): void {
     const problem = file ? `${file}: ${message}` : message;
     if (!seenProblems.has(problem)) {
         seenProblems.add(problem);
@@ -115,24 +112,41 @@ function fail(file, message) {
     }
 }
 
-function git(gitArgs, options = {}) {
-    return execFileSync("git", gitArgs, { cwd: ROOT, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, ...options });
+class GitError extends Error {}
+
+// git with fixed arguments; its output as bytes.
+function gitBytes(gitArgs: string[], input?: Uint8Array): Buffer {
+    const result = Bun.spawnSync(["git", ...gitArgs], { cwd: ROOT, stdin: input ?? "ignore", stdout: "pipe", stderr: "pipe" });
+    if (result.exitCode !== 0) throw new GitError(result.stderr.toString().trim() || `git exited with ${result.exitCode}`);
+    return result.stdout;
 }
 
-function sha256(buffer) {
-    return crypto.createHash("sha256").update(buffer).digest("hex");
+function git(gitArgs: string[]): string {
+    return gitBytes(gitArgs).toString("utf8");
+}
+
+function sha256(data: Uint8Array): string {
+    return new Bun.CryptoHasher("sha256").update(data).digest("hex");
+}
+
+async function readText(file: string): Promise<string> {
+    return Bun.file(path.join(ROOT, file)).text();
+}
+
+function message(error: unknown): string {
+    return error instanceof Error ? error.message : String(error);
 }
 
 // A text file can differ from the original only in its line endings (git normalizes them), so a game
 // file is also recognized with LF or CRLF line endings.
-function lineEndingVariants(buffer) {
-    if (!buffer.includes(0x0a)) return [];
-    const text = buffer.toString("latin1");
+function lineEndingVariants(data: Buffer): Buffer[] {
+    if (!data.includes(0x0a)) return [];
+    const text = data.toString("latin1");
     const lf = text.replace(/\r\n/g, "\n");
     return [Buffer.from(lf, "latin1"), Buffer.from(lf.replace(/\n/g, "\r\n"), "latin1")];
 }
 
-function lineOf(text, index) {
+function lineOf(text: string, index: number): number {
     let line = 1;
     for (let i = text.indexOf("\n"); i !== -1 && i < index; i = text.indexOf("\n", i + 1)) line++;
     return line;
@@ -148,24 +162,25 @@ for (const file of git(["ls-files", "-z", "--cached", "--ignored", "--exclude-st
 }
 
 // The game manifest: SHA-256 -> game path (empty files excluded: every empty file has the same hash).
-const gameHashes = new Map();
+const gameHashes = new Map<string, string>();
 let gameFiles = 0;
 try {
-    for (const entry of JSON.parse(fs.readFileSync(path.join(ROOT, GAME_MANIFEST), "utf8")).files) {
+    const manifest = JSON.parse(await readText(GAME_MANIFEST)) as { files: { path: string; size: number; sha256: string }[] };
+    for (const entry of manifest.files) {
         gameFiles++;
         if (entry.size > 0) gameHashes.set(entry.sha256.toLowerCase(), entry.path);
     }
 } catch (error) {
-    fail(GAME_MANIFEST, `could not be read (${error.message})`);
+    fail(GAME_MANIFEST, `could not be read (${message(error)})`);
 }
 if (gameFiles < 400) fail(GAME_MANIFEST, `lists only ${gameFiles} game files; expected the full 1.4.4 manifest (410)`);
 
-const allowUsed = new Set();
-const fileHashes = new Map();
+const allowUsed = new Set<string>();
+const fileHashes = new Map<string, string>();
 let scanned = 0;
 let scannedBytes = 0;
 
-function checkName(file, where) {
+function checkName(file: string, where: string): void {
     const lower = file.toLowerCase();
     const base = lower.slice(lower.lastIndexOf("/") + 1);
     for (const rule of NAME_RULES) {
@@ -175,7 +190,7 @@ function checkName(file, where) {
 
 // `where` names the commit for a file version from the history; allow-list use is counted for the
 // checked-out files only.
-function checkData(file, data, where) {
+function checkData(file: string, data: Buffer, where: string): void {
     if (data.length > 0 && file !== GAME_MANIFEST) {
         for (const variant of [data, ...lineEndingVariants(data)]) {
             const game = gameHashes.get(sha256(variant));
@@ -190,10 +205,10 @@ function checkData(file, data, where) {
     const text = data.toString("latin1");
     for (const rule of CONTENT_RULES) {
         rule.re.lastIndex = 0;
-        let match;
+        let match: RegExpExecArray | null;
         while ((match = rule.re.exec(text)) !== null) {
             if (rule.confirm && !rule.confirm(match[0])) continue;
-            if ((ALLOWED_CONTENT[file] || []).includes(rule.id)) {
+            if ((ALLOWED_CONTENT[file] ?? []).includes(rule.id)) {
                 if (!where) allowUsed.add(`${file}|${rule.id}`);
                 continue;
             }
@@ -206,11 +221,10 @@ for (const file of files) {
     checkName(file, "");
 
     const full = path.join(ROOT, ...file.split("/"));
-    let data;
+    let data: Buffer;
     try {
-        const stat = fs.lstatSync(full);
-        if (!stat.isFile()) continue;   // a symlink or a submodule
-        data = fs.readFileSync(full);
+        if (!lstatSync(full).isFile()) continue;   // a symlink or a submodule
+        data = Buffer.from(await Bun.file(full).bytes());
     } catch {
         continue;   // deleted in the working tree
     }
@@ -225,26 +239,26 @@ for (const file of files) {
 let historyCommits = 0;
 let historyVersions = 0;
 if (historyRange !== null) {
-    let commits = [];
+    let commits: string[] = [];
     try {
         commits = git(["rev-list", "--no-merges", historyRange, "--"]).split("\n").filter(Boolean);
     } catch (error) {
-        fail(null, `--history ${historyRange}: git rev-list failed (${String(error.stderr || error.message).trim()})`);
+        fail(null, `--history ${historyRange}: git rev-list failed (${message(error)})`);
     }
     historyCommits = commits.length;
 
     // The blobs of the checked-out commit were checked above (under their current names).
     const tipFiles = new Set(files);
     const tipBlobs = new Set(git(["ls-files", "-z", "--stage"]).split("\0").filter(Boolean).map((line) => line.split(" ")[1]));
-    const blobs = new Map();   // blob id -> { file, commit }
+    const blobs = new Map<string, { file: string; commit: string }>();
     for (const commit of commits) {
         // Records of ":oldmode newmode oldblob newblob status", each followed by its path.
         const out = git(["diff-tree", "-r", "--root", "--no-commit-id", "--no-renames", "--no-abbrev", "-z", "--diff-filter=AMT", commit]).split("\0");
         for (let i = 0; i + 1 < out.length; i += 2) {
-            const meta = out[i].split(" ");
+            const meta = out[i]!.split(" ");
             const file = out[i + 1];
             if (meta.length < 5 || !file) continue;
-            const mode = meta[1], blob = meta[3];
+            const mode = meta[1], blob = meta[3]!;
             if (!tipFiles.has(file)) checkName(file, ` (in commit ${commit.slice(0, 12)})`);
             if (mode === "160000" || mode === "120000") continue;   // a submodule or a symlink
             if (!tipBlobs.has(blob) && !blobs.has(blob)) blobs.set(blob, { file, commit });
@@ -255,7 +269,7 @@ if (historyRange !== null) {
     const ids = [...blobs.keys()];
     for (let start = 0; start < ids.length; start += 200) {
         const batch = ids.slice(start, start + 200);
-        const out = execFileSync("git", ["cat-file", "--batch"], { cwd: ROOT, input: batch.join("\n") + "\n", maxBuffer: 1024 * 1024 * 1024 });
+        const out = gitBytes(["cat-file", "--batch"], Buffer.from(batch.join("\n") + "\n"));
         let pos = 0;
         for (const id of batch) {
             const eol = out.indexOf(0x0a, pos);
@@ -267,7 +281,7 @@ if (historyRange !== null) {
             const size = Number(header[2]);
             const data = out.subarray(eol + 1, eol + 1 + size);
             pos = eol + 1 + size + 1;
-            const { file, commit } = blobs.get(id);
+            const { file, commit } = blobs.get(id)!;
             historyVersions++;
             checkData(file, data, ` (in commit ${commit.slice(0, 12)})`);
         }
@@ -276,7 +290,7 @@ if (historyRange !== null) {
 
 for (const [file, ids] of Object.entries(ALLOWED_CONTENT)) {
     for (const id of ids) {
-        if (!allowUsed.has(`${file}|${id}`)) fail("tools/ci/check-repo.js", `allow-list entry ${file} (${id}) no longer matches anything; remove it`);
+        if (!allowUsed.has(`${file}|${id}`)) fail("tools/ci/check-repo.ts", `allow-list entry ${file} (${id}) no longer matches anything; remove it`);
     }
 }
 
@@ -284,12 +298,12 @@ for (const [file, ids] of Object.entries(ALLOWED_CONTENT)) {
 for (const source of DLL_PIN_SOURCES) {
     let text = "";
     try {
-        text = fs.readFileSync(path.join(ROOT, source.file), "utf8");
+        text = await readText(source.file);
     } catch (error) {
-        fail(source.file, `could not be read (${error.message})`);
+        fail(source.file, `could not be read (${message(error)})`);
         continue;
     }
-    const pins = new Map([...text.matchAll(source.pattern)].map((m) => [m[1].toLowerCase(), m[2].toLowerCase()]));
+    const pins = new Map([...text.matchAll(source.pattern)].map((m) => [m[1]!.toLowerCase(), m[2]!.toLowerCase()]));
     for (const dll of PINNED_DLLS) {
         const name = dll.slice(dll.lastIndexOf("/") + 1).toLowerCase();
         if (!fileHashes.has(dll)) fail(dll, "is missing (it must be tracked)");
@@ -300,22 +314,23 @@ for (const source of DLL_PIN_SOURCES) {
 
 // The client-mods DLLs against client-mods/manifest.json.
 try {
-    const pins = new Map(JSON.parse(fs.readFileSync(path.join(ROOT, CLIENT_MODS_MANIFEST), "utf8")).files.map((f) => [`client-mods/${f.path}`, String(f.sha256).toLowerCase()]));
+    const manifest = JSON.parse(await readText(CLIENT_MODS_MANIFEST)) as { files: { path: string; sha256: unknown }[] };
+    const pins = new Map(manifest.files.map((f) => [`client-mods/${f.path}`, String(f.sha256).toLowerCase()]));
     for (const dll of CLIENT_MODS_DLLS) {
         if (!fileHashes.has(dll)) fail(dll, "is missing (it must be tracked)");
         else if (!pins.has(dll)) fail(CLIENT_MODS_MANIFEST, `has no SHA-256 pin for ${dll}`);
         else if (pins.get(dll) !== fileHashes.get(dll)) fail(dll, `does not match its SHA-256 pin in ${CLIENT_MODS_MANIFEST}`);
     }
 } catch (error) {
-    fail(CLIENT_MODS_MANIFEST, `could not be read (${error.message})`);
+    fail(CLIENT_MODS_MANIFEST, `could not be read (${message(error)})`);
 }
 
 // The launcher version names the release tag launcher-v<version>.
 try {
-    const version = JSON.parse(fs.readFileSync(path.join(ROOT, LAUNCHER_PACKAGE), "utf8")).version;
+    const version: unknown = (JSON.parse(await readText(LAUNCHER_PACKAGE)) as { version?: unknown }).version;
     if (!isLauncherVersion(version)) fail(LAUNCHER_PACKAGE, `"version" ${JSON.stringify(version)} is not a launcher version (x.y.z or x.y.z-prerelease, no +build metadata)`);
 } catch (error) {
-    fail(LAUNCHER_PACKAGE, `could not be read (${error.message})`);
+    fail(LAUNCHER_PACKAGE, `could not be read (${message(error)})`);
 }
 
 // ---------------------------------------------------------------------------------------------------------

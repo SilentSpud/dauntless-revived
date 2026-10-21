@@ -713,8 +713,8 @@ install; the names cannot.
 
 | What | SHA-256 | Also pinned in |
 |:-----|:--------|:---------------|
-| Game zip, 1.4.4 (`BaseGame144.zip`, 10,479,214,119 bytes) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedLauncher/src/main/constants.ts`, the content manifest |
+| Game zip, 1.4.4 (`BaseGame144.zip`, 10,479,214,119 bytes) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.ts` |
+| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedLauncher/src/main/constants.ts`, the content manifest |
 | `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | the same files as `dxgi.dll` |
 | Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | only the kit; it must also match nodejs.org's `SHASUMS256.txt` |
@@ -827,7 +827,9 @@ sessions at different player counts. Keep reports local with the other operation
 
 Tests: `node --test tools/summarize-performance.test.mjs`.
 
-Run these from a checkout, with Node.js or Windows PowerShell as noted.
+Run these from a checkout, with Node.js, Bun or Windows PowerShell as noted. The `.ts` tools run on
+Bun, the version in `tools/package.json` (`packageManager`); they need no `bun install`, which only
+brings the type checker.
 
 ### make-friend-kit.ps1
 
@@ -852,19 +854,19 @@ refuses to run while `friend-kit\` has uncommitted changes.
 powershell -ExecutionPolicy Bypass -File tools\make-friend-kit.ps1 -Out D:\dist
 ```
 
-### sync-roadmap.js
+### sync-roadmap.ts
 
-`node tools/sync-roadmap.js` takes no arguments. It regenerates `docs/roadmap.md` from `ROADMAP.md`:
+`bun tools/sync-roadmap.ts` takes no arguments. It regenerates `docs/roadmap.md` from `ROADMAP.md`:
 front matter, a table of contents, and the checklist inside a Liquid `raw` block, so Jekyll leaves
 its text alone. Run it after every change to `ROADMAP.md`, and never edit `docs/roadmap.md` by hand. The Finnish
 `docs/fi/roadmap.md` is a hand-written summary, not generated.
 
-### build-llms.js
+### build-llms.ts
 
-`node tools/build-llms.js` takes no arguments. It writes `docs/llms.txt` (an index of every page) and
+`bun tools/build-llms.ts` takes no arguments. It writes `docs/llms.txt` (an index of every page) and
 `docs/llms-full.txt` (every English page as Markdown in one file) from the pages' front matter and
 text and from `docs/_data/faq_en.yml` and `faq_fi.yml`. Run it after adding a page or changing a
-title or description, and after `sync-roadmap.js`, because the roadmap page is one of its inputs.
+title or description, and after `sync-roadmap.ts`, because the roadmap page is one of its inputs.
 
 It warns about a page without a `description`. It stops with an error on Liquid it does not
 understand. Pages may use only:
@@ -878,14 +880,14 @@ understand. Pages may use only:
 A link from the FAQ data to a page that does not exist is also an error, and so is a page link whose
 `assign` names a page that does not exist.
 
-### make-game-manifest.js
+### make-game-manifest.ts
 
 Builds the content manifest, `legacy/UndauntedContent/data/dauntless-1.4.4.json`, from the verified game
 zip. The content server serves only the files in it, and the launcher compiles the same file in and
 refuses any other file. Run it only when the manifest must change.
 
 ```text
-node tools/make-game-manifest.js --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
+bun tools/make-game-manifest.ts --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
                                  [--compare-all] [--zip-sha256 <hex>] [--skip-zip-hash]
 ```
 
@@ -902,8 +904,8 @@ It checks each entry's CRC-32 and size against the zip's own records, that every
 same rule the content server applies), that no two paths differ only in letter case, that
 `Version.txt` names the 1.4.4 build and that the exe matches its pin. It prints the file count, the
 total bytes and the manifest's own SHA-256. It runs at low priority, reads the zip twice (about 21 GB
-of reads), exits with `1` on any failure, and needs `yauzl`: run `npm ci` in `legacy/UndauntedContent` or
-`legacy/UndauntedLauncher` first. After regenerating the manifest, rebuild the launcher.
+of reads), and exits with `1` on any failure. It reads the zip itself (`tools/zip.ts`, Zip64 included), so
+nothing needs installing first. After regenerating the manifest, rebuild the launcher.
 
 ## CI workflows and tools {#ci-workflows-and-tools}
 
@@ -918,10 +920,10 @@ and run the tools from a checkout. What each CI job checks, and how launcher rel
 | `.github/workflows/ci.yml` (**CI**) | Every push to any branch, every pull request, and Actions > **CI** > **Run workflow** | none | Builds and tests the four server packages, the launcher and the server kit, checks the docs and the repository, and keeps the launcher's release files for 7 days (not for pull requests from forks). Then, on a push to `dauntless-revived` in `mixutin/dauntless-revived` that passed every check, it publishes the launcher version if that version has no release yet, unless `LAUNCHER_AUTO_RELEASE` is `false`. |
 | `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** on `dauntless-revived`; called by `ci.yml` | None by hand. `ci.yml` passes `version` (it must equal the `legacy/UndauntedLauncher/package.json` version at that commit) and `artifact` (the release files it built). | Publishes the launcher version as the release `launcher-v<version>`, creates that tag, attests the build provenance of every file, and points the `launcher-updates` feed at it. Run by hand, it builds and tests the commit itself; for a version that is published already, it only brings the feed up to it. It refuses to run on any branch but `dauntless-revived`, the default branch. |
 
-### tools/ci/check-repo.js {#check-repojs}
+### tools/ci/check-repo.ts {#check-repots}
 
 ```text
-node tools/ci/check-repo.js [--history <revision range>]
+bun tools/ci/check-repo.ts [--history <revision range>]
 ```
 
 The repository hygiene check. Without arguments it checks every tracked file:
@@ -941,22 +943,22 @@ The repository hygiene check. Without arguments it checks every tracked file:
 | `--history <revision range>` | Also checks every file version that the commits in the range added or changed, for example `origin/dauntless-revived..HEAD` before a push. `--history HEAD` checks the whole history. A secret that was committed and deleted again is still in the history, so the key has to be replaced. |
 
 It never prints what a match contains, only the file, the line and the kind of match. Exit code `0`
-means nothing was found, `1` a problem, `2` a usage error. It has no dependencies, so it needs no
-`npm ci`.
+means nothing was found, `1` a problem, `2` a usage error. It has no dependencies, so nothing needs
+installing first.
 
-### tools/ci/launcher-version.js {#launcher-versionjs}
+### tools/ci/launcher-version.ts {#launcher-versionts}
 
-The launcher version rules that `check-repo.js` and the release workflow share. A launcher version is
+The launcher version rules that `check-repo.ts` and the release workflow share. A launcher version is
 a semantic version without build metadata (`x.y.z` or `x.y.z-prerelease`), and it names the release
 tag `launcher-v<version>`.
 
 | Command | What it does |
 |:--------|:-------------|
-| `node tools/ci/launcher-version.js valid <version>` | Exit code `0` if it is a launcher version, `1` if not. |
-| `node tools/ci/launcher-version.js compare <a> <b>` | Prints `-1`, `0` or `1` (semantic version order). |
-| `node tools/ci/launcher-version.js newest <version> [<other>...]` | Exit code `0` if `<version>` is newer than every other one that counts: a release is compared with the other releases only, a prerelease with everything. Otherwise it prints the newer or equal one and exits with `1`. Others that are not launcher versions are skipped with a warning. |
-| `node tools/ci/launcher-version.js nuget <version>` | Prints the version as Squirrel's package names spell it. |
-| `node tools/ci/launcher-version.js from-nupkg <file name>` | Prints the version in a `*-full.nupkg` file name, or exits with `1` if there is none. |
+| `bun tools/ci/launcher-version.ts valid <version>` | Exit code `0` if it is a launcher version, `1` if not. |
+| `bun tools/ci/launcher-version.ts compare <a> <b>` | Prints `-1`, `0` or `1` (semantic version order). |
+| `bun tools/ci/launcher-version.ts newest <version> [<other>...]` | Exit code `0` if `<version>` is newer than every other one that counts: a release is compared with the other releases only, a prerelease with everything. Otherwise it prints the newer or equal one and exits with `1`. Others that are not launcher versions are skipped with a warning. |
+| `bun tools/ci/launcher-version.ts nuget <version>` | Prints the version as Squirrel's package names spell it. |
+| `bun tools/ci/launcher-version.ts from-nupkg <file name>` | Prints the version in a `*-full.nupkg` file name, or exits with `1` if there is none. |
 
 A usage error, or a `<version>` that is not a launcher version where one is required, exits with `2`.
 

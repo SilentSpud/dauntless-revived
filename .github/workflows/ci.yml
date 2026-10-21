@@ -10,7 +10,7 @@
 #    kit's own tests (unit checks, remote deployment against a local folder, an end-to-end sandbox install)
 #  - the docs site: generated files current, and the same Jekyll build GitHub Pages runs
 #  - repository hygiene: no secrets or game files in the tracked files or in the commits being pushed
-#    (tools/ci/check-repo.js)
+#    (tools/ci/check-repo.ts)
 #
 # Automatic launcher releases are ON: set the repository variable LAUNCHER_AUTO_RELEASE to false
 # (Settings > Secrets and variables > Actions > Variables) to pause them. A push to dauntless-revived that passes
@@ -631,16 +631,28 @@ jobs:
         with:
           node-version: 24
 
-      # sync-roadmap first: build-llms reads the roadmap page it writes.
+      # The version in tools/package.json ("packageManager")
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
+
       - name: Performance report tests
         run: node --test tools/summarize-performance.test.mjs tools/dashboard.test.mjs tools/discord-status.test.mjs
 
+      - name: Tools type check and tests
+        working-directory: tools
+        run: |
+          bun install --frozen-lockfile
+          bun run typecheck
+          bun --no-env-file test zip.test.ts
+
+      # sync-roadmap first: build-llms reads the roadmap page it writes.
       - name: Generated files are current (docs/roadmap.md, docs/llms.txt, docs/llms-full.txt)
         run: |
-          node tools/sync-roadmap.js
-          node tools/build-llms.js
+          bun --no-env-file tools/sync-roadmap.ts
+          bun --no-env-file tools/build-llms.ts
           if ! git diff --exit-code --stat; then
-            echo "::error::Generated docs files are out of date. Run node tools/sync-roadmap.js and node tools/build-llms.js, then commit the result."
+            echo "::error::Generated docs files are out of date. Run bun tools/sync-roadmap.ts and bun tools/build-llms.ts, then commit the result."
             exit 1
           fi
 
@@ -672,9 +684,10 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      # The version in tools/package.json ("packageManager")
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          node-version: 24
+          bun-version-file: tools/package.json
 
       # A secret committed and deleted again within one push is still public in the history, so every
       # commit the push or pull request brings is checked, not only the files at its end.
@@ -697,10 +710,10 @@ jobs:
             since="origin/$DEFAULT_BRANCH"
           fi
           if [ -n "$since" ]; then
-            node tools/ci/check-repo.js --history "$since..HEAD"
+            bun --no-env-file tools/ci/check-repo.ts --history "$since..HEAD"
           else
             echo "::notice::no earlier commit to compare with; only the checked-out files are checked"
-            node tools/ci/check-repo.js
+            bun --no-env-file tools/ci/check-repo.ts
           fi
 
   # The one check branch protection requires. Jobs skipped because their family didn't change count

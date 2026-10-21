@@ -9,12 +9,11 @@
 // adding a page or changing a description. Neither output file has front matter, so Jekyll copies both
 // to the site byte for byte (served at /dauntless-revived/llms.txt and /dauntless-revived/llms-full.txt).
 //
-// Usage (from the repository root): node tools/build-llms.js
-"use strict";
-const fs = require("fs");
-const path = require("path");
+// Usage (from the repository root): bun tools/build-llms.ts
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
 
-const root = path.join(__dirname, "..");
+const root = path.join(import.meta.dir, "..");
 const docs = path.join(root, "docs");
 const SITE = "https://mixutin.github.io/dauntless-revived";
 const REPO = "https://github.com/mixutin/dauntless-revived";
@@ -46,12 +45,24 @@ const FACTS = [
         "deploy server, the metagame backend and the launcher are theirs.",
 ];
 
+interface Page {
+    path: string;
+    body: string;
+    title: string | undefined;
+    description: string | undefined;
+    lang: string;
+    ref: string | undefined;
+    parent: string | undefined;
+    navOrder: number;
+    url: string;
+}
+
 // ---------------------------------------------------------------------------------------------------------
 // Reading pages
 
-function walk(dir, rel = "") {
-    const out = [];
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+function walk(dir: string, rel = ""): string[] {
+    const out: string[] = [];
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
         if (entry.name.startsWith("_") || entry.name.startsWith(".")) continue;
         const relPath = rel ? `${rel}/${entry.name}` : entry.name;
         if (entry.isDirectory()) out.push(...walk(path.join(dir, entry.name), relPath));
@@ -60,21 +71,21 @@ function walk(dir, rel = "") {
     return out;
 }
 
-function parseScalar(raw) {
+function parseScalar(raw: string): string {
     const v = raw.trim();
-    if (v.startsWith('"')) return JSON.parse(v);
+    if (v.startsWith('"')) return JSON.parse(v) as string;
     if (v.startsWith("'")) return v.slice(1, -1).replace(/''/g, "'");
     return v;
 }
 
-function readPage(relPath) {
-    const src = fs.readFileSync(path.join(docs, relPath), "utf8").replace(/\r\n/g, "\n");
+function readPage(relPath: string): Page | null {
+    const src = readFileSync(path.join(docs, relPath), "utf8").replace(/\r\n/g, "\n");
     const m = src.match(/^---\n([\s\S]*?)\n---\n/);
     if (!m) return null; // not a Jekyll page
-    const fm = {};
-    for (const line of m[1].split("\n")) {
+    const fm: Record<string, string> = {};
+    for (const line of m[1]!.split("\n")) {
         const kv = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-        if (kv && kv[2] !== "") fm[kv[1]] = parseScalar(kv[2]);
+        if (kv && kv[2] !== "") fm[kv[1]!] = parseScalar(kv[2]!);
     }
     let url = fm.permalink;
     if (!url) {
@@ -93,16 +104,16 @@ function readPage(relPath) {
     };
 }
 
-const pages = walk(docs).map(readPage).filter(Boolean);
+const pages = walk(docs).map(readPage).filter((p): p is Page => p !== null);
 const byPath = new Map(pages.map(p => [p.path, p]));
 const english = pages.filter(p => p.lang === "en");
 const finnish = pages.filter(p => p.lang === "fi");
 
 // Navigation order: top-level pages by nav_order, each followed by its children.
-function navSort(list) {
-    const cmp = (a, b) => a.navOrder - b.navOrder || String(a.title).localeCompare(String(b.title));
-    const out = [];
-    const add = (p, depth) => {
+function navSort(list: Page[]): Page[] {
+    const cmp = (a: Page, b: Page) => a.navOrder - b.navOrder || String(a.title).localeCompare(String(b.title));
+    const out: Page[] = [];
+    const add = (p: Page, depth: number) => {
         out.push(p);
         if (depth > 2) return;
         list.filter(c => c.parent === p.title).sort(cmp).forEach(c => add(c, depth + 1));
@@ -124,12 +135,14 @@ for (const p of pages) {
 // ---------------------------------------------------------------------------------------------------------
 // FAQ data (_data/faq_*.yml). A small parser for the fixed format documented at the top of that file.
 
-function parseFaqYaml(text) {
-    const items = [];
-    let cur = null;
-    let blockKey = null;
-    let blockLines = [];
-    const fold = lines => {
+type FaqItem = Record<string, string>;
+
+function parseFaqYaml(text: string): FaqItem[] {
+    const items: FaqItem[] = [];
+    let cur: FaqItem | null = null;
+    let blockKey: string | null = null;
+    let blockLines: string[] = [];
+    const fold = (lines: string[]) => {
         while (lines.length && lines[lines.length - 1] === "") lines.pop();
         let out = "";
         let prevText = false;
@@ -141,13 +154,13 @@ function parseFaqYaml(text) {
         return out;
     };
     const flush = () => {
-        if (blockKey) cur[blockKey] = fold(blockLines);
+        if (blockKey && cur) cur[blockKey] = fold(blockLines);
         blockKey = null;
         blockLines = [];
     };
-    const set = (k, v) => {
+    const set = (item: FaqItem, k: string, v: string) => {
         if (v.trim() === ">-") blockKey = k;
-        else cur[k] = parseScalar(v);
+        else item[k] = parseScalar(v);
     };
     for (const line of text.replace(/\r\n/g, "\n").split("\n")) {
         if (blockKey) {
@@ -156,9 +169,9 @@ function parseFaqYaml(text) {
             flush();
         }
         if (line.trim() === "" || /^\s*#/.test(line)) continue;
-        let m;
-        if ((m = line.match(/^- (\w+):\s*(.*)$/))) { cur = {}; items.push(cur); set(m[1], m[2]); }
-        else if (cur && (m = line.match(/^  (\w+):\s*(.*)$/))) set(m[1], m[2]);
+        let m: RegExpMatchArray | null;
+        if ((m = line.match(/^- (\w+):\s*(.*)$/))) { cur = {}; items.push(cur); set(cur, m[1]!, m[2]!); }
+        else if (cur && (m = line.match(/^  (\w+):\s*(.*)$/))) set(cur, m[1]!, m[2]!);
         else throw new Error(`FAQ data: cannot parse line: ${line}`);
     }
     flush();
@@ -169,28 +182,28 @@ function parseFaqYaml(text) {
 }
 
 // [text](setup/host.md#anchor) -> [text](https://.../setup/host.html#anchor), like _includes/faq_resolve.html.
-function resolveSourceLinks(md, where) {
-    return md.replace(/\]\(([\w./-]+\.md)(#[^)\s]*)?\)/g, (all, p, anchor) => {
+function resolveSourceLinks(md: string, where: string): string {
+    return md.replace(/\]\(([\w./-]+\.md)(#[^)\s]*)?\)/g, (all, p: string, anchor: string | undefined) => {
         const target = byPath.get(p);
         if (!target) throw new Error(`${where}: link to missing page ${p}`);
         return `](${target.url}${anchor || ""})`;
     });
 }
 
-function faqMarkdown(lang) {
+function faqMarkdown(lang: string): string {
     const file = path.join(docs, "_data", `faq_${lang}.yml`);
-    return parseFaqYaml(fs.readFileSync(file, "utf8"))
-        .map(it => `## ${it.q}\n\n${resolveSourceLinks(it.a, `faq_${lang}.yml#${it.id}`)}\n`)
+    return parseFaqYaml(readFileSync(file, "utf8"))
+        .map(it => `## ${it.q}\n\n${resolveSourceLinks(it.a!, `faq_${lang}.yml#${it.id}`)}\n`)
         .join("\n");
 }
 
 // ---------------------------------------------------------------------------------------------------------
 // Markdown for llms-full.txt
 
-function plainMarkdown(page) {
-    const vars = new Map();
-    const pageUrl = v => {
-        const target = byPath.get(vars.get(v));
+function plainMarkdown(page: Page): string {
+    const vars = new Map<string, string>();
+    const pageUrl = (v: string) => {
+        const target = byPath.get(vars.get(v) ?? "");
         if (!target) throw new Error(`${page.path}: Liquid variable ${v} does not name a known page`);
         return target.url;
     };
@@ -204,11 +217,11 @@ function plainMarkdown(page) {
             const out = seg
                 .replace(/\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}\n?/g, "")
                 .replace(/\{%-?\s*for item in site\.data\.faq_(\w+)\s*-?%\}[\s\S]*?\{%-?\s*endfor\s*-?%\}\n?/g,
-                    (all, lang) => faqMarkdown(lang))
+                    (all, lang: string) => faqMarkdown(lang))
                 .replace(/\{%-?\s*assign\s+(\w+)\s*=\s*site\.pages\s*\|\s*where:\s*"path",\s*"([^"]+)"\s*\|\s*first\s*-?%\}\n?/g,
-                    (all, name, p) => { vars.set(name, p); return ""; })
-                .replace(/\{\{\s*(\w+)\.url\s*\|\s*relative_url\s*\}\}/g, (all, v) => pageUrl(v))
-                .replace(/\{\{\s*['"]([^'"]*)['"]\s*\|\s*relative_url\s*\}\}/g, (all, p) => SITE + p)
+                    (all, name: string, p: string) => { vars.set(name, p); return ""; })
+                .replace(/\{\{\s*(\w+)\.url\s*\|\s*relative_url\s*\}\}/g, (all, v: string) => pageUrl(v))
+                .replace(/\{\{\s*['"]([^'"]*)['"]\s*\|\s*relative_url\s*\}\}/g, (all, p: string) => SITE + p)
                 .replace(/\{\{\s*site\.github\.repository_url\s*\}\}/g, REPO);
             const leftover = out.match(/\{\{[^}]*\}\}|\{%[^%]*%\}/g);
             if (leftover) throw new Error(`${page.path}: unsupported Liquid: ${leftover.slice(0, 3).join(" ")}`);
@@ -232,9 +245,9 @@ function plainMarkdown(page) {
 // ---------------------------------------------------------------------------------------------------------
 // Output
 
-const link = (p, label) => `- [${label || p.title}](${p.url}): ${p.description || ""}`.trimEnd();
+const link = (p: Page, label?: string) => `- [${label || p.title}](${p.url}): ${p.description || ""}`.trimEnd();
 const englishByRef = new Map(english.map(p => [p.ref, p]));
-const pick = ref => englishByRef.get(ref);
+const pick = (ref: string) => englishByRef.get(ref);
 const setupPages = englishOrdered.filter(p => p.ref === "setup/index" || p.parent === "Setup");
 const referencePages = englishOrdered.filter(p => p.ref === "reference/index" || p.parent === "Reference");
 const findingsPages = englishOrdered.filter(p => p.ref === "findings/index" || p.parent === "Findings");
@@ -243,6 +256,7 @@ const listed = new Set([
     ...setupPages.map(p => p.ref), ...referencePages.map(p => p.ref), ...findingsPages.map(p => p.ref),
 ]);
 const projectPages = englishOrdered.filter(p => !listed.has(p.ref));
+const home = pick("index"), faq = pick("faq");
 
 const llms = [
     "# Dauntless Revived",
@@ -253,8 +267,8 @@ const llms = [
     "",
     "## Start here",
     "",
-    pick("index") && link(pick("index"), "Home"),
-    pick("faq") && link(pick("faq"), "FAQ"),
+    home && link(home, "Home"),
+    faq && link(faq, "FAQ"),
     "",
     "## Setup",
     "",
@@ -287,7 +301,7 @@ const llms = [
     "- [Mystic Paradox](https://github.com/pranav158/Mystic-Paradox): A related project porting the same approach to the Dauntless 1.12.0 client.",
     "",
 ]
-    .filter(l => l !== undefined && l !== false)
+    .filter((l): l is string => typeof l === "string")
     .join("\n");
 
 const rule = "=".repeat(80);
@@ -302,8 +316,8 @@ const full = [
     ...englishOrdered.flatMap(p => [rule, `URL: ${p.url}`, rule, "", plainMarkdown(p), ""]),
 ].join("\n");
 
-fs.writeFileSync(path.join(docs, "llms.txt"), llms);
-fs.writeFileSync(path.join(docs, "llms-full.txt"), full);
+await Bun.write(path.join(docs, "llms.txt"), llms);
+await Bun.write(path.join(docs, "llms-full.txt"), full);
 console.log(
     `docs/llms.txt: ${englishOrdered.length} English + ${finnishOrdered.length} Finnish pages, ${llms.length} bytes\n` +
     `docs/llms-full.txt: ${englishOrdered.length} pages, ${Buffer.byteLength(full)} bytes`

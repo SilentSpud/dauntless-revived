@@ -81,7 +81,7 @@ them are named `dauntless-revived-*` (for example `dauntless-revived-metagame`).
 | `native/internal-server/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `legacy/UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
 | `deploy/windows-server/` | The Windows server kit: the scripts, `lib/` (Node helpers `dr-db.js`, `dr-keys.js`, `verify-game.js`) and `tests/`. | none |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends. | `tools/make-friend-kit.ps1` builds the zip outside the repository |
-| `tools/` | `build-llms.js`, `sync-roadmap.js`, `make-friend-kit.ps1`, `make-game-manifest.js`, and in `ci/` what CI uses: `check-repo.js` (the repository check) and `launcher-version.js` (the launcher version rules). | none |
+| `tools/` | `build-llms.ts`, `sync-roadmap.ts`, `make-friend-kit.ps1`, `make-game-manifest.ts`, and in `ci/` what CI uses: `check-repo.ts` (the repository check) and `launcher-version.ts` (the launcher version rules). | none |
 | `docs/` | This site (GitHub Pages, Jekyll). `docs/fi/` holds the Finnish pages, `docs/_data/faq_en.yml` and `faq_fi.yml` the FAQ entries. | none |
 | `.github/` | Issue and pull request templates, the social images, `dependabot.yml`, and the workflows `workflows/ci.yml` and `workflows/launcher-release.yml`. | none |
 
@@ -100,10 +100,10 @@ the tool again.
 
 | File | Made by | From | Run it again when |
 |:-----|:--------|:-----|:------------------|
-| `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` | you change `ROADMAP.md`. The Finnish `docs/fi/roadmap.md` is a hand-written summary, not generated. |
-| `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` (after `sync-roadmap.js`) | The front matter and text of the docs pages, and `docs/_data/faq_*.yml` | you add a page, change a title or description, or change the text of an English page (`llms-full.txt` holds every English page in full). |
+| `docs/roadmap.md` | `bun tools/sync-roadmap.ts` | `ROADMAP.md` | you change `ROADMAP.md`. The Finnish `docs/fi/roadmap.md` is a hand-written summary, not generated. |
+| `docs/llms.txt`, `docs/llms-full.txt` | `bun tools/build-llms.ts` (after `sync-roadmap.ts`) | The front matter and text of the docs pages, and `docs/_data/faq_*.yml` | you add a page, change a title or description, or change the text of an English page (`llms-full.txt` holds every English page in full). |
 | `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js`, in `legacy/UndauntedMetagame` | The deploy server's `player_hunts_table.json` and `matchmaker_hunts_table.json` | the deploy server's hunt tables change. |
-| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | The verified game zip | practically never: the build is pinned. If it changes, rebuild the launcher, which compiles the same file in. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `bun tools/make-game-manifest.ts --zip <BaseGame144.zip>` | The verified game zip | practically never: the build is pinned. If it changes, rebuild the launcher, which compiles the same file in. |
 | `legacy/UndauntedMetagame/src/drizzle/*.sql` and `meta/` | `npm run db:generate`, in `legacy/UndauntedMetagame` | `src/db/schema.ts` | you change the schema. Commit the new migration with the schema change. |
 
 `legacy/UndauntedMetagame/dist/build-info.json` is also generated (by `npm run build`: the commit, with

@@ -10,7 +10,7 @@ Our fork of [Undaunted](https://github.com/SyST3MDeV/Undaunted) (AGPL-3.0). It r
 - **L**: a week or more
 - **XL**: research with no known end
 
-`docs/roadmap.md` is a copy of this file. After changing this file, regenerate it with `node tools/sync-roadmap.js`.
+`docs/roadmap.md` is a copy of this file. After changing this file, regenerate it with `bun tools/sync-roadmap.ts`.
 
 ## Done
 

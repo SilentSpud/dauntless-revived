@@ -429,12 +429,12 @@ this page:
 | Server packages | `npm ci`, `npm run build` and `npm test` in each of the four packages | Windows, Node 24 |
 | Launcher | `npm ci`, `npm run typecheck`, `npm test` and `npm run make`, then `scripts/collect-release.ps1`. The release files (the installer, the Squirrel update files, the zip and `SHA256SUMS.txt`) stay downloadable from the run's **Artifacts** for 7 days (not for pull requests from forks). | Windows, Node 24 |
 | Server kit | Every tracked `.ps1` must parse in Windows PowerShell 5.1, PSScriptAnalyzer must find no errors (when the runner has it), then the three kit tests | Windows PowerShell 5.1 |
-| Docs | `sync-roadmap.js` and `build-llms.js` must change nothing, the site must build with the builder GitHub Pages uses, and the built site must have its main pages | Linux |
-| Repository hygiene | `tools/ci/check-repo.js`: no secrets, keys, databases, logs or game files in the tracked files or in any commit the push or pull request brings, no tracked file that a `.gitignore` rule excludes, the two DLLs match their pins, and the launcher version is valid | Linux |
+| Docs | `sync-roadmap.ts` and `build-llms.ts` must change nothing, the site must build with the builder GitHub Pages uses, and the built site must have its main pages | Linux |
+| Repository hygiene | `tools/ci/check-repo.ts`: no secrets, keys, databases, logs or game files in the tracked files or in any commit the push or pull request brings, no tracked file that a `.gitignore` rule excludes, the two DLLs match their pins, and the launcher version is valid | Linux |
 
 The content server's integration test is the exception: it needs a real game install, so CI does
 not run it. To run the hygiene check yourself before a push:
-`node tools/ci/check-repo.js --history origin/dauntless-revived..HEAD` (without `--history` it checks
+`bun tools/ci/check-repo.ts --history origin/dauntless-revived..HEAD` (without `--history` it checks
 the files only). It never prints what it found inside a file. Its arguments are in
 [Scripts and parameters]({{ scripts_page.url | relative_url }}#ci-workflows-and-tools).
 
@@ -474,22 +474,22 @@ not update to. The details are in the "Checks" section of
 
 | File | Made by | Run it again when |
 |---|---|---|
-| `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` changes. Never edit `docs/roadmap.md` by hand. |
-| `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` | Any English page or the FAQ data changes (`llms-full.txt` holds the text of every English page; `llms.txt` lists every page with its title and description). |
+| `docs/roadmap.md` | `bun tools/sync-roadmap.ts` | `ROADMAP.md` changes. Never edit `docs/roadmap.md` by hand. |
+| `docs/llms.txt`, `docs/llms-full.txt` | `bun tools/build-llms.ts` | Any English page or the FAQ data changes (`llms-full.txt` holds the text of every English page; `llms.txt` lists every page with its title and description). |
 | `legacy/UndauntedMetagame/src/drizzle/*.sql` and `meta/` | `npm run db:generate` in `legacy/UndauntedMetagame` | `src/db/schema.ts` changes. It reads `.env`. Commit the new migration with the schema change. |
 | `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node legacy/UndauntedMetagame/scripts/make-hunt-titles.js` | The deploy server's hunt tables in `legacy/UndauntedDeployServer/src/vendor/` change. |
-| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <game zip>`, after `npm ci` in `legacy/UndauntedContent` (for its zip reader) | Practically never: it describes the pinned 1.4.4 build. The launcher compiles this same file in, so rebuild the launcher afterwards. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `bun tools/make-game-manifest.ts --zip <game zip>` | Practically never: it describes the pinned 1.4.4 build. The launcher compiles this same file in, so rebuild the launcher afterwards. |
 | `legacy/UndauntedLauncher/assets/icon.png`, `icon.ico` and `src/renderer/brand/*.png` | `npm run icon` in `legacy/UndauntedLauncher`, which copies them from `brand/` (`python3 brand/build.py` makes them there) | The launcher icons in `brand/launcher/` or the emblem sizes in `brand/web/` change. The launcher's unit tests fail while a copy is out of date. |
 
-Run the two docs generators with `sync-roadmap.js` first: `build-llms.js` reads the roadmap page it
+Run the two docs generators with `sync-roadmap.ts` first: `build-llms.ts` reads the roadmap page it
 writes. Neither takes arguments; both find the repository root themselves. CI runs both and fails if
 that changes any file.
 `docs/fi/roadmap.md` is a hand-written Finnish summary, not generated.
 
 ```powershell
 Set-Location C:\dr\undaunted
-node tools/sync-roadmap.js
-node tools/build-llms.js
+bun tools/sync-roadmap.ts
+bun tools/build-llms.ts
 git status --short docs
 ```
 
@@ -627,5 +627,5 @@ Paths in each table are relative to the folder named above it.
 | Server DLL | `native/internal-server/dllmain.cpp` (the endpoint table, client and server mode), `constants.h` |
 | Server kit | `deploy/windows-server/*.ps1`; shared pins, paths, the component table and the start order in `DauntlessServer.Common.ps1`; database, key and game-folder helpers in `lib/` |
 | Friend kit | `friend-kit/`, zipped by `tools/make-friend-kit.ps1` |
-| Docs tools | `tools/sync-roadmap.js`, `tools/build-llms.js` |
+| Docs tools | `tools/sync-roadmap.ts`, `tools/build-llms.ts` |
 | CI | `.github/workflows/ci.yml`, `.github/workflows/launcher-release.yml`, `.github/dependabot.yml`, `tools/ci/`, `legacy/UndauntedLauncher/scripts/collect-release.ps1` |

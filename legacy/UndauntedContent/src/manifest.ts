@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-// The manifest is generated from the verified 1.4.4 zip by tools/make-game-manifest.js and checked in
+// The manifest is generated from the verified 1.4.4 zip by tools/make-game-manifest.ts and checked in
 // as data/dauntless-1.4.4.json. The friend launcher compiles in the same file, so what we serve and
 // what it accepts are the same list.
 
@@ -21,7 +21,7 @@ export const EXPECTED_BUILD = "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_
 
 // Every manifest path is one or more segments joined by "/". A segment is letters, digits, "_", "-"
 // and ".", may not start or end with "." (so no "." or ".." and nothing Windows would silently trim),
-// and may not be a Windows device name. Keep in sync with IsSafeManifestPath in tools/make-game-manifest.js.
+// and may not be a Windows device name. Keep in sync with IsSafeManifestPath in tools/make-game-manifest.ts.
 const SEGMENT = /^[A-Za-z0-9_-](?:[A-Za-z0-9_.-]{0,126}[A-Za-z0-9_-])?$/;
 const RESERVED = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?$/i;
 

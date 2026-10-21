@@ -60,8 +60,14 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             legacy/UndauntedLauncher/package.json
-            tools/ci/launcher-version.js
+            tools/ci/launcher-version.ts
+            tools/package.json
           sparse-checkout-cone-mode: false
+
+      # The version in tools/package.json ("packageManager")
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
 
       - name: Work out the version and whether it is published
         id: plan
@@ -91,7 +97,7 @@ jobs:
           else
             fail "unexpected trigger $EVENT"
           fi
-          node tools/ci/launcher-version.js valid "$version" ||
+          bun --no-env-file tools/ci/launcher-version.ts valid "$version" ||
             fail "package.json version $version is not a launcher version (x.y.z or x.y.z-prerelease, no +build metadata)"
           tag="launcher-v$version"
           prerelease=false
@@ -242,8 +248,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          sparse-checkout: tools/ci/launcher-version.js
+          sparse-checkout: |
+            tools/ci/launcher-version.ts
+            tools/package.json
           sparse-checkout-cone-mode: false
+
+      # The version in tools/package.json ("packageManager")
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
 
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -258,7 +271,7 @@ jobs:
       - name: Check and combine the release files
         run: |
           set -euo pipefail
-          nuget="$(node tools/ci/launcher-version.js nuget "$VERSION")"
+          nuget="$(bun --no-env-file tools/ci/launcher-version.ts nuget "$VERSION")"
           cd release
           windows_assets="$(printf '%s\n' DauntlessRevivedLauncher-Setup.exe RELEASES \
             "DauntlessRevivedLauncher-$nuget-full.nupkg" "DauntlessRevivedLauncher-$VERSION-win32-x64.zip" | sort)"
@@ -329,7 +342,7 @@ jobs:
             [ "$ref" = "refs/tags/$TAG" ] || others+=("${ref#refs/tags/launcher-v}")
           done < tags.txt
           rc=0
-          blocking="$(node tools/ci/launcher-version.js newest "$VERSION" "${others[@]}")" || rc=$?
+          blocking="$(bun --no-env-file tools/ci/launcher-version.ts newest "$VERSION" "${others[@]}")" || rc=$?
           case "$rc" in
             0) newest=true ;;
             1) newest=false ;;
@@ -466,8 +479,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          sparse-checkout: tools/ci/launcher-version.js
+          sparse-checkout: |
+            tools/ci/launcher-version.ts
+            tools/package.json
           sparse-checkout-cone-mode: false
+
+      # The version in tools/package.json ("packageManager")
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
 
       # The feed is filled from the published release, never from local files, so it always offers exactly
       # what the release holds; the steps below can be re-run any number of times.
@@ -476,7 +496,7 @@ jobs:
           set -euo pipefail
           fail() { echo "::error::$1"; exit 1; }
           feed=launcher-updates
-          lv() { node tools/ci/launcher-version.js "$@"; }
+          lv() { bun --no-env-file tools/ci/launcher-version.ts "$@"; }
           state="$(gh release view "$TAG" --json isDraft,isPrerelease --jq '"\(.isDraft) \(.isPrerelease)"')"
           [ "$state" = "false false" ] || fail "$TAG is not a published full release (draft, prerelease: $state)"
 

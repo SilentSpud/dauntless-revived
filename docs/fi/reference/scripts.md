@@ -742,8 +742,8 @@ asennuskohtaisesti, nimiä ei.
 
 | Mikä | SHA-256 | Kiinnitetty myös tiedostoissa |
 |:-----|:--------|:------------------------------|
-| Pelizip, 1.4.4 (`BaseGame144.zip`, 10 479 214 119 tavua) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedLauncher/src/main/constants.ts`, sisältöluettelo |
+| Pelizip, 1.4.4 (`BaseGame144.zip`, 10 479 214 119 tavua) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.ts` |
+| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedLauncher/src/main/constants.ts`, sisältöluettelo |
 | `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | samat tiedostot kuin `dxgi.dll`:llä |
 | Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | vain paketissa; sen on vastattava myös nodejs.org:n `SHASUMS256.txt`-tiedostoa |
@@ -860,8 +860,9 @@ eri pelaajamäärillä. Pidä raportit paikallisina kuten muutkin palvelinlokit.
 
 Testit: `node --test tools/summarize-performance.test.mjs`.
 
-Aja nämä repositoriokopiosta Node.js:llä tai Windows PowerShellillä, kuten kunkin kohdalla
-kerrotaan.
+Aja nämä repositoriokopiosta Node.js:llä, Bunilla tai Windows PowerShellillä, kuten kunkin kohdalla
+kerrotaan. `.ts`-työkalut ajetaan Bunilla, sillä versiolla, joka on tiedostossa `tools/package.json`
+(`packageManager`); ne eivät tarvitse `bun install` -komentoa, joka tuo vain tyyppitarkistimen.
 
 ### make-friend-kit.ps1 {#make-friend-kitps1}
 
@@ -888,20 +889,20 @@ committoimattomia muutoksia.
 powershell -ExecutionPolicy Bypass -File tools\make-friend-kit.ps1 -Out D:\dist
 ```
 
-### sync-roadmap.js {#sync-roadmapjs}
+### sync-roadmap.ts {#sync-roadmapts}
 
-`node tools/sync-roadmap.js` ei ota argumentteja. Se tuottaa tiedoston `docs/roadmap.md` uudelleen
+`bun tools/sync-roadmap.ts` ei ota argumentteja. Se tuottaa tiedoston `docs/roadmap.md` uudelleen
 tiedostosta `ROADMAP.md`: etuaineisto (front matter), sisällysluettelo ja tarkistuslista Liquidin
 `raw`-lohkon sisällä, jotta Jekyll jättää sen tekstin rauhaan. Aja se jokaisen `ROADMAP.md`-muutoksen
 jälkeen, äläkä koskaan muokkaa tiedostoa `docs/roadmap.md` käsin. Suomenkielinen
 `docs/fi/roadmap.md` on käsin kirjoitettu tiivistelmä, jota skripti ei tuota.
 
-### build-llms.js {#build-llmsjs}
+### build-llms.ts {#build-llmsts}
 
-`node tools/build-llms.js` ei ota argumentteja. Se kirjoittaa tiedostot `docs/llms.txt` (hakemisto
+`bun tools/build-llms.ts` ei ota argumentteja. Se kirjoittaa tiedostot `docs/llms.txt` (hakemisto
 kaikista sivuista) ja `docs/llms-full.txt` (kaikki englanninkieliset sivut Markdownina yhdessä
 tiedostossa) sivujen etuaineistosta ja tekstistä sekä tiedostoista `docs/_data/faq_en.yml` ja
-`faq_fi.yml`. Aja se, kun lisäät sivun tai muutat otsikkoa tai kuvausta, sekä `sync-roadmap.js`:n
+`faq_fi.yml`. Aja se, kun lisäät sivun tai muutat otsikkoa tai kuvausta, sekä `sync-roadmap.ts`:n
 jälkeen, koska tiekarttasivu on yksi sen lähteistä.
 
 Se varoittaa sivusta, jolla ei ole `description`-kenttää. Se pysähtyy virheeseen, kun se kohtaa
@@ -916,14 +917,14 @@ Liquidia, jota se ei ymmärrä. Sivuilla saa käyttää vain:
 Virhe on myös UKK-datan linkki sivulle, jota ei ole olemassa, sekä sivulinkki, jonka `assign` nimeää
 sivun, jota ei ole olemassa.
 
-### make-game-manifest.js {#make-game-manifestjs}
+### make-game-manifest.ts {#make-game-manifestts}
 
 Rakentaa sisältöluettelon `legacy/UndauntedContent/data/dauntless-1.4.4.json` tarkistetusta pelizipistä.
 Sisältöpalvelin jakaa vain siinä luetellut tiedostot, ja käynnistin kääntää saman tiedoston
 sisäänsä ja torjuu kaikki muut tiedostot. Aja se vain, kun luettelon täytyy muuttua.
 
 ```text
-node tools/make-game-manifest.js --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
+bun tools/make-game-manifest.ts --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
                                  [--compare-all] [--zip-sha256 <hex>] [--skip-zip-hash]
 ```
 
@@ -941,9 +942,8 @@ turvallinen (sama sääntö, jota sisältöpalvelin käyttää), ettei kaksi pol
 kirjainkoon osalta, että `Version.txt` nimeää 1.4.4-koontiversion ja että exe vastaa kiinnitettyä
 tiivistettä. Se tulostaa tiedostojen määrän, tavujen kokonaismäärän ja luettelon oman SHA-256:n. Se
 pyörii matalalla prioriteetilla, lukee zipin kahdesti (noin 21 Gt luettavaa), päättyy paluukoodilla
-`1` missä tahansa virheessä ja tarvitsee `yauzl`-kirjaston: aja ensin `npm ci` kansiossa
-`legacy/UndauntedContent` tai `legacy/UndauntedLauncher`. Kun olet tuottanut luettelon uudelleen, käännä
-käynnistin uudelleen.
+`1` missä tahansa virheessä. Se lukee zipin itse (`tools/zip.ts`, myös Zip64), joten mitään ei
+tarvitse asentaa ensin. Kun olet tuottanut luettelon uudelleen, käännä käynnistin uudelleen.
 
 ## CI-työnkulut ja -työkalut {#ci-workflows-and-tools}
 
@@ -958,10 +958,10 @@ muuttuja `LAUNCHER_AUTO_RELEASE`, joka pysäyttää automaattiset julkaisut, on 
 | `.github/workflows/ci.yml` (**CI**) | Jokaisella pushilla mihin tahansa haaraan, jokaisella pull requestilla ja Actions > **CI** > **Run workflow** | ei mitään | Kääntää ja testaa neljä palvelinohjelmaa, käynnistimen ja Windows-palvelinpaketin, tarkistaa dokumentaation ja repositorion sekä säilyttää käynnistimen julkaisutiedostot 7 päivää (ei forkeista tulevissa pull requesteissa). Kun `mixutin/dauntless-revived`-repositorion `dauntless-revived`-haaraan tehty push on läpäissyt kaikki tarkistukset, se julkaisee sen jälkeen käynnistimen version, jos versiolla ei ole vielä julkaisua, paitsi jos `LAUNCHER_AUTO_RELEASE` on `false`. |
 | `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** `dauntless-revived`-haaralle; `ci.yml` kutsuu sitä | Käsin ei mitään. `ci.yml` antaa `version`-arvon (sen on oltava sama kuin `legacy/UndauntedLauncher/package.json`-tiedoston versio kyseisessä commitissa) ja `artifact`-arvon (sen kääntämät julkaisutiedostot). | Julkaisee käynnistimen version julkaisuna `launcher-v<versio>`, luo sen tagin, tekee jokaiselle tiedostolle allekirjoitetun käännöksen alkuperätodistuksen (build provenance attestation) ja osoittaa `launcher-updates`-kanavan siihen. Käsin ajettuna se kääntää ja testaa commitin itse; jo julkaistulla versiolla se vain päivittää kanavan siihen. Se kieltäytyy toimimasta muussa haarassa kuin `dauntless-revived`, joka on oletushaara. |
 
-### tools/ci/check-repo.js {#check-repojs}
+### tools/ci/check-repo.ts {#check-repots}
 
 ```text
-node tools/ci/check-repo.js [--history <revision range>]
+bun tools/ci/check-repo.ts [--history <revision range>]
 ```
 
 Repositorion siisteystarkistus. Ilman argumentteja se tarkistaa jokaisen versionhallinnassa olevan
@@ -984,22 +984,22 @@ tiedoston:
 | `--history <revision range>` | Tarkistaa lisäksi jokaisen tiedostoversion, jonka välin commitit lisäsivät tai muuttivat, esimerkiksi `origin/dauntless-revived..HEAD` ennen pushia. `--history HEAD` tarkistaa koko historian. Commitoitu ja taas poistettu salaisuus on yhä historiassa, joten avain on vaihdettava. |
 
 Se ei koskaan tulosta osuman sisältöä, vain tiedoston, rivin ja osuman lajin. Paluukoodi `0` tarkoittaa,
-ettei mitään löytynyt, `1` ongelmaa ja `2` käyttövirhettä. Sillä ei ole riippuvuuksia, joten se ei
-tarvitse `npm ci`:tä.
+ettei mitään löytynyt, `1` ongelmaa ja `2` käyttövirhettä. Sillä ei ole riippuvuuksia, joten mitään ei
+tarvitse asentaa ensin.
 
-### tools/ci/launcher-version.js {#launcher-versionjs}
+### tools/ci/launcher-version.ts {#launcher-versionts}
 
-Käynnistimen versiosäännöt, jotka `check-repo.js` ja julkaisutyönkulku jakavat. Käynnistimen versio on
+Käynnistimen versiosäännöt, jotka `check-repo.ts` ja julkaisutyönkulku jakavat. Käynnistimen versio on
 semanttinen versio ilman build-metatietoja (`x.y.z` tai `x.y.z-prerelease`), ja se nimeää
 julkaisutagin `launcher-v<versio>`.
 
 | Komento | Mitä se tekee |
 |:--------|:--------------|
-| `node tools/ci/launcher-version.js valid <version>` | Paluukoodi `0`, jos se on käynnistimen versio, muuten `1`. |
-| `node tools/ci/launcher-version.js compare <a> <b>` | Tulostaa `-1`, `0` tai `1` (semanttisten versioiden järjestys). |
-| `node tools/ci/launcher-version.js newest <version> [<other>...]` | Paluukoodi `0`, jos `<version>` on uudempi kuin jokainen muu huomioon otettava: julkaisua verrataan vain muihin julkaisuihin, esiversiota kaikkiin. Muuten se tulostaa uudemman tai yhtä uuden version ja päättyy paluukoodilla `1`. Muut, jotka eivät ole käynnistimen versioita, ohitetaan varoituksen kera. |
-| `node tools/ci/launcher-version.js nuget <version>` | Tulostaa version siinä muodossa, jossa se on Squirrelin pakettien nimissä. |
-| `node tools/ci/launcher-version.js from-nupkg <file name>` | Tulostaa `*-full.nupkg`-tiedostonimessä olevan version, tai päättyy paluukoodilla `1`, jos siinä ei ole versiota. |
+| `bun tools/ci/launcher-version.ts valid <version>` | Paluukoodi `0`, jos se on käynnistimen versio, muuten `1`. |
+| `bun tools/ci/launcher-version.ts compare <a> <b>` | Tulostaa `-1`, `0` tai `1` (semanttisten versioiden järjestys). |
+| `bun tools/ci/launcher-version.ts newest <version> [<other>...]` | Paluukoodi `0`, jos `<version>` on uudempi kuin jokainen muu huomioon otettava: julkaisua verrataan vain muihin julkaisuihin, esiversiota kaikkiin. Muuten se tulostaa uudemman tai yhtä uuden version ja päättyy paluukoodilla `1`. Muut, jotka eivät ole käynnistimen versioita, ohitetaan varoituksen kera. |
+| `bun tools/ci/launcher-version.ts nuget <version>` | Tulostaa version siinä muodossa, jossa se on Squirrelin pakettien nimissä. |
+| `bun tools/ci/launcher-version.ts from-nupkg <file name>` | Tulostaa `*-full.nupkg`-tiedostonimessä olevan version, tai päättyy paluukoodilla `1`, jos siinä ei ole versiota. |
 
 Käyttövirhe tai `<version>`, joka ei ole käynnistimen versio siellä, missä sellainen vaaditaan,
 päättyy paluukoodilla `2`.

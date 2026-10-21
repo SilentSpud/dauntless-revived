@@ -155,7 +155,7 @@ install root, as before.
 | `deploy/openbsd-server/` | Separate OpenBSD 7.9 control-plane port: rc.d services, PF redirect/allowlist rules and the restricted SSH launcher for a Linux game worker |
 | `deploy/unix-common/` | Shared Linux/OpenBSD config, SQLite/bootstrap, invite and compatibility-runner helpers; the Windows kit does not use these |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends' PCs |
-| `tools/` | `sync-roadmap.js` and `build-llms.js` (the generated docs files), `make-friend-kit.ps1`, `make-game-manifest.js`, and in `ci/` the checks CI runs |
+| `tools/` | `sync-roadmap.ts` and `build-llms.ts` (the generated docs files), `make-friend-kit.ps1`, `make-game-manifest.ts`, and in `ci/` the checks CI runs |
 | `brand/` | The logo, emblem and palette, and `build.py`, which renders every size the launcher, the docs and GitHub use |
 | `docs/` | The documentation site (GitHub Pages), with the Finnish pages in `docs/fi/` |
 | `.github/` | The CI workflows (`ci.yml`, `launcher-release.yml`), Dependabot, and the issue and pull request templates |

@@ -15,7 +15,7 @@ Roadmap step: <!-- e.g. 2.7, or "none" -->
 
 - [ ] No keys, tokens, `.env` files, databases, backups, logs or game files are included
 - [ ] Docs updated if behaviour changed
-- [ ] If `ROADMAP.md` changed, I ran `node tools/sync-roadmap.js`
+- [ ] If `ROADMAP.md` changed, I ran `bun tools/sync-roadmap.ts`
 - [ ] I agree that this contribution is licensed under AGPL-3.0-only, like the rest of the project
 
 <!-- Security fixes: please report the problem privately first (see SECURITY.md) and coordinate before opening a public pull request. -->

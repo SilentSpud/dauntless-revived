@@ -1,5 +1,5 @@
 //! The game manifest (`src/manifest.ts`): the file list generated from the verified 1.4.4 zip by
-//! tools/make-game-manifest.js. The friend launcher compiles in the same file, so what is served and
+//! tools/make-game-manifest.ts. The friend launcher compiles in the same file, so what is served and
 //! what it accepts are the same list; this binary does too (`CONTENT_MANIFEST` names another).
 
 use std::collections::{HashMap, HashSet};
@@ -63,7 +63,7 @@ fn is_reserved(segment: &str) -> bool {
             && stem.as_bytes()[3].is_ascii_digit())
 }
 
-/// `IsSafeManifestPath`. Keep in sync with tools/make-game-manifest.js.
+/// `IsSafeManifestPath`. Keep in sync with tools/make-game-manifest.ts.
 pub fn is_safe_manifest_path(value: &str) -> bool {
     !value.is_empty() && value.len() <= 400 && value.split('/').all(|s| is_safe_segment(s) && !is_reserved(s))
 }

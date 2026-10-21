@@ -19,7 +19,7 @@ Community chat: **[Dauntless Revived Discord](https://discord.gg/ZJRprHzsgu)**. 
    config. If you commit something like that by accident, say so in the pull request, and rotate
    any key it exposed.
 4. **Keep pull requests small and focused.** Say what you changed, how you tested it, and which
-   roadmap step it belongs to. If you change `ROADMAP.md`, run `node tools/sync-roadmap.js` so the
+   roadmap step it belongs to. If you change `ROADMAP.md`, run `bun tools/sync-roadmap.ts` so the
    docs site copy matches. Update the docs when behaviour changes. A new or changed setting, route,
    port or script belongs in the [Reference](https://mixutin.github.io/dauntless-revived/reference/)
    pages (`docs/reference/`, English and Finnish) and in the component's `.env.example`.
@@ -48,8 +48,8 @@ hygiene checks, which need only Node.js.
 | Server packages (`legacy/UndauntedMetagame`, `legacy/UndauntedGateway`, `legacy/UndauntedContent`, `legacy/UndauntedDeployServer`): build and unit tests | In the package folder: `npm ci`, `npm run build`, `npm test` |
 | Launcher: typecheck, unit tests, installer | In `legacy/UndauntedLauncher`: `npm ci`, `npm run typecheck`, `npm test`, `npm run make` |
 | Windows Server kit, in Windows PowerShell 5.1: every script parses, PSScriptAnalyzer finds no errors, and the kit's tests pass | `npm ci` in `legacy/UndauntedGateway` first. Then, in PowerShell from the repository root, `powershell -NoProfile -ExecutionPolicy Bypass -File deploy\windows-server\tests\Test-KitUnit.ps1`, and the same for `Test-DeployRemote.ps1`. Last, the same for `Test-Sandbox.ps1` with `-SandboxDir "$env:TEMP\dr-sandbox"` added (a few minutes; it uses loopback ports 62000-62499 only and deletes that folder at the end) |
-| Docs: generated files are current, and the site builds the way GitHub Pages builds it | `node tools/sync-roadmap.js` and `node tools/build-llms.js` must leave `git diff` empty |
-| No secrets or game files are committed, not even in a commit that a later one undoes, and the launcher version is valid | `node tools/ci/check-repo.js --history origin/dauntless-revived..HEAD` (without `--history`: the files only) |
+| Docs: generated files are current, and the site builds the way GitHub Pages builds it | `bun tools/sync-roadmap.ts` and `bun tools/build-llms.ts` must leave `git diff` empty |
+| No secrets or game files are committed, not even in a commit that a later one undoes, and the launcher version is valid | `bun tools/ci/check-repo.ts --history origin/dauntless-revived..HEAD` (without `--history`: the files only) |
 
 CodeQL (the repository's code scanning default setup) also scans the code for security problems, and
 Dependabot proposes dependency updates.

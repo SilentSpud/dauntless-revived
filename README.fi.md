@@ -170,7 +170,7 @@ edelleen asennuskansion ylätasolle kuten ennenkin.
 | `deploy/openbsd-server/` | Erillinen OpenBSD 7.9 -ohjauspuoli: rc.d-palvelut, PF-säännöt ja rajattu SSH-käynnistin Linux-pelityöntekijälle |
 | `deploy/unix-common/` | Linuxin ja OpenBSD:n yhteiset asetusten, SQLite-bootstrapin, kutsujen ja yhteensopivuusajon apuohjelmat; Windows-paketti ei käytä niitä |
 | `friend-kit/` | Vain Tailscalea käyttävät asennus- ja käynnistysohjelmat kavereiden koneille |
-| `tools/` | `sync-roadmap.js` ja `build-llms.js` (ohjesivuston tuotetut tiedostot), `make-friend-kit.ps1`, `make-game-manifest.js` sekä kansiossa `ci/` CI:n tarkistukset |
+| `tools/` | `sync-roadmap.ts` ja `build-llms.ts` (ohjesivuston tuotetut tiedostot), `make-friend-kit.ps1`, `make-game-manifest.ts` sekä kansiossa `ci/` CI:n tarkistukset |
 | `brand/` | Logo, tunnus ja väripaletti sekä `build.py`, joka tekee niistä kaikki käynnistimen, ohjesivuston ja GitHubin käyttämät koot |
 | `docs/` | Ohjesivusto (GitHub Pages); suomenkieliset sivut ovat kansiossa `docs/fi/` |
 | `.github/` | CI:n työnkulut (`ci.yml`, `launcher-release.yml`), Dependabot sekä ilmoitus- ja muutospyyntöpohjat |

@@ -85,7 +85,7 @@ niiden npm-pakettien nimet ovat muotoa `dauntless-revived-*` (esimerkiksi `daunt
 | `native/internal-server/` | Palvelin-DLL:n C++-lähdekoodi: Visual Studio -ratkaisu, `dllmain.cpp` (jossa on osoitetaulukko, josta `Game.ini` generoidaan), pelimoottorin otsaketiedostot kansiossa `SDK/` sekä `MinHook/`. Mikään tämän repositorion skripti tai työnkulku ei käännä sitä; kaikki käyttävät valmiiksi käännettyjä DLL-tiedostoja kansiosta `legacy/UndauntedLauncher/assets/`. MinHookin include-korjauksesta (syyskuu 2026) alkaen se kääntyy Visual Studio 2022 Build Toolsilla (Release, x64), mutta täällä käännettyä DLL:ää ei jaeta. | Visual Studion tuotokset (`x64/`, `*.dll` ja vastaavat) |
 | `deploy/windows-server/` | Windows-palvelinpaketti: skriptit, `lib/` (Node-apurit `dr-db.js`, `dr-keys.js` ja `verify-game.js`) ja `tests/`. | ei mitään |
 | `friend-kit/` | Kutsuttujen kavereiden asennus- ja pelaamisskriptit, vain Tailscalen kautta pelaamiseen. | `tools/make-friend-kit.ps1` rakentaa zip-tiedoston repositorion ulkopuolelle |
-| `tools/` | `build-llms.js`, `sync-roadmap.js`, `make-friend-kit.ps1`, `make-game-manifest.js` sekä kansiossa `ci/` CI:n käyttämät `check-repo.js` (repositorion tarkistus) ja `launcher-version.js` (käynnistimen versiosäännöt). | ei mitään |
+| `tools/` | `build-llms.ts`, `sync-roadmap.ts`, `make-friend-kit.ps1`, `make-game-manifest.ts` sekä kansiossa `ci/` CI:n käyttämät `check-repo.ts` (repositorion tarkistus) ja `launcher-version.ts` (käynnistimen versiosäännöt). | ei mitään |
 | `docs/` | Tämä sivusto (GitHub Pages, Jekyll). `docs/fi/` sisältää suomenkieliset sivut, `docs/_data/faq_en.yml` ja `faq_fi.yml` usein kysytyt kysymykset. | ei mitään |
 | `.github/` | Issue- ja pull request -pohjat, jakokuvat (social images), `dependabot.yml` sekä työnkulut `workflows/ci.yml` ja `workflows/launcher-release.yml`. | ei mitään |
 
@@ -105,10 +105,10 @@ ja aja työkalu uudelleen.
 
 | Tiedosto | Tekijä | Lähde | Aja uudelleen, kun |
 |:---------|:-------|:------|:-------------------|
-| `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` | muutat `ROADMAP.md`-tiedostoa. Suomenkielinen `docs/fi/roadmap.md` on käsin kirjoitettu tiivistelmä, ei generoitu. |
-| `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` (`sync-roadmap.js`-ajon jälkeen) | Dokumentaatiosivujen front matter ja teksti sekä `docs/_data/faq_*.yml` | lisäät sivun, muutat otsikkoa tai kuvausta tai muutat englanninkielisen sivun tekstiä (`llms-full.txt` sisältää jokaisen englanninkielisen sivun kokonaan). |
+| `docs/roadmap.md` | `bun tools/sync-roadmap.ts` | `ROADMAP.md` | muutat `ROADMAP.md`-tiedostoa. Suomenkielinen `docs/fi/roadmap.md` on käsin kirjoitettu tiivistelmä, ei generoitu. |
+| `docs/llms.txt`, `docs/llms-full.txt` | `bun tools/build-llms.ts` (`sync-roadmap.ts`-ajon jälkeen) | Dokumentaatiosivujen front matter ja teksti sekä `docs/_data/faq_*.yml` | lisäät sivun, muutat otsikkoa tai kuvausta tai muutat englanninkielisen sivun tekstiä (`llms-full.txt` sisältää jokaisen englanninkielisen sivun kokonaan). |
 | `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js` kansiossa `legacy/UndauntedMetagame` | Deploy-palvelimen `player_hunts_table.json` ja `matchmaker_hunts_table.json` | deploy-palvelimen metsästystaulukot muuttuvat. |
-| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | Tarkistettu pelin zip-tiedosto | käytännössä ei koskaan: versio on kiinnitetty. Jos se muuttuu, käännä myös käynnistin uudelleen, sillä sen sisään käännetään sama tiedosto. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `bun tools/make-game-manifest.ts --zip <BaseGame144.zip>` | Tarkistettu pelin zip-tiedosto | käytännössä ei koskaan: versio on kiinnitetty. Jos se muuttuu, käännä myös käynnistin uudelleen, sillä sen sisään käännetään sama tiedosto. |
 | `legacy/UndauntedMetagame/src/drizzle/*.sql` ja `meta/` | `npm run db:generate` kansiossa `legacy/UndauntedMetagame` | `src/db/schema.ts` | muutat skeemaa. Committoi uusi migraatio samaan committiin skeeman muutoksen kanssa. |
 
 Myös `legacy/UndauntedMetagame/dist/build-info.json` on generoitu (`npm run build` kirjaa siihen commitin,

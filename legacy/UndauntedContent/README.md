@@ -137,10 +137,10 @@ If an edit breaks the file, the last good version stays up and a warning is logg
 ## The manifest
 
 `data/dauntless-1.4.4.json` is generated from the verified game zip by
-`tools/make-game-manifest.js` (from the repository root):
+`tools/make-game-manifest.ts` (from the repository root):
 
 ```powershell
-node tools/make-game-manifest.js --zip <BaseGame144.zip> --compare-dir C:\D144\Dauntless
+bun tools/make-game-manifest.ts --zip <BaseGame144.zip> --compare-dir C:\D144\Dauntless
 ```
 
 It hashes the whole zip first and stops unless it matches the pinned SHA-256

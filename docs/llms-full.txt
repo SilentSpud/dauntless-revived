@@ -7041,7 +7041,7 @@ them are named `dauntless-revived-*` (for example `dauntless-revived-metagame`).
 | `native/internal-server/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `legacy/UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
 | `deploy/windows-server/` | The Windows server kit: the scripts, `lib/` (Node helpers `dr-db.js`, `dr-keys.js`, `verify-game.js`) and `tests/`. | none |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends. | `tools/make-friend-kit.ps1` builds the zip outside the repository |
-| `tools/` | `build-llms.js`, `sync-roadmap.js`, `make-friend-kit.ps1`, `make-game-manifest.js`, and in `ci/` what CI uses: `check-repo.js` (the repository check) and `launcher-version.js` (the launcher version rules). | none |
+| `tools/` | `build-llms.ts`, `sync-roadmap.ts`, `make-friend-kit.ps1`, `make-game-manifest.ts`, and in `ci/` what CI uses: `check-repo.ts` (the repository check) and `launcher-version.ts` (the launcher version rules). | none |
 | `docs/` | This site (GitHub Pages, Jekyll). `docs/fi/` holds the Finnish pages, `docs/_data/faq_en.yml` and `faq_fi.yml` the FAQ entries. | none |
 | `.github/` | Issue and pull request templates, the social images, `dependabot.yml`, and the workflows `workflows/ci.yml` and `workflows/launcher-release.yml`. | none |
 
@@ -7060,10 +7060,10 @@ the tool again.
 
 | File | Made by | From | Run it again when |
 |:-----|:--------|:-----|:------------------|
-| `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` | you change `ROADMAP.md`. The Finnish `docs/fi/roadmap.md` is a hand-written summary, not generated. |
-| `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` (after `sync-roadmap.js`) | The front matter and text of the docs pages, and `docs/_data/faq_*.yml` | you add a page, change a title or description, or change the text of an English page (`llms-full.txt` holds every English page in full). |
+| `docs/roadmap.md` | `bun tools/sync-roadmap.ts` | `ROADMAP.md` | you change `ROADMAP.md`. The Finnish `docs/fi/roadmap.md` is a hand-written summary, not generated. |
+| `docs/llms.txt`, `docs/llms-full.txt` | `bun tools/build-llms.ts` (after `sync-roadmap.ts`) | The front matter and text of the docs pages, and `docs/_data/faq_*.yml` | you add a page, change a title or description, or change the text of an English page (`llms-full.txt` holds every English page in full). |
 | `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node scripts/make-hunt-titles.js`, in `legacy/UndauntedMetagame` | The deploy server's `player_hunts_table.json` and `matchmaker_hunts_table.json` | the deploy server's hunt tables change. |
-| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <BaseGame144.zip>` | The verified game zip | practically never: the build is pinned. If it changes, rebuild the launcher, which compiles the same file in. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `bun tools/make-game-manifest.ts --zip <BaseGame144.zip>` | The verified game zip | practically never: the build is pinned. If it changes, rebuild the launcher, which compiles the same file in. |
 | `legacy/UndauntedMetagame/src/drizzle/*.sql` and `meta/` | `npm run db:generate`, in `legacy/UndauntedMetagame` | `src/db/schema.ts` | you change the schema. Commit the new migration with the schema change. |
 
 `legacy/UndauntedMetagame/dist/build-info.json` is also generated (by `npm run build`: the commit, with
@@ -8127,17 +8127,17 @@ DLL is an offset into the pinned exe, so the exe hash is what keeps the DLL safe
 | Engine | Unreal Engine `4.25.3-239827+++dauntless+rel-1.4.4`, the version the DLL's SDK headers were generated from |
 | Exe | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe`, SHA-256 `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4`, 103,673,520 bytes |
 | Game zip | `BaseGame144.zip`, SHA-256 `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D`, 10,479,214,119 bytes. Its top folder is `Dauntless\`, which contains `Archon\`. |
-| Content manifest | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 files, 10,893,512,875 bytes, with a `build` field equal to the build string. It lists no ini files (the cooked config is inside the paks, and the user config lives outside the game folder) and not the two DLLs. Generated with `tools/make-game-manifest.js`. |
+| Content manifest | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 files, 10,893,512,875 bytes, with a `build` field equal to the build string. It lists no ini files (the cooked config is inside the paks, and the user config lives outside the game folder) and not the two DLLs. Generated with `tools/make-game-manifest.ts`. |
 | Phoenix's own manifest | `Manifest.bin.json` in the game folder: 406 entries. Our 410 are those plus `Manifest.bin.json` itself, `Manifest.bin` and two empty `debug.log` files. How we checked it is in [Host a server, step 2](https://mixutin.github.io/dauntless-revived/setup/host.html#verify-the-build) and [Verifying game files](https://mixutin.github.io/dauntless-revived/findings/verification.html). |
 
 ### Who checks the pins
 
 | Check | Launcher | Friend kit | Server kit installer | Elsewhere |
 |:------|:---------|:-----------|:---------------------|:----------|
-| Game zip SHA-256 | Not applicable: it downloads single files, not the zip | `setup.ps1 -Zip` | A resumable download is verified against it; the zip is hashed again before extraction | `tools/make-game-manifest.js` refuses any other zip unless it is run with `--zip-sha256` or `--skip-zip-hash`; even then it refuses a zip whose `Version.txt` or exe differs from the pins |
-| Exe SHA-256 | Before every PLAY | `setup.ps1`, and `play.ps1` on every launch | Before anything runs from the game folder; stops if it is wrong (not enforced under `-Sandbox`) | `tools/make-game-manifest.js` |
+| Game zip SHA-256 | Not applicable: it downloads single files, not the zip | `setup.ps1 -Zip` | A resumable download is verified against it; the zip is hashed again before extraction | `tools/make-game-manifest.ts` refuses any other zip unless it is run with `--zip-sha256` or `--skip-zip-hash`; even then it refuses a zip whose `Version.txt` or exe differs from the pins |
+| Exe SHA-256 | Before every PLAY | `setup.ps1`, and `play.ps1` on every launch | Before anything runs from the game folder; stops if it is wrong (not enforced under `-Sandbox`) | `tools/make-game-manifest.ts` |
 | DLL SHA-256s | On install, and before every PLAY (repairs them) | `setup.ps1` before and after copying; `play.ps1` on every launch | Before and after copying | `tools/make-friend-kit.ps1` before packing |
-| Build string | The compiled-in manifest must carry it, or the launcher refuses the manifest | Not checked | Warns if `Version.txt` names another build | `tools/make-game-manifest.js` checks `Version.txt` inside the zip; the content server only logs a warning for a manifest with another build |
+| Build string | The compiled-in manifest must carry it, or the launcher refuses the manifest | Not checked | Warns if `Version.txt` names another build | `tools/make-game-manifest.ts` checks `Version.txt` inside the zip; the content server only logs a warning for a manifest with another build |
 | Every game file | Each download is checked against the compiled-in manifest; Repair re-hashes every file | Not checked | `lib/verify-game.js` hashes every file against the manifest | The content server checks sizes at startup and serves only listed files |
 
 ### Where the pins live
@@ -8147,11 +8147,11 @@ together, and only together with the files they describe.
 
 | Value | Files |
 |:------|:------|
-| Exe SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test) |
+| Exe SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test) |
 | Exe size | `legacy/UndauntedLauncher/src/main/constants.ts` and `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test). The other files check the hash only. |
 | DLL SHA-256s | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-friend-kit.ps1` |
-| Zip SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (with the byte count), `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| Build string | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.js`, the manifest JSON |
+| Zip SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (with the byte count), `friend-kit/setup.ps1`, `tools/make-game-manifest.ts` |
+| Build string | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.ts`, the manifest JSON |
 | Changelist | `deploy/windows-server/DauntlessServer.Common.ps1`, which writes the metagame's `TARGET_CHANGELIST` |
 
 ---
@@ -8936,8 +8936,8 @@ install; the names cannot.
 
 | What | SHA-256 | Also pinned in |
 |:-----|:--------|:---------------|
-| Game zip, 1.4.4 (`BaseGame144.zip`, 10,479,214,119 bytes) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedLauncher/src/main/constants.ts`, the content manifest |
+| Game zip, 1.4.4 (`BaseGame144.zip`, 10,479,214,119 bytes) | `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D` | `friend-kit/setup.ps1`, `tools/make-game-manifest.ts` |
+| `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedLauncher/src/main/constants.ts`, the content manifest |
 | `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | the same files as `dxgi.dll` |
 | Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | only the kit; it must also match nodejs.org's `SHASUMS256.txt` |
@@ -9050,7 +9050,9 @@ sessions at different player counts. Keep reports local with the other operation
 
 Tests: `node --test tools/summarize-performance.test.mjs`.
 
-Run these from a checkout, with Node.js or Windows PowerShell as noted.
+Run these from a checkout, with Node.js, Bun or Windows PowerShell as noted. The `.ts` tools run on
+Bun, the version in `tools/package.json` (`packageManager`); they need no `bun install`, which only
+brings the type checker.
 
 ### make-friend-kit.ps1
 
@@ -9075,19 +9077,19 @@ refuses to run while `friend-kit\` has uncommitted changes.
 powershell -ExecutionPolicy Bypass -File tools\make-friend-kit.ps1 -Out D:\dist
 ```
 
-### sync-roadmap.js
+### sync-roadmap.ts
 
-`node tools/sync-roadmap.js` takes no arguments. It regenerates `docs/roadmap.md` from `ROADMAP.md`:
+`bun tools/sync-roadmap.ts` takes no arguments. It regenerates `docs/roadmap.md` from `ROADMAP.md`:
 front matter, a table of contents, and the checklist inside a Liquid `raw` block, so Jekyll leaves
 its text alone. Run it after every change to `ROADMAP.md`, and never edit `docs/roadmap.md` by hand. The Finnish
 `docs/fi/roadmap.md` is a hand-written summary, not generated.
 
-### build-llms.js
+### build-llms.ts
 
-`node tools/build-llms.js` takes no arguments. It writes `docs/llms.txt` (an index of every page) and
+`bun tools/build-llms.ts` takes no arguments. It writes `docs/llms.txt` (an index of every page) and
 `docs/llms-full.txt` (every English page as Markdown in one file) from the pages' front matter and
 text and from `docs/_data/faq_en.yml` and `faq_fi.yml`. Run it after adding a page or changing a
-title or description, and after `sync-roadmap.js`, because the roadmap page is one of its inputs.
+title or description, and after `sync-roadmap.ts`, because the roadmap page is one of its inputs.
 
 It warns about a page without a `description`. It stops with an error on Liquid it does not
 understand. Pages may use only:
@@ -9101,14 +9103,14 @@ understand. Pages may use only:
 A link from the FAQ data to a page that does not exist is also an error, and so is a page link whose
 `assign` names a page that does not exist.
 
-### make-game-manifest.js
+### make-game-manifest.ts
 
 Builds the content manifest, `legacy/UndauntedContent/data/dauntless-1.4.4.json`, from the verified game
 zip. The content server serves only the files in it, and the launcher compiles the same file in and
 refuses any other file. Run it only when the manifest must change.
 
 ```text
-node tools/make-game-manifest.js --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
+bun tools/make-game-manifest.ts --zip <BaseGame144.zip> [--out <file>] [--compare-dir <game folder>]
                                  [--compare-all] [--zip-sha256 <hex>] [--skip-zip-hash]
 ```
 
@@ -9125,8 +9127,8 @@ It checks each entry's CRC-32 and size against the zip's own records, that every
 same rule the content server applies), that no two paths differ only in letter case, that
 `Version.txt` names the 1.4.4 build and that the exe matches its pin. It prints the file count, the
 total bytes and the manifest's own SHA-256. It runs at low priority, reads the zip twice (about 21 GB
-of reads), exits with `1` on any failure, and needs `yauzl`: run `npm ci` in `legacy/UndauntedContent` or
-`legacy/UndauntedLauncher` first. After regenerating the manifest, rebuild the launcher.
+of reads), and exits with `1` on any failure. It reads the zip itself (`tools/zip.ts`, Zip64 included), so
+nothing needs installing first. After regenerating the manifest, rebuild the launcher.
 
 ## CI workflows and tools
 
@@ -9141,10 +9143,10 @@ and run the tools from a checkout. What each CI job checks, and how launcher rel
 | `.github/workflows/ci.yml` (**CI**) | Every push to any branch, every pull request, and Actions > **CI** > **Run workflow** | none | Builds and tests the four server packages, the launcher and the server kit, checks the docs and the repository, and keeps the launcher's release files for 7 days (not for pull requests from forks). Then, on a push to `dauntless-revived` in `mixutin/dauntless-revived` that passed every check, it publishes the launcher version if that version has no release yet, unless `LAUNCHER_AUTO_RELEASE` is `false`. |
 | `.github/workflows/launcher-release.yml` (**Launcher release**) | Actions > **Launcher release** > **Run workflow** on `dauntless-revived`; called by `ci.yml` | None by hand. `ci.yml` passes `version` (it must equal the `legacy/UndauntedLauncher/package.json` version at that commit) and `artifact` (the release files it built). | Publishes the launcher version as the release `launcher-v<version>`, creates that tag, attests the build provenance of every file, and points the `launcher-updates` feed at it. Run by hand, it builds and tests the commit itself; for a version that is published already, it only brings the feed up to it. It refuses to run on any branch but `dauntless-revived`, the default branch. |
 
-### tools/ci/check-repo.js
+### tools/ci/check-repo.ts
 
 ```text
-node tools/ci/check-repo.js [--history <revision range>]
+bun tools/ci/check-repo.ts [--history <revision range>]
 ```
 
 The repository hygiene check. Without arguments it checks every tracked file:
@@ -9164,22 +9166,22 @@ The repository hygiene check. Without arguments it checks every tracked file:
 | `--history <revision range>` | Also checks every file version that the commits in the range added or changed, for example `origin/dauntless-revived..HEAD` before a push. `--history HEAD` checks the whole history. A secret that was committed and deleted again is still in the history, so the key has to be replaced. |
 
 It never prints what a match contains, only the file, the line and the kind of match. Exit code `0`
-means nothing was found, `1` a problem, `2` a usage error. It has no dependencies, so it needs no
-`npm ci`.
+means nothing was found, `1` a problem, `2` a usage error. It has no dependencies, so nothing needs
+installing first.
 
-### tools/ci/launcher-version.js
+### tools/ci/launcher-version.ts
 
-The launcher version rules that `check-repo.js` and the release workflow share. A launcher version is
+The launcher version rules that `check-repo.ts` and the release workflow share. A launcher version is
 a semantic version without build metadata (`x.y.z` or `x.y.z-prerelease`), and it names the release
 tag `launcher-v<version>`.
 
 | Command | What it does |
 |:--------|:-------------|
-| `node tools/ci/launcher-version.js valid <version>` | Exit code `0` if it is a launcher version, `1` if not. |
-| `node tools/ci/launcher-version.js compare <a> <b>` | Prints `-1`, `0` or `1` (semantic version order). |
-| `node tools/ci/launcher-version.js newest <version> [<other>...]` | Exit code `0` if `<version>` is newer than every other one that counts: a release is compared with the other releases only, a prerelease with everything. Otherwise it prints the newer or equal one and exits with `1`. Others that are not launcher versions are skipped with a warning. |
-| `node tools/ci/launcher-version.js nuget <version>` | Prints the version as Squirrel's package names spell it. |
-| `node tools/ci/launcher-version.js from-nupkg <file name>` | Prints the version in a `*-full.nupkg` file name, or exits with `1` if there is none. |
+| `bun tools/ci/launcher-version.ts valid <version>` | Exit code `0` if it is a launcher version, `1` if not. |
+| `bun tools/ci/launcher-version.ts compare <a> <b>` | Prints `-1`, `0` or `1` (semantic version order). |
+| `bun tools/ci/launcher-version.ts newest <version> [<other>...]` | Exit code `0` if `<version>` is newer than every other one that counts: a release is compared with the other releases only, a prerelease with everything. Otherwise it prints the newer or equal one and exits with `1`. Others that are not launcher versions are skipped with a warning. |
+| `bun tools/ci/launcher-version.ts nuget <version>` | Prints the version as Squirrel's package names spell it. |
+| `bun tools/ci/launcher-version.ts from-nupkg <file name>` | Prints the version in a `*-full.nupkg` file name, or exits with `1` if there is none. |
 
 A usage error, or a `<version>` that is not a launcher version where one is required, exits with `2`.
 
@@ -9708,12 +9710,12 @@ this page:
 | Server packages | `npm ci`, `npm run build` and `npm test` in each of the four packages | Windows, Node 24 |
 | Launcher | `npm ci`, `npm run typecheck`, `npm test` and `npm run make`, then `scripts/collect-release.ps1`. The release files (the installer, the Squirrel update files, the zip and `SHA256SUMS.txt`) stay downloadable from the run's **Artifacts** for 7 days (not for pull requests from forks). | Windows, Node 24 |
 | Server kit | Every tracked `.ps1` must parse in Windows PowerShell 5.1, PSScriptAnalyzer must find no errors (when the runner has it), then the three kit tests | Windows PowerShell 5.1 |
-| Docs | `sync-roadmap.js` and `build-llms.js` must change nothing, the site must build with the builder GitHub Pages uses, and the built site must have its main pages | Linux |
-| Repository hygiene | `tools/ci/check-repo.js`: no secrets, keys, databases, logs or game files in the tracked files or in any commit the push or pull request brings, no tracked file that a `.gitignore` rule excludes, the two DLLs match their pins, and the launcher version is valid | Linux |
+| Docs | `sync-roadmap.ts` and `build-llms.ts` must change nothing, the site must build with the builder GitHub Pages uses, and the built site must have its main pages | Linux |
+| Repository hygiene | `tools/ci/check-repo.ts`: no secrets, keys, databases, logs or game files in the tracked files or in any commit the push or pull request brings, no tracked file that a `.gitignore` rule excludes, the two DLLs match their pins, and the launcher version is valid | Linux |
 
 The content server's integration test is the exception: it needs a real game install, so CI does
 not run it. To run the hygiene check yourself before a push:
-`node tools/ci/check-repo.js --history origin/dauntless-revived..HEAD` (without `--history` it checks
+`bun tools/ci/check-repo.ts --history origin/dauntless-revived..HEAD` (without `--history` it checks
 the files only). It never prints what it found inside a file. Its arguments are in
 [Scripts and parameters](https://mixutin.github.io/dauntless-revived/reference/scripts.html#ci-workflows-and-tools).
 
@@ -9753,22 +9755,22 @@ not update to. The details are in the "Checks" section of
 
 | File | Made by | Run it again when |
 |---|---|---|
-| `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` changes. Never edit `docs/roadmap.md` by hand. |
-| `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` | Any English page or the FAQ data changes (`llms-full.txt` holds the text of every English page; `llms.txt` lists every page with its title and description). |
+| `docs/roadmap.md` | `bun tools/sync-roadmap.ts` | `ROADMAP.md` changes. Never edit `docs/roadmap.md` by hand. |
+| `docs/llms.txt`, `docs/llms-full.txt` | `bun tools/build-llms.ts` | Any English page or the FAQ data changes (`llms-full.txt` holds the text of every English page; `llms.txt` lists every page with its title and description). |
 | `legacy/UndauntedMetagame/src/drizzle/*.sql` and `meta/` | `npm run db:generate` in `legacy/UndauntedMetagame` | `src/db/schema.ts` changes. It reads `.env`. Commit the new migration with the schema change. |
 | `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node legacy/UndauntedMetagame/scripts/make-hunt-titles.js` | The deploy server's hunt tables in `legacy/UndauntedDeployServer/src/vendor/` change. |
-| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <game zip>`, after `npm ci` in `legacy/UndauntedContent` (for its zip reader) | Practically never: it describes the pinned 1.4.4 build. The launcher compiles this same file in, so rebuild the launcher afterwards. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `bun tools/make-game-manifest.ts --zip <game zip>` | Practically never: it describes the pinned 1.4.4 build. The launcher compiles this same file in, so rebuild the launcher afterwards. |
 | `legacy/UndauntedLauncher/assets/icon.png`, `icon.ico` and `src/renderer/brand/*.png` | `npm run icon` in `legacy/UndauntedLauncher`, which copies them from `brand/` (`python3 brand/build.py` makes them there) | The launcher icons in `brand/launcher/` or the emblem sizes in `brand/web/` change. The launcher's unit tests fail while a copy is out of date. |
 
-Run the two docs generators with `sync-roadmap.js` first: `build-llms.js` reads the roadmap page it
+Run the two docs generators with `sync-roadmap.ts` first: `build-llms.ts` reads the roadmap page it
 writes. Neither takes arguments; both find the repository root themselves. CI runs both and fails if
 that changes any file.
 `docs/fi/roadmap.md` is a hand-written Finnish summary, not generated.
 
 ```powershell
 Set-Location C:\dr\undaunted
-node tools/sync-roadmap.js
-node tools/build-llms.js
+bun tools/sync-roadmap.ts
+bun tools/build-llms.ts
 git status --short docs
 ```
 
@@ -9906,7 +9908,7 @@ Paths in each table are relative to the folder named above it.
 | Server DLL | `native/internal-server/dllmain.cpp` (the endpoint table, client and server mode), `constants.h` |
 | Server kit | `deploy/windows-server/*.ps1`; shared pins, paths, the component table and the start order in `DauntlessServer.Common.ps1`; database, key and game-folder helpers in `lib/` |
 | Friend kit | `friend-kit/`, zipped by `tools/make-friend-kit.ps1` |
-| Docs tools | `tools/sync-roadmap.js`, `tools/build-llms.js` |
+| Docs tools | `tools/sync-roadmap.ts`, `tools/build-llms.ts` |
 | CI | `.github/workflows/ci.yml`, `.github/workflows/launcher-release.yml`, `.github/dependabot.yml`, `tools/ci/`, `legacy/UndauntedLauncher/scripts/collect-release.ps1` |
 
 ================================================================================
@@ -15502,7 +15504,7 @@ or off on [Configuration](https://mixutin.github.io/dauntless-revived/reference/
 URL: https://mixutin.github.io/dauntless-revived/roadmap.html
 ================================================================================
 
-<!-- Generated by tools/sync-roadmap.js from ROADMAP.md. Edit ROADMAP.md, then rerun the script. -->
+<!-- Generated by tools/sync-roadmap.ts from ROADMAP.md. Edit ROADMAP.md, then rerun the script. -->
 
 # Roadmap
 

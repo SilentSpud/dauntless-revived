@@ -451,12 +451,12 @@ ajaa itse tämän sivun ohjeilla:
 | Palvelinpaketit | `npm ci`, `npm run build` ja `npm test` jokaisessa neljästä paketista | Windows, Node 24 |
 | Käynnistin | `npm ci`, `npm run typecheck`, `npm test` ja `npm run make`, sitten `scripts/collect-release.ps1`. Julkaisutiedostot (asennusohjelma, Squirrelin päivitystiedostot, zip ja `SHA256SUMS.txt`) ovat ladattavissa ajon kohdasta **Artifacts** 7 päivän ajan (ei forkeista tulevissa pull requesteissa). | Windows, Node 24 |
 | Palvelinpaketti | Jokaisen versionhallinnassa olevan `.ps1`-tiedoston on jäsennyttävä Windows PowerShell 5.1:ssä, PSScriptAnalyzer ei saa löytää virheitä (kun se on ajoympäristössä), sitten paketin kolme testiä | Windows PowerShell 5.1 |
-| Dokumentaatio | `sync-roadmap.js` ja `build-llms.js` eivät saa muuttaa mitään, sivuston on käännyttävä samalla työkalulla, jota GitHub Pages käyttää, ja käännetyssä sivustossa on oltava sen pääsivut | Linux |
-| Repositorion siisteys | `tools/ci/check-repo.js`: versionhallinnassa olevissa tiedostoissa tai pushin tai pull requestin tuomissa commiteissa ei saa olla salaisuuksia, avaimia, tietokantoja, lokeja eikä pelin tiedostoja, versionhallinnassa ei saa olla tiedostoa, jonka jokin `.gitignore`-sääntö sulkee pois, kahden DLL:n on vastattava kiinnityksiään, ja käynnistimen versionumeron on oltava kelvollinen | Linux |
+| Dokumentaatio | `sync-roadmap.ts` ja `build-llms.ts` eivät saa muuttaa mitään, sivuston on käännyttävä samalla työkalulla, jota GitHub Pages käyttää, ja käännetyssä sivustossa on oltava sen pääsivut | Linux |
+| Repositorion siisteys | `tools/ci/check-repo.ts`: versionhallinnassa olevissa tiedostoissa tai pushin tai pull requestin tuomissa commiteissa ei saa olla salaisuuksia, avaimia, tietokantoja, lokeja eikä pelin tiedostoja, versionhallinnassa ei saa olla tiedostoa, jonka jokin `.gitignore`-sääntö sulkee pois, kahden DLL:n on vastattava kiinnityksiään, ja käynnistimen versionumeron on oltava kelvollinen | Linux |
 
 Poikkeus on sisältöpalvelimen integraatiotesti: se tarvitsee oikean peliasennuksen, joten CI ei aja
 sitä. Siisteystarkistuksen voit ajaa itse ennen pushia:
-`node tools/ci/check-repo.js --history origin/dauntless-revived..HEAD` (ilman valitsinta `--history`
+`bun tools/ci/check-repo.ts --history origin/dauntless-revived..HEAD` (ilman valitsinta `--history`
 se tarkistaa vain tiedostot). Se ei koskaan tulosta sitä, mitä se löysi tiedoston sisältä. Sen
 parametrit ovat sivulla
 [Skriptit ja parametrit]({{ scripts_page.url | relative_url }}#ci-workflows-and-tools).
@@ -498,22 +498,22 @@ kohdassa "Julkaisut ja päivitykset".
 
 | Tiedosto | Mikä sen tekee | Aja uudelleen, kun |
 |---|---|---|
-| `docs/roadmap.md` | `node tools/sync-roadmap.js` | `ROADMAP.md` muuttuu. Älä koskaan muokkaa tiedostoa `docs/roadmap.md` käsin. |
-| `docs/llms.txt`, `docs/llms-full.txt` | `node tools/build-llms.js` | Mikä tahansa englanninkielinen sivu tai UKK:n data muuttuu (`llms-full.txt` sisältää jokaisen englanninkielisen sivun tekstin; `llms.txt` listaa jokaisen sivun otsikkoineen ja kuvauksineen). |
+| `docs/roadmap.md` | `bun tools/sync-roadmap.ts` | `ROADMAP.md` muuttuu. Älä koskaan muokkaa tiedostoa `docs/roadmap.md` käsin. |
+| `docs/llms.txt`, `docs/llms-full.txt` | `bun tools/build-llms.ts` | Mikä tahansa englanninkielinen sivu tai UKK:n data muuttuu (`llms-full.txt` sisältää jokaisen englanninkielisen sivun tekstin; `llms.txt` listaa jokaisen sivun otsikkoineen ja kuvauksineen). |
 | `legacy/UndauntedMetagame/src/drizzle/*.sql` ja `meta/` | `npm run db:generate` kansiossa `legacy/UndauntedMetagame` | `src/db/schema.ts` muuttuu. Komento lukee `.env`-tiedoston. Commitoi uusi migraatio samassa muutoksessa skeemamuutoksen kanssa. |
 | `legacy/UndauntedMetagame/src/vendor/hunt_titles.json` | `node legacy/UndauntedMetagame/scripts/make-hunt-titles.js` | Deploy-palvelimen metsästystaulukot kansiossa `legacy/UndauntedDeployServer/src/vendor/` muuttuvat. |
-| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `node tools/make-game-manifest.js --zip <pelin zip>`, kun `npm ci` on ajettu kansiossa `legacy/UndauntedContent` (sen zip-lukijaa varten) | Käytännössä ei koskaan: tiedosto kuvaa kiinnitettyä 1.4.4-versiota. Käynnistin kääntää saman tiedoston sisäänsä, joten käännä käynnistin sen jälkeen uudelleen. |
+| `legacy/UndauntedContent/data/dauntless-1.4.4.json` | `bun tools/make-game-manifest.ts --zip <pelin zip>` | Käytännössä ei koskaan: tiedosto kuvaa kiinnitettyä 1.4.4-versiota. Käynnistin kääntää saman tiedoston sisäänsä, joten käännä käynnistin sen jälkeen uudelleen. |
 | `legacy/UndauntedLauncher/assets/icon.png`, `icon.ico` ja `src/renderer/brand/*.png` | `npm run icon` kansiossa `legacy/UndauntedLauncher`; se kopioi ne kansiosta `brand/` (siellä ne tekee `python3 brand/build.py`) | Käynnistimen kuvakkeet kansiossa `brand/launcher/` tai tunnuskuvan koot kansiossa `brand/web/` muuttuvat. Käynnistimen yksikkötestit epäonnistuvat, kun jokin kopio on vanhentunut. |
 
-Aja kaksi dokumentaatiogeneraattoria niin, että `sync-roadmap.js` on ensin: `build-llms.js` lukee sen
+Aja kaksi dokumentaatiogeneraattoria niin, että `sync-roadmap.ts` on ensin: `build-llms.ts` lukee sen
 kirjoittaman tiekarttasivun. Kumpikaan ei ota argumentteja, ja molemmat löytävät repositorion juuren
 itse. CI ajaa molemmat ja epäonnistuu, jos jokin tiedosto muuttuu.
 `docs/fi/roadmap.md` on käsin kirjoitettu suomenkielinen tiivistelmä, ei generoitu tiedosto.
 
 ```powershell
 Set-Location C:\dr\undaunted
-node tools/sync-roadmap.js
-node tools/build-llms.js
+bun tools/sync-roadmap.ts
+bun tools/build-llms.ts
 git status --short docs
 ```
 
@@ -660,5 +660,5 @@ Kunkin taulukon polut ovat suhteessa taulukon yläpuolella mainittuun kansioon.
 | Palvelin-DLL | `native/internal-server/dllmain.cpp` (päätepistetaulukko, asiakas- ja palvelintila), `constants.h` |
 | Palvelinpaketti | `deploy/windows-server/*.ps1`; yhteiset kiinnitykset, polut, osien taulukko ja käynnistysjärjestys tiedostossa `DauntlessServer.Common.ps1`; tietokanta-, avain- ja pelikansioapurit kansiossa `lib/` |
 | Kaveripaketti | `friend-kit/`, jonka `tools/make-friend-kit.ps1` pakkaa zip-tiedostoksi |
-| Dokumentaatiotyökalut | `tools/sync-roadmap.js`, `tools/build-llms.js` |
+| Dokumentaatiotyökalut | `tools/sync-roadmap.ts`, `tools/build-llms.ts` |
 | CI | `.github/workflows/ci.yml`, `.github/workflows/launcher-release.yml`, `.github/dependabot.yml`, `tools/ci/`, `legacy/UndauntedLauncher/scripts/collect-release.ps1` |

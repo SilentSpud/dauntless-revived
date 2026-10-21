@@ -607,17 +607,17 @@ DLL is an offset into the pinned exe, so the exe hash is what keeps the DLL safe
 | Engine | Unreal Engine `4.25.3-239827+++dauntless+rel-1.4.4`, the version the DLL's SDK headers were generated from |
 | Exe | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe`, SHA-256 `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4`, 103,673,520 bytes |
 | Game zip | `BaseGame144.zip`, SHA-256 `556B9A648A5E5E7E11B6F8DD3D80FF8E88FCEB0D3448297AAF47CE7BF756BC6D`, 10,479,214,119 bytes. Its top folder is `Dauntless\`, which contains `Archon\`. |
-| Content manifest | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 files, 10,893,512,875 bytes, with a `build` field equal to the build string. It lists no ini files (the cooked config is inside the paks, and the user config lives outside the game folder) and not the two DLLs. Generated with `tools/make-game-manifest.js`. |
+| Content manifest | `legacy/UndauntedContent/data/dauntless-1.4.4.json`: 410 files, 10,893,512,875 bytes, with a `build` field equal to the build string. It lists no ini files (the cooked config is inside the paks, and the user config lives outside the game folder) and not the two DLLs. Generated with `tools/make-game-manifest.ts`. |
 | Phoenix's own manifest | `Manifest.bin.json` in the game folder: 406 entries. Our 410 are those plus `Manifest.bin.json` itself, `Manifest.bin` and two empty `debug.log` files. How we checked it is in [Host a server, step 2]({{ host_page.url | relative_url }}#verify-the-build) and [Verifying game files]({{ verification_page.url | relative_url }}). |
 
 ### Who checks the pins {#pin-checks}
 
 | Check | Launcher | Friend kit | Server kit installer | Elsewhere |
 |:------|:---------|:-----------|:---------------------|:----------|
-| Game zip SHA-256 | Not applicable: it downloads single files, not the zip | `setup.ps1 -Zip` | A resumable download is verified against it; the zip is hashed again before extraction | `tools/make-game-manifest.js` refuses any other zip unless it is run with `--zip-sha256` or `--skip-zip-hash`; even then it refuses a zip whose `Version.txt` or exe differs from the pins |
-| Exe SHA-256 | Before every PLAY | `setup.ps1`, and `play.ps1` on every launch | Before anything runs from the game folder; stops if it is wrong (not enforced under `-Sandbox`) | `tools/make-game-manifest.js` |
+| Game zip SHA-256 | Not applicable: it downloads single files, not the zip | `setup.ps1 -Zip` | A resumable download is verified against it; the zip is hashed again before extraction | `tools/make-game-manifest.ts` refuses any other zip unless it is run with `--zip-sha256` or `--skip-zip-hash`; even then it refuses a zip whose `Version.txt` or exe differs from the pins |
+| Exe SHA-256 | Before every PLAY | `setup.ps1`, and `play.ps1` on every launch | Before anything runs from the game folder; stops if it is wrong (not enforced under `-Sandbox`) | `tools/make-game-manifest.ts` |
 | DLL SHA-256s | On install, and before every PLAY (repairs them) | `setup.ps1` before and after copying; `play.ps1` on every launch | Before and after copying | `tools/make-friend-kit.ps1` before packing |
-| Build string | The compiled-in manifest must carry it, or the launcher refuses the manifest | Not checked | Warns if `Version.txt` names another build | `tools/make-game-manifest.js` checks `Version.txt` inside the zip; the content server only logs a warning for a manifest with another build |
+| Build string | The compiled-in manifest must carry it, or the launcher refuses the manifest | Not checked | Warns if `Version.txt` names another build | `tools/make-game-manifest.ts` checks `Version.txt` inside the zip; the content server only logs a warning for a manifest with another build |
 | Every game file | Each download is checked against the compiled-in manifest; Repair re-hashes every file | Not checked | `lib/verify-game.js` hashes every file against the manifest | The content server checks sizes at startup and serves only listed files |
 
 ### Where the pins live {#pin-locations}
@@ -627,11 +627,11 @@ together, and only together with the files they describe.
 
 | Value | Files |
 |:------|:------|
-| Exe SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.js`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test) |
+| Exe SHA-256 | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test) |
 | Exe size | `legacy/UndauntedLauncher/src/main/constants.ts` and `legacy/UndauntedContent/data/dauntless-1.4.4.json` (and its test). The other files check the hash only. |
 | DLL SHA-256s | `legacy/UndauntedLauncher/src/main/constants.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `friend-kit/play.ps1`, `friend-kit/setup.ps1`, `tools/make-friend-kit.ps1` |
-| Zip SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (with the byte count), `friend-kit/setup.ps1`, `tools/make-game-manifest.js` |
-| Build string | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.js`, the manifest JSON |
+| Zip SHA-256 | `deploy/windows-server/DauntlessServer.Common.ps1` (with the byte count), `friend-kit/setup.ps1`, `tools/make-game-manifest.ts` |
+| Build string | `legacy/UndauntedLauncher/src/main/manifest.ts`, `legacy/UndauntedContent/src/manifest.ts`, `deploy/windows-server/DauntlessServer.Common.ps1`, `tools/make-game-manifest.ts`, the manifest JSON |
 | Changelist | `deploy/windows-server/DauntlessServer.Common.ps1`, which writes the metagame's `TARGET_CHANGELIST` |
 
 ---

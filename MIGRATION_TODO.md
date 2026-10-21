@@ -84,6 +84,11 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
       no Node task behind. [T8]
 - [ ] Each component's security checklist signed off in its cutover. [X9]
 
+### Tools (Part E)
+
+- [ ] Regenerate the game manifest from the real 1.4.4 zip with `bun tools/make-game-manifest.ts --zip
+      <BaseGame144.zip>`: `git diff` stays empty. [T5]
+
 ## Later work
 
 - **Serenity.** The bot dropped serenity because 0.12.5, its latest release, pins rustls 0.22, whose webpki has
