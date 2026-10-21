@@ -59,6 +59,32 @@ impl RecentRequests {
     }
 }
 
+/// A friendship that began or ended (`FriendshipEvent`), for chat presence. Sent once the change is
+/// stored.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum FriendshipEvent {
+    Accepted {
+        requester: String,
+        accepter: String,
+        created_at: i64,
+    },
+    Ended {
+        a: String,
+        b: String,
+    },
+}
+
+/// Tells chat presence about a stored friendship change (`NotifyFriendship`).
+pub fn notify(state: &crate::app::AppState, event: Option<FriendshipEvent>) {
+    if let Some(event) = event {
+        // Nobody listening (chat off) is fine
+        let _ = state.friendships.send(event);
+    }
+}
+
+/// A change and the friendship event it makes, if any.
+pub type Changed = (Outcome, Option<FriendshipEvent>);
+
 /// What a change did (`FriendResult`): 204, or a refusal's status.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Outcome {
@@ -179,42 +205,49 @@ pub fn list_blocked(conn: &mut Conn, account: &str) -> QueryResult<Vec<String>> 
 
 /// `SendOrAcceptFriendRequest`: a request the other side already sent is accepted; asking again, or
 /// asking an existing friend, changes nothing.
-pub fn send_or_accept(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str) -> QueryResult<Outcome> {
-    let outcome = if me == them {
-        Outcome::Refused(400, "self")
+pub fn send_or_accept(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str) -> QueryResult<Changed> {
+    let (outcome, requested_at) = if me == them {
+        (Outcome::Refused(400, "self"), 0)
     } else {
         request_in_tx(conn, recent, me, them)?
     };
     tracing::info!("friends: request by={me} to={them} -> {}", outcome.shown());
-    Ok(outcome)
+    let event = (outcome == Outcome::Done("accepted")).then(|| FriendshipEvent::Accepted {
+        requester: them.to_owned(),
+        accepter: me.to_owned(),
+        created_at: requested_at,
+    });
+    Ok((outcome, event))
 }
 
-fn request_in_tx(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str) -> QueryResult<Outcome> {
+/// The outcome, and when the accepted request was made
+fn request_in_tx(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str) -> QueryResult<(Outcome, i64)> {
+    let outcome = |o: Outcome| Ok((o, 0));
     if !account_exists(conn, them)? {
-        return Ok(Outcome::Refused(404, "not_found"));
+        return outcome(Outcome::Refused(404, "not_found"));
     }
     if blocked_either_way(conn, me, them)? {
-        return Ok(Outcome::Refused(403, "blocked"));
+        return outcome(Outcome::Refused(403, "blocked"));
     }
     let (low, high) = pair(me, them);
     let existing: Option<FriendshipRow> = friendships::table.find((low, high)).first(conn).optional()?;
     let now = now_ms();
-    if let Some((_, _, requester, status, _, _)) = existing {
+    if let Some((_, _, requester, status, created_at, _)) = existing {
         if status == "ACCEPTED" {
-            return Ok(Outcome::Done("already_friends"));
+            return outcome(Outcome::Done("already_friends"));
         }
         if requester == me {
-            return Ok(Outcome::Done("already_requested"));
+            return outcome(Outcome::Done("already_requested"));
         }
         diesel::update(friendships::table.find((low, high)))
             .set((friendships::status.eq("ACCEPTED"), friendships::updatedAt.eq(now)))
             .execute(conn)?;
-        return Ok(Outcome::Done("accepted"));
+        return Ok((Outcome::Done("accepted"), created_at));
     }
     if count_friendships(conn, me)? >= MAX_FRIENDSHIPS_PER_ACCOUNT
         || count_friendships(conn, them)? >= MAX_FRIENDSHIPS_PER_ACCOUNT
     {
-        return Ok(Outcome::Refused(409, "limit"));
+        return outcome(Outcome::Refused(409, "limit"));
     }
     let pending: i64 = friendships::table
         .filter(friendships::requesterId.eq(me))
@@ -222,12 +255,12 @@ fn request_in_tx(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str)
         .select(count_star())
         .first(conn)?;
     if pending >= MAX_PENDING_OUTGOING {
-        return Ok(Outcome::Refused(409, "pending_limit"));
+        return outcome(Outcome::Refused(409, "pending_limit"));
     }
     let mut map = recent.0.lock().unwrap_or_else(std::sync::PoisonError::into_inner);
     let mut times = RecentRequests::recent(&mut map, me, now);
     if times.len() >= MAX_REQUESTS_PER_WINDOW {
-        return Ok(Outcome::Refused(409, "rate"));
+        return outcome(Outcome::Refused(409, "rate"));
     }
     diesel::insert_into(friendships::table)
         .values((
@@ -241,11 +274,11 @@ fn request_in_tx(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str)
         .execute(conn)?;
     times.push(now);
     map.insert(me.to_owned(), times);
-    Ok(Outcome::Done("requested"))
+    outcome(Outcome::Done("requested"))
 }
 
 /// `RemoveFriend`: unfriend, withdraw a request or decline one.
-pub fn remove(conn: &mut Conn, me: &str, them: &str) -> QueryResult<Outcome> {
+pub fn remove(conn: &mut Conn, me: &str, them: &str) -> QueryResult<Changed> {
     let (low, high) = pair(me, them);
     let removed: Vec<String> = diesel::delete(friendships::table.find((low, high)))
         .returning(friendships::status)
@@ -257,13 +290,17 @@ pub fn remove(conn: &mut Conn, me: &str, them: &str) -> QueryResult<Outcome> {
         outcome.shown(),
         slayer_link_note(cancelled)
     );
-    Ok(outcome)
+    let event = removed.iter().any(|s| s == "ACCEPTED").then(|| FriendshipEvent::Ended {
+        a: me.to_owned(),
+        b: them.to_owned(),
+    });
+    Ok((outcome, event))
 }
 
 /// `BlockPlayer`.
-pub fn block(conn: &mut Conn, me: &str, them: &str) -> QueryResult<Outcome> {
-    let (outcome, guild_invites, links) = if me == them {
-        (Outcome::Refused(400, "self"), 0, 0)
+pub fn block(conn: &mut Conn, me: &str, them: &str) -> QueryResult<Changed> {
+    let (outcome, guild_invites, links, were_friends) = if me == them {
+        (Outcome::Refused(400, "self"), 0, 0, false)
     } else {
         block_in_tx(conn, me, them)?
     };
@@ -277,12 +314,17 @@ pub fn block(conn: &mut Conn, me: &str, them: &str) -> QueryResult<Outcome> {
         },
         slayer_link_note(links)
     );
-    Ok(outcome)
+    let event = (outcome == Outcome::Done("blocked") && were_friends).then(|| FriendshipEvent::Ended {
+        a: me.to_owned(),
+        b: them.to_owned(),
+    });
+    Ok((outcome, event))
 }
 
-fn block_in_tx(conn: &mut Conn, me: &str, them: &str) -> QueryResult<(Outcome, usize, usize)> {
+/// The outcome, the guild invites and Slayer Link invites removed, and whether the two were friends
+fn block_in_tx(conn: &mut Conn, me: &str, them: &str) -> QueryResult<(Outcome, usize, usize, bool)> {
     if !account_exists(conn, them)? {
-        return Ok((Outcome::Refused(404, "not_found"), 0, 0));
+        return Ok((Outcome::Refused(404, "not_found"), 0, 0, false));
     }
     let existing: Option<String> = blocks::table
         .find((me, them))
@@ -290,14 +332,14 @@ fn block_in_tx(conn: &mut Conn, me: &str, them: &str) -> QueryResult<(Outcome, u
         .first(conn)
         .optional()?;
     if existing.is_some() {
-        return Ok((Outcome::Done("already_blocked"), 0, 0));
+        return Ok((Outcome::Done("already_blocked"), 0, 0, false));
     }
     let count: i64 = blocks::table
         .filter(blocks::blockerId.eq(me))
         .select(count_star())
         .first(conn)?;
     if count >= MAX_BLOCKS_PER_ACCOUNT {
-        return Ok((Outcome::Refused(409, "limit"), 0, 0));
+        return Ok((Outcome::Refused(409, "limit"), 0, 0, false));
     }
     diesel::insert_into(blocks::table)
         .values((
@@ -307,7 +349,9 @@ fn block_in_tx(conn: &mut Conn, me: &str, them: &str) -> QueryResult<(Outcome, u
         ))
         .execute(conn)?;
     let (low, high) = pair(me, them);
-    diesel::delete(friendships::table.find((low, high))).execute(conn)?;
+    let ended: Vec<String> = diesel::delete(friendships::table.find((low, high)))
+        .returning(friendships::status)
+        .get_results(conn)?;
     let guild_invites = diesel::delete(
         guildinvites::table.filter(
             guildinvites::inviterId
@@ -318,7 +362,12 @@ fn block_in_tx(conn: &mut Conn, me: &str, them: &str) -> QueryResult<(Outcome, u
     )
     .execute(conn)?;
     let links = cancel_slayer_link_invites(conn, me, them)?;
-    Ok((Outcome::Done("blocked"), guild_invites, links))
+    Ok((
+        Outcome::Done("blocked"),
+        guild_invites,
+        links,
+        ended.iter().any(|s| s == "ACCEPTED"),
+    ))
 }
 
 /// `UnblockPlayer`.

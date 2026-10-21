@@ -17,7 +17,7 @@ protocol = { path = "crates/protocol" }
 store = { path = "crates/store" }
 service-kit = { path = "crates/service-kit" }
 
-axum = { version = "0.8", default-features = false, features = ["http1", "json", "query", "tokio", "form"] }
+axum = { version = "0.8", default-features = false, features = ["http1", "json", "query", "tokio", "form", "ws"] }
 aes-gcm = "0.11"
 base64 = "0.23"
 
@@ -27,6 +27,7 @@ diesel = { version = "2.3", default-features = false, features = ["sqlite", "r2d
 diesel_migrations = { version = "2.3", features = ["sqlite"] }
 dotenvy = "0.15"
 flate2 = "1"
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 gethostname = "1"
 if-addrs = "0.15"
 memory-stats = "1"

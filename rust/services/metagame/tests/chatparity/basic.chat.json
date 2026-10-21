@@ -1,0 +1,398 @@
+{
+  "about": "Chat: logins, binding, IQs, rooms (joins, refusals, messages, leaves), whispers, friends' presence and bad input (MIGRATION_PLAN.md M32-M34).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0)",
+    "INSERT INTO friendships (userLow, userHigh, requesterId, status, createdAt, updatedAt) VALUES ('UID-a', 'UID-b', 'UID-a', 'ACCEPTED', 1700000000000, 1700000000000)",
+    "INSERT INTO blocks (blockerId, blockedId, createdAt) VALUES ('UID-c', 'UID-a', 1700000000000)"
+  ],
+  "steps": [
+    {
+      "connect": "a"
+    },
+    {
+      "send": [
+        "a",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"set\" id=\"bind_a\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::aaaa</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"set\" id=\"sess\"><session xmlns=\"urn:ietf:params:xml:ns:xmpp-session\"/></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"get\" id=\"p1\"><ping xmlns=\"urn:xmpp:ping\"/></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"get\" id=\"v1\"><query xmlns=\"jabber:iq:version\"/></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"result\" id=\"sp9\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence><show>away</show><status>{\"Status\":\"In Ramsgate\"}</status></presence>"
+      ]
+    },
+    {
+      "connect": "b"
+    },
+    {
+      "send": [
+        "b",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-b}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<iq type=\"set\" id=\"bind_b\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::bbbb</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"Hunting\"}</status></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence><show>dnd</show><status>{\"Status\":\"In Ramsgate\"}</status></presence>"
+      ]
+    },
+    {
+      "connect": "c"
+    },
+    {
+      "send": [
+        "c",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-c}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<iq type=\"set\" id=\"bind_c\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::cccc</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<presence/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Ada:UID-a:V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Bo:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Cy:UID-c:V2:app:WIN::cccc\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message to=\"City-1@muc.127.0.0.1:61000\" type=\"groupchat\" id=\"m1\"><body>hello &amp; welcome &lt;all&gt;</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<message to=\"City-1@muc.127.0.0.1:61000\" type=\"groupchat\" id=\"m2\"><body>from Cy</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<message to=\"City-1@muc.127.0.0.1:61000\" type=\"groupchat\"><subject>new</subject></message>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<message to=\"City-1@muc.127.0.0.1:61000\" type=\"groupchat\" id=\"m3\"><body></body></message>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<message to=\"City-9@muc.127.0.0.1:61000\" type=\"groupchat\" id=\"m4\"><body>nobody here</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-2@muc.127.0.0.1:61000/Ada:UID-a:V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-2@muc.127.0.0.1:61000/Bo:UID-b:other\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-2@muc.127.0.0.1:61000/Nobody:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-2@muc.127.0.0.1:61000/B%ZZ:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"Party-xyz@muc.127.0.0.1:61000/Bo:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"Lobby-1@muc.127.0.0.1:61000/Bo:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Bo:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-3@muc.127.0.0.1:61000/InvalidMCPUser:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-3@muc.127.0.0.1:61000/InvalidMCPUser:UID-b:V2:app:WIN::bbbb\" type=\"unavailable\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-8@muc.127.0.0.1:61000/Bo:UID-b:V2:app:WIN::bbbb\" type=\"unavailable\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message to=\"UID-b@127.0.0.1:61000/V2:app:WIN::bbbb\" type=\"chat\" id=\"w1\"><body>psst</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message to=\"UID-b@127.0.0.1:61000\" type=\"chat\"><body>to all of Bo</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message to=\"UID-c@127.0.0.1:61000\" type=\"chat\"><body>blocked</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message to=\"UID-d@127.0.0.1:61000\" type=\"chat\"><body>offline</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message to=\"UID-a@127.0.0.1:61000\" type=\"chat\"><body>self</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<message"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<!DOCTYPE x><x/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<unknown/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence to=\"UID-b@127.0.0.1:61000\" type=\"subscribe\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<presence type=\"unavailable\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Ada:UID-a:V2:app:WIN::aaaa\" type=\"unavailable\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<close xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\"/>"
+      ]
+    },
+    {
+      "close": "a"
+    },
+    {
+      "connect": "d"
+    },
+    {
+      "send": [
+        "d",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"DIGEST-MD5\">x</auth>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<iq type=\"set\" id=\"legacy\"><query xmlns=\"jabber:iq:auth\"/></iq>"
+      ]
+    },
+    {
+      "connect": "e"
+    },
+    {
+      "send": [
+        "e",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">not base64!</auth>"
+      ]
+    },
+    {
+      "send": [
+        "e",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">AGEAYg==</auth>"
+      ]
+    },
+    {
+      "connect": "f"
+    },
+    {
+      "send": [
+        "f",
+        "<!DOCTYPE x><open/>"
+      ]
+    },
+    {
+      "connect": "g"
+    },
+    {
+      "send": [
+        "g",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "g",
+        "<message to='x@y'/>"
+      ]
+    },
+    {
+      "connect": "h",
+      "headers": {
+        "x-forwarded-for": "1.2.3.4"
+      }
+    },
+    {
+      "send": [
+        "h",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-nobody}}</auth>"
+      ]
+    }
+  ]
+}

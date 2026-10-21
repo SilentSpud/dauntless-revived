@@ -1,0 +1,138 @@
+{
+  "about": "CHAT_NICK_CHECK=log admits the resource, format and name rules with a warning, never another account's id; a fifth frame before login ends the connection (MIGRATION_PLAN.md M33-M34).",
+  "results": [
+    {
+      "step": "{\"connect\":\"a\"}",
+      "seen": {}
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" from=\"127.0.0.1:61000\" id=\"<id>\" version=\"1.0\" xml:lang=\"en\"/>",
+            "<stream:features xmlns:stream=\"http://etherx.jabber.org/streams\"><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<auth xmlns=\\\"urn:ietf:params:xml:ns:xmpp-sasl\\\" mechanism=\\\"PLAIN\\\">{{plain:UID-a}}</auth>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<success xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"/>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" from=\"127.0.0.1:61000\" id=\"<id>\" version=\"1.0\" xml:lang=\"en\"/>",
+            "<stream:features xmlns:stream=\"http://etherx.jabber.org/streams\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/></stream:features>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<iq type=\\\"set\\\" id=\\\"bind_a\\\"><bind xmlns=\\\"urn:ietf:params:xml:ns:xmpp-bind\\\"><resource>V2:app:WIN::aaaa</resource></bind></iq>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<iq xmlns=\"jabber:client\" type=\"result\" id=\"bind_a\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><jid>UID-a@127.0.0.1:61000/V2:app:WIN::aaaa</jid></bind></iq>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<presence to=\\\"City-1@muc.127.0.0.1:61000/Somebody:UID-a:V2:app:WIN::aaaa\\\"><x xmlns=\\\"http://jabber.org/protocol/muc\\\"/></presence>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<presence xmlns=\"jabber:client\" from=\"City-1@muc.127.0.0.1:61000/Somebody:UID-a:V2:app:WIN::aaaa\" to=\"UID-a@127.0.0.1:61000/V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc#user\"><item affiliation=\"none\" role=\"participant\" jid=\"UID-a@127.0.0.1:61000/V2:app:WIN::aaaa\"/><status code=\"110\"/></x></presence>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<presence to=\\\"City-2@muc.127.0.0.1:61000/Ada:UID-a:wrong\\\"><x xmlns=\\\"http://jabber.org/protocol/muc\\\"/></presence>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<presence xmlns=\"jabber:client\" from=\"City-2@muc.127.0.0.1:61000/Ada:UID-a:wrong\" to=\"UID-a@127.0.0.1:61000/V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc#user\"><item affiliation=\"none\" role=\"participant\" jid=\"UID-a@127.0.0.1:61000/V2:app:WIN::aaaa\"/><status code=\"110\"/></x></presence>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"a\",\"<presence to=\\\"City-3@muc.127.0.0.1:61000/Ada:UID-b:V2:app:WIN::aaaa\\\"><x xmlns=\\\"http://jabber.org/protocol/muc\\\"/></presence>\"]}",
+      "seen": {
+        "a": {
+          "frames": [
+            "<presence xmlns=\"jabber:client\" type=\"error\" from=\"City-3@muc.127.0.0.1:61000/Ada:UID-b:V2:app:WIN::aaaa\" to=\"UID-a@127.0.0.1:61000/V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc\"/><error type=\"auth\"><forbidden xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/></error></presence>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"connect\":\"e\"}",
+      "seen": {}
+    },
+    {
+      "step": "{\"send\":[\"e\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "e": {
+          "frames": [
+            "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" from=\"127.0.0.1:61000\" id=\"<id>\" version=\"1.0\" xml:lang=\"en\"/>",
+            "<stream:features xmlns:stream=\"http://etherx.jabber.org/streams\"><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"e\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "e": {
+          "frames": [
+            "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" from=\"127.0.0.1:61000\" id=\"<id>\" version=\"1.0\" xml:lang=\"en\"/>",
+            "<stream:features xmlns:stream=\"http://etherx.jabber.org/streams\"><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"e\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "e": {
+          "frames": [
+            "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" from=\"127.0.0.1:61000\" id=\"<id>\" version=\"1.0\" xml:lang=\"en\"/>",
+            "<stream:features xmlns:stream=\"http://etherx.jabber.org/streams\"><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"e\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "e": {
+          "frames": [
+            "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" from=\"127.0.0.1:61000\" id=\"<id>\" version=\"1.0\" xml:lang=\"en\"/>",
+            "<stream:features xmlns:stream=\"http://etherx.jabber.org/streams\"><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+          ]
+        }
+      }
+    },
+    {
+      "step": "{\"send\":[\"e\",\"<open xmlns=\\\"urn:ietf:params:xml:ns:xmpp-framing\\\" to=\\\"127.0.0.1:61000\\\" version=\\\"1.0\\\"/>\"]}",
+      "seen": {
+        "e": {
+          "frames": [],
+          "closed": 1006
+        }
+      }
+    }
+  ]
+}

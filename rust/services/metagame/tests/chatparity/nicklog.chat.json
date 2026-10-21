@@ -1,0 +1,91 @@
+{
+  "about": "CHAT_NICK_CHECK=log admits the resource, format and name rules with a warning, never another account's id; a fifth frame before login ends the connection (MIGRATION_PLAN.md M33-M34).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "CHAT_NICK_CHECK": "log"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0)"
+  ],
+  "steps": [
+    {
+      "connect": "a"
+    },
+    {
+      "send": [
+        "a",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"set\" id=\"bind_a\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::aaaa</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Somebody:UID-a:V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence to=\"City-2@muc.127.0.0.1:61000/Ada:UID-a:wrong\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence to=\"City-3@muc.127.0.0.1:61000/Ada:UID-b:V2:app:WIN::aaaa\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "connect": "e"
+    },
+    {
+      "send": [
+        "e",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "e",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "e",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "e",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "e",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    }
+  ]
+}

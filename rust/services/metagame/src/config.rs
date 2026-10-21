@@ -63,6 +63,8 @@ pub struct Config {
     pub log_requests: bool,
     /// `LOG_BODIES=1`, `BODY_LOG_FILE`, `BODY_LOG_PER_PATH` (`bodylog.rs`).
     pub body_log: Option<crate::bodylog::Settings>,
+    /// `CHAT`, `CHAT_PORT`, `CHAT_BIND_HOST`, `CHAT_NICK_CHECK`, `CHAT_TRACE`, `CHAT_PRESENCE` (`chat`).
+    pub chat: crate::chat::Settings,
     pub store_images_dir: PathBuf,
     pub progression: crate::progression::ProgressionMode,
     pub entitlement_defaults: Vec<String>,
@@ -162,6 +164,7 @@ impl Config {
             backend_health: env.get("BACKEND_HEALTH") == Some("1"),
             log_requests: env.get("LOG_REQUESTS") != Some("0"),
             body_log: crate::bodylog::Settings::from_env(env),
+            chat: crate::chat::Settings::from_env(env),
             store_images_dir: raw(env, "STORE_IMAGES_DIR").map_or_else(|| "store-images".into(), PathBuf::from),
             progression: crate::progression::ProgressionMode::new(
                 env.raw("PROGRESSION_MODE"),

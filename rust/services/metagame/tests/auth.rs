@@ -98,6 +98,7 @@ fn fixture_with(account_key_recovery: bool, backup_root: Option<String>) -> Fixt
         status_cache: Default::default(),
         health: Arc::new(metagame::health::Health::new(false)),
         key_revocations: tokio::sync::broadcast::channel(64).0,
+        friendships: tokio::sync::broadcast::channel(64).0,
     });
     Fixture { _dir: dir, db, state }
 }

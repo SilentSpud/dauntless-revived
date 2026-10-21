@@ -189,6 +189,20 @@ Done so far:
   move the guild clock, so skipping some breaks the rest; the guild parity scripts cover the routes),
   the tests that put one router in their own app (backup, health, moderation, Discord stats), the
   matchmaking tests with their own servers, and chat (M32). Then: the port to Rust tests.
+- Metagame B3, M32-M34: chat (`chat/`, from `realtime/*.ts`), on by default on `CHAT_PORT` as in
+  Node, started before the HTTP listener and closed with it (`<close/>`, at most 1 s). One task owns
+  all of chat and answers frames one at a time, in order, as Node's thread did; each connection has a
+  reader and a writer, and the writer counts what waits unsent for the 256 KB output limit. The frame
+  parser is a port of ltx 3.1.2's (the parser Node used), not quick-xml, so a frame parses exactly as
+  it did, leniencies included; it is linear and keeps no recursion on the input. Friendship changes
+  reach presence through a broadcast channel once they are stored. Parity: `tests/chatparity`
+  scripts drive WebSocket clients against Node's chat (`record.cjs`) and Rust's, and every frame each
+  client receives matches, with how its connection closed: five scripts, 229 steps (logins, binding,
+  IQs, rooms with their refusals and limits, whispers, guild rooms, sessions and ghosts, the throttles,
+  friends' presence over HTTP friendships, held-back changes, `CHAT_NICK_CHECK=log`, an oversized
+  frame). The timers (login and bind deadlines, idle pings, ping timeouts) and shutdown are checked
+  on a clock the tests move. Left of B3: the `cargo-fuzz` target on the parser (M33, before cutover),
+  and the TS chat tests themselves, which build the chat in process and stay Node's.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

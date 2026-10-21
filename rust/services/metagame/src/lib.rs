@@ -9,6 +9,7 @@ pub mod bodylog;
 pub mod bounties;
 pub mod characterprogress;
 pub mod characters;
+pub mod chat;
 pub mod config;
 pub mod cooldowns;
 pub mod creator;

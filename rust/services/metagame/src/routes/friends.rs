@@ -113,7 +113,7 @@ async fn list_blocked(State(state): State<AppState>, parts: Parts, params: Param
     Ok(json(StatusCode::OK, json!({"blockedUsers": list})))
 }
 
-type Change = fn(&mut store::Connection, &AppState, &str, &str) -> diesel::QueryResult<Outcome>;
+type Change = fn(&mut store::Connection, &AppState, &str, &str) -> diesel::QueryResult<friends::Changed>;
 
 /// Changes answer 204 with no body, as the Epic service did. The URL's first id must be the caller.
 async fn change(
@@ -137,10 +137,11 @@ async fn change(
         return Ok(empty(StatusCode::NOT_FOUND));
     }
     let shared = state.clone();
-    let outcome = state
+    let (outcome, event) = state
         .store
         .write(move |conn| work(conn, &shared, &me, &them).map_err(AppError::from))
         .await?;
+    friends::notify(&state, event);
     Ok(empty(match outcome {
         Outcome::Done(_) => StatusCode::NO_CONTENT,
         Outcome::Refused(status, _) => StatusCode::from_u16(status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
@@ -180,12 +181,12 @@ async fn block(
     params: Params,
 ) -> Result<Response, AppError> {
     change(state, parts, player, params, |conn, state, me, them| {
-        let outcome = friends::block(conn, me, them)?;
+        let changed = friends::block(conn, me, them)?;
         // The in-memory party invites between the two go too
-        if outcome == Outcome::Done("blocked") {
+        if changed.0 == Outcome::Done("blocked") {
             state.parties.lock().drop_invites_between(me, them);
         }
-        Ok(outcome)
+        Ok(changed)
     })
     .await
 }
@@ -197,7 +198,7 @@ async fn unblock(
     params: Params,
 ) -> Result<Response, AppError> {
     change(state, parts, player, params, |conn, _, me, them| {
-        friends::unblock(conn, me, them)
+        friends::unblock(conn, me, them).map(|outcome| (outcome, None))
     })
     .await
 }

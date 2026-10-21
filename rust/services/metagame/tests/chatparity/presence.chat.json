@@ -1,0 +1,259 @@
+{
+  "about": "Friends' online status: friendships accepted, ended and blocked over HTTP, changes held back when they come too often (MIGRATION_PLAN.md M34).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0)"
+  ],
+  "steps": [
+    {
+      "connect": "a"
+    },
+    {
+      "send": [
+        "a",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<iq type=\"set\" id=\"bind_a\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::aaaa</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a",
+        "<presence><status>{\"Status\":\"a\"}</status></presence>"
+      ]
+    },
+    {
+      "connect": "b"
+    },
+    {
+      "send": [
+        "b",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-b}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<iq type=\"set\" id=\"bind_b\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::bbbb</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"b\"}</status></presence>"
+      ]
+    },
+    {
+      "connect": "c"
+    },
+    {
+      "send": [
+        "c",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-c}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c",
+        "<iq type=\"set\" id=\"bind_c\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::cccc</resource></bind></iq>"
+      ]
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/friends/UID-a/UID-b",
+        "headers": {
+          "authorization": "{{bearer:UID-a}}"
+        }
+      }
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/friends/UID-b/UID-a",
+        "headers": {
+          "authorization": "{{bearer:UID-b}}"
+        }
+      }
+    },
+    {
+      "send": [
+        "a",
+        "<presence><status>{\"Status\":\"a2\"}</status></presence>"
+      ]
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/friends/UID-c/UID-a",
+        "headers": {
+          "authorization": "{{bearer:UID-c}}"
+        }
+      }
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/friends/UID-a/UID-c",
+        "headers": {
+          "authorization": "{{bearer:UID-a}}"
+        }
+      }
+    },
+    {
+      "send": [
+        "c",
+        "<presence><status>{\"Status\":\"c\"}</status></presence>"
+      ]
+    },
+    {
+      "http": {
+        "method": "DELETE",
+        "path": "/friends/api/public/friends/UID-a/UID-b",
+        "headers": {
+          "authorization": "{{bearer:UID-a}}"
+        }
+      }
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/blocklist/UID-c/UID-a",
+        "headers": {
+          "authorization": "{{bearer:UID-c}}"
+        }
+      }
+    },
+    {
+      "send": [
+        "a",
+        "<presence><status>{\"Status\":\"a3\"}</status></presence>"
+      ]
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/friends/UID-a/UID-b",
+        "headers": {
+          "authorization": "{{bearer:UID-a}}"
+        }
+      }
+    },
+    {
+      "http": {
+        "method": "POST",
+        "path": "/friends/api/public/friends/UID-b/UID-a",
+        "headers": {
+          "authorization": "{{bearer:UID-b}}"
+        }
+      }
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"b0\"}</status></presence>"
+      ],
+      "settle": 20
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"b1\"}</status></presence>"
+      ],
+      "settle": 20
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"b2\"}</status></presence>"
+      ],
+      "settle": 20
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"b3\"}</status></presence>"
+      ],
+      "settle": 20
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"held\"}</status></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>{\"Status\":\"held\"}</status></presence>"
+      ],
+      "wait": 2600
+    },
+    {
+      "send": [
+        "b",
+        "<presence type=\"unavailable\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence><show>chat</show></presence>"
+      ],
+      "wait": 2600
+    },
+    {
+      "send": [
+        "b",
+        "<presence><status>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</status></presence>"
+      ],
+      "wait": 2600
+    },
+    {
+      "close": "a"
+    }
+  ]
+}

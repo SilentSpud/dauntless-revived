@@ -44,7 +44,8 @@ export async function StartRust(port = Port){
     Port = port;
     StartedEnv = EnvText();
     const Started = spawn(RustBin!, ["serve"], {
-        env: { ...process.env, PORT: port, LOG_LEVEL: "info", METAGAME_RUST_BIN: undefined },
+        // The Node tests' app never starts chat (server.ts does); neither does this, unless a test says so
+        env: { CHAT: "0", ...process.env, PORT: port, LOG_LEVEL: "info", METAGAME_RUST_BIN: undefined },
         stdio: ["pipe", "pipe", "inherit"]
     });
     Child = Started;

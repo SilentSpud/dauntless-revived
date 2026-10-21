@@ -78,6 +78,8 @@ pub struct App {
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,
+    /// Friendships that began or ended, for chat presence (`AddFriendshipListener`).
+    pub friendships: tokio::sync::broadcast::Sender<crate::friends::FriendshipEvent>,
 }
 
 pub type AppState = Arc<App>;

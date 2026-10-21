@@ -1,0 +1,355 @@
+{
+  "about": "Chat sessions: two per account, ghosts, replacement, the throttle after it, unbound logins and binding (MIGRATION_PLAN.md M32-M34).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0)",
+    "INSERT INTO friendships (userLow, userHigh, requesterId, status, createdAt, updatedAt) VALUES ('UID-a', 'UID-b', 'UID-a', 'ACCEPTED', 1700000000000, 1700000000000)"
+  ],
+  "steps": [
+    {
+      "connect": "a1"
+    },
+    {
+      "send": [
+        "a1",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<iq type=\"set\" id=\"bind_a1\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::0001</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<presence/>"
+      ]
+    },
+    {
+      "connect": "b"
+    },
+    {
+      "send": [
+        "b",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-b}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<iq type=\"set\" id=\"bind_b\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::bbbb</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence/>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Ada:UID-a:V2:app:WIN::0001\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Bo:UID-b:V2:app:WIN::bbbb\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "connect": "a2"
+    },
+    {
+      "send": [
+        "a2",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a2",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a2",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a2",
+        "<iq type=\"set\" id=\"bind_a2\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::0002</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "a2",
+        "<presence to=\"City-1@muc.127.0.0.1:61000/Ada:UID-a:V2:app:WIN::0002\"><x xmlns=\"http://jabber.org/protocol/muc\"/></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a2",
+        "<presence><show>away</show></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<presence><show>xa</show></presence>"
+      ]
+    },
+    {
+      "send": [
+        "a1",
+        "<message to=\"City-1@muc.127.0.0.1:61000\" type=\"groupchat\"><body>from the ghost</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<message to=\"UID-a@127.0.0.1:61000\" type=\"chat\"><body>to both</body></message>"
+      ]
+    },
+    {
+      "send": [
+        "b",
+        "<message to=\"UID-a@127.0.0.1:61000/V2:app:WIN::0002\" type=\"chat\"><body>to one</body></message>"
+      ]
+    },
+    {
+      "connect": "a3"
+    },
+    {
+      "send": [
+        "a3",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a3",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a3",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a3",
+        "<iq type=\"set\" id=\"bind_a3\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::0003</resource></bind></iq>"
+      ]
+    },
+    {
+      "connect": "a4"
+    },
+    {
+      "send": [
+        "a4",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a4",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "a4",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a4",
+        "<iq type=\"set\" id=\"bind_a4\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::0003</resource></bind></iq>"
+      ]
+    },
+    {
+      "connect": "a5"
+    },
+    {
+      "send": [
+        "a5",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "a5",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-a}}</auth>"
+      ]
+    },
+    {
+      "connect": "c1"
+    },
+    {
+      "send": [
+        "c1",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c1",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-c}}</auth>"
+      ]
+    },
+    {
+      "connect": "c2"
+    },
+    {
+      "send": [
+        "c2",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c2",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-c}}</auth>"
+      ]
+    },
+    {
+      "connect": "c3"
+    },
+    {
+      "send": [
+        "c3",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c3",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-c}}</auth>"
+      ]
+    },
+    {
+      "connect": "c4"
+    },
+    {
+      "send": [
+        "c4",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c4",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-c}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "c4",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "c4",
+        "<iq type=\"set\" id=\"bind_c4\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"/></iq>"
+      ]
+    },
+    {
+      "send": [
+        "c4",
+        "<iq type=\"set\" id=\"again\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>other</resource></bind></iq>"
+      ]
+    },
+    {
+      "connect": "d"
+    },
+    {
+      "send": [
+        "d",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"PLAIN\">{{plain:UID-d}}</auth>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<open xmlns=\"urn:ietf:params:xml:ns:xmpp-framing\" to=\"127.0.0.1:61000\" version=\"1.0\"/>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<iq type=\"set\" id=\"bind_d\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>bad\u0001resource</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<iq type=\"set\" id=\"long\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<iq type=\"set\" id=\"ok\"><bind xmlns=\"urn:ietf:params:xml:ns:xmpp-bind\"><resource>V2:app:WIN::dddd</resource></bind></iq>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<iq type=\"weird\" id=\"w\"/>"
+      ]
+    },
+    {
+      "send": [
+        "d",
+        "<iq type=\"get\" id=\"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\"><ping xmlns=\"urn:xmpp:ping\"/></iq>"
+      ]
+    },
+    {
+      "close": "b"
+    }
+  ]
+}

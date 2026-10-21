@@ -53,6 +53,13 @@ pub struct TokenClaims {
     pub epoch: Option<i64>,
 }
 
+/// Why a token was refused, where the difference shows (chat's login log).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TokenError {
+    Expired,
+    Invalid,
+}
+
 /// The signing key pair, from `AUTH_SIGNING_PRIVKEY_B64` and `AUTH_SIGNING_PUBKEY_B64` (base64 of PEM).
 pub struct TokenKeys {
     encoding: EncodingKey,
@@ -89,6 +96,16 @@ impl TokenKeys {
         };
         jsonwebtoken::encode(&Header::new(Algorithm::RS256), &claims, &self.encoding)
             .map_err(|e| CryptoError::Keys(e.to_string()))
+    }
+
+    /// `verify`, telling an expired token (`TokenExpiredError`) from any other refusal.
+    pub fn verify_detailed(&self, token: &str) -> Result<TokenClaims, TokenError> {
+        jsonwebtoken::decode::<TokenClaims>(token, &self.decoding, &self.validation)
+            .map(|data| data.claims)
+            .map_err(|e| match e.kind() {
+                jsonwebtoken::errors::ErrorKind::ExpiredSignature => TokenError::Expired,
+                _ => TokenError::Invalid,
+            })
     }
 
     /// Checks signature, algorithm, issuer, audience and expiry. Epoch and ban checks are the caller's.

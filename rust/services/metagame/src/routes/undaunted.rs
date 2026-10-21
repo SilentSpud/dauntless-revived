@@ -627,12 +627,13 @@ async fn friends(
         Err(refused) => return Ok(refused),
     };
     let shared = state.clone();
-    let outcome = state
+    let (outcome, event) = state
         .store
         .write(move |conn| {
             crate::friends::send_or_accept(conn, &shared.friend_requests, &from, &to).map_err(AppError::from)
         })
         .await?;
+    crate::friends::notify(&state, event);
     Ok(match outcome {
         crate::friends::Outcome::Done(result) => ok(json!({"From": from_name, "To": to_name, "Result": result})),
         crate::friends::Outcome::Refused(status, error) => json(

@@ -187,6 +187,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         status_cache: crate::serverstatus::Cache::default(),
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
+        friendships: tokio::sync::broadcast::channel(256).0,
     });
     Ok(Prepared { state, progression })
 }
@@ -242,6 +243,10 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
     tracing::info!("Registered {users} new User API Key(s) on boot!");
     state.limits.spawn_sweepers();
 
+    // Text chat (docs/findings/chat.md): on by default, CHAT=0 opts out. A bad setting or a port in
+    // use is one error line; the metagame always starts, with or without chat.
+    let chat = crate::chat::connection::start(state.clone(), &config.chat).await;
+
     let address = SocketAddr::new(config.bind_host, config.port);
     let listener = tokio::net::TcpListener::bind(address)
         .await
@@ -274,9 +279,23 @@ pub async fn run(config: Config, progression: ProgressionConfig) -> Result<(), S
     tracing::info!("Clear Skies, Slayer.");
 
     let app = app(state.clone(), config.log_requests);
-    serve(listener, app, stop_requested(), Duration::from_secs(2))
+    // A stop request closes the chat sessions (at most 1 s) while the HTTP requests drain
+    let (stop_tx, mut stop_rx) = tokio::sync::watch::channel(false);
+    let chat_stopped = tokio::spawn(async move {
+        if stop_rx.wait_for(|stopping| *stopping).await.is_ok()
+            && let Some(chat) = chat
+        {
+            chat.stop().await;
+        }
+    });
+    let stop = async move {
+        stop_requested().await;
+        let _ = stop_tx.send(true);
+    };
+    serve(listener, app, stop, Duration::from_secs(2))
         .await
         .map_err(|e| e.to_string())?;
+    let _ = chat_stopped.await;
     state
         .store
         .checkpoint()
