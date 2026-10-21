@@ -598,7 +598,7 @@ async fn post_party_status_lists_the_asked_players_parties_and_the_caller_s_own_
 }
 
 #[tokio::test(flavor = "multi_thread")]
-async fn account_id_account_id_answers_an_array_of_the_known_accounts_no_query_answers_the_caller_s_account_as_before()
+async fn accountid_accountid_answers_an_array_of_the_known_accounts_no_query_answers_the_caller_s_account_as_before()
 {
     let ph = ph(&[]).await;
     let many = ph

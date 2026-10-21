@@ -658,7 +658,7 @@
       "each change shows in the next poll": "tests/m31/partyhttp.rs::each_change_shows_in_the_next_poll",
       "PARTY_SOLO_STUB=0 answers a party of one without the placeholder candidate (Idle to the client), read on every poll": "tests/m31/partyhttp.rs::party_solo_stub_0_answers_a_party_of_one_without_the_placeholder_candidate_idle_to_the_client_read_on_every_poll",
       "POST /party/status lists the asked players' parties and the caller's own invitations": "tests/m31/partyhttp.rs::post_party_status_lists_the_asked_players_parties_and_the_caller_s_own_invitations",
-      "?accountId=..&accountId=.. answers an array of the known accounts; no query answers the caller's account as before": "todo",
+      "?accountId=..&accountId=.. answers an array of the known accounts; no query answers the caller's account as before": "tests/m31/partyhttp.rs::accountid_accountid_answers_an_array_of_the_known_accounts_no_query_answers_the_caller_s_account_as_before",
       "/account/:id and /account/displayName/:name answer with a token, and the old replies without": "tests/m31/partyhttp.rs::account_id_and_account_displayname_name_answer_with_a_token_and_the_old_replies_without",
       "POST /account/mapping answers accountMappings as an object keyed by each asked id, flat and wrapped at once, and never 404s": "tests/m31/partyhttp.rs::post_account_mapping_answers_accountmappings_as_an_object_keyed_by_each_asked_id_flat_and_wrapped_at_once_and_never_404s",
       "ACCOUNT_MAPPING=0 maps nothing, read on every request": "tests/m31/partyhttp.rs::account_mapping_0_maps_nothing_read_on_every_request",
