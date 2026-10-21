@@ -155,3 +155,148 @@ impl RecordingDeploy {
         self.state.lock().unwrap().calls.clone()
     }
 }
+
+/// How a scripted deploy server answers one matchmaking call.
+#[derive(Clone)]
+pub(crate) enum Answer {
+    /// Status, body and any extra headers
+    Reply(u16, String, Vec<(String, String)>),
+    /// The connection is closed without an answer
+    Drop,
+}
+
+impl Answer {
+    pub(crate) fn json(status: u16, body: Value) -> Self {
+        Self::Reply(status, body.to_string(), Vec::new())
+    }
+}
+
+type Script = Box<dyn Fn(&Value, usize) -> Answer + Send + Sync>;
+
+/// A deploy server stand-in on raw TCP, so a test can hold an answer, drop the connection or send
+/// any body (the Node tests replaced `fetch` or wrote to the socket). Every call's body is recorded;
+/// `script` picks the answer from the body and the call's number (from 1); with `hold` set, answers
+/// wait for `release`.
+#[derive(Clone)]
+pub(crate) struct ScriptedDeploy {
+    pub address: String,
+    pub calls: Arc<Mutex<Vec<Value>>>,
+    script: Arc<Mutex<Script>>,
+    hold: Arc<Mutex<bool>>,
+    releases: tokio::sync::watch::Sender<u64>,
+}
+
+impl ScriptedDeploy {
+    pub(crate) async fn start(script: impl Fn(&Value, usize) -> Answer + Send + Sync + 'static) -> Self {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap().to_string();
+        let deploy = Self {
+            address,
+            calls: Arc::default(),
+            script: Arc::new(Mutex::new(Box::new(script))),
+            hold: Arc::default(),
+            releases: tokio::sync::watch::channel(0).0,
+        };
+        let shared = deploy.clone();
+        tokio::spawn(async move {
+            while let Ok((stream, _)) = listener.accept().await {
+                tokio::spawn(shared.clone().answer(stream));
+            }
+        });
+        deploy
+    }
+
+    async fn answer(self, mut stream: tokio::net::TcpStream) {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+        let mut data = Vec::new();
+        let mut buffer = [0u8; 4096];
+        let body = loop {
+            let Ok(read) = stream.read(&mut buffer).await else {
+                return;
+            };
+            if read == 0 {
+                return;
+            }
+            data.extend_from_slice(&buffer[..read]);
+            let Some(end) = data.windows(4).position(|w| w == b"\r\n\r\n") else {
+                continue;
+            };
+            let head = String::from_utf8_lossy(&data[..end]).to_lowercase();
+            let length = head
+                .lines()
+                .find_map(|line| line.strip_prefix("content-length:"))
+                .and_then(|v| v.trim().parse::<usize>().ok())
+                .unwrap_or(0);
+            if data.len() >= end + 4 + length {
+                break data[end + 4..end + 4 + length].to_vec();
+            }
+        };
+        let parsed: Value = serde_json::from_slice(&body).unwrap_or(json!({}));
+        let (answer, held) = {
+            let mut calls = self.calls.lock().unwrap();
+            calls.push(parsed.clone());
+            let number = calls.len();
+            (
+                (self.script.lock().unwrap())(&parsed, number),
+                *self.hold.lock().unwrap(),
+            )
+        };
+        if held {
+            let mut releases = self.releases.subscribe();
+            let seen = *releases.borrow_and_update();
+            while *releases.borrow() == seen {
+                if releases.changed().await.is_err() {
+                    return;
+                }
+            }
+        }
+        match answer {
+            Answer::Drop => drop(stream),
+            Answer::Reply(status, body, headers) => {
+                let mut response = format!(
+                    "HTTP/1.1 {status} X\r\ncontent-type: application/json\r\ncontent-length: {}\r\nconnection: close\r\n",
+                    body.len()
+                );
+                for (name, value) in headers {
+                    response.push_str(&format!("{name}: {value}\r\n"));
+                }
+                response.push_str("\r\n");
+                response.push_str(&body);
+                let _ = stream.write_all(response.as_bytes()).await;
+                let _ = stream.shutdown().await;
+            }
+        }
+    }
+
+    pub(crate) fn set(&self, script: impl Fn(&Value, usize) -> Answer + Send + Sync + 'static) {
+        *self.script.lock().unwrap() = Box::new(script);
+    }
+
+    /// Answers wait for `release` from now on (true) or go out at once (false).
+    pub(crate) fn hold(&self, hold: bool) {
+        *self.hold.lock().unwrap() = hold;
+    }
+
+    /// Sends every held answer.
+    pub(crate) fn release(&self) {
+        self.releases.send_modify(|generation| *generation += 1);
+    }
+
+    pub(crate) fn calls(&self) -> Vec<Value> {
+        self.calls.lock().unwrap().clone()
+    }
+
+    pub(crate) fn clear(&self) {
+        self.calls.lock().unwrap().clear();
+    }
+
+    /// Waits up to 2 s for `count` calls, then checks there are exactly that many.
+    pub(crate) async fn wait_for_calls(&self, count: usize) {
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(2);
+        while self.calls().len() < count && std::time::Instant::now() < deadline {
+            tokio::time::sleep(std::time::Duration::from_millis(5)).await;
+        }
+        assert_eq!(self.calls().len(), count);
+        tokio::time::sleep(std::time::Duration::from_millis(5)).await;
+    }
+}
