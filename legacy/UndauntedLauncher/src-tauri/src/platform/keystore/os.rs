@@ -175,29 +175,30 @@ mod dpapi {
 
 #[cfg(target_os = "linux")]
 mod secret_service {
-    //! The desktop's Secret Service over D-Bus (gnome-keyring; KWallet answers it too on Plasma 6).
+    //! The desktop's Secret Service over D-Bus (gnome-keyring; KWallet answers it too on Plasma 6), through
+    //! libdbus (`dbus-secret-service`; zbus 5's parts are unmaintained). Its calls block, so they run on
+    //! the blocking pool.
 
     use std::collections::HashMap;
 
-    use secret_service::{EncryptionType, SecretService};
+    use dbus_secret_service::{EncryptionType, SecretService};
 
     const APPLICATION: &str = "io.github.mixutin.dauntlessrevived";
 
-    /// This launcher's key for its key files, made the first time.
-    pub async fn launcher_key() -> Option<[u8; 32]> {
-        let service = SecretService::connect(EncryptionType::Dh).await.ok()?;
+    fn key_now() -> Option<[u8; 32]> {
+        let service = SecretService::connect(EncryptionType::Dh).ok()?;
         let attributes = HashMap::from([("application", APPLICATION), ("purpose", "account-key-files")]);
-        let found = service.search_items(attributes.clone()).await.ok()?;
+        let found = service.search_items(attributes.clone()).ok()?;
         for item in found.unlocked.iter().chain(found.locked.iter()) {
-            let _ = item.unlock().await;
-            if let Ok(secret) = item.get_secret().await
+            let _ = item.unlock();
+            if let Ok(secret) = item.get_secret()
                 && let Ok(key) = <[u8; 32]>::try_from(secret.as_slice())
             {
                 return Some(key);
             }
         }
-        let collection = service.get_default_collection().await.ok()?;
-        let _ = collection.unlock().await;
+        let collection = service.get_default_collection().ok()?;
+        let _ = collection.unlock();
         let key: [u8; 32] = rand::random();
         collection
             .create_item(
@@ -207,27 +208,35 @@ mod secret_service {
                 true,
                 "application/octet-stream",
             )
-            .await
             .ok()?;
         Some(key)
+    }
+
+    fn password_now() -> Option<Vec<u8>> {
+        let service = SecretService::connect(EncryptionType::Dh).ok()?;
+        let attributes = HashMap::from([
+            ("xdg:schema", "chrome_libsecret_os_crypt_password_v2"),
+            ("application", "Dauntless Revived Launcher"),
+        ]);
+        let found = service.search_items(attributes).ok()?;
+        for item in found.unlocked.iter().chain(found.locked.iter()) {
+            let _ = item.unlock();
+            if let Ok(secret) = item.get_secret() {
+                return Some(secret);
+            }
+        }
+        None
+    }
+
+    /// This launcher's key for its key files, made the first time.
+    pub async fn launcher_key() -> Option<[u8; 32]> {
+        tokio::task::spawn_blocking(key_now).await.ok().flatten()
     }
 
     /// The password Electron's safeStorage keeps for the old launcher. Found by its attributes, never by
     /// its label ("Chromium Safe Storage" is the same for every Electron app).
     pub async fn electron_password() -> Option<Vec<u8>> {
-        let service = SecretService::connect(EncryptionType::Dh).await.ok()?;
-        let attributes = HashMap::from([
-            ("xdg:schema", "chrome_libsecret_os_crypt_password_v2"),
-            ("application", "Dauntless Revived Launcher"),
-        ]);
-        let found = service.search_items(attributes).await.ok()?;
-        for item in found.unlocked.iter().chain(found.locked.iter()) {
-            let _ = item.unlock().await;
-            if let Ok(secret) = item.get_secret().await {
-                return Some(secret);
-            }
-        }
-        None
+        tokio::task::spawn_blocking(password_now).await.ok().flatten()
     }
 }
 

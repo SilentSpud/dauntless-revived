@@ -275,8 +275,8 @@ Done so far:
   `launcher.old.log` past 2 MiB, and library events and panics through the same mask (`test/cases/log.json`).
 - Launcher P4, L27: `platform/keystore/` is `keystore.ts` (one key per server id, the `DRK2` format, the
   certificate binding and `rebind`, the Documents recovery copy, the backup file) over an `Encryptor`: DPAPI for the
-  user on Windows, and on Linux AES-256-GCM with a random key the Secret Service keeps (`secret-service`, zbus, pure
-  Rust). New files are `keys/<id>.key2`; an Electron `keys/<id>.key` is read once (`legacy.rs`: the `Local State`
+  user on Windows, and on Linux AES-256-GCM with a random key the Secret Service keeps (`dbus-secret-service` on libdbus
+  with pure-Rust crypto; zbus 5's parts were declared unmaintained in October 2026). New files are `keys/<id>.key2`; an Electron `keys/<id>.key` is read once (`legacy.rs`: the `Local State`
   key through DPAPI and AES-256-GCM on Windows; `v11` with the Secret Service password found by its attributes, or
   `v10` with "peanuts", and AES-128-CBC on Linux), written in the new format, read back, and left in place; one it
   cannot read loads as "no key", so the import flow takes over. Tested with synthetic blobs (and Chromium's known

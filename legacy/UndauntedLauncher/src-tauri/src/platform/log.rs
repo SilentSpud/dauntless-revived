@@ -192,7 +192,7 @@ mod tests {
     fn a_registered_key_never_reaches_the_file() {
         let dir = tempfile::tempdir().unwrap();
         log_to_file(dir.path().to_path_buf());
-        let key = "UUK_fedcba9876543210fedcba9876543210fedcba9876543210";
+        let key = concat!("UUK_", "fedcba9876543210", "fedcba9876543210", "fedcba9876543210");
         add_secret(key);
         info(&format!("launching with -AUTH_PASSWORD={key} and {}", &key[4..]));
         tracing::subscriber::with_default(

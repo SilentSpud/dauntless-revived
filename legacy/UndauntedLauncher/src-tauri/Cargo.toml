@@ -72,7 +72,7 @@ ts-rs.workspace = true
 windows = { version = "0.62", features = ["Win32_Foundation", "Win32_Security_Cryptography"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-secret-service = { version = "5", features = ["rt-tokio-crypto-rust"] }
+dbus-secret-service = { version = "4.1", features = ["crypto-rust"] }
 
 [features]
 # Set by `tauri build`: serve the built page from the binary instead of the Vite dev server
