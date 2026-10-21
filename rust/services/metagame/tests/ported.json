@@ -401,18 +401,18 @@
       "mutation quota is per player and does not stop native rewards or reads": "tests/m31/inventoryauthority.rs::mutation_quota_is_per_player_and_does_not_stop_native_rewards_or_reads"
     },
     "inventoryported.test.ts": {
-      "grants a stacked item": "todo",
-      "accumulates repeated grants of the same catalog id": "todo",
-      "removes a stacked item": "todo",
-      "refuses a transaction against a character the account does not own, and writes nothing": "todo",
-      "a replayed transaction id grants only once": "todo",
-      "with INVENTORY_REFUSE_OVERSPEND=1, refuses to remove more of a stacked item than is held": "todo",
-      "by default clamps that removal at 0 and still applies the rest of the transaction": "todo",
-      "refuses a negative grant quantity, and still accepts a quantity of 0": "todo",
-      "crafting-style removals report the final quantity of every changed stack": "todo",
-      "a stack used up entirely is reported at zero, not omitted": "todo",
-      "a stack touched more than once is reported once, at its final quantity": "todo",
-      "a retried transaction returns the same reported quantities, not the current ones, and does not deduct again": "todo"
+      "grants a stacked item": "tests/m31/inventoryported.rs::grants_a_stacked_item",
+      "accumulates repeated grants of the same catalog id": "tests/m31/inventoryported.rs::accumulates_repeated_grants_of_the_same_catalog_id",
+      "removes a stacked item": "tests/m31/inventoryported.rs::removes_a_stacked_item",
+      "refuses a transaction against a character the account does not own, and writes nothing": "tests/m31/inventoryported.rs::refuses_a_transaction_against_a_character_the_account_does_not_own_and_writes_nothing",
+      "a replayed transaction id grants only once": "tests/m31/inventoryported.rs::a_replayed_transaction_id_grants_only_once",
+      "with INVENTORY_REFUSE_OVERSPEND=1, refuses to remove more of a stacked item than is held": "tests/m31/inventoryported.rs::with_inventory_refuse_overspend_1_refuses_to_remove_more_of_a_stacked_item_than_is_held",
+      "by default clamps that removal at 0 and still applies the rest of the transaction": "tests/m31/inventoryported.rs::by_default_clamps_that_removal_at_0_and_still_applies_the_rest_of_the_transaction",
+      "refuses a negative grant quantity, and still accepts a quantity of 0": "tests/m31/inventoryported.rs::refuses_a_negative_grant_quantity_and_still_accepts_a_quantity_of_0",
+      "crafting-style removals report the final quantity of every changed stack": "tests/m31/inventoryported.rs::crafting_style_removals_report_the_final_quantity_of_every_changed_stack",
+      "a stack used up entirely is reported at zero, not omitted": "tests/m31/inventoryported.rs::a_stack_used_up_entirely_is_reported_at_zero_not_omitted",
+      "a stack touched more than once is reported once, at its final quantity": "tests/m31/inventoryported.rs::a_stack_touched_more_than_once_is_reported_once_at_its_final_quantity",
+      "a retried transaction returns the same reported quantities, not the current ones, and does not deduct again": "tests/m31/inventoryported.rs::a_retried_transaction_returns_the_same_reported_quantities_not_the_current_ones_and_does_not_deduct_again"
     },
     "inventorytx.test.ts": {
       "rolls back with an outer transaction that throws: no stack, no item log, no ledger row": "tests/m31/inventorytx.rs::rolls_back_with_an_outer_transaction_that_throws_no_stack_no_item_log_no_ledger_row",
@@ -729,11 +729,11 @@
       "every stanza of this file kept the rule": "todo"
     },
     "progressiondefault.test.ts": {
-      "a new account reads its own tracks at 0 as a plain list, not the stub's 99,999,999": "todo",
-      "every account owns the Elite Hunt Pass (season09b_premium), so the Elite track is not locked": "todo",
-      "stores XP from the game server and gives it back after a fresh read": "todo",
-      "a Hunt Pass claim on the free and the Elite track is stored (the confirm routes exist)": "todo",
-      "a player's own client still cannot grant itself XP": "todo"
+      "a new account reads its own tracks at 0 as a plain list, not the stub's 99,999,999": "tests/m31/progressiondefault.rs::a_new_account_reads_its_own_tracks_at_0_as_a_plain_list_not_the_stub_s_99_999_999",
+      "every account owns the Elite Hunt Pass (season09b_premium), so the Elite track is not locked": "tests/m31/progressiondefault.rs::every_account_owns_the_elite_hunt_pass_season09b_premium_so_the_elite_track_is_not_locked",
+      "stores XP from the game server and gives it back after a fresh read": "tests/m31/progressiondefault.rs::stores_xp_from_the_game_server_and_gives_it_back_after_a_fresh_read",
+      "a Hunt Pass claim on the free and the Elite track is stored (the confirm routes exist)": "tests/m31/progressiondefault.rs::a_hunt_pass_claim_on_the_free_and_the_elite_track_is_stored_the_confirm_routes_exist",
+      "a player's own client still cannot grant itself XP": "tests/m31/progressiondefault.rs::a_player_s_own_client_still_cannot_grant_itself_xp"
     },
     "progressionextras.test.ts": {
       "leaves the inventory, the item log, the ledger and the entitlements as they were, for every track and kind": "todo",
@@ -759,24 +759,24 @@
       "names a progression request no route answered, then the catch-all answers 404": "todo"
     },
     "progressionmode.test.ts": {
-      "is real for every account by default (PROGRESSION_MODE unset)": "todo",
-      "is real for every account when PROGRESSION_MODE is empty or blank": "todo",
-      "is stub for everyone with PROGRESSION_MODE=stub and no list, as upstream": "todo",
-      "accepts STUB and REAL in any case, with spaces around": "todo",
-      "is real only for the listed accounts in stub mode": "todo",
-      "is real for every account with PROGRESSION_MODE=real, but never for a missing id": "todo",
-      "is real for every account by default even when PROGRESSION_REAL_ACCOUNTS lists some (the list only matters in stub mode)": "todo",
-      "treats an unknown mode as real, the default, and says so in the log": "todo",
-      "does not warn for the known values or an unset mode": "todo",
-      "names real as the default when nothing is set": "todo",
-      "does not call an explicit PROGRESSION_MODE=real the default": "todo",
-      "names an unrecognised value instead of calling it the default (off used to mean stub)": "todo",
-      "says that PROGRESSION_REAL_ACCOUNTS is ignored outside stub mode": "todo",
-      "describes stub mode with the number of listed accounts, worded as before": "todo",
-      "counts players who own a character and have no stored progression, and nothing else": "todo",
-      "warns in real mode while such players exist, names both ways out, and never changes their data": "todo",
-      "stays quiet in stub mode, where nobody's ranks change": "todo",
-      "stays quiet once every player has stored progression": "todo"
+      "is real for every account by default (PROGRESSION_MODE unset)": "tests/m31/progressionmode.rs::is_real_for_every_account_by_default_progression_mode_unset",
+      "is real for every account when PROGRESSION_MODE is empty or blank": "tests/m31/progressionmode.rs::is_real_for_every_account_when_progression_mode_is_empty_or_blank",
+      "is stub for everyone with PROGRESSION_MODE=stub and no list, as upstream": "tests/m31/progressionmode.rs::is_stub_for_everyone_with_progression_mode_stub_and_no_list_as_upstream",
+      "accepts STUB and REAL in any case, with spaces around": "tests/m31/progressionmode.rs::accepts_stub_and_real_in_any_case_with_spaces_around",
+      "is real only for the listed accounts in stub mode": "tests/m31/progressionmode.rs::is_real_only_for_the_listed_accounts_in_stub_mode",
+      "is real for every account with PROGRESSION_MODE=real, but never for a missing id": "tests/m31/progressionmode.rs::is_real_for_every_account_with_progression_mode_real_but_never_for_a_missing_id",
+      "is real for every account by default even when PROGRESSION_REAL_ACCOUNTS lists some (the list only matters in stub mode)": "tests/m31/progressionmode.rs::is_real_for_every_account_by_default_even_when_progression_real_accounts_lists_some_the_list_only_matters_in_stub_mode",
+      "treats an unknown mode as real, the default, and says so in the log": "tests/m31/progressionmode.rs::treats_an_unknown_mode_as_real_the_default_and_says_so_in_the_log",
+      "does not warn for the known values or an unset mode": "tests/m31/progressionmode.rs::does_not_warn_for_the_known_values_or_an_unset_mode",
+      "names real as the default when nothing is set": "tests/m31/progressionmode.rs::names_real_as_the_default_when_nothing_is_set",
+      "does not call an explicit PROGRESSION_MODE=real the default": "tests/m31/progressionmode.rs::does_not_call_an_explicit_progression_mode_real_the_default",
+      "names an unrecognised value instead of calling it the default (off used to mean stub)": "tests/m31/progressionmode.rs::names_an_unrecognised_value_instead_of_calling_it_the_default_off_used_to_mean_stub",
+      "says that PROGRESSION_REAL_ACCOUNTS is ignored outside stub mode": "tests/m31/progressionmode.rs::says_that_progression_real_accounts_is_ignored_outside_stub_mode",
+      "describes stub mode with the number of listed accounts, worded as before": "tests/m31/progressionmode.rs::describes_stub_mode_with_the_number_of_listed_accounts_worded_as_before",
+      "counts players who own a character and have no stored progression, and nothing else": "tests/m31/progressionmode.rs::counts_players_who_own_a_character_and_have_no_stored_progression_and_nothing_else",
+      "warns in real mode while such players exist, names both ways out, and never changes their data": "tests/m31/progressionmode.rs::warns_in_real_mode_while_such_players_exist_names_both_ways_out_and_never_changes_their_data",
+      "stays quiet in stub mode, where nobody's ranks change": "tests/m31/progressionmode.rs::stays_quiet_in_stub_mode_where_nobody_s_ranks_change",
+      "stays quiet once every player has stored progression": "tests/m31/progressionmode.rs::stays_quiet_once_every_player_has_stored_progression"
     },
     "progressionrank.test.ts": {
       "has the 10 tracks the roadmap lists, requirements sorted by rank_id": "tests/m31/progressionrank.rs::has_the_10_tracks_the_roadmap_lists_requirements_sorted_by_rank_id",
