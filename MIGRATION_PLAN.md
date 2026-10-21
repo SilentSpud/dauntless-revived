@@ -273,15 +273,20 @@ Done so far:
   metagame hears of them, DMs are reserved durably before they are sent and reconciled from the DM
   history, and every operation runs one at a time, as in `keys.mjs`. `/key` (claim, status, link,
   resend, recover), the owner's `/counter`, command registration that keeps command ids, the
-  one-instance lock and the two-minute connection check are ported. Discord is reached with serenity
-  directly rather than poise: registration is the bot's own (it compares and patches commands in
-  place), so poise's would only be in the way. The invite string now comes from
+  one-instance lock and the two-minute connection check are ported. Discord is reached without
+  serenity or poise: serenity 0.12.5, its latest release, pins rustls 0.22, whose webpki has open
+  advisories (cargo-deny fails) with no fixed 0.102 release, and its other TLS backend is OpenSSL,
+  which is banned (D10). The bot keeps its own small gateway client (`gateway.rs`: identify,
+  heartbeat, resume, a new session when Discord asks, fatal close codes end the process) on the
+  workspace's tungstenite and rustls, calls the REST API directly with a wait on 429s, and keeps
+  what it needs of each guild (owner, member count, role permissions) from the gateway's events to
+  work out its channel permissions as discord.js does. Registration was already the bot's own (it
+  compares and patches commands in place). The invite string now comes from
   `protocol::format_invite`, which encodes the server name as `encodeURIComponent` does (`%20`)
   where the Node bot used `URLSearchParams` (`+`); the launcher reads both the same. The logic sits
   behind traits (metagame, Discord REST, interaction, guild), so every Node test is ported against
-  stand-ins: keys, delivery, commands, counter, recovery, instance. A side effect handled here:
-  serenity brings rustls's ring provider, so every HTTPS client now names aws-lc-rs instead of
-  relying on rustls's default. Not done: a real `/key claim` on a test guild (needs a bot token).
+  stand-ins: keys, delivery, commands, counter, recovery, instance; the gateway is tested against a
+  local stand-in for Discord's. Not done: a real `/key claim` on a test guild (needs a bot token).
 - Part C, S6: the Unix kit helpers. `deploy run-game` is `game-runner.mjs` (Proton first, else
   Wine, Xvfb without a display, the game's own `dxgi` forced, the runtime's process group ended
   with it), `deploy worker <payload>` is `worker-launch.mjs` (one base64url JSON argument list,
@@ -315,7 +320,7 @@ D8–D26 server-side, workspace, repository, tools, testing, release and securit
 | UndauntedGateway (+ allowlist helper) | Node, `node-forge` (~2.6k lines) | Rust: `rustls`, `hyper` reverse proxy, `windows` crate firewall helper |
 | UndauntedContent | Node, `yauzl` (~1.9k lines) | Rust: `axum` with range requests, `zip` |
 | UndauntedDeployServer | Node, Express, `better-sqlite3`, Drizzle, `jsonwebtoken` (~1.8k lines) | Rust on the same shared crates as the metagame |
-| UndauntedDiscordBot | Node `.mjs`, `discord.js` | Rust: `poise` on `serenity` (last; D18) |
+| UndauntedDiscordBot | Node `.mjs`, `discord.js` | Rust: own gateway client and REST calls (last; D18) |
 | Server kits (`deploy/`) | Node + `npm ci`, `dr-db` scripts, `.mjs` helpers (Linux kit, `deploy/unix-common/`, OpenBSD port) | Release binaries + `metagame db …` subcommands; Linux helpers in Rust; OpenBSD port removed (D14) |
 | UndauntedInternalServer, `dxgi.dll` | C++ | Unchanged code, moved to `native/internal-server/` (R2) |
 | Repository | One folder per project at the root, mixed languages | Four code families at the root: `rust/` (one cargo workspace: launcher, servers, shared crates), `native/` (C++), `client-mods/` (UE4SS mods and assets), `tools/` (TypeScript on Bun), plus `deploy/`, `brand/`, `docs/`, `friend-kit/` (Part D) |
@@ -768,7 +773,7 @@ Most of Part C runs in parallel with Part B. Before each cutover, that service's
 | S2 | Gateway (`legacy/UndauntedGateway`, ~2.6k lines) | Node TLS listener with a self-signed certificate (`node-forge`), policy, IP checks, rate limits, redaction, feed, proxy to metagame/content/chat | `rustls` server (`aws-lc-rs`, D10), `hyper` reverse proxy with `crates/proxy` (X5), WebSocket tunnelling, the same policy/limit/redaction rules; traffic capture option (M2) | **Load the existing certificate and key; never generate a new one on upgrade**, or every invite's `fp` breaks. `rcgen` only for new installs | Gateway tests; a 0.1.x and a 0.2.x launcher both connect through it |
 | S3 | Allowlist helpers: Windows (elevated) and Linux (`deploy/linux-server/allowlist.mjs`, nftables; shared `deploy/unix-common/allowlist-core.mjs`) | Node processes keeping one Windows Firewall rule / nftables set in sync with logged-in addresses | `gateway` workspace bin `allowlist`: Windows Firewall through the `windows` crate COM API (`INetFwPolicy2`), Linux through `nft` with a fixed argument list (no shell); local IPC from the gateway only | Runs with admin rights: smallest possible surface, no network listener beyond the local IPC | Firewall rule / set contents after login and logout on Windows and Linux |
 | S4 | DeployServer (`legacy/UndauntedDeployServer`, ~1.8k lines) | Express, `better-sqlite3`, Drizzle, `jsonwebtoken`, `pino` | Same stack as the metagame on `service-kit` and `store`; its own Diesel migrations, starting from a baseline adopted from its latest Drizzle migration like the metagame's (D11) | Also runs in the launcher's offline mode (D12, X2) | Ported tests; offline stack start in the launcher |
-| S5 | Discord bot (`legacy/UndauntedDiscordBot`, `.mjs`) | `discord.js` 14, state file, `/key claim` / `/key status`, DM delivery and retries | `poise` on `serenity`; same state file format and the same invite builder from `protocol` | Last of the services (D18). State file must load unchanged: a corrupt state stops issuance (as today) | Ported `*.test.mjs` cases; a real `/key claim` on a test guild |
+| S5 | Discord bot (`legacy/UndauntedDiscordBot`, `.mjs`) | `discord.js` 14, state file, `/key claim` / `/key status`, DM delivery and retries | Own gateway client and REST calls (serenity's rustls has open advisories); same state file format and the same invite builder from `protocol` | Last of the services (D18). State file must load unchanged: a corrupt state stops issuance (as today) | Ported `*.test.mjs` cases; a real `/key claim` on a test guild |
 | S6 | Linux kit helpers (`deploy/linux-server/*.mjs`: `launch-gameserver`, `worker-launch`; `deploy/unix-common/*.mjs`: `game-runner`, `generate-config`, `new-invite`) | Node scripts | Subcommands of the matching Rust bins (`deploy`, `metagame`), or plain `sh` where it's only process control; the SSH worker keeps taking one validated argv payload, never a shell string | — | `install.sh` and a two-machine worker launch in a CI container |
 
 ---

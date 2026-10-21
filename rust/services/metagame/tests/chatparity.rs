@@ -398,6 +398,20 @@ fn drain(client: &mut Client) -> (Vec<String>, Option<Value>) {
     (frames, closed)
 }
 
+/// How the client's connection closed, waiting up to 5 s for it: the sweep runs on a real-time timer,
+/// so a busy runner may close it later than `Timed::later`'s pause.
+async fn close_code(client: &mut Client) -> Option<Value> {
+    let wait = tokio::time::timeout(Duration::from_secs(5), async {
+        while let Some(heard) = client.heard.recv().await {
+            if let Heard::Closed(code) = heard {
+                return Some(code);
+            }
+        }
+        None
+    });
+    wait.await.ok().flatten()
+}
+
 #[tokio::test(flavor = "multi_thread")]
 async fn a_connection_that_never_logs_in_goes_after_15_s() {
     let timed = Timed::start().await;
@@ -405,7 +419,7 @@ async fn a_connection_that_never_logs_in_goes_after_15_s() {
     timed.later(14_000).await;
     assert_eq!(drain(&mut client).1, None);
     timed.later(1_000).await;
-    assert_eq!(drain(&mut client).1, Some(json!(1006)));
+    assert_eq!(close_code(&mut client).await, Some(json!(1006)));
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -420,7 +434,7 @@ async fn a_login_that_never_binds_goes_after_10_s() {
     );
     assert_eq!(closed, None);
     timed.later(10_000).await;
-    assert_eq!(drain(&mut client).1, Some(json!(1006)));
+    assert_eq!(close_code(&mut client).await, Some(json!(1006)));
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -453,7 +467,7 @@ async fn a_silent_session_is_pinged_after_50_s_and_ended_100_s_later() {
     timed.later(99_000).await;
     assert_eq!(drain(&mut client), (vec![], None));
     timed.later(1_000).await;
-    assert_eq!(drain(&mut client).1, Some(json!(1006)), "no answer for 100 s");
+    assert_eq!(close_code(&mut client).await, Some(json!(1006)), "no answer for 100 s");
 }
 
 #[tokio::test(flavor = "multi_thread")]

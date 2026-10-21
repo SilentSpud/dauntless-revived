@@ -12,6 +12,7 @@ use discord_bot::bot::{Bot, Settings};
 use discord_bot::commands::Rest;
 use discord_bot::counter::Counters;
 use discord_bot::discord::DiscordRest;
+use discord_bot::gateway::Gateway;
 use discord_bot::keys::{Keys, generate_code, load_state, save_state};
 use discord_bot::metagame::{Http, MetagameBackend};
 use service_kit::env::Env;
@@ -27,8 +28,6 @@ struct Cli {
 const MEMBER_INTENT_FLAGS: u64 = (1 << 14) | (1 << 15);
 
 fn main() -> ExitCode {
-    // Two rustls providers are compiled in (serenity's HTTP client brings ring): name the default
-    let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
     let cli = Cli::parse();
     let file = cli
         .env_file
@@ -112,27 +111,28 @@ async fn run(env: Env) -> Result<ExitCode, String> {
         metagame_url,
         recovery_secret: env.get("KEY_RECOVERY_SERVICE_SECRET").map(str::to_owned),
     };
-    let bot = Bot::new(keys, counters.clone(), invite_config, settings, rest, member_intent);
-    let last_ready = bot.last_ready.clone();
-    let mut client = serenity::Client::builder(token, Bot::intents(member_intent))
-        .event_handler(bot)
-        .await
-        .map_err(|e| e.to_string())?;
+    let bot = Arc::new(Bot::new(
+        keys,
+        counters.clone(),
+        invite_config,
+        settings,
+        rest.clone(),
+        member_intent,
+    ));
+    let url = match rest.get("/gateway/bot").await {
+        Ok(gateway) => gateway["url"].as_str().unwrap_or("wss://gateway.discord.gg").to_owned(),
+        Err(_) => "wss://gateway.discord.gg".to_owned(),
+    };
+    let gateway = Arc::new(Gateway::new(token, Bot::intents(member_intent), &url));
 
     // A live process is not necessarily a connected bot: let the supervisor recover a stalled start or
     // a gateway that never reconnects, without touching key state
-    let shards = client.shard_manager.clone();
+    let (last_ready, watched) = (bot.last_ready.clone(), gateway.clone());
     tokio::spawn(async move {
         loop {
             tokio::time::sleep(Duration::from_secs(15)).await;
-            let connected = shards
-                .runners
-                .lock()
-                .await
-                .values()
-                .any(|runner| runner.stage == serenity::gateway::ConnectionStage::Connected);
             let now = chrono::Utc::now().timestamp_millis();
-            if connected {
+            if watched.connected.load(Ordering::SeqCst) {
                 last_ready.store(now, Ordering::SeqCst);
             } else if now - last_ready.load(Ordering::SeqCst) > 120_000 {
                 eprintln!("Key bot connection unavailable for 120 seconds; restarting");
@@ -140,12 +140,18 @@ async fn run(env: Env) -> Result<ExitCode, String> {
             }
         }
     });
-    let shards = client.shard_manager.clone();
+    let (stop, stopped) = tokio::sync::watch::channel(false);
     tokio::spawn(async move {
         service_kit::serve::stop_requested().await;
-        shards.shutdown_all().await;
+        let _ = stop.send(true);
     });
-    if client.start().await.is_err() {
+    let (events, mut dispatches) = tokio::sync::mpsc::unbounded_channel::<discord_bot::gateway::Dispatch>();
+    tokio::spawn(async move {
+        while let Some((name, data)) = dispatches.recv().await {
+            bot.dispatch(&name, data);
+        }
+    });
+    if gateway.run(events, stopped).await.is_err() {
         eprintln!("Discord login failed");
         return Ok(ExitCode::FAILURE);
     }

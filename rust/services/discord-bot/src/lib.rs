@@ -7,6 +7,7 @@ pub mod bot;
 pub mod commands;
 pub mod counter;
 pub mod discord;
+pub mod gateway;
 pub mod instance;
 pub mod invite;
 pub mod keys;

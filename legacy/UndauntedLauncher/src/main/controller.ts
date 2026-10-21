@@ -195,6 +195,8 @@ export class Controller {
   private news: NewsItem[] | null = null;
   private newsCheckedAt = -Infinity;
   private newsLoading = false;
+  // News and art load in the background; shutdown waits for them.
+  private extrasTask: Promise<void> = Promise.resolve();
   private branding: Branding | null = null;
   private art = new Map<string, { file: string; type: string }>();
   private relay: Relay | null = null;
@@ -534,7 +536,7 @@ export class Controller {
         if (sv.mode === "public") this.contentProbe = await probeContent(ep);
         await this.checkAccount();
         await this.inspectInstall();
-        void this.loadExtras();
+        this.inBackground(() => this.loadExtras());
       } else {
         this.reachable = false;
         if (res.kind === "bad_answer") this.connectProblem = "bad_answer";
@@ -644,8 +646,8 @@ export class Controller {
       this.status = res.status;
       this.statusUnsupported = false;
       this.failedPolls = 0;
-      if (this.branding === null) void this.loadExtras();
-      else void this.refreshNews();
+      if (this.branding === null) this.inBackground(() => this.loadExtras());
+      else this.inBackground(() => this.refreshNews());
     } else if (res.kind === "unsupported") {
       this.statusUnsupported = true;
       this.failedPolls = 0;
@@ -681,6 +683,11 @@ export class Controller {
       const items = await fetchNews(ep, this.news ?? []);
       if (generation === this.statusGen) { this.news = items; this.publish(); }
     } finally { this.newsLoading = false; }
+  }
+
+  private inBackground(task: () => Promise<void>): void {
+    const run = task().catch((e: unknown) => log.warn(`could not load the server's news or art: ${describeError(e)}`));
+    this.extrasTask = Promise.all([this.extrasTask, run]).then(() => undefined);
   }
 
   private async loadExtras(): Promise<void> {
@@ -1685,6 +1692,7 @@ export class Controller {
   async shutdown(): Promise<void> {
     this.shuttingDown = true;
     await this.saveTask?.catch(() => undefined);
+    await this.extrasTask;
     this.setStatusPolling(false);
     this.job?.cancel();
     this.taskAbort?.abort();

@@ -43,6 +43,15 @@ const ALLOWED_CONTENT = {
     // Throwaway key pair, tokens and recovery blob made by make-node-crypto.cjs for the Rust metagame's
     // compatibility tests; nothing in it is used by a server.
     "rust/services/metagame/tests/fixtures/node-crypto.json": ["private-key-b64", "jwt", "account-key"],
+    // The Rust gateway's copies of the made-up token and key above (the key is "fedcba9876543210" three
+    // times), in its redaction tests and the requests and answers recorded from the Node gateway.
+    "rust/services/gateway/src/redact.rs": ["jwt"],
+    "rust/services/gateway/tests/common/mod.rs": ["jwt"],
+    "rust/services/gateway/tests/gateway.rs": ["account-key"],
+    "rust/services/gateway/tests/parity/gateway.expected.json": ["jwt", "account-key"],
+    "rust/services/gateway/tests/parity/gateway.requests.json": ["jwt", "account-key"],
+    // Key-rotation replay requests with placeholder keys (one repeated hex digit).
+    "rust/services/metagame/tests/parity/keyrotation.requests.json": ["account-key"],
 };
 
 // The only DLLs the repository may hold: Undaunted's prebuilt server DLLs, which the launcher ships and the

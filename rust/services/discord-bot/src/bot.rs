@@ -5,16 +5,17 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::{Arc, Mutex, PoisonError};
+use std::time::Duration;
 
 use serde_json::{Value, json};
-use serenity::all::{
-    CommandInteraction, Context, CreateInteractionResponse, CreateInteractionResponseMessage, EventHandler,
-    GatewayIntents, GuildId, Interaction as Event, Member, Ready, User,
-};
 
 use crate::commands::{Rest, key_command, sync_counter_command, sync_key_commands};
 use crate::counter::Counters;
-use crate::discord::{DiscordGuild, DiscordRest, KeyInteraction, failure, find_invite_message};
+use crate::discord::{
+    Cache, DiscordGuild, DiscordRest, KeyInteraction, command_user, defer_ephemeral, direct_message, edit_response,
+    find_invite_message, respond,
+};
+use crate::gateway;
 use crate::invite::invite_message;
 use crate::keys::{Failure, Keys, Outcome};
 use crate::link_input::{KEY_INSTRUCTIONS, LinkInput, link_input};
@@ -35,6 +36,7 @@ pub struct Bot {
     pub rest: Arc<DiscordRest>,
     pub member_intent: bool,
     pub last_ready: Arc<AtomicI64>,
+    pub cache: Arc<Cache>,
     active: Mutex<HashSet<String>>,
     cooldown: Mutex<HashMap<String, i64>>,
     transport: MetagameHttp,
@@ -71,8 +73,11 @@ pub fn message(status: &str) -> String {
     }
 }
 
-fn subcommand(command: &CommandInteraction) -> String {
-    command.data.options.first().map(|o| o.name.clone()).unwrap_or_default()
+fn subcommand(command: &Value) -> String {
+    command["data"]["options"][0]["name"]
+        .as_str()
+        .unwrap_or_default()
+        .to_owned()
 }
 
 impl Bot {
@@ -93,17 +98,18 @@ impl Bot {
             rest,
             member_intent,
             last_ready: Arc::new(AtomicI64::new(now())),
+            cache: Arc::default(),
             active: Mutex::default(),
             cooldown: Mutex::default(),
             transport: MetagameHttp::default(),
         }
     }
 
-    pub fn intents(member_intent: bool) -> GatewayIntents {
+    pub fn intents(member_intent: bool) -> u64 {
         if member_intent {
-            GatewayIntents::GUILDS | GatewayIntents::GUILD_MEMBERS
+            gateway::GUILDS | gateway::GUILD_MEMBERS
         } else {
-            GatewayIntents::GUILDS
+            gateway::GUILDS
         }
     }
 
@@ -111,20 +117,20 @@ impl Bot {
         invite_message(&self.invite_config, code).map_err(Failure::new)
     }
 
-    async fn key(&self, ctx: &Context, command: CommandInteraction) {
-        let id = command.user.id.to_string();
+    async fn key(&self, command: Value) {
+        let id = command_user(&command);
         let mut stage = "acknowledge".to_owned();
         let interaction = KeyInteraction {
-            http: ctx.http.clone(),
+            rest: self.rest.clone(),
             command: command.clone(),
             ephemeral: true,
         };
         let mut deferred = false;
         let result: Result<(), Failure> = async {
-            command.defer_ephemeral(&ctx.http).await.map_err(failure)?;
+            defer_ephemeral(&self.rest, &command).await?;
             deferred = true;
-            if let (Some(guild), Some(here)) = (&self.settings.guild, command.guild_id)
-                && here.to_string() != *guild
+            if let (Some(guild), Some(here)) = (&self.settings.guild, command["guild_id"].as_str())
+                && here != guild
             {
                 return interaction
                     .edit_reply("Use this command in the Revived server or in a DM with me.".into())
@@ -154,7 +160,7 @@ impl Bot {
                     .unwrap_or_else(PoisonError::into_inner)
                     .insert(id.clone(), now() + 10_000);
             }
-            let result = self.key_command(ctx, &command, &interaction, &mut stage).await;
+            let result = self.key_command(&command, &interaction, &mut stage).await;
             self.active.lock().unwrap_or_else(PoisonError::into_inner).remove(&id);
             result
         }
@@ -175,12 +181,11 @@ impl Bot {
 
     async fn key_command(
         &self,
-        ctx: &Context,
-        command: &CommandInteraction,
+        command: &Value,
         interaction: &KeyInteraction,
         stage: &mut String,
     ) -> Result<(), Failure> {
-        let id = command.user.id.to_string();
+        let id = command_user(command);
         let name = subcommand(command);
         stage.clone_from(&name);
         let base = self.settings.metagame_url.clone();
@@ -208,23 +213,22 @@ impl Bot {
             let key = interaction.option("key").unwrap_or_default();
             self.keys.link(&id, service_kit::js::trim(&key)).await?
         } else if claim {
-            let (http, user, bot) = (ctx.http.clone(), command.user.id, ctx.cache.current_user().id);
-            let dm_user = command.user.clone();
+            let (rest, user, bot) = (&*self.rest, id.clone(), self.cache.user());
             let config = &self.invite_config;
+            let dm_user = user.clone();
             let send: crate::keys::Send_<'_> = Box::new(move |code| {
-                let http = http.clone();
+                let dm_user = dm_user.clone();
                 Box::pin(async move {
                     let content = invite_message(config, &code).map_err(Failure::new)?;
-                    dm_user
-                        .direct_message(&http, serenity::all::CreateMessage::new().content(content))
+                    direct_message(rest, &dm_user, json!({ "content": content }))
                         .await
-                        .map(|m| Some(m.id.to_string()))
-                        .map_err(failure)
+                        .map(Some)
                 })
             });
-            let http = ctx.http.clone();
-            let reconcile: crate::keys::Reconcile<'_> =
-                Box::new(move |code| Box::pin(async move { find_invite_message(&http, user, bot, &code).await }));
+            let reconcile: crate::keys::Reconcile<'_> = Box::new(move |code| {
+                let (user, bot) = (user.clone(), bot.clone());
+                Box::pin(async move { find_invite_message(rest, &user, &bot, &code).await })
+            });
             self.keys.deliver(&id, send, Some(reconcile)).await?
         } else {
             self.keys.run(&id, false).await?
@@ -264,68 +268,104 @@ impl Bot {
         interaction.edit_reply(message(&result.status)).await
     }
 
-    async fn counter(&self, ctx: &Context, command: CommandInteraction) {
+    async fn counter(&self, command: Value) {
         if !self.member_intent {
-            let reply = CreateInteractionResponseMessage::new()
-                .content("Enable Server Members Intent for this bot in Discord Developer Portal. The bot will reconnect automatically within a minute.")
-                .ephemeral(true);
-            let _ = command
-                .create_response(&ctx.http, CreateInteractionResponse::Message(reply))
-                .await;
+            let reply = json!({ "type": 4, "data": {
+                "content": "Enable Server Members Intent for this bot in Discord Developer Portal. The bot will reconnect automatically within a minute.",
+                "flags": 64,
+            } });
+            let _ = respond(&self.rest, &command, reply).await;
             return;
         }
-        if command.defer_ephemeral(&ctx.http).await.is_err() {
+        if defer_ephemeral(&self.rest, &command).await.is_err() {
             eprintln!("Counter interaction failed");
             return;
         }
-        let category = command
-            .data
-            .options
-            .iter()
-            .find(|o| o.name == "category_id")
-            .and_then(|o| o.value.as_str())
+        let category = command["data"]["options"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .find(|o| o["name"] == "category_id")
+            .and_then(|o| o["value"].as_str())
             .unwrap_or("")
             .to_owned();
-        let guild = command.guild_id.map(|id| self.guild(ctx, id));
+        let guild = command["guild_id"].as_str().map(|id| self.guild(id));
         let reply = self
             .counters
             .configure(
                 guild.as_ref().map(|g| g as &dyn crate::counter::Guild),
-                &command.user.id.to_string(),
+                &command_user(&command),
                 &category,
             )
             .await;
-        let edit = serenity::all::EditInteractionResponse::new().content(reply);
-        if command.edit_response(&ctx.http, edit).await.is_err() {
+        if edit_response(&self.rest, &command, json!({ "content": reply }))
+            .await
+            .is_err()
+        {
             eprintln!("Counter interaction failed");
         }
     }
 
-    fn guild(&self, ctx: &Context, id: GuildId) -> DiscordGuild {
+    fn guild(&self, id: &str) -> DiscordGuild {
         DiscordGuild {
-            http: ctx.http.clone(),
-            cache: ctx.cache.clone(),
-            id,
-            bot: ctx.cache.current_user().id,
+            rest: self.rest.clone(),
+            cache: self.cache.clone(),
+            id: id.to_owned(),
+            bot: self.cache.user(),
         }
     }
 
-    fn schedule(&self, ctx: &Context, id: GuildId) {
-        if self.member_intent {
-            self.counters.schedule(Arc::new(self.guild(ctx, id)));
+    fn schedule(&self, id: &str) {
+        if self.member_intent && !id.is_empty() {
+            self.counters.schedule(Arc::new(self.guild(id)));
         }
     }
-}
 
-#[serenity::async_trait]
-impl EventHandler for Bot {
-    async fn ready(&self, ctx: Context, ready: Ready) {
+    /// One gateway dispatch. The cache takes it in first; the handlers run as their own tasks.
+    pub fn dispatch(self: &Arc<Self>, name: &str, data: Value) {
+        self.cache.update(name, &data);
+        let bot = self.clone();
+        match name {
+            "READY" => {
+                tokio::spawn(async move { bot.ready(data).await });
+            }
+            "RESUMED" => self.last_ready.store(now(), Ordering::SeqCst),
+            // Application commands only
+            "INTERACTION_CREATE" if data["type"] == 2 => {
+                tokio::spawn(async move {
+                    match data["data"]["name"].as_str() {
+                        Some("counter") => bot.counter(data).await,
+                        Some("key") => bot.key(data).await,
+                        _ => {}
+                    }
+                });
+            }
+            "GUILD_MEMBER_ADD" | "GUILD_MEMBER_REMOVE" => {
+                self.schedule(data["guild_id"].as_str().unwrap_or_default());
+            }
+            _ => {}
+        }
+    }
+
+    async fn ready(&self, ready: Value) {
         self.last_ready.store(now(), Ordering::SeqCst);
-        let mut guilds: Vec<String> = ready.guilds.iter().map(|g| g.id.to_string()).collect();
+        let mut guilds: Vec<String> = ready["guilds"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|g| g["id"].as_str().map(str::to_owned))
+            .collect();
+        // discord.js reports ready once its guilds have arrived, or after 15 seconds without them
+        for _ in 0..60 {
+            if guilds.iter().all(|id| self.cache.guild(id).is_some()) {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(250)).await;
+        }
         if let Some(guild) = &self.settings.guild {
             guilds.push(guild.clone());
         }
-        let application = ready.application.id.to_string();
+        let application = ready["application"]["id"].as_str().unwrap_or_default().to_owned();
         let command = key_command(self.settings.recovery_secret.is_some());
         let rest: &dyn Rest = &*self.rest;
         let registered = async {
@@ -341,45 +381,19 @@ impl EventHandler for Bot {
             }
             Err(_) => {
                 eprintln!("Could not register /key");
-                ctx.shard.shutdown_clean();
                 std::process::exit(1);
             }
         }
         if self.member_intent {
             for id in self.counters.configured_guilds().await {
-                let Ok(id) = id.parse::<u64>() else { continue };
-                if id == 0 || ctx.cache.guild(GuildId::new(id)).is_none() {
+                if self.cache.guild(&id).is_none() {
                     continue;
                 }
-                if self
-                    .counters
-                    .refresh(&self.guild(&ctx, GuildId::new(id)))
-                    .await
-                    .is_err()
-                {
+                if self.counters.refresh(&self.guild(&id)).await.is_err() {
                     eprintln!("Counter startup refresh failed");
                 }
             }
         }
-    }
-
-    async fn interaction_create(&self, ctx: Context, interaction: Event) {
-        let Event::Command(command) = interaction else {
-            return;
-        };
-        match command.data.name.as_str() {
-            "counter" => self.counter(&ctx, command).await,
-            "key" => self.key(&ctx, command).await,
-            _ => {}
-        }
-    }
-
-    async fn guild_member_addition(&self, ctx: Context, member: Member) {
-        self.schedule(&ctx, member.guild_id);
-    }
-
-    async fn guild_member_removal(&self, ctx: Context, guild_id: GuildId, _user: User, _member: Option<Member>) {
-        self.schedule(&ctx, guild_id);
     }
 }
 
