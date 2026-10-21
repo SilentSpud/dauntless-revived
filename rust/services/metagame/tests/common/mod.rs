@@ -112,6 +112,10 @@ impl TestApp {
             .map(|(k, v)| ((*k).to_owned(), (*v).to_owned()))
             .collect();
         pairs.push(("DB_FILENAME".into(), db_text));
+        // Node's tests run in the service folder, where the default "store-images" is
+        let images =
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../legacy/UndauntedMetagame/store-images");
+        pairs.push(("STORE_IMAGES_DIR".into(), images.to_string_lossy().into_owned()));
         pairs.push((
             "AUTH_SIGNING_PRIVKEY_B64".into(),
             keys["privB64"].as_str().unwrap().into(),

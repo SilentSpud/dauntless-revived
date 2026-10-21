@@ -4,7 +4,9 @@ use metagame::store::{self as shop, GrantKind, Offer};
 use serde_json::{Value, json};
 
 use crate::common::TestApp;
-use crate::middleman_store::{WEEKLY, app_with, at, create, credit, family, offers, price, redeem};
+use crate::storekit::{app_with, at, create, credit, family, offers, price, redeem};
+
+const WEEKLY: &str = "weekly_cell_offering";
 
 #[tokio::test(flavor = "multi_thread")]
 async fn shares_exact_availability_boundaries_with_all_rotating_shop_categories() {
@@ -46,7 +48,7 @@ fn rotates_three_stable_families_at_the_thursday_18_00_utc_reset() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn lists_only_this_week_s_cells_each_available_once() {
-    let app = app_with(&[]).await;
+    let app = app_with(false, true, &[]).await;
     let (user, _) = app.make_player().await;
     let listed = offers(&app, &user, WEEKLY).await;
     assert_eq!(listed.len(), 3);
@@ -75,9 +77,9 @@ async fn lists_only_this_week_s_cells_each_available_once() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn spends_aetherdust_atomically_and_sells_each_weekly_cell_once_per_reset() {
-    let app = app_with(&[]).await;
+    let app = app_with(false, true, &[]).await;
     let (user, character) = app.make_player().await;
-    credit(&app, &character, 500);
+    credit(&app, &character, "CURRENCY_CELLDUST", 500);
     let first = offers(&app, &user, WEEKLY).await.remove(0);
     let (id, cost) = (first["id"].as_str().unwrap().to_owned(), price(&first));
 
@@ -89,7 +91,7 @@ async fn spends_aetherdust_atomically_and_sells_each_weekly_cell_once_per_reset(
     let remaining = |list: Vec<Offer>| list.iter().find(|o| o["id"] == id.as_str()).unwrap()["remaining"].clone();
     assert_eq!(remaining(offers(&app, &user, WEEKLY).await), 0);
     assert_eq!(create(&app, &user, "CURRENCY_CELLDUST", &id).await, Err(409));
-    credit(&app, &character, 500 - cost);
+    credit(&app, &character, "CURRENCY_CELLDUST", 500 - cost);
     assert_eq!(create(&app, &user, "CURRENCY_CELLDUST", &id).await, Err(409));
     assert_eq!(app.stack_quantity(&character, "CURRENCY_CELLDUST"), 500 - cost);
 
@@ -107,9 +109,9 @@ async fn spends_aetherdust_atomically_and_sells_each_weekly_cell_once_per_reset(
 
 #[tokio::test(flavor = "multi_thread")]
 async fn lets_only_the_first_of_two_outstanding_tokens_buy_this_week_s_cell() {
-    let app = app_with(&[]).await;
+    let app = app_with(false, true, &[]).await;
     let (user, character) = app.make_player().await;
-    credit(&app, &character, 500);
+    credit(&app, &character, "CURRENCY_CELLDUST", 500);
     let first = offers(&app, &user, WEEKLY).await.remove(0);
     let (id, cell) = (
         first["id"].as_str().unwrap(),
