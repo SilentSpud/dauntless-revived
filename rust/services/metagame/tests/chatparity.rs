@@ -179,7 +179,8 @@ async fn run_chat(name: &str) {
 
     let mut clients: BTreeMap<String, Client> = BTreeMap::new();
     let mut actual = Vec::new();
-    for step in script["steps"].as_array().unwrap() {
+    let wanted = expected["results"].as_array().unwrap().clone();
+    for (index, step) in script["steps"].as_array().unwrap().iter().enumerate() {
         let mut http = None;
         let mut seen = serde_json::Map::new();
         if let Some(who) = step["connect"].as_str() {
@@ -225,23 +226,40 @@ async fn run_chat(name: &str) {
         }
         let wait = step["wait"].as_u64().or(step["settle"].as_u64()).unwrap_or(150);
         tokio::time::sleep(Duration::from_millis(wait)).await;
-        let mut gone = Vec::new();
-        for (who, client) in clients.iter_mut() {
-            let mut frames = Vec::new();
-            let mut closed = None;
-            while let Ok(heard) = client.heard.try_recv() {
-                match heard {
-                    Heard::Frame(frame) => frames.push(json!(frame)),
-                    Heard::Closed(code) => closed = Some(code),
+        // A busy runner can deliver a step's frames after the wait: keep listening, up to 3 s more,
+        // while fewer frames than Node's have arrived (more, or different ones, still fail below)
+        let want = wanted.get(index).map(|w| w["seen"].clone()).unwrap_or(Value::Null);
+        let mut heard: BTreeMap<String, (Vec<Value>, Option<Value>)> = BTreeMap::new();
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(3);
+        loop {
+            for (who, client) in clients.iter_mut() {
+                let entry = heard.entry(who.clone()).or_default();
+                while let Ok(next) = client.heard.try_recv() {
+                    match next {
+                        Heard::Frame(frame) => entry.0.push(json!(frame)),
+                        Heard::Closed(code) => entry.1 = Some(code),
+                    }
                 }
             }
+            let short = clients.keys().any(|who| {
+                let (frames, closed) = &heard[who];
+                let expected_frames = want[who]["frames"].as_array().map_or(0, Vec::len);
+                frames.len() < expected_frames || (closed.is_none() && !want[who]["closed"].is_null())
+            });
+            if !short || tokio::time::Instant::now() >= deadline {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(50)).await;
+        }
+        let mut gone = Vec::new();
+        for (who, (frames, closed)) in heard {
             if !frames.is_empty() || closed.is_some() {
                 let mut entry = json!({"frames": frames});
                 if let Some(code) = closed {
                     entry["closed"] = code;
                     gone.push(who.clone());
                 }
-                seen.insert(who.clone(), entry);
+                seen.insert(who, entry);
             }
         }
         for who in gone {
@@ -355,6 +373,14 @@ impl Timed {
         self.chat.as_ref().unwrap().port
     }
 
+    /// Connects and gives the server a moment to register the session, so its start time is read
+    /// before the test moves the clock
+    async fn connect(&self) -> Client {
+        let client = connect(self.port(), &serde_json::Map::new()).await.unwrap();
+        tokio::time::sleep(Duration::from_millis(300)).await;
+        client
+    }
+
     /// Moves the clock and lets a tick (every second) see it
     async fn later(&self, ms: i64) {
         self.now.fetch_add(ms, std::sync::atomic::Ordering::Relaxed);
@@ -415,7 +441,7 @@ async fn close_code(client: &mut Client) -> Option<Value> {
 #[tokio::test(flavor = "multi_thread")]
 async fn a_connection_that_never_logs_in_goes_after_15_s() {
     let timed = Timed::start().await;
-    let mut client = connect(timed.port(), &serde_json::Map::new()).await.unwrap();
+    let mut client = timed.connect().await;
     timed.later(14_000).await;
     assert_eq!(drain(&mut client).1, None);
     timed.later(1_000).await;
@@ -425,7 +451,7 @@ async fn a_connection_that_never_logs_in_goes_after_15_s() {
 #[tokio::test(flavor = "multi_thread")]
 async fn a_login_that_never_binds_goes_after_10_s() {
     let timed = Timed::start().await;
-    let mut client = connect(timed.port(), &serde_json::Map::new()).await.unwrap();
+    let mut client = timed.connect().await;
     timed.login(&client, false).await;
     let (frames, closed) = drain(&mut client);
     assert_eq!(
@@ -440,7 +466,7 @@ async fn a_login_that_never_binds_goes_after_10_s() {
 #[tokio::test(flavor = "multi_thread")]
 async fn a_silent_session_is_pinged_after_50_s_and_ended_100_s_later() {
     let timed = Timed::start().await;
-    let mut client = connect(timed.port(), &serde_json::Map::new()).await.unwrap();
+    let mut client = timed.connect().await;
     timed.login(&client, true).await;
     drain(&mut client);
     timed.later(49_000).await;
@@ -473,7 +499,7 @@ async fn a_silent_session_is_pinged_after_50_s_and_ended_100_s_later() {
 #[tokio::test(flavor = "multi_thread")]
 async fn shutdown_sends_close_to_every_session() {
     let mut timed = Timed::start().await;
-    let mut client = connect(timed.port(), &serde_json::Map::new()).await.unwrap();
+    let mut client = timed.connect().await;
     timed.login(&client, true).await;
     drain(&mut client);
     timed.chat.take().unwrap().stop().await;
