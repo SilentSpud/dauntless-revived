@@ -201,8 +201,12 @@ Done so far:
   IQs, rooms with their refusals and limits, whispers, guild rooms, sessions and ghosts, the throttles,
   friends' presence over HTTP friendships, held-back changes, `CHAT_NICK_CHECK=log`, an oversized
   frame). The timers (login and bind deadlines, idle pings, ping timeouts) and shutdown are checked
-  on a clock the tests move. Left of B3: the `cargo-fuzz` target on the parser (M33, before cutover),
-  and the TS chat tests themselves, which build the chat in process and stay Node's.
+  on a clock the tests move. Left of B3: the TS chat tests themselves, which build the chat in
+  process and stay Node's.
+- Metagame B3, M33: `rust/fuzz` (cargo-fuzz, nightly, its own workspace) fuzzes the frame parser and
+  the helpers that read client text (JIDs, nicknames, the trace redaction, log text) for panics, and
+  checks that a parsed tree holds nothing longer than its input. First run: 10 minutes, about 470,000
+  inputs from the parity scripts' frames, nothing found. Left: the 24-hour run before cutover.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

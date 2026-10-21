@@ -3,6 +3,8 @@
 [workspace]
 resolver = "3"
 members = ["crates/*", "services/*"]
+# The fuzz targets (cargo fuzz, nightly) are a workspace of their own
+exclude = ["fuzz"]
 
 [workspace.package]
 version = "0.0.0"

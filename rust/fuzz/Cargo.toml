@@ -1,0 +1,28 @@
+# Fuzz targets for untrusted input (MIGRATION_PLAN.md M33), with cargo-fuzz on nightly, from rust/fuzz:
+#   cargo +nightly fuzz run chat_frame -- -max_len=32768 -max_total_time=86400
+# On Windows the AddressSanitizer runtime (clang_rt.asan_dynamic-x86_64.dll) must be on PATH: it is in
+# the Visual Studio install, VC\Tools\MSVC\<version>in\Hostx64d. Seed the corpus from the
+# chat parity scripts' frames (any frame file in corpus/chat_frame will do). A workspace of its own:
+# cargo fuzz needs nightly and its own build flags.
+[package]
+name = "dauntless-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+metagame = { path = "../services/metagame" }
+
+[[bin]]
+name = "chat_frame"
+path = "fuzz_targets/chat_frame.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]
