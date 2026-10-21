@@ -68,6 +68,9 @@ impl AllowlistFeed {
             .collect();
         let client = Client::builder(TokioExecutor::new())
             .pool_max_idle_per_host(4)
+            // The helper closes idle connections soon; a report a minute needs no warm ones
+            .pool_idle_timeout(Duration::from_secs(2))
+            .pool_timer(hyper_util::rt::TokioTimer::new())
             .build_http();
         Self {
             inner: Arc::new(Inner {

@@ -236,8 +236,24 @@ Done so far:
   `tests/parity` runs 40 raw requests through the Node and the Rust gateway against the same fake
   upstreams: statuses, headers, bodies, access-log lines and the feed's addresses equal. Known
   difference: requests the HTTP parser rejects (bad syntax, oversized heads) get hyper's own 400 or
-  431 with an empty body instead of Node's JSON one. Left: traffic capture (M2), the allowlist helper
-  (S3) and the process-level e2e tests with it, and connecting a 0.1.x and a 0.2.x launcher through it.
+  431 with an empty body instead of Node's JSON one. Left: traffic capture (M2), and connecting a
+  0.1.x and a 0.2.x launcher through it.
+- Part C, S3: the allowlist helper, one binary for both platforms (`allowlist` in the gateway
+  package; `--close-ports` as before). The Windows helper's design is the shared one: the debounced
+  firewall sync (one change per interval, retried with backoff), the audit log, the saved state and
+  the loopback HTTP endpoint with the shared secret, unchanged for the gateway. Windows changes its
+  rule through the COM API (`INetFwPolicy2`) instead of PowerShell: the rule is found by the name the
+  Node helper gave it, so an existing rule is taken over, never duplicated. Linux feeds `nft -f -`
+  the same table and sets as `allowlist.mjs`, with a fixed argument list. Real mode on Windows still
+  refuses to start without administrator rights. Differences from the Linux Node helper: it now needs
+  `ALLOWLIST_DRY_RUN` set like the Windows one (both kits already set it), answers 200 before the
+  rule change runs and retries a failed change instead of answering 503, and `--close-ports` keeps
+  the saved set. A dry run writes the change it would make (enabled, addresses, ports; on Linux the
+  nft script) instead of the PowerShell script. Tests: the state, sync, config and script tests, the
+  helper over HTTP (secret, paths, refusals, debouncing, expiry, restart) and the e2e tests with the
+  gateway, in process and as the two binaries, all in dry run. Left: checking the rule after login
+  and logout on a real Windows server and a real Linux server (needs administrator rights on a
+  machine whose firewall may change), and the kits' service files, at cutover (B5).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite
