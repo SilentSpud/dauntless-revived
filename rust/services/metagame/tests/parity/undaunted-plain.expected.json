@@ -1,0 +1,43 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /undaunted/api/HuntRegion",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"region\":\"main\",\"enabled\":false,\"probes\":[]}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 503,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"region_unavailable\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DiscordKeyStats",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"at\":\"<date>\",\"linkedAccounts\":0,\"bot\":null,\"error\":\"Bot claim statistics are not configured.\"}"
+    },
+    {
+      "request": "GET /undaunted/api/ServerStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"name\":\"Dauntless Revived\",\"online\":true,\"version\":\"1.0.0\",\"commit\":\"unknown\",\"sourceUrl\":\"https://github.com/mixutin/dauntless-revived\",\"registration\":\"NONE\",\"playersOnline\":0,\"players\":[],\"instances\":[],\"contentPort\":null,\"uptimeSeconds\":<n>,\"limited\":false}"
+    }
+  ]
+}

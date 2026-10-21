@@ -1,0 +1,480 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /undaunted/api/ServerStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"name\":\"Test Server\",\"online\":true,\"version\":\"9.9.9\",\"commit\":\"abc1234\",\"sourceUrl\":\"https://github.com/mixutin/dauntless-revived\",\"registration\":\"INVITECODE\",\"playersOnline\":0,\"players\":[],\"instances\":[],\"contentPort\":8080,\"uptimeSeconds\":<n>,\"limited\":true}"
+    },
+    {
+      "request": "GET /undaunted/api/HuntRegion",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/HuntRegion",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"region\":\"main\",\"enabled\":true,\"probes\":[{\"region\":\"main\",\"host\":\"main.example.test\",\"port\":443},{\"region\":\"us\",\"host\":\"us.example.test\",\"port\":7777}]}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_region\"}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"invalid_region\"}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 410,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"region_retired\",\"replacement\":\"us\"}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 503,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"error\":\"region_unavailable\"}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"region\":\"us\"}"
+    },
+    {
+      "request": "GET /undaunted/api/HuntRegion",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"region\":\"us\",\"enabled\":true,\"probes\":[{\"region\":\"main\",\"host\":\"main.example.test\",\"port\":443},{\"region\":\"us\",\"host\":\"us.example.test\",\"port\":7777}]}"
+    },
+    {
+      "request": "POST /undaunted/api/HuntRegion",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"region\":\"main\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DiscordKeyStats",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/DiscordKeyStats",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"at\":\"<date>\",\"linkedAccounts\":0,\"bot\":null,\"error\":\"Bot claim statistics are unavailable; no zero counts have been assumed.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DiscordLink",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=119; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"status\":\"invalid_key\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DiscordLink",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=118; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"status\":\"linked\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DiscordLink",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"status\":\"linked\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DiscordLink",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=116; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"status\":\"discord_already_linked\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DiscordLink",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=115; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"status\":\"account_already_linked\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DiscordLink",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=114; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"status\":\"invalid_key\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DiscordLink/12",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=117; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"invalid_discord_id\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DiscordLink/123456789012345678",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=116; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"account\":{\"userId\":\"UID-a\",\"username\":\"Ada\"}}"
+    },
+    {
+      "request": "GET /undaunted/api/DiscordLink/123456789012345670",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=115; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"account\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DiscordKeyStats",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=114; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"at\":\"<date>\",\"linkedAccounts\":1,\"bot\":null,\"error\":\"Bot claim statistics are unavailable; no zero counts have been assumed.\"}"
+    },
+    {
+      "request": "GET /undaunted/api/BackendHealth",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=113; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"health_disabled\"}"
+    },
+    {
+      "request": "GET /undaunted/api/BackendHealth",
+      "status": 403,
+      "headers": {
+        "ratelimit": "\"120-in-1min\"; r=112; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=111; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[{\"id\":\"UID-a\",\"name\":\"Ada\",\"admin\":false,\"developer\":true,\"keyFingerprint\":\"a890ae1c9bcd3ec2\"},{\"id\":\"UID-b\",\"name\":\"bo\",\"admin\":false,\"developer\":false,\"keyFingerprint\":\"fd8fedfe3cef0af4\"},{\"id\":\"UID-c\",\"name\":\"Cy\",\"admin\":false,\"developer\":false,\"keyFingerprint\":null},{\"id\":\"UID-owner\",\"name\":\"Slayer\",\"admin\":true,\"developer\":false,\"keyFingerprint\":\"9ded81e8e21b8dca\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?offset=-1",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=110; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"invalid_offset\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?offset=abc",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=109; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"invalid_offset\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?offset=1.5",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=108; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"invalid_offset\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?offset=1",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=107; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[{\"id\":\"UID-b\",\"name\":\"bo\",\"admin\":false,\"developer\":false,\"keyFingerprint\":\"fd8fedfe3cef0af4\"},{\"id\":\"UID-c\",\"name\":\"Cy\",\"admin\":false,\"developer\":false,\"keyFingerprint\":null},{\"id\":\"UID-owner\",\"name\":\"Slayer\",\"admin\":true,\"developer\":false,\"keyFingerprint\":\"9ded81e8e21b8dca\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?offset=",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=106; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[{\"id\":\"UID-a\",\"name\":\"Ada\",\"admin\":false,\"developer\":true,\"keyFingerprint\":\"a890ae1c9bcd3ec2\"},{\"id\":\"UID-b\",\"name\":\"bo\",\"admin\":false,\"developer\":false,\"keyFingerprint\":\"fd8fedfe3cef0af4\"},{\"id\":\"UID-c\",\"name\":\"Cy\",\"admin\":false,\"developer\":false,\"keyFingerprint\":null},{\"id\":\"UID-owner\",\"name\":\"Slayer\",\"admin\":true,\"developer\":false,\"keyFingerprint\":\"9ded81e8e21b8dca\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?q=%20AD%20",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=105; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[{\"id\":\"UID-a\",\"name\":\"Ada\",\"admin\":false,\"developer\":true,\"keyFingerprint\":\"a890ae1c9bcd3ec2\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?q=uid-b",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=104; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[{\"id\":\"UID-b\",\"name\":\"bo\",\"admin\":false,\"developer\":false,\"keyFingerprint\":\"fd8fedfe3cef0af4\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?q=fd8fedfe3c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=103; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[{\"id\":\"UID-b\",\"name\":\"bo\",\"admin\":false,\"developer\":false,\"keyFingerprint\":\"fd8fedfe3cef0af4\"}],\"nextOffset\":null}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?q=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=102; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"error\":\"invalid_query\"}"
+    },
+    {
+      "request": "GET /undaunted/api/DashboardAccounts?q=nobody",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+        "ratelimit": "\"120-in-1min\"; r=101; t=<s>",
+        "ratelimit-policy": "\"120-in-1min\"; q=120; w=60; pk=:MTJjYTE3YjQ5YWYy:"
+      },
+      "body": "{\"accounts\":[],\"nextOffset\":null}"
+    },
+    {
+      "request": "POST /undaunted/api/PlayingEnded",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/PlayingEnded",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "GET /undaunted/api/ServerStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"name\":\"Test Server\",\"online\":true,\"version\":\"9.9.9\",\"commit\":\"abc1234\",\"sourceUrl\":\"https://github.com/mixutin/dauntless-revived\",\"registration\":\"INVITECODE\",\"playersOnline\":0,\"players\":[],\"instances\":[],\"contentPort\":8080,\"uptimeSeconds\":<n>,\"limited\":true}"
+    },
+    {
+      "request": "GET /undaunted/api/ServerStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"name\":\"Test Server\",\"online\":true,\"version\":\"9.9.9\",\"commit\":\"abc1234\",\"sourceUrl\":\"https://github.com/mixutin/dauntless-revived\",\"registration\":\"INVITECODE\",\"playersOnline\":3,\"players\":[{\"name\":\"Ada\",\"where\":\"city\",\"instance\":\"city-1\"},{\"name\":\"bo\",\"where\":\"hunt\",\"instance\":\"hunt-1\"},{\"name\":\"Slayer\",\"where\":\"menu\",\"instance\":null}],\"instances\":[{\"id\":\"city-1\",\"kind\":\"city\",\"title\":\"Ramsgate\",\"map\":\"ramsgate_p\",\"behemoth\":null,\"players\":1,\"maxPlayers\":32,\"startedAt\":\"<date>\"},{\"id\":\"hunt-1\",\"kind\":\"hunt\",\"title\":\"Hunt: Rezakiri\",\"map\":\"cora_jamima\",\"behemoth\":\"Rezakiri\",\"players\":1,\"maxPlayers\":4,\"startedAt\":\"<date>\"},{\"id\":\"hunt-2\",\"kind\":\"hunt\",\"title\":\"Hunt: Lesser Embermane\",\"map\":\"x_island\",\"behemoth\":\"Lesser Embermane\",\"players\":2,\"maxPlayers\":4,\"startedAt\":\"<date>\"},{\"id\":\"hunt-3\",\"kind\":\"hunt\",\"title\":\"Hunt: Gnasher\",\"map\":\"y\",\"behemoth\":\"Gnasher\",\"players\":0,\"maxPlayers\":4,\"startedAt\":\"<date>\"},{\"id\":\"dojo-1\",\"kind\":\"dojo\",\"title\":\"Training Dojo\",\"map\":\"dojo\",\"behemoth\":null,\"players\":0,\"maxPlayers\":12,\"startedAt\":\"<date>\"}],\"contentPort\":8080,\"uptimeSeconds\":<n>,\"limited\":false}"
+    },
+    {
+      "request": "GET /undaunted/api/ServerStatus",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store"
+      },
+      "body": "{\"name\":\"Test Server\",\"online\":true,\"version\":\"9.9.9\",\"commit\":\"abc1234\",\"sourceUrl\":\"https://github.com/mixutin/dauntless-revived\",\"registration\":\"INVITECODE\",\"playersOnline\":3,\"players\":[{\"name\":\"Ada\",\"where\":\"city\",\"instance\":\"city-1\"},{\"name\":\"bo\",\"where\":\"hunt\",\"instance\":\"hunt-1\"},{\"name\":\"Slayer\",\"where\":\"menu\",\"instance\":null}],\"instances\":[{\"id\":\"city-1\",\"kind\":\"city\",\"title\":\"Ramsgate\",\"map\":\"ramsgate_p\",\"behemoth\":null,\"players\":1,\"maxPlayers\":32,\"startedAt\":\"<date>\"},{\"id\":\"hunt-1\",\"kind\":\"hunt\",\"title\":\"Hunt: Rezakiri\",\"map\":\"cora_jamima\",\"behemoth\":\"Rezakiri\",\"players\":1,\"maxPlayers\":4,\"startedAt\":\"<date>\"},{\"id\":\"hunt-2\",\"kind\":\"hunt\",\"title\":\"Hunt: Lesser Embermane\",\"map\":\"x_island\",\"behemoth\":\"Lesser Embermane\",\"players\":2,\"maxPlayers\":4,\"startedAt\":\"<date>\"},{\"id\":\"hunt-3\",\"kind\":\"hunt\",\"title\":\"Hunt: Gnasher\",\"map\":\"y\",\"behemoth\":\"Gnasher\",\"players\":0,\"maxPlayers\":4,\"startedAt\":\"<date>\"},{\"id\":\"dojo-1\",\"kind\":\"dojo\",\"title\":\"Training Dojo\",\"map\":\"dojo\",\"behemoth\":null,\"players\":0,\"maxPlayers\":12,\"startedAt\":\"<date>\"}],\"contentPort\":8080,\"uptimeSeconds\":<n>,\"limited\":false}"
+    },
+    {
+      "request": "GET /undaunted/api/PrivateOnlineStats",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/PrivateOnlineStats",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"UserId\":\"UID-a\",\"Map\":\"/Game/Maps/Ramsgate/ramsgate_p\"},{\"UserId\":\"UID-b\",\"Map\":\"/Game/Maps/islands/1702/cora_jamima\"},{\"UserId\":\"UID-owner\"},{\"UserId\":\"UID-gone\",\"Map\":\"/Game/Maps/Ramsgate/ramsgate_p\"}]"
+    },
+    {
+      "request": "GET /undaunted/api/PublicOnlineStats",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/PublicOnlineStats",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"NumActivePlayers\":4}"
+    },
+    {
+      "request": "POST /undaunted/api/PlayingEnded",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('userId', userId, 'region', region)) AS j FROM (SELECT * FROM huntregions ORDER BY userId)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"userId\":\"UID-a\",\"region\":\"us\"},{\"userId\":\"UID-b\",\"region\":\"main\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('discordId', discordId, 'userId', userId)) AS j FROM (SELECT * FROM discordlinks ORDER BY discordId)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"discordId\":\"123456789012345678\",\"userId\":\"UID-a\"}]"
+    }
+  ]
+}

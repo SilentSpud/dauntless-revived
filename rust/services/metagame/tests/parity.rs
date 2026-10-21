@@ -67,6 +67,8 @@ fn normalize(text: &str) -> String {
         (r#""(trial_start|trial_end|time_to_refresh)":\d+"#, r#""${1}":<n>"#),
         (r"revived_trials_marks:-?\d+:", "revived_trials_marks:<week>:"),
         (r"\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}", "<servicedate>"),
+        // How long the server has run (ServerStatus)
+        (r#""uptimeSeconds":\d+"#, r#""uptimeSeconds":<n>"#),
     ];
     rules.iter().fold(text.to_owned(), |text, (pattern, with)| {
         Regex::new(pattern).unwrap().replace_all(&text, *with).into_owned()
@@ -564,4 +566,14 @@ async fn backup() {
 #[tokio::test]
 async fn backup_off() {
     run_area("backup-off").await;
+}
+
+#[tokio::test]
+async fn undaunted() {
+    run_area("undaunted").await;
+}
+
+#[tokio::test]
+async fn undaunted_plain() {
+    run_area("undaunted-plain").await;
 }

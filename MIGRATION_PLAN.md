@@ -155,6 +155,12 @@ Done so far:
 - Metagame B2, area 7 of M29, second part: POST /internal/backup (`routes/backup.ts`) behind
   `BACKUP_ROOT`, on the store's online backup. Two parity scripts (`backup`, `backup-off`, 15 replies)
   match Node's refusals, name checks and host-wide budget; a Rust test covers a full copy.
+- Metagame B2, area 7 of M29, third part: the host and launcher routes of `routes/undauntedapi.ts`
+  that are not about accounts or save history. Hunt regions, Discord links and key statistics
+  (`DISCORD_KEY_STATE_FILE`), backend health, the dashboard's account directory
+  (`DEVELOPER_ACCOUNT_IDS`), playing addresses, online stats and `ServerStatus` with its game servers
+  and 5 s caches. Two parity scripts (`undaunted`, `undaunted-plain`, 55 replies) match Node, stored
+  rows included.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

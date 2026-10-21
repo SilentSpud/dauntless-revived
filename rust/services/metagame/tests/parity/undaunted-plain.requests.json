@@ -1,0 +1,48 @@
+{
+  "about": "The undauntedapi host routes with no regions, bot state, game servers or status extras (MIGRATION_PLAN.md M29, area 7). SERVER_VERSION is set: without it Rust reports its crate version where Node read package.json.",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "SERVER_VERSION": "1.0.0"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'bo', 0, 0), ('UID-c', 'Cy', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da'), ('UID-a', 'a890ae1c9bcd3ec2ecd2c13757cb9280536e1b3bda785fd09db0b18eb0109542'), ('UID-b', 'fd8fedfe3cef0af473fb6891df9bf86da0c83053a8beb1f29713e5dc38df0b60'), ('UID-c', 'not-a-hash')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO invitecodes (invitecode, usesRemaining, infiniteUses) VALUES ('TEST-CODE-0001', 1, 0)"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/undaunted/api/HuntRegion",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/HuntRegion",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "region": "us"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/DiscordKeyStats",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/ServerStatus",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      }
+    }
+  ]
+}

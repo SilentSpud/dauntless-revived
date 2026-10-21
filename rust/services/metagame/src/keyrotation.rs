@@ -29,7 +29,7 @@ pub fn is_discord_id(id: &str) -> bool {
 }
 
 /// `/^UID-[A-Za-z0-9-]{1,100}$/`.
-fn is_link_user_id(id: &str) -> bool {
+pub fn is_link_user_id(id: &str) -> bool {
     id.strip_prefix("UID-").is_some_and(|rest| {
         (1..=100).contains(&rest.len()) && rest.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-')
     })

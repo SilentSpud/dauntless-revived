@@ -76,6 +76,10 @@ pub struct Config {
     pub key_recovery_secret: Option<String>,
     /// `BACKUP_ROOT`: where POST /internal/backup writes (`routes/backup.rs`); unset turns it off.
     pub backup_root: Option<String>,
+    /// `DISCORD_KEY_STATE_FILE`: the Discord bot's state, for `DiscordKeyStats`.
+    pub discord_key_state_file: Option<String>,
+    /// `DEVELOPER_ACCOUNT_IDS` (comma-separated), marked in the dashboard's account directory.
+    pub developer_accounts: Vec<String>,
     pub real_progression: crate::realprogression::Settings,
     /// The server's name, version and source for the status (`serverstatus.rs`).
     pub server_status: crate::serverstatus::Settings,
@@ -167,6 +171,16 @@ impl Config {
             slayer_links: on_off(env, "SLAYER_LINKS", true),
             key_recovery_secret: env.raw("KEY_RECOVERY_SERVICE_SECRET").map(str::to_owned),
             backup_root: env.raw("BACKUP_ROOT").filter(|r| !r.is_empty()).map(str::to_owned),
+            discord_key_state_file: env
+                .raw("DISCORD_KEY_STATE_FILE")
+                .filter(|f| !f.is_empty())
+                .map(str::to_owned),
+            developer_accounts: env
+                .raw("DEVELOPER_ACCOUNT_IDS")
+                .unwrap_or("")
+                .split(',')
+                .map(|id| id.trim().to_owned())
+                .collect(),
             real_progression: crate::realprogression::Settings::from_env(env),
             server_status: crate::serverstatus::Settings::from_env(env),
             features: Features {

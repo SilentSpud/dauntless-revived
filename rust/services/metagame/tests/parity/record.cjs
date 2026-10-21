@@ -83,7 +83,9 @@ function normalize(text) {
     .replace(/Arena_MatchmakerHunt_(Hard|Elite)_\d{3}/g, "Arena_MatchmakerHunt_$1_<row>")
     .replace(/"(trial_start|trial_end|time_to_refresh)":\d+/g, '"$1":<n>')
     .replace(/revived_trials_marks:-?\d+:/g, "revived_trials_marks:<week>:")
-    .replace(/\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}/g, "<servicedate>");
+    .replace(/\d{4}\.\d{2}\.\d{2}-\d{2}\.\d{2}\.\d{2}/g, "<servicedate>")
+    // How long the server has run (ServerStatus)
+    .replace(/"uptimeSeconds":\d+/g, '"uptimeSeconds":<n>');
 }
 
 // This week's Trial row ({{trial:<difficulty>}}, or {{trial:<difficulty>:<weeks back>}}) and the

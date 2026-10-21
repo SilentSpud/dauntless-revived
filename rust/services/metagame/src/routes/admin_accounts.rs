@@ -36,6 +36,7 @@ pub fn routes(state: &AppState) -> Router<AppState> {
         .post("/undaunted/api/CreateInvite", create_invite)
         .layer(from_fn_with_state(admin_limit, enforce))
         .post("/undaunted/api/RenameUser", rename_user)
+        .get("/undaunted/api/ServerStatus", super::undaunted::server_status)
         .get("/undaunted/api/GetUserInfo", |UserKey(user): UserKey| async move {
             json(
                 StatusCode::OK,
