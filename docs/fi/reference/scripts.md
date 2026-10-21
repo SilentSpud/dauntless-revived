@@ -863,6 +863,36 @@ eri pelaajamäärillä. Pidä raportit paikallisina kuten muutkin palvelinlokit.
 
 Testit: `bun test summarize-performance` kansiossa `tools/`.
 
+### replay.ts
+
+Varjotoisto, joka vertaa Rust-metagamea Node-versioon ennen vaihtoa. Se lähettää tallennetun
+liikenteen (liikenteen tallennus, ks. asetusviite: `CAPTURE_DIR`) molemmille palvelimille, jotka
+käynnistetään kumpikin omalla kopiollaan samasta tietokantatilanteesta, ja vertaa vastauksia.
+
+Aja repositoriokopiosta Bunilla, kun `legacy/UndauntedMetagame` on käännetty (`npm run build`):
+`bun --no-env-file tools/replay.ts --corpus <tallennuskansio> --db <snapshot.db> --env <metagame.env> --node legacy/UndauntedMetagame --rust <metagame-ohjelma> --out report.json`
+
+| Parametri | Merkitys |
+|---|---|
+| `--corpus` | Tallennuskansio tai `.jsonl`-tiedosto; toista yhdistääksesi useita (gateway ja metagame) |
+| `--db` | Tietokanta sellaisena kuin se oli tallennuksen alkaessa; siitä tehdään kopiot, sitä ei muuteta |
+| `--env` | Metagamen asetustiedosto, jolla molemmat käynnistyvät; portit vaihdetaan vapaisiin paikallisiin |
+| `--node` | Käännetty Node-metagamen kansio |
+| `--rust` | Rustin `metagame`-ohjelma |
+| `--out` | JSON-raportin polku (oletus: vain yhteenveto tulostetaan) |
+| `--keep-matchmaking` | Jätä otteluhaku asetusten mukaiseksi; oletuksena se kytketään pois, jotta pelipalvelinta ei käynnistetä |
+| `--keep-work` | Säilytä väliaikaiset tietokannat ja lokit tarkastelua varten |
+
+Toisto antaa kopioissa jokaiselle tallenteen tiliavaimelle oman uuden avaimen (tallenteessa on vain
+avainten tiivisteet), allekirjoittaa uudet tunnisteet asetusten allekirjoitusavaimella ja rekisteröi oman
+pelipalvelinavaimen. Päivämäärät, luodut tunnisteet, tokenit sekä versio ja commit normalisoidaan
+ennen vertailua; myös JSON-avainten järjestys verrataan. Pyynnöt, joista tallennus leikkasi salaisuuden,
+raportoidaan erikseen odotettuina eroina. Paluukoodi 0, kun mikään tarkka pyyntö ei eroa, 1 kun jokin
+eroaa, 2 käyttö- tai käynnistysvirheessä. Tallenne ja raportti sisältävät henkilötietoja: pidä ne
+ylläpitäjän koneilla.
+
+Testit: `bun test replay` kansiossa `tools/`.
+
 Aja nämä repositoriokopiosta Node.js:llä, Bunilla tai Windows PowerShellillä, kuten kunkin kohdalla
 kerrotaan. `.ts`-työkalut ajetaan Bunilla, sillä versiolla, joka on tiedostossa `tools/package.json`
 (`packageManager`); ne eivät tarvitse `bun install` -komentoa, joka tuo vain tyyppitarkistimen.

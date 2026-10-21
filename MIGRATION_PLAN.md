@@ -183,6 +183,16 @@ Done so far:
   section of `docs/legal.md` (and the Finnish copy) says recording may run and what it keeps; the
   settings are in the configuration reference. Left: enabling it on the live servers, which needs a
   release of the Node services with it.
+- M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
+  Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
+  are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
+  is off by default. Answers are compared after normalising dates, epoch times, generated ids (learned
+  per server, so a new character's id is used in later calls), tokens and the build's version/commit;
+  key order is compared too (SB1). Chat sessions are replayed stanza by stanza. End to end on a recorded
+  session (register, token exchange, login, account, character create/list, inventory, loadout,
+  friends, party, game-server status, chat login/bind/room/message): 14 of 14 requests and the chat
+  session equal; the corpus held no key, token or game-server key. Left: the real corpus from the live
+  servers, and the final run after the catch-up (M44).
 - Metagame B2, M31, first part: `test/appclient.ts` runs its calls against the Rust binary when
   `METAGAME_RUST_BIN` names it (same database, same environment; restarted when a test changes the
   environment or resets what the app keeps in memory). The 16 test files on it: Node 256/256; Rust 246
