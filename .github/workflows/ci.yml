@@ -86,6 +86,8 @@ jobs:
               - legacy/UndauntedLauncher/isolation/**
               - legacy/UndauntedLauncher/src/shared/generated/**
               - legacy/UndauntedLauncher/test/cases/**
+              # The launcher backend compiles the game manifest in (L17)
+              - legacy/UndauntedContent/data/**
             native:
               - native/**
             client-mods:

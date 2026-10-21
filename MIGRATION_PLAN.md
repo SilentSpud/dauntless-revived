@@ -228,6 +228,13 @@ Done so far:
   and a sorted lookup table per language from it. `core/i18n.rs` has `translate` and `systemLanguage` as the page
   has them, the 8 keys the backend shows (close confirmation, folder dialogs) with a test that each exists in
   every language, and the first start's language from `sys-locale`.
+- Launcher P2, L16 to L18 (P2 done): `core/game_language.rs` (`gameLocale` and the `-epiclocale` guard, with
+  `launch.ts`'s cases); `core/pins.rs` (constants.ts's pins and limits) and `core/manifest_check.rs`
+  (`validateManifest`, `compareManifests`, `manifestFingerprint`, `isSafeRelativePath`, same reasons), both
+  also `include!`d by `build.rs`, which stops the build when a DLL in `assets/` is not the pinned one or the
+  compiled-in manifest is malformed, and writes its fingerprint as a constant; `core/manifest.rs` holds the
+  manifest (`include_bytes!`, read once) and `resolve_inside`. `test/cases/manifest.json` (34 validations,
+  10 comparisons, 35 paths, made from the TypeScript) runs on both sides. The DLLs are `bundle.resources`.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

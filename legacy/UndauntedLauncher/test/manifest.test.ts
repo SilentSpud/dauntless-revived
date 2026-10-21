@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { compareManifests, isSafeRelativePath, resolveInside, validateManifest, manifestFingerprint, type GameManifest } from "../src/main/manifest";
 import { EXE_RELATIVE_PATH, PINNED_EXE_SHA256, PINNED_EXE_SIZE } from "../src/main/constants";
 import { makeFiles, manifestFor, TEST_BUILD } from "./fakes";
@@ -89,4 +90,16 @@ test("compareManifests: identical, reordered, and every kind of difference", () 
   assert.equal(compareManifests(m, { ...base, build: "dauntless_rel-1.4.5" }).equal, false);
   assert.equal(compareManifests(m, "nope").equal, false);
   assert.equal(manifestFingerprint(m), manifestFingerprint(valid()));
+});
+
+// test/cases/manifest.json: the table the Rust copy (src-tauri/src/core/manifest_check.rs) runs too (L17)
+test("the shared manifest table", () => {
+  const cases = JSON.parse(readFileSync(path.join(__dirname, "../../test/cases/manifest.json"), "utf8"));
+  for (const c of cases.validate) assert.deepEqual(validateManifest(c.input, c.build, c.requireGameExe), c.result, JSON.stringify(c.input)?.slice(0, 100));
+  const reference = validateManifest(cases.base, cases.testBuild, false);
+  assert.ok(reference.ok);
+  if (!reference.ok) return;
+  assert.equal(manifestFingerprint(reference.manifest), cases.fingerprint);
+  for (const c of cases.compare) assert.deepEqual(compareManifests(reference.manifest, c.input), c.result, JSON.stringify(c.input)?.slice(0, 100));
+  for (const c of cases.paths) assert.equal(isSafeRelativePath(c.path), c.safe, JSON.stringify(c.path));
 });

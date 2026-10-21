@@ -23,6 +23,10 @@
   },
   "bundle": {
     "active": false,
-    "icon": ["../assets/icon.png", "../assets/icon.ico"]
+    "icon": ["../assets/icon.png", "../assets/icon.ico"],
+    "resources": {
+      "../assets/dxgi.dll": "dxgi.dll",
+      "../assets/UndauntedInternalServer.dll": "UndauntedInternalServer.dll"
+    }
   }
 }

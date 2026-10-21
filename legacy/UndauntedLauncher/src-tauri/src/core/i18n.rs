@@ -1,7 +1,13 @@
 //! The backend's own text (row L14): the dialogs the backend shows, in the player's language, from the
 //! same strings the page uses (`gen/strings.json`, made into `Language` and its tables by build.rs).
 //! Nothing here lists the languages: a language added to the page appears by rebuilding.
-#![cfg_attr(not(test), allow(dead_code, reason = "the close confirmation (L5) and the file dialogs (L36) show this text"))]
+#![cfg_attr(
+    not(test),
+    allow(
+        dead_code,
+        reason = "the close confirmation (L5) and the file dialogs (L36) show this text"
+    )
+)]
 
 include!(concat!(env!("OUT_DIR"), "/languages.rs"));
 

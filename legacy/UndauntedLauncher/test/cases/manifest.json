@@ -1,0 +1,1687 @@
+{
+  "base": {
+    "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+    "totalBytes": 1320101,
+    "files": [
+      {
+        "path": "Archon/Binaries/Win64/Fake-Game.exe",
+        "size": 300000,
+        "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+      },
+      {
+        "path": "Archon/Content/Movies/intro (1).bk2",
+        "size": 120000,
+        "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+      },
+      {
+        "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+        "size": 900000,
+        "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+      },
+      {
+        "path": "Engine/Binaries/Win64/empty.dat",
+        "size": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Engine/Config/BaseEngine.ini",
+        "size": 46,
+        "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+      },
+      {
+        "path": "Version.txt",
+        "size": 55,
+        "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+      }
+    ]
+  },
+  "testBuild": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+  "fingerprint": "4395f13cb2d061d866f90a817f122f5db77ad7a699bec99b48a65cd128825b69",
+  "validate": [
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": true,
+        "manifest": {
+          "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+          "totalBytes": 1320101,
+          "files": [
+            {
+              "path": "Archon/Binaries/Win64/Fake-Game.exe",
+              "size": 300000,
+              "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+            },
+            {
+              "path": "Archon/Content/Movies/intro (1).bk2",
+              "size": 120000,
+              "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+            },
+            {
+              "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+              "size": 900000,
+              "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+            },
+            {
+              "path": "Engine/Binaries/Win64/empty.dat",
+              "size": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "Engine/Config/BaseEngine.ini",
+              "size": 46,
+              "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+            },
+            {
+              "path": "Version.txt",
+              "size": 55,
+              "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": true,
+        "manifest": {
+          "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+          "totalBytes": 1320101,
+          "files": [
+            {
+              "path": "Archon/Binaries/Win64/Fake-Game.exe",
+              "size": 300000,
+              "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+            },
+            {
+              "path": "Archon/Content/Movies/intro (1).bk2",
+              "size": 120000,
+              "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+            },
+            {
+              "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+              "size": 900000,
+              "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+            },
+            {
+              "path": "Engine/Binaries/Win64/empty.dat",
+              "size": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "Engine/Config/BaseEngine.ini",
+              "size": 46,
+              "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+            },
+            {
+              "path": "Version.txt",
+              "size": 55,
+              "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": true,
+      "result": {
+        "ok": false,
+        "reason": "game executable is not the pinned 1.4.4 build"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 104993621,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "Archon/Binaries/Win64/Dauntless-Win64-Shipping.exe",
+            "size": 103673520,
+            "sha256": "d3d41e614908d2befd518b27046d9822d6130ef12ba3504babbdb786bef9cff4"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": true,
+      "result": {
+        "ok": true,
+        "manifest": {
+          "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+          "totalBytes": 104993621,
+          "files": [
+            {
+              "path": "Archon/Binaries/Win64/Dauntless-Win64-Shipping.exe",
+              "size": 103673520,
+              "sha256": "d3d41e614908d2befd518b27046d9822d6130ef12ba3504babbdb786bef9cff4"
+            },
+            {
+              "path": "Archon/Binaries/Win64/Fake-Game.exe",
+              "size": 300000,
+              "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+            },
+            {
+              "path": "Archon/Content/Movies/intro (1).bk2",
+              "size": 120000,
+              "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+            },
+            {
+              "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+              "size": 900000,
+              "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+            },
+            {
+              "path": "Engine/Binaries/Win64/empty.dat",
+              "size": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "Engine/Config/BaseEngine.ini",
+              "size": 46,
+              "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+            },
+            {
+              "path": "Version.txt",
+              "size": 55,
+              "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 104993621,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "Archon/Binaries/Win64/Dauntless-Win64-Shipping.exe",
+            "size": 103673520,
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": true,
+      "result": {
+        "ok": false,
+        "reason": "game executable is not the pinned 1.4.4 build"
+      }
+    },
+    {
+      "input": null,
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "not an object"
+      }
+    },
+    {
+      "input": [],
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "not an object"
+      }
+    },
+    {
+      "input": "x",
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "not an object"
+      }
+    },
+    {
+      "input": {
+        "build": "other",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "wrong build"
+      }
+    },
+    {
+      "input": {
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "wrong build"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": []
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "no files"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": "x"
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "no files"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320102,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "totalBytes does not match the files"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": -1,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad totalBytes"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1.5,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad totalBytes"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": "1",
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad totalBytes"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 9007199254740992,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad totalBytes"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1620101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "duplicate: Archon/Binaries/Win64/Fake-Game.exe"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1620101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "ARCHON/BINARIES/WIN64/FAKE-GAME.EXE",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "duplicate: ARCHON/BINARIES/WIN64/FAKE-GAME.EXE"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "../evil.dll",
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "unsafe path: ../evil.dll"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": -1,
+        "files": [
+          {
+            "path": "a",
+            "size": -1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad totalBytes"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1.5,
+        "files": [
+          {
+            "path": "a",
+            "size": 1.5,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad totalBytes"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "a",
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": true,
+        "manifest": {
+          "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+          "totalBytes": 1,
+          "files": [
+            {
+              "path": "a",
+              "size": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "a",
+            "size": "1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad size: a"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "a",
+            "size": 1,
+            "sha256": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad sha256: a"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "a",
+            "size": 1,
+            "sha256": 7
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad sha256: a"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/dxgi.dll",
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "pinned DLL listed: Archon/Binaries/Win64/dxgi.dll"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "archon/binaries/win64/UNDAUNTEDINTERNALSERVER.DLL",
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "pinned DLL listed: archon/binaries/win64/UNDAUNTEDINTERNALSERVER.DLL"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 0,
+        "files": [
+          "x"
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "bad entry"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": 5,
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "unsafe path: 5"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": null,
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "unsafe path: null"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": false,
+        "reason": "unsafe path: undefined"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1,
+        "files": [
+          {
+            "path": "x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/y",
+            "size": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": true,
+        "manifest": {
+          "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+          "totalBytes": 1,
+          "files": [
+            {
+              "path": "x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/y",
+              "size": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 0,
+        "files": [
+          {
+            "path": "a",
+            "size": 0,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "path": "b",
+            "size": 0,
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ]
+      },
+      "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+      "requireGameExe": false,
+      "result": {
+        "ok": true,
+        "manifest": {
+          "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+          "totalBytes": 0,
+          "files": [
+            {
+              "path": "a",
+              "size": 0,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "b",
+              "size": 0,
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "compare": [
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": true
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          }
+        ]
+      },
+      "result": {
+        "equal": true
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "hash differs: Archon/Content/Movies/intro (1).bk2"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320102,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300001,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "total size differs"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          },
+          {
+            "path": "Archon/extra.pak",
+            "size": 0,
+            "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "file count differs"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/renamed.bin",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "missing on server: Archon/Binaries/Win64/Fake-Game.exe"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.5",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300000,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "server manifest invalid (wrong build)"
+      }
+    },
+    {
+      "input": "nope",
+      "result": {
+        "equal": false,
+        "difference": "server manifest invalid (not an object)"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 120000,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "server manifest invalid (totalBytes does not match the files)"
+      }
+    },
+    {
+      "input": {
+        "build": "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827",
+        "totalBytes": 1320101,
+        "files": [
+          {
+            "path": "Archon/Binaries/Win64/Fake-Game.exe",
+            "size": 300001,
+            "sha256": "1bb182f649a789fda17412a4839e9d5dd50b4068089bc334655f78e6db797370"
+          },
+          {
+            "path": "Archon/Content/Movies/intro (1).bk2",
+            "size": 119999,
+            "sha256": "874d1c9768c92aa71883a40aef7c0c4600a19c176869ecc3f2af7de9fb68325c"
+          },
+          {
+            "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+            "size": 900000,
+            "sha256": "3796dbb0f33359e8efdf46274e2259bd1c07d9b106e90cad4fd4c64fb2171057"
+          },
+          {
+            "path": "Engine/Binaries/Win64/empty.dat",
+            "size": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "Engine/Config/BaseEngine.ini",
+            "size": 46,
+            "sha256": "4e91f737a6bd822663028326547d17c17319a4bd29db572fc1634c1281498da0"
+          },
+          {
+            "path": "Version.txt",
+            "size": 55,
+            "sha256": "e7a9a545e5280c164f50e989092e0b40be0296b361b5cfb534e6bc8338763fe6"
+          }
+        ]
+      },
+      "result": {
+        "equal": false,
+        "difference": "size differs: Archon/Binaries/Win64/Fake-Game.exe"
+      }
+    }
+  ],
+  "paths": [
+    {
+      "path": "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak",
+      "safe": true
+    },
+    {
+      "path": "Version.txt",
+      "safe": true
+    },
+    {
+      "path": "Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
+      "safe": true
+    },
+    {
+      "path": "a/intro (1).bk2",
+      "safe": true
+    },
+    {
+      "path": "",
+      "safe": false
+    },
+    {
+      "path": "/abs",
+      "safe": false
+    },
+    {
+      "path": "C:/x",
+      "safe": false
+    },
+    {
+      "path": "C:x",
+      "safe": false
+    },
+    {
+      "path": "a\\b",
+      "safe": false
+    },
+    {
+      "path": "a/../b",
+      "safe": false
+    },
+    {
+      "path": "./a",
+      "safe": false
+    },
+    {
+      "path": "a//b",
+      "safe": false
+    },
+    {
+      "path": "a/",
+      "safe": false
+    },
+    {
+      "path": "..",
+      "safe": false
+    },
+    {
+      "path": "a/.",
+      "safe": false
+    },
+    {
+      "path": "a:stream",
+      "safe": false
+    },
+    {
+      "path": "CON",
+      "safe": false
+    },
+    {
+      "path": "a/nul.txt",
+      "safe": false
+    },
+    {
+      "path": "a/COM1",
+      "safe": false
+    },
+    {
+      "path": "trail. ",
+      "safe": false
+    },
+    {
+      "path": "trail.",
+      "safe": false
+    },
+    {
+      "path": " lead",
+      "safe": false
+    },
+    {
+      "path": "a/b\u0000",
+      "safe": false
+    },
+    {
+      "path": "é.txt",
+      "safe": false
+    },
+    {
+      "path": "a?b",
+      "safe": false
+    },
+    {
+      "path": "a*b",
+      "safe": false
+    },
+    {
+      "path": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "safe": true
+    },
+    {
+      "path": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "safe": false
+    },
+    {
+      "path": "conin$",
+      "safe": false
+    },
+    {
+      "path": "a/CONOUT$.txt",
+      "safe": false
+    },
+    {
+      "path": "console",
+      "safe": true
+    },
+    {
+      "path": "com10",
+      "safe": true
+    },
+    {
+      "path": "lpt0.x",
+      "safe": false
+    },
+    {
+      "path": "a+b",
+      "safe": true
+    },
+    {
+      "path": "a.b.c",
+      "safe": true
+    }
+  ]
+}
