@@ -254,6 +254,20 @@ Done so far:
   gateway, in process and as the two binaries, all in dry run. Left: checking the rule after login
   and logout on a real Windows server and a real Linux server (needs administrator rights on a
   machine whose firewall may change), and the kits' service files, at cutover (B5).
+- Part C, S4: the DeployServer (`rust/services/deploy`, binary `deploy`). The table row below is out
+  of date: the Node server has no database (no SQLite, Drizzle or JWT code is left in it), so there
+  are no migrations. Ported: Ramsgate and the Training Dojo (one shared launch per world, liveness
+  restarts, `ENABLE_DOJO`), the city pool and its caps, hunts from game args, catalog hunts and the
+  weekly Trials rotation (checked against the DLL's `TrialsRotation.h`), the launch queue and
+  spacing, readiness (ready file or UDP bind), hunt, CPU, memory and backlog admission and the drain
+  file, the watchdog and hunt lifetimes, the overflow and regional workers with their capacity
+  cooldowns, Ramsgate balancing, the loopback-only and no-proxy checks, and shutdown that stops the
+  game processes it started. Settings are read on each use, as Node read `process.env`. Processes
+  sit behind a `Platform` trait, so the tests use stand-ins, as the Node tests did. Tests: every Node
+  suite ported (persistent worlds, launch latency, city instances and pool, city router, hunt
+  contract, capacity, CPU, lifetime, occupancy, readiness, matchmaking input and routes, worker
+  snapshots, overflow, regions, database-only role); 80 tests. Not done: a run against the real game
+  binary, and the offline stack in the launcher (D12, X2) still starts the Node server.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

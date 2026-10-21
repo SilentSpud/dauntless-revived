@@ -42,6 +42,11 @@ impl Env {
         }
     }
 
+    /// Every variable, as set.
+    pub fn vars(&self) -> impl Iterator<Item = (&str, &str)> {
+        self.values.iter().map(|(k, v)| (k.as_str(), v.as_str()))
+    }
+
     /// The value as set, also when it is empty.
     pub fn raw(&self, name: &str) -> Option<&str> {
         self.values.get(name).map(String::as_str)
