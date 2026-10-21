@@ -54,15 +54,28 @@ fn from(local: &'static str) -> Options<'static> {
 /// A raw request over a fresh TLS connection; the reply's status and body, even if the gateway
 /// hangs up while the request is still being written.
 async fn raw_exchange(port: u16, head: &str, chunks: Vec<Vec<u8>>) -> (u16, String) {
-    let mut stream = tls_connect(port, None).await.unwrap();
-    stream.write_all(head.as_bytes()).await.unwrap();
-    for chunk in chunks {
-        if stream.write_all(&chunk).await.is_err() {
-            break;
+    let stream = tls_connect(port, None).await.unwrap();
+    let (mut reader, mut writer) = tokio::io::split(stream);
+    // Read while writing: the gateway answers and closes before the body is all sent, and on Windows
+    // that close resets the connection, which drops whatever reply the client has not read yet
+    let write = async move {
+        if writer.write_all(head.as_bytes()).await.is_err() {
+            return;
         }
-    }
+        for chunk in chunks {
+            if writer.write_all(&chunk).await.is_err() {
+                return;
+            }
+        }
+        // Keep the write half open until the reply is read
+        tokio::time::sleep(Duration::from_secs(6)).await;
+    };
     let mut data = Vec::new();
-    let _ = tokio::time::timeout(Duration::from_secs(5), stream.read_to_end(&mut data)).await;
+    let read = tokio::time::timeout(Duration::from_secs(5), reader.read_to_end(&mut data));
+    tokio::select! {
+        _ = read => {}
+        () = write => {}
+    }
     let text = String::from_utf8_lossy(&data).into_owned();
     let status = text.split(' ').nth(1).and_then(|s| s.parse().ok()).unwrap_or(0);
     let body = text
