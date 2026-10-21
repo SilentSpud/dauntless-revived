@@ -79,7 +79,7 @@ try {
     Check 'first run drops the connection after 2 parts' ($r1.Code -eq 1 -and $r1.Text -match 'TEST: connection dropped after 2 part') (($r1.Out | Select-Object -Last 4) -join ' | ')
     $up = Join-Path $remote 'staging\upload'
     Check 'two verified parts wait on the server' ((Test-Path -LiteralPath (Join-Path $up 'part00000.ok')) -and (Test-Path -LiteralPath (Join-Path $up 'part00001.ok')) -and -not (Test-Path -LiteralPath (Join-Path $up 'part00002')))
-    Check 'the kit was unpacked on the server' ((Test-Path -LiteralPath (Join-Path $remote 'staging\kit\Receive-Upload.ps1')) -and (Test-Path -LiteralPath (Join-Path $remote 'staging\kit\lib\dr-db.js')) -and -not (Test-Path -LiteralPath (Join-Path $remote 'staging\kit\tests')))
+    Check 'the kit was unpacked on the server' ((Test-Path -LiteralPath (Join-Path $remote 'staging\kit\Receive-Upload.ps1')) -and (Test-Path -LiteralPath (Join-Path $remote 'staging\kit\Stack.ps1')) -and -not (Test-Path -LiteralPath (Join-Path $remote 'staging\kit\tests')))
     $srcZip = @(Get-ChildItem -LiteralPath (Join-Path $remote 'staging\source') -Filter 'source-*.zip')
     Check 'the source zip (git archive) arrived' ($srcZip.Count -eq 1 -and $r1.Text -match 'server code uploaded and checked')
     $restored = Join-Path $remote "staging\restore\$(Split-Path $backup -Leaf)"

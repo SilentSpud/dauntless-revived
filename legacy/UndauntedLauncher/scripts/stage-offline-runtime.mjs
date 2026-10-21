@@ -105,14 +105,11 @@ console.log("Staging Deploy...");
 await copyServiceBase(deploySource, deployOutput);
 await installServiceDependencies(deployOutput);
 
-for (const file of ["local-service-runner.cjs", "register-gameserver-key.cjs", "offline-save-db.cjs"]) {
+// dr-db.js and backup-policy.cjs were the Windows server kit's Node database helpers; the kit runs the
+// Rust services now (MIGRATION_PLAN.md M40), and the offline stack keeps them until the Tauri launcher
+// (X1) calls the Rust tools instead.
+for (const file of ["local-service-runner.cjs", "register-gameserver-key.cjs", "offline-save-db.cjs", "dr-db.js", "backup-policy.cjs"]) {
     await cp(path.join(launcherDir, "runtime", file), path.join(outputDir, file));
-}
-
-// Reuse the server kit's supported, idempotent key registration rather than
-// teaching the Launcher about Metagame's database schema.
-for (const file of ["dr-db.js", "backup-policy.cjs"]) {
-    await cp(path.join(repoDir, "deploy", "windows-server", "lib", file), path.join(outputDir, file));
 }
 
 const dllSource = await readFile(path.join(repoDir, "native", "internal-server", "dllmain.cpp"), "utf8");
