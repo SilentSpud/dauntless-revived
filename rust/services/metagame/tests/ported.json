@@ -53,11 +53,11 @@
       "would notice the product name coming back": "todo"
     },
     "capacityturns.test.ts": {
-      "oldest capacity retry blocks later regional launches including while in flight": "todo",
-      "original queue age wins over first allocation attempt and survives retries": "todo",
-      "equal-age candidates keep registration order and an in-flight attempt never expires": "todo",
-      "an older candidate arriving during an allocation waits for its result": "todo",
-      "cancelled and disconnected waiters cannot block the next hunt": "todo"
+      "oldest capacity retry blocks later regional launches including while in flight": "tests/m31/capacityturns.rs::oldest_capacity_retry_blocks_later_regional_launches_including_while_in_flight",
+      "original queue age wins over first allocation attempt and survives retries": "tests/m31/capacityturns.rs::original_queue_age_wins_over_first_allocation_attempt_and_survives_retries",
+      "equal-age candidates keep registration order and an in-flight attempt never expires": "tests/m31/capacityturns.rs::equal_age_candidates_keep_registration_order_and_an_in_flight_attempt_never_expires",
+      "an older candidate arriving during an allocation waits for its result": "tests/m31/capacityturns.rs::an_older_candidate_arriving_during_an_allocation_waits_for_its_result",
+      "cancelled and disconnected waiters cannot block the next hunt": "tests/m31/capacityturns.rs::cancelled_and_disconnected_waiters_cannot_block_the_next_hunt"
     },
     "character.test.ts": {
       "injects SERIE_dojo when the FTUE objective is complete": "todo",
@@ -159,24 +159,24 @@
       "the audit log records the grant source and only one permanent receipt": "todo"
     },
     "devicesignals.test.ts": {
-      "strict input validation, HMAC-only storage and replacement without missing-device buckets": "todo",
-      "only explicit snapshots block matching claims; expiry, revocation, missing claims and replacement are safe": "todo",
-      "stale and future claims cannot be snapshotted; failure preserves the prior snapshot": "todo"
+      "strict input validation, HMAC-only storage and replacement without missing-device buckets": "tests/m31/devicesignals.rs::strict_input_validation_hmac_only_storage_and_replacement_without_missing_device_buckets",
+      "only explicit snapshots block matching claims; expiry, revocation, missing claims and replacement are safe": "tests/m31/devicesignals.rs::only_explicit_snapshots_block_matching_claims_expiry_revocation_missing_claims_and_replacement_are_safe",
+      "stale and future claims cannot be snapshotted; failure preserves the prior snapshot": "tests/m31/devicesignals.rs::stale_and_future_claims_cannot_be_snapshotted_failure_preserves_the_prior_snapshot"
     },
     "discordlinks.test.ts": {
       "Discord linking preserves credentials and rejects reassignment on both sides": "tests/m31/discordlinks.rs::discord_linking_preserves_credentials_and_rejects_reassignment_on_both_sides"
     },
     "discordstats.test.ts": {
-      "bot statistics distinguish claims, issuance and redemption without exposing codes or identities": "todo",
-      "missing bot state remains unavailable while canonical linked-account count stays readable": "todo",
-      "statistics join real SQLite invite column names and return only counts": "todo",
-      "Discord key statistics are owner-only and refuse proxied owner requests": "todo"
+      "bot statistics distinguish claims, issuance and redemption without exposing codes or identities": "tests/m31/discordstats.rs::bot_statistics_distinguish_claims_issuance_and_redemption_without_exposing_codes_or_identities",
+      "missing bot state remains unavailable while canonical linked-account count stays readable": "tests/m31/discordstats.rs::missing_bot_state_remains_unavailable_while_canonical_linked_account_count_stays_readable",
+      "statistics join real SQLite invite column names and return only counts": "tests/m31/discordstats.rs::statistics_join_real_sqlite_invite_column_names_and_return_only_counts",
+      "Discord key statistics are owner-only and refuse proxied owner requests": "tests/m31/discordstats.rs::discord_key_statistics_are_owner_only_and_refuse_proxied_owner_requests"
     },
     "entitlements.test.ts": {
-      "every account owns the Elite Hunt Pass by default, permanently, as {name, duration, activatedDate}": "todo",
-      "a grant is listed once, a second identical grant does not duplicate it": "todo",
-      "a timed grant still running is extended; an expired one is left out of every list": "todo",
-      "a revoked entitlement, default or not, stays revoked until granted again": "todo"
+      "every account owns the Elite Hunt Pass by default, permanently, as {name, duration, activatedDate}": "tests/m31/entitlements.rs::every_account_owns_the_elite_hunt_pass_by_default_permanently_as_name_duration_activateddate",
+      "a grant is listed once, a second identical grant does not duplicate it": "tests/m31/entitlements.rs::a_grant_is_listed_once_a_second_identical_grant_does_not_duplicate_it",
+      "a timed grant still running is extended; an expired one is left out of every list": "tests/m31/entitlements.rs::a_timed_grant_still_running_is_extended_an_expired_one_is_left_out_of_every_list",
+      "a revoked entitlement, default or not, stays revoked until granted again": "tests/m31/entitlements.rs::a_revoked_entitlement_default_or_not_stays_revoked_until_granted_again"
     },
     "escalation.test.ts": {
       "carries the client's five seasons with Frost disabled": "todo",
@@ -285,9 +285,9 @@
       "never say Undaunted": "todo"
     },
     "gameserveronly.test.ts": {
-      "refuses a player's request with 403 and lets a game server's through": "todo",
-      "logs a game server's request that carries another account's token, once a minute, and never refuses it": "todo",
-      "is quiet for the token's own account, no token, and a player's request": "todo"
+      "refuses a player's request with 403 and lets a game server's through": "tests/m31/gameserveronly.rs::refuses_a_player_s_request_with_403_and_lets_a_game_server_s_through",
+      "logs a game server's request that carries another account's token, once a minute, and never refuses it": "tests/m31/gameserveronly.rs::logs_a_game_server_s_request_that_carries_another_account_s_token_once_a_minute_and_never_refuses_it",
+      "is quiet for the token's own account, no token, and a player's request": "tests/m31/gameserveronly.rs::is_quiet_for_the_token_s_own_account_no_token_and_a_player_s_request"
     },
     "guildhttp.test.ts": {
       "GET /guild is 204 with no body (the client clears its guild); GET /guild/invite/player is the wrapped empty list": "todo",
@@ -779,18 +779,18 @@
       "stays quiet once every player has stored progression": "todo"
     },
     "progressionrank.test.ts": {
-      "has the 10 tracks the roadmap lists, requirements sorted by rank_id": "todo",
-      "totals: PlayerLevel 1,111, Behemoth 411, weapons 115, season09b 5,000 plus prestige": "todo",
-      "PlayerLevel: progress 0 is rank 1, 1,111 is rank 50, one XP short is 49": "todo",
-      "weapons: 115 is rank 20, 114 is 19, 0 is 0; Behemoth 411 is 50": "todo",
-      "season09b: 100 XP per rank, then one prestige level per 100 XP past 5,000": "todo",
-      "premium rank follows the free rank only with premium": "todo",
-      "the old stub values: earned never exceeds the stub's confirmed rank, so nothing was pending": "todo"
+      "has the 10 tracks the roadmap lists, requirements sorted by rank_id": "tests/m31/progressionrank.rs::has_the_10_tracks_the_roadmap_lists_requirements_sorted_by_rank_id",
+      "totals: PlayerLevel 1,111, Behemoth 411, weapons 115, season09b 5,000 plus prestige": "tests/m31/progressionrank.rs::totals_playerlevel_1_111_behemoth_411_weapons_115_season09b_5_000_plus_prestige",
+      "PlayerLevel: progress 0 is rank 1, 1,111 is rank 50, one XP short is 49": "tests/m31/progressionrank.rs::playerlevel_progress_0_is_rank_1_1_111_is_rank_50_one_xp_short_is_49",
+      "weapons: 115 is rank 20, 114 is 19, 0 is 0; Behemoth 411 is 50": "tests/m31/progressionrank.rs::weapons_115_is_rank_20_114_is_19_0_is_0_behemoth_411_is_50",
+      "season09b: 100 XP per rank, then one prestige level per 100 XP past 5,000": "tests/m31/progressionrank.rs::season09b_100_xp_per_rank_then_one_prestige_level_per_100_xp_past_5_000",
+      "premium rank follows the free rank only with premium": "tests/m31/progressionrank.rs::premium_rank_follows_the_free_rank_only_with_premium",
+      "the old stub values: earned never exceeds the stub's confirmed rank, so nothing was pending": "tests/m31/progressionrank.rs::the_old_stub_values_earned_never_exceeds_the_stub_s_confirmed_rank_so_nothing_was_pending"
     },
     "ramspricing.test.ts": {
-      "pilot price tiers, bundle cap and account isolation": "todo",
-      "native pilot transport preserves canonical Rams accounting and isolates other accounts": "todo",
-      "wire adapter remains disabled without explicit native pilot switch": "todo"
+      "pilot price tiers, bundle cap and account isolation": "tests/m31/ramspricing.rs::pilot_price_tiers_bundle_cap_and_account_isolation",
+      "native pilot transport preserves canonical Rams accounting and isolates other accounts": "tests/m31/ramspricing.rs::native_pilot_transport_preserves_canonical_rams_accounting_and_isolates_other_accounts",
+      "wire adapter remains disabled without explicit native pilot switch": "tests/m31/ramspricing.rs::wire_adapter_remains_disabled_without_explicit_native_pilot_switch"
     },
     "realprogression.test.ts": {
       "lists all 10 configured tracks at 0 for a new account, keyed by the URL account": "todo",
@@ -842,9 +842,9 @@
       "attributes multiple Ramsgates by the player's allocated port": "todo"
     },
     "shoplayout.test.ts": {
-      "every sufficiently stocked category changes all three offers each week": "todo",
-      "manual seed refresh changes stock and retains automatic weekly rotation": "todo",
-      "weekly stock is stable, rotates, preserves prices and corrects category tags": "todo"
+      "every sufficiently stocked category changes all three offers each week": "tests/m31/shoplayout.rs::every_sufficiently_stocked_category_changes_all_three_offers_each_week",
+      "manual seed refresh changes stock and retains automatic weekly rotation": "tests/m31/shoplayout.rs::manual_seed_refresh_changes_stock_and_retains_automatic_weekly_rotation",
+      "weekly stock is stable, rotates, preserves prices and corrects category tags": "tests/m31/shoplayout.rs::weekly_stock_is_stable_rotates_preserves_prices_and_corrects_category_tags"
     },
     "shutdown.test.ts": {
       "Metagame shutdown is idempotent and releases listeners (${Mode})": "todo"

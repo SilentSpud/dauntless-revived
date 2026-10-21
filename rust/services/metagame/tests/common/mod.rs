@@ -305,3 +305,33 @@ pub fn sha256_hex(text: &str) -> String {
         .map(|b| format!("{b:02x}"))
         .collect()
 }
+
+/// The warnings `f` logs (`appclient.ts`'s `Warnings`), on this thread.
+pub fn warnings<T>(f: impl FnOnce() -> T) -> (T, Vec<String>) {
+    use std::sync::{Arc, Mutex};
+    use tracing_subscriber::layer::SubscriberExt;
+
+    struct Capture(Arc<Mutex<Vec<String>>>);
+    struct Message(String);
+    impl tracing::field::Visit for Message {
+        fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) {
+            if field.name() == "message" {
+                self.0 = format!("{value:?}");
+            }
+        }
+    }
+    impl<S: tracing::Subscriber> tracing_subscriber::Layer<S> for Capture {
+        fn on_event(&self, event: &tracing::Event<'_>, _: tracing_subscriber::layer::Context<'_, S>) {
+            if *event.metadata().level() == tracing::Level::WARN {
+                let mut message = Message(String::new());
+                event.record(&mut message);
+                self.0.lock().unwrap().push(message.0);
+            }
+        }
+    }
+    let seen = Arc::new(Mutex::new(Vec::new()));
+    let subscriber = tracing_subscriber::registry().with(Capture(seen.clone()));
+    let result = tracing::subscriber::with_default(subscriber, f);
+    let seen = seen.lock().unwrap().clone();
+    (result, seen)
+}

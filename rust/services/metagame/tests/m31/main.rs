@@ -6,8 +6,16 @@
 mod common;
 
 mod accountrecovery;
+mod capacityturns;
+mod devicesignals;
 mod discordlinks;
+mod discordstats;
+mod entitlements;
+mod gameserveronly;
 mod huntregion;
 mod keyrotation;
 mod playertracking;
+mod progressionrank;
+mod ramspricing;
 mod regionprobes;
+mod shoplayout;
