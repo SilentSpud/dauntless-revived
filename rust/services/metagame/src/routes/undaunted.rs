@@ -9,6 +9,7 @@
 #![allow(clippy::result_large_err)]
 
 use axum::extract::{RawQuery, State};
+use axum::http::request::Parts;
 use axum::http::{HeaderValue, StatusCode, header};
 use axum::middleware::from_fn_with_state;
 use axum::response::Response;
@@ -20,8 +21,9 @@ use service_kit::ratelimit::{around, enforce};
 use service_kit::routing::{Params, Router};
 
 use super::{empty, field, json, ok, query};
+use crate::accounts::{AccountError, find_account};
 use crate::app::{AppError, AppState};
-use crate::auth::{AdminKey, SoftAccount, UserKey};
+use crate::auth::{AdminKey, SoftAccount, UserInfo, UserKey};
 use crate::discordstats;
 use crate::keyrotation::{discord_account, is_discord_id, link_discord_account};
 use crate::limits::per_client;
@@ -57,6 +59,11 @@ pub fn before(state: &AppState) -> Router<AppState> {
 pub fn after(state: &AppState) -> Router<AppState> {
     let health_limit = from_fn_with_state(per_client(&state.limits.health_read, state.origin.clone()), enforce);
     Router::new()
+        .post("/undaunted/api/PartyInvite", party_invite)
+        .post("/undaunted/api/Friends", friends)
+        .post("/undaunted/api/GuildInvite", guild_invite)
+        .post("/undaunted/api/DisbandGuild", disband_guild)
+        .get("/undaunted/api/Guilds", list_guilds)
         .get("/undaunted/api/AccountRecovery/:userId", account_recovery)
         .layer(health_limit)
 }
@@ -492,4 +499,248 @@ async fn account_recovery(
         },
     };
     Ok(no_store(ok(json!({"accountId": id, "key": key}))))
+}
+
+// ---- Parties, friends and guilds by name ----
+// Fallbacks for when the game's own buttons are missing or fail: the key's owner invites a player to
+// their party or guild (who still accepts in game), or sends them a friend request. An admin may act
+// for another player with "From" (a name or account id), only directly on the host.
+
+fn not_found() -> Response {
+    let error = AccountError::NotFound;
+    json(
+        StatusCode::NOT_FOUND,
+        json!({"error": error.code(), "message": error.message()}),
+    )
+}
+
+/// `FindAccount` on a body field.
+async fn account_named(state: &AppState, who: Option<Value>) -> Result<Option<(String, String)>, AppError> {
+    state
+        .store
+        .read(move |conn| find_account(conn, who.as_ref()).map_err(AppError::from))
+        .await
+}
+
+/// `ActingAccount`: the key's owner, or for an admin the account `From` names; else the refusal.
+async fn acting_account(
+    state: &AppState,
+    parts: &Parts,
+    caller: &UserInfo,
+    body: &Option<Value>,
+) -> Result<Result<(String, String), Response>, AppError> {
+    let Some(from) = field(body, "From") else {
+        return Ok(Ok((caller.user_id.clone(), caller.username.clone())));
+    };
+    if !caller.is_admin {
+        return Ok(Err(json(
+            StatusCode::FORBIDDEN,
+            json!({"error": "forbidden", "message": "Only an admin may act for another player."}),
+        )));
+    }
+    if crate::auth::origin(parts).is_proxied() {
+        tracing::warn!(
+            "Refusing an admin request on {} {} from {}: admin keys are not accepted through a proxy",
+            parts.method,
+            parts.uri.path(),
+            crate::auth::origin(parts).client_address(&state.origin)
+        );
+        return Ok(Err(empty(StatusCode::FORBIDDEN)));
+    }
+    Ok(account_named(state, Some(from.clone())).await?.ok_or_else(not_found))
+}
+
+/// The acting account and the one `Username` names, or the refusal.
+async fn both_accounts(
+    state: &AppState,
+    parts: &Parts,
+    caller: &UserInfo,
+    body: &Option<Value>,
+) -> Result<Result<((String, String), (String, String)), Response>, AppError> {
+    let from = match acting_account(state, parts, caller, body).await? {
+        Ok(from) => from,
+        Err(refused) => return Ok(Err(refused)),
+    };
+    Ok(match account_named(state, field(body, "Username").cloned()).await? {
+        Some(to) => Ok((from, to)),
+        None => Err(not_found()),
+    })
+}
+
+/// `{Username, From?}` -> `{From, To}`.
+async fn party_invite(
+    State(state): State<AppState>,
+    parts: Parts,
+    UserKey(caller): UserKey,
+    ExpressBody(body): ExpressBody,
+) -> Result<Response, AppError> {
+    let ((from, from_name), (to, to_name)) = match both_accounts(&state, &parts, &caller, &body).await? {
+        Ok(both) => both,
+        Err(refused) => return Ok(refused),
+    };
+    let (shared, sender, recipient) = (state.clone(), from.clone(), to.clone());
+    let reply = state
+        .store
+        .read(move |conn| {
+            shared
+                .parties
+                .lock()
+                .invite(conn, &sender, Some(&json!(recipient)), None, now_ms())
+                .map_err(AppError::from)
+        })
+        .await?;
+    tracing::info!(
+        "party: /undaunted/api/PartyInvite by key of {}: from={from} to={to} -> {}",
+        caller.user_id,
+        reply.status
+    );
+    if reply.status != 200 {
+        let message = reply.reason.unwrap_or_else(|| "The invite was refused.".into());
+        return Ok(json(
+            StatusCode::from_u16(reply.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            json!({"error": "party_invite_refused", "message": message}),
+        ));
+    }
+    Ok(ok(json!({"From": from_name, "To": to_name})))
+}
+
+fn friend_error_message(error: &str) -> &'static str {
+    match error {
+        "blocked" => "One of the two has blocked the other.",
+        "self" => "That is the same account.",
+        "limit" => "Too many friends or requests.",
+        "pending_limit" => "Too many friend requests are still unanswered.",
+        "rate" => "Too many friend requests in the last 10 minutes; try again later.",
+        _ => "No such account.",
+    }
+}
+
+/// `{Username, From?}` -> `{From, To, Result: requested | accepted | already_friends | already_requested}`.
+async fn friends(
+    State(state): State<AppState>,
+    parts: Parts,
+    UserKey(caller): UserKey,
+    ExpressBody(body): ExpressBody,
+) -> Result<Response, AppError> {
+    let ((from, from_name), (to, to_name)) = match both_accounts(&state, &parts, &caller, &body).await? {
+        Ok(both) => both,
+        Err(refused) => return Ok(refused),
+    };
+    let shared = state.clone();
+    let outcome = state
+        .store
+        .write(move |conn| {
+            crate::friends::send_or_accept(conn, &shared.friend_requests, &from, &to).map_err(AppError::from)
+        })
+        .await?;
+    Ok(match outcome {
+        crate::friends::Outcome::Done(result) => ok(json!({"From": from_name, "To": to_name, "Result": result})),
+        crate::friends::Outcome::Refused(status, error) => json(
+            StatusCode::from_u16(status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            json!({"error": error, "message": friend_error_message(error)}),
+        ),
+    })
+}
+
+/// `GUILDS=0` turns the guild fallbacks off too.
+fn guilds_off(state: &AppState) -> Option<Response> {
+    (!state.guilds.enabled).then(|| {
+        json(
+            StatusCode::NOT_FOUND,
+            json!({"error": "guilds_off", "message": "Guilds are turned off on this server (GUILDS=0)."}),
+        )
+    })
+}
+
+/// `{Username, From?}` -> `{From, To, Guild}`.
+async fn guild_invite(
+    State(state): State<AppState>,
+    parts: Parts,
+    UserKey(caller): UserKey,
+    ExpressBody(body): ExpressBody,
+) -> Result<Response, AppError> {
+    if let Some(off) = guilds_off(&state) {
+        return Ok(off);
+    }
+    let ((from, from_name), (to, to_name)) = match both_accounts(&state, &parts, &caller, &body).await? {
+        Ok(both) => both,
+        Err(refused) => return Ok(refused),
+    };
+    super::guild::sweep(&state).await?;
+    let now = now_ms();
+    let (shared, user, them) = (state.clone(), from.clone(), to.clone());
+    let (reply, why) = state
+        .store
+        .write(move |conn| {
+            crate::guild::invite_in_tx(conn, &shared.guilds, &shared.guild_memory, &user, &them, now)
+                .map_err(AppError::from)
+        })
+        .await?;
+    crate::guild::invite_finish(&state.guild_memory, &from, &to, &reply, why, now);
+    tracing::info!(
+        "guild: /undaunted/api/GuildInvite by key of {}: from={from} to={to} -> {}",
+        caller.user_id,
+        reply.status
+    );
+    if reply.status != 200 {
+        let text = |name: &str| {
+            reply
+                .body
+                .as_ref()
+                .and_then(|b| b.get(name))
+                .and_then(Value::as_str)
+                .map(str::to_owned)
+        };
+        let message = match (text("code").filter(|c| !c.is_empty()), text("message")) {
+            (Some(code), message) => format!("{code}: {}", message.unwrap_or_default()),
+            (None, Some(message)) => message,
+            (None, None) => "The invite was refused.".into(),
+        };
+        return Ok(json(
+            StatusCode::from_u16(reply.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            json!({"error": "guild_refused", "message": message}),
+        ));
+    }
+    let guild = state
+        .store
+        .read(move |conn| crate::guild::guild_name_of(conn, &from).map_err(AppError::from))
+        .await?;
+    Ok(ok(
+        json!({"From": from_name, "To": to_name, "Guild": guild.unwrap_or_default()}),
+    ))
+}
+
+/// `{Guild: <id or name>}` -> `{Guild, Members}`.
+async fn disband_guild(
+    State(state): State<AppState>,
+    _admin: AdminKey,
+    ExpressBody(body): ExpressBody,
+) -> Result<Response, AppError> {
+    if let Some(off) = guilds_off(&state) {
+        return Ok(off);
+    }
+    let guild = field(&body, "Guild").cloned();
+    let result = state
+        .store
+        .write(move |conn| crate::guild::disband_as_admin(conn, guild.as_ref()).map_err(AppError::from))
+        .await?;
+    Ok(match result {
+        Some((name, members)) => ok(json!({"Guild": name, "Members": members})),
+        None => json(
+            StatusCode::NOT_FOUND,
+            json!({"error": "not_found", "message": "No such guild."}),
+        ),
+    })
+}
+
+/// `[{guildId, name, nameplate, leader, members}]`.
+async fn list_guilds(State(state): State<AppState>, _admin: AdminKey) -> Result<Response, AppError> {
+    if let Some(off) = guilds_off(&state) {
+        return Ok(off);
+    }
+    let list = state
+        .store
+        .read(|conn| crate::guild::list_guilds(conn).map_err(AppError::from))
+        .await?;
+    Ok(ok(Value::Array(list)))
 }

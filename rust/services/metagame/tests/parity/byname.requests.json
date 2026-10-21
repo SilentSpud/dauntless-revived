@@ -1,0 +1,384 @@
+{
+  "about": "The by-name fallbacks of /undaunted/api: PartyInvite, Friends, GuildInvite, DisbandGuild and Guilds (MIGRATION_PLAN.md M29, area 7).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-owner', 'Slayer', 0, 1), ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0), ('UID-c', 'Cy', 0, 0), ('UID-d', 'Di', 0, 0), ('UID-t1', 'Twin', 0, 0), ('UID-t2', 'twin', 0, 0)",
+    "INSERT INTO userapikeys (userId, keyHash) VALUES ('UID-owner', '9ded81e8e21b8dca7783526139fd335a2979375d415d1107cf5fc10fdeba34da'), ('UID-a', 'a890ae1c9bcd3ec2ecd2c13757cb9280536e1b3bda785fd09db0b18eb0109542'), ('UID-b', 'fd8fedfe3cef0af473fb6891df9bf86da0c83053a8beb1f29713e5dc38df0b60'), ('UID-c', '3e16cc13e60863cef4d108f309769458496baf144464f1a555ee3826f3125d14'), ('UID-d', 'e0fcdc6a24c87b660df88ab5be2792722eb70fba3d6555d86ef1dba9986507a0')",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')",
+    "INSERT INTO blocks (blockerId, blockedId, createdAt) VALUES ('UID-d', 'UID-a', 1700000000000)",
+    "INSERT INTO guilds (guildId, name, nameKey, nameplate, leaderId, createdAt, updatedAt) VALUES ('G-one', 'First Guild', 'first guild', 'FG', 'UID-c', 1700000000000, 1700000000000), ('G-two', 'Other Guild', 'other guild', 'OG', 'UID-d', 1700000000000, 1700000000000)",
+    "INSERT INTO guildmembers (accountId, guildId, rank, joinedAt, updatedAt) VALUES ('UID-c', 'G-one', 'Leader', 1700000000000, 1700000000000), ('UID-d', 'G-two', 'Leader', 1700000000000, 1700000000000)"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {},
+      "json": {
+        "Username": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "nobody"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "  bo  "
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "UID-c"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "twin"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Cy",
+        "From": "UID-b"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Username": "Cy",
+        "From": "nobody"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner",
+        "x-forwarded-for": "1.2.3.4"
+      },
+      "json": {
+        "Username": "Cy",
+        "From": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Username": "Cy",
+        "From": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Username": "Cy",
+        "From": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/PartyInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-d"
+      },
+      "json": {
+        "Username": "Ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-b"
+      },
+      "json": {
+        "Username": "ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-b"
+      },
+      "json": {
+        "Username": "Ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Di"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Username": "Cy",
+        "From": "UID-d"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/Friends",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-c"
+      },
+      "json": {
+        "Username": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      },
+      "json": {
+        "Username": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-c"
+      },
+      "json": {
+        "Username": "Bo"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-c"
+      },
+      "json": {
+        "Username": "Di"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-c"
+      },
+      "json": {
+        "Username": "Ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-c"
+      },
+      "json": {
+        "Username": "Ada"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-c"
+      },
+      "json": {
+        "Username": "Cy"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/GuildInvite",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Username": "Bo",
+        "From": "Cy"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Guilds",
+      "headers": {
+        "x-undaunted-user-api-key": "test-player-key-a"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Guilds",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/DisbandGuild",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/DisbandGuild",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Guild": "nope"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/DisbandGuild",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Guild": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/DisbandGuild",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Guild": "OTHER GUILD"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/undaunted/api/DisbandGuild",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      },
+      "json": {
+        "Guild": "G-one"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/undaunted/api/Guilds",
+      "headers": {
+        "x-undaunted-user-api-key": "test-admin-key-owner"
+      }
+    }
+  ],
+  "finalQueries": [
+    "SELECT json_group_array(json_object('low', userLow, 'high', userHigh, 'requester', requesterId, 'status', status)) AS j FROM (SELECT * FROM friendships ORDER BY userLow, userHigh)",
+    "SELECT json_group_array(json_object('guild', guildId, 'from', inviterId, 'to', inviteeId)) AS j FROM (SELECT * FROM guildinvites ORDER BY guildId, inviteeId)",
+    "SELECT json_group_array(json_object('guild', guildId, 'account', accountId)) AS j FROM (SELECT * FROM guildmembers ORDER BY accountId)"
+  ]
+}

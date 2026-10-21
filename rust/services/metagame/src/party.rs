@@ -152,6 +152,8 @@ pub struct Invite {
 pub struct Reply {
     pub status: u16,
     pub body: Value,
+    /// Why an invite was refused (`Reason`), for the by-name fallback's message.
+    pub reason: Option<String>,
 }
 
 impl Reply {
@@ -159,6 +161,7 @@ impl Reply {
         Self {
             status,
             body: json!({}),
+            reason: None,
         }
     }
 }
@@ -640,7 +643,10 @@ impl State {
                 "party: invite by={caller} to={} refused {status}: {why}",
                 recipient_id.unwrap_or("<not an account id>")
             );
-            Ok(Reply::empty(status))
+            Ok(Reply {
+                reason: Some(why),
+                ..Reply::empty(status)
+            })
         };
         let Some(recipient) = recipient_id else {
             return refuse(404, "no recipient".into());
@@ -767,7 +773,11 @@ impl State {
                         party.members.len()
                     );
                     let body = self.party_reply(conn, settings, &current)?;
-                    return Ok(Reply { status: 200, body });
+                    return Ok(Reply {
+                        status: 200,
+                        body,
+                        reason: None,
+                    });
                 }
             }
             tracing::info!(
@@ -798,7 +808,11 @@ impl State {
         if members.iter().any(|m| m == caller) {
             drop_target_invites(self);
             let body = self.party_reply(conn, settings, &target)?;
-            return Ok(Reply { status: 200, body });
+            return Ok(Reply {
+                status: 200,
+                body,
+                reason: None,
+            });
         }
         if members.is_empty() {
             tracing::info!("party: accept by {caller} matched={matched} P={target}: the party is gone");
@@ -829,7 +843,11 @@ impl State {
             }
         );
         let body = self.party_reply(conn, settings, &target)?;
-        Ok(Reply { status: 200, body })
+        Ok(Reply {
+            status: 200,
+            body,
+            reason: None,
+        })
     }
 
     /// `DeclinePartyInvites`, DELETE /party/invite. Declining: the recipient is the caller, and the
@@ -1052,6 +1070,7 @@ impl State {
         Ok(Reply {
             status: 200,
             body: json!({"parties": parties, "invitations": invitations}),
+            reason: None,
         })
     }
 }

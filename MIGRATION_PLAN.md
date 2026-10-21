@@ -165,6 +165,11 @@ Done so far:
   (bans by account, playing address and device, with durations), the moderation log and account key
   recovery (`/undaunted/api/AccountRecovery/:userId`). Two parity scripts (`moderation`,
   `moderation-off`, 75 replies) match Node, stored rows included.
+- Metagame B2, area 7 of M29, fifth part: the by-name fallbacks of `routes/undauntedapi.ts`
+  (`PartyInvite`, `Friends`, `GuildInvite`, `DisbandGuild`, `Guilds`). Two parity scripts (`byname`,
+  `byname-guilds-off`, 43 replies) match Node, stored rows included. With this, every route in
+  `routes.json` (175 and the `/progression` fallback) has its Rust port, in Node's order. Left of B2:
+  M30 and M31 (the TS tests against the Rust binary).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

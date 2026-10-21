@@ -1,0 +1,29 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guilds_off\",\"message\":\"Guilds are turned off on this server (GUILDS=0).\"}"
+    },
+    {
+      "request": "GET /undaunted/api/Guilds",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guilds_off\",\"message\":\"Guilds are turned off on this server (GUILDS=0).\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DisbandGuild",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guilds_off\",\"message\":\"Guilds are turned off on this server (GUILDS=0).\"}"
+    }
+  ]
+}

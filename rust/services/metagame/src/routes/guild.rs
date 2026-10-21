@@ -77,7 +77,7 @@ async fn player_on(state: &AppState, parts: &Parts) -> Result<Player, Response> 
 }
 
 /// `Sweep`: at most once a minute, expired invites go.
-async fn sweep(state: &AppState) -> Result<(), AppError> {
+pub(crate) async fn sweep(state: &AppState) -> Result<(), AppError> {
     let now = now_ms();
     if guild::sweep_due(&state.guild_memory, now) {
         state

@@ -1,0 +1,313 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Ada\",\"To\":\"Bo\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"party_invite_refused\",\"message\":\"already invited\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"party_invite_refused\",\"message\":\"cannot invite yourself\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Ada\",\"To\":\"Cy\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"forbidden\",\"message\":\"Only an admin may act for another player.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Bo\",\"To\":\"Cy\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/PartyInvite",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"party_invite_refused\",\"message\":\"blocked\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Ada\",\"To\":\"Bo\",\"Result\":\"requested\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Ada\",\"To\":\"Bo\",\"Result\":\"already_requested\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Bo\",\"To\":\"Ada\",\"Result\":\"accepted\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Bo\",\"To\":\"Ada\",\"Result\":\"already_friends\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"self\",\"message\":\"That is the same account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"blocked\",\"message\":\"One of the two has blocked the other.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Di\",\"To\":\"Cy\",\"Result\":\"requested\"}"
+    },
+    {
+      "request": "POST /undaunted/api/Friends",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such account.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guild_refused\",\"message\":\"ExcludedAdorableQuillshot: Not in that guild.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Cy\",\"To\":\"Bo\",\"Guild\":\"First Guild\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Cy\",\"To\":\"Di\",\"Guild\":\"First Guild\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"From\":\"Cy\",\"To\":\"Ada\",\"Guild\":\"First Guild\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guild_refused\",\"message\":\"RedundantAdorableQuillshot: That player already has an invite from your guild.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guild_refused\",\"message\":\"ClonedAdorableQuillshot: That player is already in your guild.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/GuildInvite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"guild_refused\",\"message\":\"RedundantAdorableQuillshot: That player already has an invite from your guild.\"}"
+    },
+    {
+      "request": "GET /undaunted/api/Guilds",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /undaunted/api/Guilds",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[{\"guildId\":\"G-one\",\"name\":\"First Guild\",\"nameplate\":\"FG\",\"leader\":\"UID-c\",\"members\":1},{\"guildId\":\"G-two\",\"name\":\"Other Guild\",\"nameplate\":\"OG\",\"leader\":\"UID-d\",\"members\":1}]"
+    },
+    {
+      "request": "POST /undaunted/api/DisbandGuild",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such guild.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DisbandGuild",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such guild.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DisbandGuild",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"error\":\"not_found\",\"message\":\"No such guild.\"}"
+    },
+    {
+      "request": "POST /undaunted/api/DisbandGuild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"Guild\":\"Other Guild\",\"Members\":1}"
+    },
+    {
+      "request": "POST /undaunted/api/DisbandGuild",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"Guild\":\"First Guild\",\"Members\":1}"
+    },
+    {
+      "request": "GET /undaunted/api/Guilds",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "[]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('low', userLow, 'high', userHigh, 'requester', requesterId, 'status', status)) AS j FROM (SELECT * FROM friendships ORDER BY userLow, userHigh)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"low\":\"UID-a\",\"high\":\"UID-b\",\"requester\":\"UID-a\",\"status\":\"ACCEPTED\"},{\"low\":\"UID-c\",\"high\":\"UID-d\",\"requester\":\"UID-d\",\"status\":\"PENDING\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('guild', guildId, 'from', inviterId, 'to', inviteeId)) AS j FROM (SELECT * FROM guildinvites ORDER BY guildId, inviteeId)",
+      "status": 0,
+      "headers": {},
+      "body": "[]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('guild', guildId, 'account', accountId)) AS j FROM (SELECT * FROM guildmembers ORDER BY accountId)",
+      "status": 0,
+      "headers": {},
+      "body": "[]"
+    }
+  ]
+}

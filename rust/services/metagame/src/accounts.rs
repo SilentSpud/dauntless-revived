@@ -359,6 +359,30 @@ pub fn username_for(conn: &mut Conn, user_id: &str) -> QueryResult<Option<String
     users::table.find(user_id).select(users::name).first(conn).optional()
 }
 
+/// `FindAccount`: an account named by id or by name (the `/undaunted/api` fallbacks take both); a
+/// name must name exactly one account. `(id, name)`.
+pub fn find_account(conn: &mut Conn, who: Option<&Value>) -> QueryResult<Option<(String, String)>> {
+    let Some(who) = who.and_then(Value::as_str) else {
+        return Ok(None);
+    };
+    if let Some(name) = username_for(conn, who)? {
+        return Ok(Some((who.to_owned(), name)));
+    }
+    let name = crate::js::trim(who);
+    if name.is_empty() || name.encode_utf16().count() > 64 {
+        return Ok(None);
+    }
+    let rows: Vec<(String, String)> = users::table
+        .filter(same_name(name))
+        .select((users::userId, users::name))
+        .limit(2)
+        .load(conn)?;
+    Ok(match rows.as_slice() {
+        [one] => Some(one.clone()),
+        _ => None,
+    })
+}
+
 /// `FindUsernames`: names of several accounts; unknown ids are left out.
 pub fn usernames_for(conn: &mut Conn, ids: &[String]) -> QueryResult<std::collections::HashMap<String, String>> {
     let mut wanted: Vec<&String> = ids.iter().filter(|id| is_account_id_shape(id)).collect();

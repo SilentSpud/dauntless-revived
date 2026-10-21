@@ -592,3 +592,13 @@ async fn moderation() {
 async fn moderation_off() {
     run_area("moderation-off").await;
 }
+
+#[tokio::test]
+async fn byname() {
+    run_area("byname").await;
+}
+
+#[tokio::test]
+async fn byname_guilds_off() {
+    run_area("byname-guilds-off").await;
+}

@@ -1267,6 +1267,66 @@ pub fn change_rank(conn: &mut Conn, user: &str, target: &str, rank: &str, now: i
     Ok(reply)
 }
 
+// ---- The host's by-name fallbacks (`/undaunted/api`) ----
+
+/// `GuildNameOf`: the name of the account's guild.
+pub fn guild_name_of(conn: &mut Conn, user: &str) -> QueryResult<Option<String>> {
+    let Some(membership) = membership_of(conn, user)? else {
+        return Ok(None);
+    };
+    guilds::table
+        .find(&membership.guild_id)
+        .select(guilds::name)
+        .first(conn)
+        .optional()
+}
+
+/// `ListGuilds`: every guild, by name.
+pub fn list_guilds(conn: &mut Conn) -> QueryResult<Vec<Value>> {
+    let rows: Vec<(String, String, String, String)> = guilds::table
+        .order(guilds::nameKey.asc())
+        .select((guilds::guildId, guilds::name, guilds::nameplate, guilds::leaderId))
+        .load(conn)?;
+    rows.into_iter()
+        .map(|(id, name, nameplate, leader)| {
+            let members = member_count(conn, &id)?;
+            Ok(json!({"guildId": id, "name": name, "nameplate": nameplate, "leader": leader, "members": members}))
+        })
+        .collect()
+}
+
+/// `DisbandGuildAsAdmin`: an admin removes a guild named by id or by name (any case); its name and
+/// how many members it had.
+pub fn disband_as_admin(conn: &mut Conn, guild: Option<&Value>) -> QueryResult<Option<(String, usize)>> {
+    let Some(guild) = guild
+        .and_then(Value::as_str)
+        .filter(|g| (1..=64).contains(&g.encode_utf16().count()))
+    else {
+        return Ok(None);
+    };
+    conn.transaction(|conn| {
+        let by_id = guilds::table
+            .find(guild)
+            .select((guilds::guildId, guilds::name))
+            .first::<(String, String)>(conn)
+            .optional()?;
+        let row = match by_id {
+            Some(row) => Some(row),
+            None => guilds::table
+                .filter(guilds::nameKey.eq(guild.to_lowercase()))
+                .select((guilds::guildId, guilds::name))
+                .first::<(String, String)>(conn)
+                .optional()?,
+        };
+        let Some((id, name)) = row else {
+            return Ok(None);
+        };
+        let members = remove_guild(conn, &id)?;
+        tracing::info!("guild: G={id} name={name} disbanded by an admin ({members} member(s))");
+        Ok(Some((name, members)))
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
