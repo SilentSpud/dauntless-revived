@@ -316,6 +316,11 @@ Done so far:
   `invite-link` event. Packaged builds point the scheme at the launcher (the current user's registry, or a desktop
   entry for the AppImage). Checked in the running app: a second launcher started with an invite exits, and the
   first one's page shows "Join ...?" for it.
+- Launcher P4, L37 (P4 done in code): `platform/art.rs` answers the `dr-art` scheme from the art the controller
+  registers under its SHA-256, in both webviews' forms (`dr-art://bg/<id>`, `http://dr-art.localhost/bg/<id>`), with
+  `no-store` and `nosniff`, and an empty 404 for anything else. Left in P4: the KWallet route on Plasma 5 (L27),
+  the manual checks with real profiles and desktops (L2, L5, L34, L36), and the page's one URL helper for the two art
+  forms (with L41).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

@@ -2,6 +2,7 @@
 //! launching, links, dialogs and the art protocol.
 #![allow(dead_code, reason = "the controller (L38) uses the platform layer")]
 
+pub mod art;
 pub mod client_mods;
 pub mod dialogs;
 pub mod game_config;

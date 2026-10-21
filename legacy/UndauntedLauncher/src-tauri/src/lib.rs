@@ -46,6 +46,15 @@ pub fn run() -> tauri::Result<()> {
         // Called from Rust only: the page has no dialog permission (L36)
         .plugin(tauri_plugin_dialog::init())
         .manage(window::CloseGuard::default())
+        .manage(platform::art::ArtStore::default())
+        // The host's art, from the controller's cache (L37); nothing from the network
+        .register_asynchronous_uri_scheme_protocol(platform::art::SCHEME, |context, request, responder| {
+            let response = context
+                .app_handle()
+                .state::<platform::art::ArtStore>()
+                .respond(request.uri());
+            responder.respond(response);
+        })
         .manage(backend)
         .invoke_handler(tauri::generate_handler![
             commands::get_snapshot,
