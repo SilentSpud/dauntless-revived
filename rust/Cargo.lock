@@ -1430,6 +1430,7 @@ dependencies = [
  "protocol",
  "rand 0.10.3",
  "regex",
+ "rusqlite",
  "serde",
  "serde_json",
  "service-kit",
