@@ -248,6 +248,15 @@ Done so far:
   art, with the same answers per status code and the key header sent only to the invite's host over a pinned or
   tailnet connection. `test/cases/hostapi.json` (news, branding, image sniffing, news bodies; from the TypeScript)
   runs on both sides; the calls are tested against a local fake host.
+- Launcher P3, L22: `net/relay.rs` is `relay.ts` on hyper 1: 127.0.0.1 only, `port_busy` for a taken port,
+  `DAUNTLESS_REVIVED_RELAY_PORT`, the per-connection owner check hook, the browser checks (`Sec-Fetch-*`,
+  foreign Host or Origin), end-to-end headers only (`crates/proxy`), the upstream `Host`, chunked bodies, streamed
+  bodies both ways, custom reason phrases, keep-alive through a pool of pinned TLS connections (hyper-util), and
+  WebSocket upgrades on a fresh pinned connection joined with `proxy::tunnel` (including the game's chat:
+  `GET //`, a loopback Origin without a port, protocol `xmpp`); a wrong certificate answers 502
+  `certificate_mismatch` and reports the fingerprint the server showed, and nothing reaches the server. The 9
+  tests mirror `relay.test.ts` against a local TLS gateway. The owner check itself (`relay-owner.ts`, the Windows
+  TCP table) comes with the launch code (L31).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

@@ -5,3 +5,4 @@
 pub mod hostapi;
 pub mod http;
 pub mod pinned;
+pub mod relay;
