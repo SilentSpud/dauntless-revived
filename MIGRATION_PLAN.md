@@ -170,6 +170,19 @@ Done so far:
   `byname-guilds-off`, 43 replies) match Node, stored rows included. With this, every route in
   `routes.json` (175 and the `/progression` fallback) has its Rust port, in Node's order. Left of B2:
   M30 and M31 (the TS tests against the Rust binary).
+- Metagame B0, M2: traffic capture in the Node services, which are what runs live until the cutover.
+  `CAPTURE_DIR` (off unless set), `CAPTURE_RETENTION_DAYS` (14) and `CAPTURE_MAX_BODY_BYTES` (256 KB). The
+  gateway records every request and answer; the metagame records the requests that did not pass the
+  gateway (game servers, private-mode players) and every chat stanza in order with the session's open
+  and close. One JSON line each, one private file per source and UTC day, files past the retention
+  deleted. `capture.ts` is the same file in both packages (a test checks it): a login token becomes
+  `<token:UID>` (its subject, read without the signature), an account key `<key:sha256>` (the hash the
+  database already stores), a SASL login `<plain:UID>`, the game-server key `<gskey>`, other secret
+  fields and long secrets `<redacted>`, and each service scrubs its own secrets from every line; so the
+  replay can sign fresh tokens and swap in its own keys from the same database snapshot. The privacy
+  section of `docs/legal.md` (and the Finnish copy) says recording may run and what it keeps; the
+  settings are in the configuration reference. Left: enabling it on the live servers, which needs a
+  release of the Node services with it.
 - Metagame B2, M31, first part: `test/appclient.ts` runs its calls against the Rust binary when
   `METAGAME_RUST_BIN` names it (same database, same environment; restarted when a test changes the
   environment or resets what the app keeps in memory). The 16 test files on it: Node 256/256; Rust 246

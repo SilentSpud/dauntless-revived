@@ -3,6 +3,7 @@ import http from "node:http";
 import https from "node:https";
 import net from "node:net";
 import tls from "node:tls";
+import { BodyTap, CaptureWriter, RedactCaptureBody, RedactCaptureHeaders, RedactCaptureTarget } from "./capture";
 import { Endpoint, GatewayConfig } from "./config";
 import { AllowlistFeed } from "./feed";
 import { PeerAddress, RateLimitKey } from "./ip";
@@ -102,6 +103,8 @@ type AccessEntry = {
     bytesOut: number;
     reason?: string;
     ua?: string;
+    // Traffic capture (CAPTURE_DIR): the bodies seen and the answer's headers
+    capture?: { req: BodyTap; res: BodyTap; resHeaders?: http.IncomingHttpHeaders | http.OutgoingHttpHeaders };
 };
 
 export type GatewayStats = {
@@ -121,9 +124,15 @@ export class Gateway {
     private readonly Throttle = new LogThrottle(60_000);
     private readonly SweepTimer: NodeJS.Timeout;
     private Closing = false;
+    private readonly ConnectionIds = new WeakMap<net.Socket, number>();
+    private NextConnection = 1;
+    private NextRequest = 1;
 
-    constructor(private readonly Config: GatewayConfig, Tls: { cert: string | Buffer; key: string | Buffer }, private readonly Feed?: AllowlistFeed){
+    constructor(private readonly Config: GatewayConfig, Tls: { cert: string | Buffer; key: string | Buffer }, private readonly Feed?: AllowlistFeed,
+        private readonly Capture?: CaptureWriter){
         this.Certificate = DescribeCertificate(Tls.cert);
+        Capture?.AddSecret(Config.secret);
+        Capture?.AddSecret(Config.allowlist?.secret);
 
         const Rates = Config.limits.rate;
         this.Limiters = {
@@ -218,6 +227,44 @@ export class Gateway {
             await this.Feed.Idle();
             this.Feed.Close();
         }
+        await this.Capture?.Close();
+    }
+
+    // One capture record per answered request: the replay sends the request again and compares
+    // the answer. Upgrades (chat) are recorded by the metagame's chat instead.
+    private Record(Req: http.IncomingMessage, Res: http.ServerResponse, Entry: AccessEntry, Started: number){
+        const Capture = this.Capture;
+        const Taps = Entry.capture;
+        if(Capture === undefined || Taps === undefined){
+            return;
+        }
+        let Connection = this.ConnectionIds.get(Req.socket);
+        if(Connection === undefined){
+            Connection = this.NextConnection++;
+            this.ConnectionIds.set(Req.socket, Connection);
+        }
+        const Max = Capture.Options.maxBodyBytes;
+        const Type = (Headers: Record<string, unknown> | undefined) => {
+            const Value = Headers?.["content-type"];
+            return typeof Value === "string" ? Value : undefined;
+        };
+        const ResHeaders = (Taps.resHeaders ?? {}) as Record<string, string | string[] | undefined>;
+        Capture.Write({
+            kind: "http",
+            conn: Connection,
+            seq: this.NextRequest++,
+            ip: Entry.ip,
+            method: Entry.method,
+            target: RedactCaptureTarget(Req.url ?? ""),
+            route: Entry.route,
+            reqHeaders: RedactCaptureHeaders(Req.headers),
+            reqBody: RedactCaptureBody(Taps.req.Body(), Type(Req.headers), Taps.req.Total, Max),
+            status: Entry.status,
+            resHeaders: RedactCaptureHeaders(Object.fromEntries(Object.entries(ResHeaders).map(([Name, Value]) => [Name, Value === undefined ? undefined : Array.isArray(Value) ? Value.map(String) : String(Value)]))),
+            resBody: RedactCaptureBody(Taps.res.Body(), Type(ResHeaders), Taps.res.Total, Max),
+            ms: Math.round(performance.now() - Started),
+            ...(Res.writableFinished ? {} : { aborted: true }),
+        });
     }
 
     private OnConnection(Socket: net.Socket){
@@ -300,14 +347,19 @@ export class Gateway {
         const Body = JSON.stringify({ error: Error });
         // A refused request's body is never read: close the connection instead of draining it.
         const HasBody = Req.headers["transfer-encoding"] !== undefined || Number(Req.headers["content-length"] ?? 0) > 0;
-        Res.writeHead(Status, {
+        const Headers: http.OutgoingHttpHeaders = {
             "content-type": "application/json",
             "content-length": Buffer.byteLength(Body),
             "cache-control": "no-store",
             ...(HasBody || this.Closing ? { connection: "close" } : {}),
             ...Extra,
-        });
+        };
+        Res.writeHead(Status, Headers);
         Res.end(Body);
+        if(Entry.capture !== undefined){
+            Entry.capture.resHeaders = Headers;
+            Entry.capture.res.Add(Buffer.from(Body));
+        }
         if(HasBody){
             Res.once("finish", () => {
                 Req.socket.end();
@@ -333,9 +385,16 @@ export class Gateway {
             bytesOut: 0,
             ua: RedactUserAgent(Req.headers["user-agent"]),
         };
+        if(this.Capture !== undefined){
+            const Max = this.Capture.Options.maxBodyBytes;
+            const Taps = { req: new BodyTap(Max), res: new BodyTap(Max) };
+            Entry.capture = Taps;
+            Req.on("data", (Chunk: Buffer) => Taps.req.Add(Chunk));
+        }
         Res.once("close", () => {
             Entry.status = Res.headersSent ? Res.statusCode : 0;
             this.Log(Entry, Started, Res.writableFinished ? {} : { aborted: true });
+            this.Record(Req, Res, Entry, Started);
         });
 
         const Choice = Classify(Req.method, Req.url, Req.headers, false);
@@ -391,8 +450,12 @@ export class Gateway {
                 return;
             }
             Res.writeHead(Status, UpRes.statusMessage, ResponseHeaders(UpRes.headers, this.Closing));
+            if(Entry.capture !== undefined){
+                Entry.capture.resHeaders = UpRes.headers;
+            }
             UpRes.on("data", (Chunk: Buffer) => {
                 Entry.bytesOut += Chunk.length;
+                Entry.capture?.res.Add(Chunk);
             });
             UpRes.on("error", () => Res.destroy());
             UpRes.on("aborted", () => Res.destroy());

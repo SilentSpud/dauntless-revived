@@ -171,6 +171,30 @@ MinHook, reproduce MinHook's copyright notice and disclaimer.
 
 ---
 
+## Privacy
+
+A Dauntless Revived server keeps what it needs to run: each account's username, its characters,
+inventory and progress, and its friends, party and guild. Its logs hold the addresses players connect
+from and what they asked for, without keys or tokens. All of it stays on the machines of whoever runs
+that server; this project receives none of it.
+
+### Traffic recording before the move to Rust {#traffic-recording}
+
+To check that the new Rust services answer exactly as the Node ones did, a server's operator can turn
+on traffic recording (`CAPTURE_DIR`; it is off unless set). While it runs:
+
+- the gateway and the metagame record every request and its answer, and the metagame records chat,
+  including chat messages, each with its time and the address it came from;
+- login tokens, account keys, the game-server key and other secrets are replaced before anything is
+  written: a token by the account it belongs to, a key by the hash the server already stores;
+- the recording stays on the operator's machines, in private files, and is deleted after the number of days the operator sets (`CAPTURE_RETENTION_DAYS`, 14 by
+  default). All of it is deleted once the Rust services have replaced the Node ones;
+- it is used only to replay play sessions against both versions and compare their answers.
+
+If you play on someone else's server, ask its operator whether recording is on.
+
+---
+
 ## Trademarks
 
 "Dauntless" and the related names and logos are trademarks of their owners. Epic Games, Epic Online

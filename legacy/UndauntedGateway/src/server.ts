@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import tls from "node:tls";
+import { CaptureWriter, LoadCaptureOptions } from "./capture";
 import { GatewayConfig, LoadGatewayConfig } from "./config";
 import { AllowlistFeed } from "./feed";
 import { DescribeCertificate, Gateway } from "./gateway";
@@ -45,7 +46,19 @@ async function Main(){
         logger.warn("allowlist feed is off (GATEWAY_ALLOWLIST=0): the game ports open for nobody unless the firewall is managed another way");
     }
 
-    const TheGateway = new Gateway(Config, { cert: Cert, key: Key }, Feed);
+    let Capture: CaptureWriter | undefined;
+    try{
+        const Options = LoadCaptureOptions(process.env, "gateway");
+        if(Options !== undefined){
+            Capture = new CaptureWriter(Options, (Message) => logger.warn(Message));
+            logger.warn("traffic capture is on: every request and answer is recorded, redacted, for the shadow replay (personal data; see docs/legal.md)", { dir: Options.dir, retentionDays: Options.retentionDays });
+        }
+    }
+    catch(error){
+        Fatal(`Traffic capture: ${error instanceof Error ? error.message : String(error)}`);
+    }
+
+    const TheGateway = new Gateway(Config, { cert: Cert, key: Key }, Feed, Capture);
     try{
         await TheGateway.Listen();
     }

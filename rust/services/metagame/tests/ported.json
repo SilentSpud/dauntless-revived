@@ -59,6 +59,10 @@
       "an older candidate arriving during an allocation waits for its result": "tests/m31/capacityturns.rs::an_older_candidate_arriving_during_an_allocation_waits_for_its_result",
       "cancelled and disconnected waiters cannot block the next hunt": "tests/m31/capacityturns.rs::cancelled_and_disconnected_waiters_cannot_block_the_next_hunt"
     },
+    "capture.test.ts": {
+      "records a game server's call and a player's, but not what the gateway forwarded": "n/a: traffic capture exists only in the Node metagame (M2), whose recorded corpus the replay (M35) compares with Rust",
+      "records chat in order, the login as the account only": "n/a: traffic capture exists only in the Node metagame (M2), whose recorded corpus the replay (M35) compares with Rust"
+    },
     "character.test.ts": {
       "injects SERIE_dojo when the FTUE objective is complete": "tests/m31/character.rs::injects_serie_dojo_when_the_ftue_objective_is_complete",
       "saves unchanged when the FTUE objective is missing (this used to throw and block every save)": "tests/m31/character.rs::saves_unchanged_when_the_ftue_objective_is_missing_this_used_to_throw_and_block_every_save",

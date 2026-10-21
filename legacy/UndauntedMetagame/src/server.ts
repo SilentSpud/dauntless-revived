@@ -6,6 +6,7 @@ import { logger } from "./logger";
 import { DescribeProgressionMode } from "./controllers/progressionmode";
 import { ProgressionUpgradeNotice } from "./controllers/realprogression";
 import { CheckGatewayConfig } from "./middleware/RequestOrigin";
+import { MetagameCapture } from "./middleware/Capture";
 import { StartChat } from "./realtime/chat";
 import { DescribeFeatures } from "./features";
 import { PruneExpiredStorePurchases } from "./controllers/freestore";
@@ -22,6 +23,15 @@ const BIND_HOST = process.env.BIND_HOST || "127.0.0.1";
 // Public mode (GATEWAY_SECRET set): the metagame sits behind UndauntedGateway on loopback.
 // Nothing is checked or logged here when GATEWAY_SECRET is unset.
 const Gateway = CheckGatewayConfig();
+
+// Traffic capture (CAPTURE_DIR): a bad setting stops the start; when on, its notice is logged now.
+try{
+  MetagameCapture();
+}
+catch(error){
+  logger.fatal(`Traffic capture: ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+}
 
 for(const Warning of Gateway.Warnings){
   logger.warn(Warning);

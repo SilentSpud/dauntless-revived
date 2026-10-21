@@ -188,6 +188,34 @@ sisältää MinHookin, toista mukana MinHookin tekijänoikeusilmoitus ja vastuuv
 
 ---
 
+## Yksityisyys {#privacy}
+
+Dauntless Revived -palvelin säilyttää sen, mitä se tarvitsee toimiakseen: jokaisen tilin
+käyttäjänimen, hahmot, varusteet ja edistymisen sekä kaverit, ryhmän ja killan. Sen lokeissa ovat
+osoitteet, joista pelaajat yhdistävät, ja se, mitä he pyysivät, ilman avaimia tai tunnuksia. Kaikki
+tämä pysyy palvelimen ylläpitäjän koneilla; tämä projekti ei saa siitä mitään.
+
+### Liikenteen tallennus ennen siirtymistä Rustiin {#traffic-recording}
+
+Varmistaakseen, että uudet Rust-palvelut vastaavat täsmälleen kuten Node-palvelut, palvelimen
+ylläpitäjä voi ottaa liikenteen tallennuksen käyttöön (`CAPTURE_DIR`; se on pois päältä, ellei sitä
+aseteta). Sen ollessa käytössä:
+
+- yhdyskäytävä ja metagame tallentavat jokaisen pyynnön ja sen vastauksen, ja metagame tallentaa
+  chatin viesteineen, kukin aikoineen ja osoitteineen, josta se tuli;
+- kirjautumistunnukset, tiliavaimet, pelipalvelimen avain ja muut salaisuudet korvataan ennen kuin
+  mitään kirjoitetaan: tunnus sillä tilillä, jolle se kuuluu, ja avain sillä tiivisteellä, jonka
+  palvelin jo säilyttää;
+- tallenne pysyy ylläpitäjän koneilla yksityisissä tiedostoissa, ja se poistetaan, kun ylläpitäjän
+  asettama määrä päiviä on kulunut (`CAPTURE_RETENTION_DAYS`, oletuksena 14). Kaikki tallennettu
+  poistetaan, kun Rust-palvelut ovat korvanneet Node-palvelut;
+- sitä käytetään vain pelikertojen toistamiseen molempia versioita vastaan ja niiden vastausten
+  vertailuun.
+
+Jos pelaat jonkun muun palvelimella, kysy sen ylläpitäjältä, onko tallennus käytössä.
+
+---
+
 ## Tavaramerkit {#trademarks}
 
 "Dauntless" sekä siihen liittyvät nimet ja logot ovat omistajiensa tavaramerkkejä. Epic Games, Epic

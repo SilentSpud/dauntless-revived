@@ -23,8 +23,11 @@ import { undauntedApiRouter } from "./routes/undauntedapi.js";
 import { DescribeOrigin, RefuseProxiedInDevAuthMode } from "./middleware/RequestOrigin.js";
 import { BodyLog, Redact } from "./middleware/BodyLog.js";
 import { backupRouter } from './routes/backup';
+import { CaptureRequests } from "./middleware/Capture";
 
 export const app = express();
+// Traffic capture (CAPTURE_DIR, off by default): first, so refusals are recorded too. middleware/Capture.ts
+app.use(CaptureRequests);
 app.use(TrackBackendHealth);
 // Keep discovery reachable so a banned launcher can display the actual reason.
 app.use((req,res,next)=>{if(/^\/undaunted\/api\/ServerStatus\/?$/i.test(req.path) || CheckPlayerAccess(req,res))next();});

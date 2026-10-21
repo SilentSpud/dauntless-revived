@@ -1,3 +1,5 @@
+import { RedactChatFrame } from "../capture";
+import { MetagameCapture } from "../middleware/Capture";
 import {KeyRevocations} from '../controllers/keyrotation';
 import crypto from "node:crypto";
 import { createServer, IncomingMessage, Server as HttpServer } from "node:http";
@@ -377,6 +379,7 @@ export class ChatServer {
 
         this.clients.add(Session);
         logger.info(`chat: connect c=${Session.Id} from=${Address} via=${Via}`);
+        MetagameCapture()?.Write({ kind: "chat", conn: Session.Id, event: "open", ip: Address, via: Via });
 
         // An oversized frame (1009), invalid UTF-8 in a text frame (1007) or a bad opcode: ws emits this
         // and closes the socket. Without a listener Node would throw and stop the whole metagame.
@@ -394,7 +397,9 @@ export class ChatServer {
         // Text and binary frames alike are read as UTF-8 (the game sends text)
         Socket.on("message", (Data: RawData) => {
             try{
-                this.frame(Session, (Buffer.isBuffer(Data) ? Data : Array.isArray(Data) ? Buffer.concat(Data) : Buffer.from(Data)).toString("utf8"));
+                const Frame = (Buffer.isBuffer(Data) ? Data : Array.isArray(Data) ? Buffer.concat(Data) : Buffer.from(Data)).toString("utf8");
+                MetagameCapture()?.Write({ kind: "chat", conn: Session.Id, dir: "in", text: RedactChatFrame(Frame) });
+                this.frame(Session, Frame);
             }
             catch(error){
                 logger.error(`chat: stanza handler failed c=${Session.Id} (${ErrorName(error)})`);
@@ -420,6 +425,7 @@ export class ChatServer {
         }
 
         OutputObserver?.(Session.Uid, Stanza);
+        MetagameCapture()?.Write({ kind: "chat", conn: Session.Id, dir: "out", text: RedactChatFrame(Stanza) });
         Session.Socket.send(Stanza);
     }
 
@@ -434,6 +440,7 @@ export class ChatServer {
         if(Session.Ended){
             return;
         }
+        MetagameCapture()?.Write({ kind: "chat", conn: Session.Id, event: "close", reason: Reason });
 
         const Now = this.clock();
 
