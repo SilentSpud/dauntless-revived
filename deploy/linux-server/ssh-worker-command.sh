@@ -29,4 +29,4 @@ case "$payload" in
 esac
 [ "${#payload}" -le 65536 ] || { echo "dauntless worker: payload too large" >&2; exit 2; }
 
-exec "$script_dir/worker-launch.mjs" "$payload"
+exec "$script_dir/../../bin/deploy" worker "$payload"

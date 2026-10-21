@@ -7,8 +7,8 @@ Requires=dauntless-metagame.service
 [Service]
 Type=simple
 User=@USER@
-WorkingDirectory=@ROOT@/UndauntedContent
-ExecStart=@NODE@ --env-file=@CONFIG@/content.env @ROOT@/UndauntedContent/dist/server.js
+WorkingDirectory=@ROOT@
+ExecStart=@ROOT@/bin/content serve --env-file=@CONFIG@/content.env
 Restart=on-failure
 RestartSec=3
 KillSignal=SIGTERM

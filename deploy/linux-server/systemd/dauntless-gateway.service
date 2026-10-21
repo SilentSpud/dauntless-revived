@@ -7,8 +7,8 @@ Requires=dauntless-metagame.service dauntless-content.service dauntless-allowlis
 [Service]
 Type=simple
 User=@USER@
-WorkingDirectory=@ROOT@/UndauntedGateway
-ExecStart=@NODE@ --env-file=@CONFIG@/gateway.env @ROOT@/UndauntedGateway/dist/server.js
+WorkingDirectory=@ROOT@
+ExecStart=@ROOT@/bin/gateway serve --env-file=@CONFIG@/gateway.env
 Restart=on-failure
 RestartSec=3
 KillSignal=SIGTERM

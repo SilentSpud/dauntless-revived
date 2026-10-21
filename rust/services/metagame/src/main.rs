@@ -1,5 +1,6 @@
-//! The `metagame` binary: `metagame serve --env-file <file>` runs the server, `metagame db …` holds
-//! the database tools for the server kits (M19).
+//! The `metagame` binary: `metagame serve --env-file <file>` runs the server, `metagame migrate` brings
+//! its database to the latest migration and exits (the kits' install step), `metagame db …` holds the
+//! database tools for the server kits (M19).
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -20,6 +21,13 @@ struct Cli {
 enum Command {
     /// Runs the metagame until `shutdown` on stdin, Ctrl+C / Ctrl+Break or SIGTERM.
     Serve {
+        /// The settings file (`.env` format); variables set in the environment win over it.
+        #[arg(long)]
+        env_file: Option<PathBuf>,
+    },
+    /// Creates the database the settings name, or adopts it, and applies every migration, then exits:
+    /// what a start does before it serves, for an install that registers keys and invites next.
+    Migrate {
         /// The settings file (`.env` format); variables set in the environment win over it.
         #[arg(long)]
         env_file: Option<PathBuf>,
@@ -77,9 +85,36 @@ fn serve(env_file: Option<PathBuf>) -> ExitCode {
     }
 }
 
+fn migrate(env_file: Option<PathBuf>) -> ExitCode {
+    let config = match Env::load(env_file.as_deref())
+        .map_err(|e| e.to_string())
+        .and_then(|env| Config::from_env(&env))
+    {
+        Ok(config) => config,
+        Err(error) => {
+            eprintln!("metagame migrate: {error}");
+            return ExitCode::FAILURE;
+        }
+    };
+    match store::Store::open(&config.db_filename, &store::Options::default(), &metagame::db::SCHEMA) {
+        Ok(_) => {
+            println!("{} is at the latest migration", config.db_filename.display());
+            ExitCode::SUCCESS
+        }
+        Err(error) => {
+            eprintln!(
+                "metagame migrate: the database {} could not be opened: {error}",
+                config.db_filename.display()
+            );
+            ExitCode::FAILURE
+        }
+    }
+}
+
 fn main() -> ExitCode {
     match Cli::parse().command {
         Command::Serve { env_file } => serve(env_file),
+        Command::Migrate { env_file } => migrate(env_file),
         Command::Invite { args } => match metagame::kitinvite::run(&args) {
             Ok(invite) => {
                 println!("{invite}");

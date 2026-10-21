@@ -14,7 +14,10 @@ usage: $0 --game-dir <Dauntless folder> [options]
   --wine <path>                 explicit wine/wine64 path
   --wineprefix <dir>            default /var/lib/dauntless-revived-worker/wineprefix
   --xvfb 0|1                    default 1
+  --binaries <dir>              folder with the release deploy binary (checked against its
+                                SHA256SUMS when it has one); default: cargo build --release
   --no-system-changes           do not create users or write /etc (test mode)
+  --skip-game-prep              do not check the game build or copy the DLLs (for tests only)
 EOF
   exit 2
 }
@@ -32,6 +35,8 @@ proton=
 wine=
 xvfb=1
 no_system=0
+skip_game_prep=0
+binaries=
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -46,15 +51,22 @@ while [ "$#" -gt 0 ]; do
     --wine) wine=$2; shift 2 ;;
     --wineprefix) wineprefix=$2; shift 2 ;;
     --xvfb) xvfb=$2; shift 2 ;;
+    --binaries) binaries=$2; shift 2 ;;
     --no-system-changes) no_system=1; shift ;;
+    --skip-game-prep) skip_game_prep=1; shift ;;
     *) usage ;;
   esac
 done
 [ -n "$game_dir" ] || usage
 case "$xvfb" in 0|1) ;; *) usage ;; esac
 
-for c in node sha256sum; do command -v "$c" >/dev/null 2>&1 || { echo "missing command: $c" >&2; exit 1; }; done
-node -e "const [a,b]=process.versions.node.split(\".\").map(Number); if(a<20 || (a===20 && b<19)) process.exit(1)" || { echo "Node.js 20.19+ is required" >&2; exit 1; }
+command -v sha256sum >/dev/null 2>&1 || { echo "missing command: sha256sum" >&2; exit 1; }
+if [ -n "$binaries" ]; then
+  [ -f "$binaries/deploy" ] || { echo "no deploy binary in $binaries" >&2; exit 1; }
+  binaries=$(CDPATH= cd -- "$binaries" && pwd)
+else
+  command -v cargo >/dev/null 2>&1 || { echo "cargo is required to build the deploy binary; or pass --binaries <dir>" >&2; exit 1; }
+fi
 
 if [ -n "$proton" ]; then
   [ -x "$proton" ] || { echo "Proton is not executable: $proton" >&2; exit 1; }
@@ -78,8 +90,26 @@ if [ "$source_root" != "$install_root" ]; then
   [ -d "$source_root/legacy/UndauntedLauncher/assets" ] && assets_root=$source_root/legacy
   (cd "$assets_root" && tar -cf - UndauntedLauncher/assets) | (cd "$install_root" && tar -xf -)
 fi
-chmod +x "$install_root/deploy/linux-server/worker-launch.mjs" "$install_root/deploy/linux-server/ssh-worker-command.sh" "$install_root/deploy/linux-server/prepare-game.sh"
-"$install_root/deploy/linux-server/prepare-game.sh" --game-dir "$game_dir" --repo "$install_root"
+chmod +x "$install_root/deploy/linux-server/ssh-worker-command.sh" "$install_root/deploy/linux-server/prepare-game.sh"
+
+# The game launch is `deploy worker <payload>` (MIGRATION_PLAN.md M39), in <install-root>/bin
+if [ -n "$binaries" ]; then
+  if [ -f "$binaries/SHA256SUMS" ]; then
+    expected=$(awk '$2 == "deploy" || $2 == "*deploy" {print $1}' "$binaries/SHA256SUMS")
+    [ -n "$expected" ] && [ "$(sha256sum "$binaries/deploy" | awk '{print $1}')" = "$expected" ] || { echo "deploy failed its SHA256SUMS check" >&2; exit 1; }
+  fi
+  deploy_bin="$binaries/deploy"
+else
+  (cd "$source_root/rust" && cargo build --release --locked --bin deploy -p deploy)
+  deploy_bin="$source_root/rust/target/release/deploy"
+fi
+mkdir -p "$install_root/bin"
+cp "$deploy_bin" "$install_root/bin/deploy.new"
+chmod 755 "$install_root/bin/deploy.new"
+mv -f "$install_root/bin/deploy.new" "$install_root/bin/deploy"
+if [ "$skip_game_prep" -eq 0 ]; then
+  "$install_root/deploy/linux-server/prepare-game.sh" --game-dir "$game_dir" --repo "$install_root"
+fi
 
 game_exe="$game_dir/Archon/Binaries/Win64/Dauntless-Win64-Shipping.exe"
 if [ "$no_system" -eq 0 ]; then
@@ -112,7 +142,7 @@ if [ "$no_system" -eq 0 ]; then
 fi
 
 echo "Linux game worker configured."
-echo "Worker launcher: $install_root/deploy/linux-server/worker-launch.mjs"
+echo "Worker launcher: $install_root/bin/deploy worker"
 echo "Environment: $env_file"
 echo "Game: $game_dir"
 if [ -n "$proton" ]; then echo "Proton: $proton"; else echo "Wine: $wine"; fi

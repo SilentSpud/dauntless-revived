@@ -127,3 +127,35 @@ fn backup_checks_its_copy_and_journal_switches_for_a_rollback() {
     assert!(!dir.path().join("undaunted.db-wal").exists());
     assert_eq!(metagame(&["db", "journal", "wal", s(&db)]).1, "journal mode wal");
 }
+
+#[test]
+fn migrate_creates_the_database_the_settings_name_and_exits() {
+    let dir = tempfile::tempdir().unwrap();
+    let keys: serde_json::Value = serde_json::from_str(include_str!("fixtures/node-crypto.json")).unwrap();
+    let db = dir.path().join("undaunted.db");
+    let env = dir.path().join("metagame.env");
+    std::fs::write(
+        &env,
+        format!(
+            "PORT=0\nNODE_ENV=production\nAUTH_MODE=APIKEY\nDB_FILENAME='{}'\nAUTH_SIGNING_PRIVKEY_B64={}\nAUTH_SIGNING_PUBKEY_B64={}\n",
+            s(&db),
+            keys["privB64"].as_str().unwrap(),
+            keys["pubB64"].as_str().unwrap()
+        ),
+    )
+    .unwrap();
+    assert_eq!(
+        metagame(&["migrate", "--env-file", s(&env)]),
+        (true, format!("{} is at the latest migration", s(&db)), String::new())
+    );
+    assert_eq!(
+        metagame(&["db", "integrity", s(&db)]),
+        (true, "ok, 0 users".into(), String::new())
+    );
+    // Again on the migrated file: nothing to do
+    assert!(metagame(&["migrate", "--env-file", s(&env)]).0);
+
+    let (ok, _, err) = metagame(&["migrate", "--env-file", s(&dir.path().join("missing.env"))]);
+    assert!(!ok);
+    assert!(err.starts_with("metagame migrate: "), "{err}");
+}

@@ -8,8 +8,8 @@ Before=dauntless-gateway.service
 Type=simple
 User=root
 WorkingDirectory=@ROOT@
-ExecStart=@NODE@ --env-file=@CONFIG@/allowlist.env @ROOT@/deploy/linux-server/allowlist.mjs
-ExecStopPost=@NODE@ --env-file=@CONFIG@/allowlist.env @ROOT@/deploy/linux-server/allowlist.mjs --close-ports
+ExecStart=@ROOT@/bin/allowlist --env-file=@CONFIG@/allowlist.env
+ExecStopPost=@ROOT@/bin/allowlist --env-file=@CONFIG@/allowlist.env --close-ports
 Restart=on-failure
 RestartSec=3
 KillSignal=SIGTERM

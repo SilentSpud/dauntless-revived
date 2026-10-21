@@ -8,6 +8,7 @@
 #  - the four server packages: npm ci, build, unit tests
 #  - the launcher: typecheck, unit tests and the Windows installer, kept as a download for 7 days
 #  - the separate Linux and OpenBSD server ports (native Node services, Wine/SSH game launch wrappers, nftables/PF)
+#  - the Linux kit on the Rust services: install.sh and install-worker.sh in test mode, twice
 #  - the Windows Server kit under Windows PowerShell 5.1: parse check, PSScriptAnalyzer errors, and the
 #    kit's own tests (unit checks, remote deployment against a local folder, an end-to-end sandbox install)
 #  - the docs site: generated files current, and the same Jekyll build GitHub Pages runs
@@ -461,13 +462,41 @@ jobs:
       - name: Parse the Linux and OpenBSD service scripts
         run: |
           set -euo pipefail
-          sh -n deploy/linux-server/install.sh deploy/linux-server/install-worker.sh deploy/linux-server/prepare-game.sh deploy/linux-server/stack.sh
+          sh -n deploy/linux-server/*.sh deploy/linux-server/tests/*.sh
           for file in deploy/openbsd-server/*.ksh deploy/openbsd-server/rc.d/*; do
             bash -n "$file"
           done
           node --check deploy/unix-common/*.mjs
-          node --check deploy/linux-server/*.mjs
           node --check deploy/openbsd-server/*.mjs
+
+  # The Linux kit on the Rust services (MIGRATION_PLAN.md M39): install.sh and install-worker.sh in test
+  # mode with freshly built binaries, twice, as an upgrade runs them.
+  linux-kit:
+    name: Linux kit (install test)
+    needs: changes
+    if: needs.changes.outputs.deploy == 'true' || needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned toolchain
+        working-directory: rust
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: rust
+          key: linux-kit
+
+      - name: Build the services
+        working-directory: rust
+        run: cargo build --locked --bins -p metagame -p gateway -p content -p deploy
+
+      - name: Install, upgrade and check
+        run: sh deploy/linux-server/tests/install-test.sh rust/target/debug
 
   server-port-openbsd:
     name: Server port (OpenBSD 7.9)
@@ -796,7 +825,7 @@ jobs:
   # as passed; a failed or cancelled job, or a failed change detection, fails it.
   ci-ok:
     name: CI ok
-    needs: [changes, rust, server-binaries, rust-deny, client-mods, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: [changes, rust, server-binaries, linux-kit, rust-deny, client-mods, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

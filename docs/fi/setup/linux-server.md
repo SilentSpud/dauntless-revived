@@ -3,7 +3,7 @@ title: Linux-palvelin
 parent: Asennus
 grand_parent: Dauntless Revived suomeksi
 nav_order: 7
-description: "Dauntless Revived -palvelin x86_64-Linuxissa: natiivit Node-palvelut, Proton/Wine-pelipalvelimet, systemd ja nftables."
+description: "Dauntless Revived -palvelin Linuxissa: natiivit Rust-palvelut, Proton/Wine-pelipalvelimet, systemd ja nftables."
 lang: fi
 ref: setup/linux-server
 locale: fi_FI
@@ -68,21 +68,21 @@ Pelaajat
 ```
 
 Windowsin deploy-palvelimen prosessirajapintaa ei muutettu. Linuxissa
-`GAMESERVER_BINARY_PATH` osoittaa `deploy/linux-server/launch-gameserver.mjs`-kääreeseen.
+`GAMESERVER_BINARY_PATH` osoittaa `bin/dr-run-game`-linkkiin, joka ajaa `deploy`-ohjelmaa kääreenä.
 
 ## Vaatimukset
 
 > **Hostattu Linux:** EU Gamehost on projektin kumppani. [Hosting-kumppanin opas]({{ "/fi/setup/hosting-partner.html" | relative_url }}) sisältää pakettiesimerkkejä; varmista ennen tilausta tarvitsemasi käyttöjärjestelmä ja virtualisointi.
 
-- x86_64 Linux + glibc
-- Node.js **20.19+** (22 tai 24 suositeltu)
-- npm
+- x86_64- tai aarch64-Linux + glibc
+- palveluohjelmat: CI:n `server-<target>`-lataus `--binaries <kansio>`-valitsimella (tarkistetaan
+  sen `SHA256SUMS`-tiedostoa vasten) tai Rust (`rustup`), jolla ne käännetään lähdekoodista
 - täsmälleen oikea Dauntless **1.4.4**
 - Proton/GE-Proton tai 64-bittinen Wine
 - päättömässä käytössä `xvfb-run`, ellei oikeaa X-näyttöä ole
 - systemd normaalia palvelinasennusta varten
 - nftables julkista tilaa varten
-- riittävästi muistia Node-palveluille ja samanaikaisille peliprosesseille
+- riittävästi muistia palveluille ja samanaikaisille peliprosesseille
 
 Vaadittu EXE:n SHA-256:
 
@@ -170,7 +170,7 @@ sudo ./deploy/linux-server/stack.sh logs
 ## Tee kutsu
 
 ```bash
-sudo -u dauntless node /opt/dauntless-revived/deploy/unix-common/new-invite.mjs \
+sudo -u dauntless /opt/dauntless-revived/bin/metagame invite \
   --config /etc/dauntless-revived \
   --name KaverinNimi
 ```
@@ -199,16 +199,16 @@ eikä yleistä shelliä.
 Linux-portissa ei vielä ole Windows-paketin transaktionaalista päivitystä ja automaattista
 palautusta.
 
-SQLite-varmuuskopio:
+SQLite-varmuuskopio (turvallinen myös metagamen ollessa käynnissä):
 
 ```bash
-sudo -u dauntless node /opt/dauntless-revived/deploy/unix-common/dr-db.cjs \
-  backup /opt/dauntless-revived/UndauntedMetagame \
+sudo -u dauntless /opt/dauntless-revived/bin/metagame db backup \
   /var/lib/dauntless-revived/undaunted.db \
   /var/lib/dauntless-revived/undaunted-backup.db
 ```
 
-Päivitä lähdekoodi ja aja asennin uudelleen samoilla asetuksilla. Säilytä samat data- ja
+Päivitä lähdekoodi ja aja asennin uudelleen samoilla asetuksilla (se kääntää tai ottaa uudet
+ohjelmat ja päivittää tietokannan ennen palvelujen käynnistystä). Säilytä samat data- ja
 config-kansiot.
 
 ## Vianetsintä

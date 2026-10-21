@@ -5,12 +5,14 @@ Windows Server kit in `deploy/windows-server/`.
 
 ## Architecture
 
-- UndauntedMetagame, UndauntedDeployServer, UndauntedContent and UndauntedGateway run natively under
-  Node.js on Linux.
+- The metagame, deploy server, content server, TLS gateway and allowlist helper are the Rust
+  binaries `metagame`, `deploy`, `content`, `gateway` and `allowlist` in `<install-root>/bin`
+  (MIGRATION_PLAN.md M39). No Node.js is needed.
 - Ramsgate, the Training Dojo and hunt processes are still the original Dauntless 1.4.4 Windows
-  x86_64 executable. `launch-gameserver.mjs` runs them through Proton or Wine.
-- The deploy server keeps its existing process contract: `GAMESERVER_BINARY_PATH` points at the
-  Linux wrapper instead of directly at the Windows EXE.
+  x86_64 executable. `deploy run-game` runs them through Proton or Wine.
+- The deploy server keeps its existing process contract: `GAMESERVER_BINARY_PATH` points at
+  `bin/dr-run-game`, a link to `deploy` that runs as the Linux wrapper, instead of directly at the
+  Windows EXE.
 - Public mode uses the existing TLS gateway and a Linux nftables allowlist. Only player IPs reported
   by authenticated gateway traffic are admitted to UDP 8770-8777.
 - systemd supervises the services.
@@ -19,9 +21,10 @@ The launcher/server DLL pins and the game EXE pin are checked before the Linux g
 
 ## Requirements
 
-- x86_64 Linux with glibc
-- Node.js 20.19+; Node.js 22 or 24 is recommended
-- npm
+- x86_64 or aarch64 Linux with glibc
+- the service binaries: either a CI `server-x86_64-unknown-linux-gnu` or
+  `server-aarch64-unknown-linux-gnu` download passed with `--binaries <dir>` (checked against its
+  `SHA256SUMS`), or Rust (`rustup`) to build them from the checkout with `cargo build --release`
 - Proton/GE-Proton or 64-bit Wine
 - `xvfb-run` for a headless game worker unless a real X display is supplied
 - systemd for the normal service install
@@ -75,6 +78,13 @@ sudo ./deploy/linux-server/install.sh \
   --wine /usr/bin/wine64
 ```
 
+Without `--binaries`, the installer builds the services in the checkout with `cargo`, so run it from
+an account that has Rust (for example `sudo env PATH="$PATH" ./deploy/linux-server/install.sh ...`),
+or build first with `cargo build --release --locked --bins -p metagame -p gateway -p content -p deploy`
+in `rust/` and pass `--binaries rust/target/release`. Running the installer again upgrades: the
+binaries are replaced, settings, secrets, the database, the certificate and the owner invite are
+kept, and the database is migrated before the services start.
+
 The normal install writes code under `/opt/dauntless-revived`, state under
 `/var/lib/dauntless-revived`, secret configuration under `/etc/dauntless-revived`, and systemd
 units under `/etc/systemd/system`.
@@ -104,7 +114,7 @@ sudo ./deploy/linux-server/stack.sh restart deploy
 ## Create an invite
 
 ```sh
-sudo -u dauntless node /opt/dauntless-revived/deploy/unix-common/new-invite.mjs \
+sudo -u dauntless /opt/dauntless-revived/bin/metagame invite \
   --config /etc/dauntless-revived \
   --name FriendName
 ```
@@ -113,8 +123,8 @@ The invite code is stored directly in SQLite and the complete v1/v2 invite is pr
 
 ## Separate Linux game worker
 
-OpenBSD uses this mode, but it is also useful when you want the Node services and game processes on
-different Linux machines.
+OpenBSD uses this mode, but it is also useful when you want the services and game processes on
+different Linux machines. The worker needs only the `deploy` binary (`--binaries <dir>`, or `cargo`).
 
 On the worker:
 
@@ -129,6 +139,10 @@ The installer creates the fixed `dr-game-worker` command. For an SSH worker key,
 command accepts only one bounded base64url JSON argv payload and never evaluates it as shell syntax.
 
 ## Validation status
+
+`deploy/linux-server/tests/install-test.sh <bin-dir>` runs both installers in test mode, twice, with
+the Rust binaries; CI runs it on every change to the kit or the services. The notes below are from
+the Node version of this kit.
 
 On 1 October 2026 this port was tested against the local pinned
 `/home/mikael-nurminen/Downloads/BaseGame144/Dauntless` tree:

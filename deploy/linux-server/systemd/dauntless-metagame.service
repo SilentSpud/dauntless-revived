@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 User=@USER@
 WorkingDirectory=@ROOT@/UndauntedMetagame
-ExecStart=@NODE@ --env-file=@CONFIG@/metagame.env @ROOT@/UndauntedMetagame/dist/server.js
+ExecStart=@ROOT@/bin/metagame serve --env-file=@CONFIG@/metagame.env
 Restart=on-failure
 RestartSec=3
 KillSignal=SIGTERM

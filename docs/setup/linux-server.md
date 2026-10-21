@@ -2,7 +2,7 @@
 title: Linux server
 parent: Setup
 nav_order: 7
-description: "Run the Dauntless Revived server stack on x86_64 Linux: native Node services, Proton/Wine game servers, systemd and nftables."
+description: "Run the Dauntless Revived server stack on Linux: native Rust services, Proton/Wine game servers, systemd and nftables."
 lang: en
 ref: setup/linux-server
 ---
@@ -14,7 +14,7 @@ ref: setup/linux-server
 {: .no_toc }
 
 The Linux server port is separate from the Windows Server kit. It runs the metagame, deploy server,
-content server and TLS gateway **natively on Linux**, while Ramsgate, the Training Dojo and hunts use
+content server and TLS gateway **natively on Linux** as Rust binaries, while Ramsgate, the Training Dojo and hunts use
 the original Dauntless 1.4.4 Windows x86_64 executable through **Proton or Wine**.
 
 Nothing under `deploy/windows-server/` is used or changed by this port.
@@ -53,13 +53,13 @@ Players
    |                                |
    +-- public: TLS :443 ---> Gateway|
                                     v
-                         Native Linux Node services
+                         Native Linux services (Rust)
                          + Metagame / SQLite
                          + Content
                          + Deploy
                                     |
                                     v
-                         launch-gameserver.mjs
+                         bin/dr-run-game (deploy)
                                     |
                               Proton / Wine
                                     |
@@ -67,22 +67,23 @@ Players
                          UDP 8770-8777
 ```
 
-The existing deploy server still starts one executable path. On Linux that path is the wrapper in
-`deploy/linux-server/launch-gameserver.mjs`; Windows continues pointing directly at the EXE.
+The existing deploy server still starts one executable path. On Linux that path is
+`bin/dr-run-game`, a link to the `deploy` binary that runs as the wrapper; Windows continues
+pointing directly at the EXE.
 
 ## Requirements
 
 > **Hosted Linux:** EU Gamehost is a project partner. Our [hosting partner guide]({{ "/setup/hosting-partner.html" | relative_url }}) lists example plans; confirm that the exact OS/virtualisation setup you need is available before ordering.
 
-- x86_64 Linux with glibc
-- Node.js **20.19+**; Node 22 or 24 recommended
-- npm
+- x86_64 or aarch64 Linux with glibc
+- the service binaries: a CI `server-<target>` download passed with `--binaries <dir>` (checked
+  against its `SHA256SUMS`), or Rust (`rustup`) to build them from the checkout
 - the exact Dauntless **1.4.4** game tree
 - Proton/GE-Proton or 64-bit Wine
 - `xvfb-run` for a headless game worker unless you provide a real X display
 - systemd for the normal service install
 - nftables for public mode
-- enough RAM for the Node stack plus however many game processes you allow
+- enough RAM for the services plus however many game processes you allow
 
 The required game EXE SHA-256 is:
 
@@ -105,7 +106,7 @@ On a Debian/Ubuntu-style server, a typical prerequisite set is:
 
 ```bash
 sudo apt update
-sudo apt install nodejs npm nftables xvfb
+sudo apt install nftables xvfb
 ```
 
 Install Proton or Wine separately. For a headless dedicated host, a known Proton/GE-Proton or Wine
@@ -202,7 +203,7 @@ sudo ./deploy/linux-server/stack.sh logs
 ## Create an invite
 
 ```bash
-sudo -u dauntless node /opt/dauntless-revived/deploy/unix-common/new-invite.mjs \
+sudo -u dauntless /opt/dauntless-revived/bin/metagame invite \
   --config /etc/dauntless-revived \
   --name FriendName
 ```
@@ -232,16 +233,17 @@ installer. That key should have no sudo access and no general shell.
 
 The Linux port does not yet have the Windows kit's transactional update/rollback script.
 
-Before updating, back up the data directory. SQLite can also be copied safely through the helper:
+Before updating, back up the data directory. The database can be copied safely while the metagame
+runs:
 
 ```bash
-sudo -u dauntless node /opt/dauntless-revived/deploy/unix-common/dr-db.cjs \
-  backup /opt/dauntless-revived/UndauntedMetagame \
+sudo -u dauntless /opt/dauntless-revived/bin/metagame db backup \
   /var/lib/dauntless-revived/undaunted.db \
   /var/lib/dauntless-revived/undaunted-backup.db
 ```
 
-Then pull/copy the newer source and re-run the installer with the same arguments. Keep the same
+Then pull/copy the newer source and re-run the installer with the same arguments (it builds or
+takes the new binaries and migrates the database before the services start). Keep the same
 `/var/lib/dauntless-revived` and `/etc/dauntless-revived` directories to preserve keys and data.
 
 ## Troubleshooting

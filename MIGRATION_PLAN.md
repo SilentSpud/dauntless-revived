@@ -213,6 +213,17 @@ Done so far:
   keeps each target's files with their `SHA256SUMS` as a 7-day artifact; nothing is published. Left: the
   chat, backup and shutdown items of the smoke list on every target, and release archives for the kits
   (M39, M40), which also carry the store images and progression config next to the binary.
+- Metagame B5, M39: the Linux kit runs the Rust services. `install.sh` takes the binaries from
+  `--binaries <dir>` (a CI `server-<target>` download, checked against its `SHA256SUMS`) or builds them with
+  `cargo`, puts them in `<install-root>/bin` by rename, links `bin/dr-run-game` to `deploy`, writes the
+  settings with `deploy generate-config`, makes the certificate with `gateway make-cert`, and bootstraps the
+  database with the new `metagame migrate --env-file` (create or adopt, migrate, exit; the `db` tools still
+  never migrate) and `metagame db gs-key` / `add-invite`. The systemd units start `bin/<service> serve
+  --env-file=…`; `install-worker.sh` installs `deploy` and the SSH forced command runs `deploy worker`.
+  Node is no longer needed on a Linux host; the Linux-only `.mjs` helpers are gone (the OpenBSD kit keeps
+  its own until M41). CI's `linux-kit` job runs `tests/install-test.sh`: both installers in test mode,
+  twice, as an upgrade, plus a tampered binary that must be refused. The setup page (both languages) and
+  the kit README say so. Left: an install on the canary itself (D23), which is the cutover (M42).
 - Metagame B3, M32-M34: chat (`chat/`, from `realtime/*.ts`), on by default on `CHAT_PORT` as in
   Node, started before the HTTP listener and closed with it (`<close/>`, at most 1 s). One task owns
   all of chat and answers frames one at a time, in order, as Node's thread did; each connection has a
