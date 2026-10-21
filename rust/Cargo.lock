@@ -612,6 +612,7 @@ name = "deploy"
 version = "0.0.0"
 dependencies = [
  "axum",
+ "base64 0.23.1",
  "bytes",
  "chrono",
  "clap",
@@ -622,6 +623,7 @@ dependencies = [
  "hyper-util",
  "libc",
  "rand 0.10.3",
+ "rcgen",
  "serde",
  "serde_json",
  "service-kit",
@@ -1533,6 +1535,7 @@ dependencies = [
  "if-addrs",
  "jsonwebtoken",
  "memory-stats",
+ "protocol",
  "rand 0.10.3",
  "regex",
  "serde",

@@ -29,6 +29,13 @@ enum Command {
         #[command(subcommand)]
         command: DbCommand,
     },
+    /// Adds a one-use invite code and prints its launcher invite (Unix kits:
+    /// `--config <dir>` `--name <server name>`).
+    #[command(disable_help_flag = true)]
+    Invite {
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
+        args: Vec<String>,
+    },
 }
 
 fn serve(env_file: Option<PathBuf>) -> ExitCode {
@@ -73,6 +80,16 @@ fn serve(env_file: Option<PathBuf>) -> ExitCode {
 fn main() -> ExitCode {
     match Cli::parse().command {
         Command::Serve { env_file } => serve(env_file),
+        Command::Invite { args } => match metagame::kitinvite::run(&args) {
+            Ok(invite) => {
+                println!("{invite}");
+                ExitCode::SUCCESS
+            }
+            Err(reason) => {
+                eprintln!("metagame invite: {reason}");
+                ExitCode::FAILURE
+            }
+        },
         Command::Db { command } => match dbtools::run(&command) {
             Ok(line) => {
                 println!("{line}");

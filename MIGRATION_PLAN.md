@@ -282,6 +282,19 @@ Done so far:
   stand-ins: keys, delivery, commands, counter, recovery, instance. A side effect handled here:
   serenity brings rustls's ring provider, so every HTTPS client now names aws-lc-rs instead of
   relying on rustls's default. Not done: a real `/key claim` on a test guild (needs a bot token).
+- Part C, S6: the Unix kit helpers. `deploy run-game` is `game-runner.mjs` (Proton first, else
+  Wine, Xvfb without a display, the game's own `dxgi` forced, the runtime's process group ended
+  with it), `deploy worker <payload>` is `worker-launch.mjs` (one base64url JSON argument list,
+  checked, plus the worker's env file), `deploy ssh-game` is OpenBSD's `launch-gameserver.mjs` (the
+  same payload over batch SSH), and `deploy generate-config` is `generate-config.mjs` (the same
+  files and secrets; the signing key comes from rcgen). The `deploy` binary linked as
+  `dr-run-game` or `dr-ssh-game` is that launcher, so `GAMESERVER_BINARY_PATH` points at a link
+  in `<bin-dir>` instead of a Node script. `new-invite.mjs` is `metagame invite`, with the invite
+  from `protocol::format_invite`; `dr-db.cjs` was already `metagame db`. `ssh-worker-command.sh`,
+  `stack.sh`, `prepare-game.sh` and `configure-pf.ksh` stay shell: they only check input and control
+  processes. Tests: the runner, worker payload, SSH and config tests, and an invite into a real
+  database. Not done: the kits' install scripts and service files still start the Node tools, and
+  the two-machine worker launch in a CI container; both belong to the kits' cutover (B5).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

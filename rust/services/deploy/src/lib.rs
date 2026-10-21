@@ -7,6 +7,8 @@ pub mod capacity;
 pub mod cities;
 pub mod cpu;
 pub mod gameservers;
+pub mod kit;
+pub mod kitconfig;
 pub mod lifetime;
 pub mod matchmaker;
 pub mod occupancy;

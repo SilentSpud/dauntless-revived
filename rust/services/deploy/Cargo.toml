@@ -10,6 +10,7 @@ publish.workspace = true
 
 [dependencies]
 axum.workspace = true
+base64.workspace = true
 bytes = "1"
 chrono.workspace = true
 clap.workspace = true
@@ -19,6 +20,7 @@ http = "1"
 hyper.workspace = true
 hyper-util = { workspace = true, features = ["client-legacy", "http1"] }
 rand.workspace = true
+rcgen = { version = "0.14.10", default-features = false, features = ["aws_lc_rs", "pem", "crypto"] }
 serde.workspace = true
 serde_json.workspace = true
 service-kit.workspace = true
