@@ -1,0 +1,169 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /dauntless-status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"show-status\":true,\"en\":\"Welcome to Test Server!\",\"fr\":\"Bienvenue sur Test Server !\",\"it\":\"Ti diamo il benvenuto su Test Server!\",\"es\":\"¡Te damos la bienvenida a Test Server!\",\"de\":\"Willkommen bei Test Server!\",\"pt\":\"Boas-vindas ao Test Server!\",\"ru\":\"Добро пожаловать в Test Server!\",\"ja\":\"Test Serverへようこそ！\",\"name\":\"Test Server\",\"version\":\"9.9.9\",\"commit\":\"abc1234\",\"sourceUrl\":\"https://example.test/src\"}"
+    },
+    {
+      "request": "GET /Dauntless-Status/",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"show-status\":true,\"en\":\"Welcome to Test Server!\",\"fr\":\"Bienvenue sur Test Server !\",\"it\":\"Ti diamo il benvenuto su Test Server!\",\"es\":\"¡Te damos la bienvenida a Test Server!\",\"de\":\"Willkommen bei Test Server!\",\"pt\":\"Boas-vindas ao Test Server!\",\"ru\":\"Добро пожаловать в Test Server!\",\"ja\":\"Test Serverへようこそ！\",\"name\":\"Test Server\",\"version\":\"9.9.9\",\"commit\":\"abc1234\",\"sourceUrl\":\"https://example.test/src\"}"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /heartbeat",
+      "status": 200,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "20000"
+    },
+    {
+      "request": "POST /event",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /event",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{}"
+    },
+    {
+      "request": "POST /account/migrate",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /account/migrate",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"migration_failed\":false,\"migration_finished\":true}"
+    },
+    {
+      "request": "GET /vivox/login",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /vivox/login",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /motd/",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /motd",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /playertreatments/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"treatments\":[\"CohortTreatment.Dojo.B\"]}"
+    },
+    {
+      "request": "GET /playertreatments/x",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /eventstats/",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"stats\":[]}"
+    },
+    {
+      "request": "GET /eventstats",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"stats\":[]}"
+    },
+    {
+      "request": "GET /all/",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"messages\":[]}}"
+    },
+    {
+      "request": "GET /all",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /motd/trigger",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /motd/trigger?event_name=test",
+      "status": 204,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

@@ -545,3 +545,13 @@ async fn slayerlinks() {
 async fn slayerlinks_off() {
     run_area("slayerlinks-off").await;
 }
+
+#[tokio::test]
+async fn system() {
+    run_area("system").await;
+}
+
+#[tokio::test]
+async fn system_plain() {
+    run_area("system-plain").await;
+}

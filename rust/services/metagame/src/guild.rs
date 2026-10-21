@@ -593,11 +593,6 @@ fn member_count(conn: &mut Conn, guild: &str) -> QueryResult<i64> {
         .first(conn)
 }
 
-/// `localeCompare` for account ids: case-insensitive first, lowercase before uppercase.
-fn locale_order(a: &str, b: &str) -> std::cmp::Ordering {
-    a.to_lowercase().cmp(&b.to_lowercase()).then_with(|| b.cmp(a))
-}
-
 /// The guild object of every guild reply (FGuildData / FGuildMemberData in the client).
 fn guild_data(conn: &mut Conn, settings: &Settings, guild: &str) -> QueryResult<Option<Map<String, Value>>> {
     let row = guilds::table
@@ -613,7 +608,7 @@ fn guild_data(conn: &mut Conn, settings: &Settings, guild: &str) -> QueryResult<
         rank_order(&a.rank)
             .cmp(&rank_order(&b.rank))
             .then(a.joined_at.cmp(&b.joined_at))
-            .then_with(|| locale_order(&a.account_id, &b.account_id))
+            .then_with(|| service_kit::collate::locale_compare(&a.account_id, &b.account_id))
     });
     let mut data = Map::new();
     data.insert("id".into(), json!(id));

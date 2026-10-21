@@ -1,0 +1,19 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /dauntless-status",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"show-status\":true,\"en\":\"Welcome to Dauntless Revived!\",\"fr\":\"Bienvenue sur Dauntless Revived !\",\"it\":\"Ti diamo il benvenuto su Dauntless Revived!\",\"es\":\"¡Te damos la bienvenida a Dauntless Revived!\",\"de\":\"Willkommen bei Dauntless Revived!\",\"pt\":\"Boas-vindas ao Dauntless Revived!\",\"ru\":\"Добро пожаловать в Dauntless Revived!\",\"ja\":\"Dauntless Revivedへようこそ！\"}"
+    },
+    {
+      "request": "GET /motd/trigger",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

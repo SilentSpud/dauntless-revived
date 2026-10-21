@@ -1,0 +1,169 @@
+{
+  "about": "The system routes: the status banner, heartbeats and the stubbed client routes (MIGRATION_PLAN.md M29, area 7).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "SERVER_VERSION": "9.9.9",
+    "GIT_COMMIT": "abc1234",
+    "SERVER_NAME": "  Test\u0007 Server  ",
+    "SOURCE_URL": "https://example.test/src"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/dauntless-status",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/Dauntless-Status/",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/heartbeat",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/heartbeat",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/heartbeat",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "map": "/Game/Maps/Ramsgate/ramsgate_p",
+        "state": "city"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/heartbeat",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/heartbeat",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "map": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/event",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/event",
+      "headers": {},
+      "json": {
+        "a": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/account/migrate",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/account/migrate",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/vivox/login",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/vivox/login",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/motd/",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/motd",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/playertreatments/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/playertreatments/x",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/eventstats/",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/eventstats",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/all/",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/all",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/motd/trigger",
+      "headers": {}
+    },
+    {
+      "method": "GET",
+      "path": "/motd/trigger?event_name=test",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    }
+  ]
+}

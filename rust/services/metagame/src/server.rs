@@ -132,6 +132,7 @@ pub struct Prepared {
 
 /// Start-up up to listening: checks, the database (adopted or migrated), the keys left to register.
 pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepared, String> {
+    crate::serverstatus::started();
     let tokens = TokenKeys::from_base64_pem(&config.signing_private_b64, &config.signing_public_b64)
         .map_err(|e| format!("AUTH_SIGNING_PRIVKEY_B64 / AUTH_SIGNING_PUBKEY_B64: {e}"))?;
     let store = store::Store::open(&config.db_filename, &store::Options::default(), &crate::db::SCHEMA)
@@ -167,6 +168,9 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         slayer_links: config.slayer_links,
         guild_memory: crate::guild::Memory::default(),
         key_recovery_secret: config.key_recovery_secret.clone(),
+        activity: crate::activity::Activity::default(),
+        server_status: config.server_status.clone(),
+        status_cache: crate::serverstatus::Cache::default(),
         health: Arc::new(Health::new(config.backend_health)),
         key_revocations: tokio::sync::broadcast::channel(256).0,
     });

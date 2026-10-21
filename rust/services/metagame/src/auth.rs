@@ -54,7 +54,7 @@ fn now_secs() -> u64 {
         .unwrap_or(0)
 }
 
-fn origin(parts: &Parts) -> Origin<'_> {
+pub(crate) fn origin(parts: &Parts) -> Origin<'_> {
     let connection = parts
         .extensions
         .get::<ConnectInfo<ConnectionInfo>>()

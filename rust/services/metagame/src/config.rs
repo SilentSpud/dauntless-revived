@@ -75,6 +75,8 @@ pub struct Config {
     /// `KEY_RECOVERY_SERVICE_SECRET`: the Discord bot's key recovery (`routes/keyrotation.rs`).
     pub key_recovery_secret: Option<String>,
     pub real_progression: crate::realprogression::Settings,
+    /// The server's name, version and source for the status (`serverstatus.rs`).
+    pub server_status: crate::serverstatus::Settings,
     pub features: Features,
 }
 
@@ -163,6 +165,7 @@ impl Config {
             slayer_links: on_off(env, "SLAYER_LINKS", true),
             key_recovery_secret: env.raw("KEY_RECOVERY_SERVICE_SECRET").map(str::to_owned),
             real_progression: crate::realprogression::Settings::from_env(env),
+            server_status: crate::serverstatus::Settings::from_env(env),
             features: Features {
                 accountinfo_public_legacy: env.get("ACCOUNTINFO_PUBLIC_LEGACY") == Some("1"),
                 account_display_name: env.get("ACCOUNT_DISPLAY_NAME") != Some("0"),

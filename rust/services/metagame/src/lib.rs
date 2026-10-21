@@ -2,6 +2,7 @@
 //! that adopts the Node metagame's `undaunted.db` (M13, M14, M18).
 
 pub mod accounts;
+pub mod activity;
 pub mod app;
 pub mod auth;
 pub mod bounties;
@@ -35,6 +36,7 @@ pub mod routes;
 #[allow(non_snake_case)]
 pub mod schema;
 pub mod server;
+pub mod serverstatus;
 pub mod slayerlinks;
 pub mod store;
 pub mod store_revocation;

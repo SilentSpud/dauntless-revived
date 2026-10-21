@@ -145,6 +145,13 @@ Done so far:
 - Metagame B2, area 6 of M29, third part: Slayer Links (`routes/slayerlinks.ts`). Invites, answers,
   links, availability, the deletes, expiry and sweeps, and the invite window, behind `SLAYER_LINKS`. Two
   parity scripts (`slayerlinks`, `slayerlinks-off`, 87 replies) match Node, stored rows included.
+- Metagame B2, area 7 of M29, first part: the rest of `routes/system.ts`. The status banner with the
+  server's identity (`SERVER_NAME`, `SERVER_VERSION`, `GIT_COMMIT`, `SOURCE_URL`, `STATUS_EXTRA`),
+  heartbeats (player activity and playing addresses, kept in memory), and the stubbed client routes.
+  The server status builder (`serverstatus.rs`) is ported with it, for `ServerStatus` in the
+  undauntedapi part. Without `SERVER_VERSION`, Rust reports its crate version where Node read
+  `package.json`. Two parity scripts (`system`, `system-plain`, 25 replies) match Node. The router now
+  takes Node's trailing-slash patterns (`/motd/`).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

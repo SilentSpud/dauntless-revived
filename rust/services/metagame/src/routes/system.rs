@@ -1,6 +1,5 @@
-//! The leaderboard profile, entitlement, progression config, Hunt Pass, cooldown and bounty routes of
-//! `routes/system.ts`
-//! (the rest of the file comes with its area).
+//! `routes/system.ts`: the status banner, heartbeats, the leaderboard profile, entitlements, the
+//! progression config, Hunt Pass, cooldowns, bounties and the client's stubbed odds and ends.
 
 // Refusals are axum responses, the way the extractors report them; boxing them gains nothing here.
 #![allow(clippy::result_large_err)]
@@ -8,25 +7,34 @@
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::http::request::Parts;
-use axum::response::Response;
+use axum::response::{IntoResponse, Response};
 use serde_json::{Value, json};
 use service_kit::body::ExpressBody;
 use service_kit::routing::{Params, Router};
 
-use super::{fall_through, json, ok};
+use super::{empty, fall_through, json, ok};
 use crate::app::{AppError, AppState};
 use crate::auth::{MetagameAuth, metagame_auth};
 use crate::entitlements;
 use crate::progression::{
     Caller, Event, account_exists, read_field, read_integer, real_reply, record_event, refuse_unless_game_server,
 };
+use crate::serverstatus;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
+        .get("/dauntless-status", dauntless_status)
+        .post("/heartbeat", heartbeat)
+        .post("/event", event)
+        .post("/account/migrate", account_migrate)
         .post("/profile/update", update_profile)
+        .get("/vivox/login", vivox_login)
+        .post("/motd/", motd)
         .get("/entitlementsv2", list)
         .post("/entitlementv2/:userId", grant)
         .delete("/entitlement/:userId/:entitlement", revoke)
+        .get("/playertreatments/:userId", player_treatments)
+        .get("/eventstats/", event_stats)
         .get("/progression/config", progression_config)
         .get("/huntpass/:userId", hunt_pass)
         .post("/huntpass/:userId", set_hunt_pass)
@@ -38,6 +46,95 @@ pub fn routes() -> Router<AppState> {
         .get("/bounty/:userId", bounties)
         .post("/bounty/delete/:userId", delete_bounties)
         .post("/bounty/:userId", set_bounties)
+        .get("/all/", mailbox)
+        .get("/motd/trigger", motd_trigger)
+}
+
+/// The client reads exactly the first nine fields by name, so the fields after them are for people
+/// and scripts: the server's name and the source it runs. Nothing about players: this answers
+/// anyone. `STATUS_EXTRA=0` answers the nine fields alone.
+async fn dauntless_status(State(state): State<AppState>) -> Response {
+    tracing::info!("Status");
+    let identity = &state.server_status;
+    let mut reply = serde_json::Map::new();
+    reply.insert("show-status".into(), json!(true));
+    reply.extend(serverstatus::welcome(&identity.name));
+    if identity.status_extra {
+        reply.extend(identity.identity());
+    }
+    ok(Value::Object(reply))
+}
+
+/// A game server's own heartbeat carries no player token: there is no player to record. A
+/// player's heartbeat also keeps them in their party.
+async fn heartbeat(
+    State(state): State<AppState>,
+    parts: Parts,
+    auth: MetagameAuth,
+    ExpressBody(body): ExpressBody,
+) -> Response {
+    if let Some(user) = auth.user_id() {
+        let now = crate::time::now_ms();
+        if !auth.is_game_server() {
+            let address = crate::auth::origin(&parts).client_address(&state.origin);
+            if !address.is_loopback() {
+                state.activity.lock().record_address(user, address.to_string(), now);
+            }
+        }
+        let map = body.as_ref().and_then(|b| b.get("map")).cloned();
+        let beat_state = body.as_ref().and_then(|b| b.get("state"));
+        state.activity.lock().heartbeat(user, map, beat_state, now);
+        state.parties.lock().touch(user, now);
+    }
+    (
+        StatusCode::OK,
+        [(axum::http::header::CONTENT_TYPE, "text/plain; charset=utf-8")],
+        "20000",
+    )
+        .into_response()
+}
+
+async fn event() -> Response {
+    ok(json!({}))
+}
+
+async fn account_migrate(_auth: MetagameAuth) -> Response {
+    tracing::info!("Account migration (stubbed)");
+    ok(json!({"migration_failed": false, "migration_finished": true}))
+}
+
+async fn vivox_login(_auth: MetagameAuth) -> Response {
+    tracing::info!("Vivox login (stubbed)");
+    empty(StatusCode::NOT_FOUND)
+}
+
+async fn motd(_auth: MetagameAuth) -> Response {
+    tracing::info!("MOTD (stubbed)");
+    empty(StatusCode::NO_CONTENT)
+}
+
+async fn player_treatments(_auth: MetagameAuth) -> Response {
+    tracing::info!("Cohorts (stubbed)");
+    ok(json!({"treatments": ["CohortTreatment.Dojo.B"]}))
+}
+
+async fn event_stats(_auth: MetagameAuth) -> Response {
+    tracing::info!("Event stats (stubbed)");
+    ok(json!({"stats": []}))
+}
+
+async fn mailbox(_auth: MetagameAuth) -> Response {
+    tracing::info!("Mailbox (stubbed)");
+    ok(json!({"code": null, "message": "OK", "payload": {"messages": []}}))
+}
+
+/// After-hunt news. The client always asks for `event_name=test`; a 204 takes the same "no news"
+/// path as the old 404. `MISC_ROUTES=0` puts the 404 back.
+async fn motd_trigger(State(state): State<AppState>, parts: Parts) -> Response {
+    if !state.features.misc_routes {
+        return fall_through(&parts);
+    }
+    empty(StatusCode::NO_CONTENT)
 }
 
 fn stub() -> Response {
@@ -467,7 +564,7 @@ async fn update_profile(State(state): State<AppState>, auth: MetagameAuth, Expre
                 "Updated leaderboard profile for {}",
                 account.as_deref().unwrap_or("undefined")
             );
-            super::empty(StatusCode::OK)
+            empty(StatusCode::OK)
         }
         Err(fail) => super::trials::refusal(fail, "Leaderboard profile update failed"),
     }

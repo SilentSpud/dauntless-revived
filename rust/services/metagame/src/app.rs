@@ -66,6 +66,10 @@ pub struct App {
     /// Guild validate tickets and rate windows (`guild.rs`).
     pub guild_memory: crate::guild::Memory,
     pub key_recovery_secret: Option<String>,
+    /// Who is playing, from the clients' heartbeats (in memory).
+    pub activity: crate::activity::Activity,
+    pub server_status: crate::serverstatus::Settings,
+    pub status_cache: crate::serverstatus::Cache,
     pub health: Arc<Health>,
     /// Accounts whose key was rotated (M28, `KeyRevocations`): chat closes their sessions.
     pub key_revocations: tokio::sync::broadcast::Sender<String>,

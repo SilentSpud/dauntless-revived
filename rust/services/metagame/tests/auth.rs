@@ -83,6 +83,9 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         slayer_links: true,
         guild_memory: Default::default(),
         key_recovery_secret: None,
+        activity: Default::default(),
+        server_status: Default::default(),
+        status_cache: Default::default(),
         health: Arc::new(metagame::health::Health::new(false)),
         key_revocations: tokio::sync::broadcast::channel(64).0,
     });

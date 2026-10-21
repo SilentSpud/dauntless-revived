@@ -47,7 +47,8 @@ impl Pattern {
     /// Panics on a malformed pattern: routes are fixed at build time.
     pub fn parse(path: &str) -> Self {
         assert!(path.starts_with('/'), "route {path:?} must start with /");
-        let segments = split(path)
+        // A trailing slash is Node's spelling of the same route ("/motd/"): matching ignores one
+        let segments = split(path.strip_suffix('/').filter(|p| !p.is_empty()).unwrap_or(path))
             .map(|segment| match segment.strip_prefix(':') {
                 Some(name) => {
                     assert!(!name.is_empty(), "route {path:?} has an unnamed parameter");
