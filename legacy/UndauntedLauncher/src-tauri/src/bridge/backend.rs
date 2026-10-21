@@ -10,9 +10,8 @@ use tauri::{AppHandle, Emitter};
 
 use super::progress::Throttle;
 use super::types::{
-    ActionResult, ErrorCode, ExposureMode, GameLanguage, GraphicsPreset, Language, LauncherError, Phase, Settings,
-    SettingsPatch, Snapshot, SnapshotAccount, SnapshotApp, SnapshotConnect, SnapshotGame, SnapshotInstall,
-    TaskProgress,
+    ActionResult, ErrorCode, ExposureMode, GameLanguage, GraphicsPreset, LauncherError, Phase, Settings, SettingsPatch,
+    Snapshot, SnapshotAccount, SnapshotApp, SnapshotConnect, SnapshotGame, SnapshotInstall, TaskProgress,
 };
 use crate::window::MAIN;
 
@@ -25,7 +24,7 @@ pub fn default_settings() -> Settings {
         graphics: GraphicsPreset::DEFAULT,
         exposure: ExposureMode::Game,
         windowed: false,
-        language: Language::En,
+        language: crate::core::i18n::os_language(),
         game_language: GameLanguage::Auto,
         show_console: false,
         streamer_mode: None,

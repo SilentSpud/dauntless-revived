@@ -7,21 +7,8 @@ use protocol::invite::ServerMode;
 use protocol::status::ServerStatus;
 use serde::{Deserialize, Serialize, Serializer};
 
-/// The launcher's own languages: English and Finnish, plus every language the 1.4.4 client has text for.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "lowercase")]
-pub enum Language {
-    En,
-    Fi,
-    De,
-    Es,
-    Fr,
-    It,
-    Ja,
-    Pt,
-    Ru,
-}
+/// The launcher's languages, made from the page's strings by build.rs (L14).
+pub use crate::core::i18n::Language;
 
 /// -1 = leave graphics to the in-game menu, 0..4 = Low, Medium, High, Epic, Cinematic.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

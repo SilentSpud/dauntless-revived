@@ -223,6 +223,11 @@ Done so far:
   `index.ts` holding the registry that `Language` and `LANGUAGES` (re-exported by `types.ts`) come from;
   `STRINGS` is byte-identical before and after (287,444 bytes of JSON). `src/shared/i18n/README.md` is the
   checklist for a new language: the file and one registry line. The game's text languages stay a fixed list.
+- Launcher P2, L14: `test/strings-export.test.ts` writes the page's `STRINGS` to `src-tauri/gen/strings.json`
+  (and fails when it is stale); `build.rs` makes the `Language` enum (also the bridge's, so its TypeScript type)
+  and a sorted lookup table per language from it. `core/i18n.rs` has `translate` and `systemLanguage` as the page
+  has them, the 8 keys the backend shows (close confirmation, folder dialogs) with a test that each exists in
+  every language, and the first start's language from `sys-locale`.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
