@@ -235,8 +235,8 @@ pub fn logout() -> ActionResult {
 pub fn install_update() {}
 
 #[tauri::command]
-pub fn take_invite_link() -> Option<String> {
-    None
+pub fn take_invite_link(backend: Backed<'_>) -> Option<String> {
+    backend.take_invite_link()
 }
 
 #[tauri::command]

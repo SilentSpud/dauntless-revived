@@ -95,7 +95,12 @@ pub fn not_yet_error() -> LauncherError {
 pub struct Backend {
     snapshot: Mutex<Snapshot>,
     progress: Mutex<Option<(Channel<TaskProgress>, Throttle)>>,
+    /// An invite link the launcher was started with or handed, until the page takes it
+    invite_link: Mutex<Option<String>>,
 }
+
+/// Tells the page an invite link is waiting (`onInviteLink`).
+pub const INVITE_LINK_EVENT: &str = "invite-link";
 
 /// A poisoned lock only means a panic elsewhere while holding it; the data is still whole.
 fn lock<T>(mutex: &Mutex<T>) -> MutexGuard<'_, T> {
@@ -107,7 +112,21 @@ impl Backend {
         Self {
             snapshot: Mutex::new(snapshot),
             progress: Mutex::new(None),
+            invite_link: Mutex::new(None),
         }
+    }
+
+    /// Keeps an invite link for the page and tells it one is waiting.
+    pub fn deliver_invite_link(&self, app: Option<&AppHandle>, link: Option<String>) {
+        let Some(link) = link else { return };
+        *lock(&self.invite_link) = Some(link);
+        if let Some(app) = app {
+            let _ = app.emit_to(MAIN, INVITE_LINK_EVENT, ());
+        }
+    }
+
+    pub fn take_invite_link(&self) -> Option<String> {
+        lock(&self.invite_link).take()
     }
 
     pub fn snapshot(&self) -> Snapshot {

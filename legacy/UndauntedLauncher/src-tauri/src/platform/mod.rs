@@ -6,6 +6,7 @@ pub mod client_mods;
 pub mod dialogs;
 pub mod game_config;
 pub mod game_folder;
+pub mod invite_link;
 pub mod keystore;
 pub mod launch;
 pub mod links;

@@ -309,6 +309,13 @@ Done so far:
   relay or the offline services carry a running game, minimises on "keep open" and lets the controller show its
   notice. The page has no dialog permission, and in the running app a page call to any plugin outside the list never
   settles.
+- Launcher P4, L34: `platform/invite_link.rs`, without plugins (tauri-plugin-single-instance brings zbus 5 on Linux,
+  tauri-plugin-deep-link a CC0-licensed crate the licence list does not take): the first launcher listens on a
+  per-user named pipe (Windows) or a socket in `$XDG_RUNTIME_DIR` (Linux), a second one hands it its arguments and
+  exits, and the first brings its window forward and keeps the invite link for `takeInviteLink` with the
+  `invite-link` event. Packaged builds point the scheme at the launcher (the current user's registry, or a desktop
+  entry for the AppImage). Checked in the running app: a second launcher started with an invite exits, and the
+  first one's page shows "Join ...?" for it.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
