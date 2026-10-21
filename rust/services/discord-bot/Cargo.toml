@@ -1,0 +1,36 @@
+[package]
+name = "discord-bot"
+description = "The Discord key bot: hands out launcher invites, links accounts, recovers keys and keeps the member counter (MIGRATION_PLAN.md S5)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+bytes = "1"
+chrono.workspace = true
+clap.workspace = true
+http-body-util.workspace = true
+http = "1"
+hyper.workspace = true
+hyper-rustls.workspace = true
+hyper-util = { workspace = true, features = ["client-legacy", "http1"] }
+protocol.workspace = true
+rand.workspace = true
+rustls.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serenity = { version = "0.12.5", default-features = false, features = ["builder", "cache", "client", "gateway", "http", "model", "utils", "rustls_backend"] }
+service-kit.workspace = true
+sha2.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "net", "time", "sync", "macros", "fs", "io-util"] }
+url.workspace = true
+
+[dev-dependencies]
+futures-util.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

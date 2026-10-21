@@ -17,11 +17,14 @@ type Https = hyper_rustls::HttpsConnector<HttpConnector>;
 fn client() -> &'static Client<Https, Empty<Bytes>> {
     static CLIENT: OnceLock<Client<Https, Empty<Bytes>>> = OnceLock::new();
     CLIENT.get_or_init(|| {
-        let connector = hyper_rustls::HttpsConnectorBuilder::new()
-            .with_webpki_roots()
-            .https_or_http()
-            .enable_http1()
-            .build();
+        // aws-lc-rs by name: with another provider compiled in (serenity brings ring), rustls has no
+        // default to fall back on
+        let builder = hyper_rustls::HttpsConnectorBuilder::new();
+        let builder = match builder.with_provider_and_webpki_roots(rustls::crypto::aws_lc_rs::default_provider()) {
+            Ok(builder) => builder,
+            Err(_) => hyper_rustls::HttpsConnectorBuilder::new().with_webpki_roots(),
+        };
+        let connector = builder.https_or_http().enable_http1().build();
         Client::builder(TokioExecutor::new()).build(connector)
     })
 }

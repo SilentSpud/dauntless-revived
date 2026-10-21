@@ -268,6 +268,20 @@ Done so far:
   contract, capacity, CPU, lifetime, occupancy, readiness, matchmaking input and routes, worker
   snapshots, overflow, regions, database-only role); 80 tests. Not done: a run against the real game
   binary, and the offline stack in the launcher (D12, X2) still starts the Node server.
+- Part C, S5: the Discord key bot (`rust/services/discord-bot`, binary `discord-bot`). The state
+  file loads unchanged and an unreadable one still stops issuance; codes are saved before the
+  metagame hears of them, DMs are reserved durably before they are sent and reconciled from the DM
+  history, and every operation runs one at a time, as in `keys.mjs`. `/key` (claim, status, link,
+  resend, recover), the owner's `/counter`, command registration that keeps command ids, the
+  one-instance lock and the two-minute connection check are ported. Discord is reached with serenity
+  directly rather than poise: registration is the bot's own (it compares and patches commands in
+  place), so poise's would only be in the way. The invite string now comes from
+  `protocol::format_invite`, which encodes the server name as `encodeURIComponent` does (`%20`)
+  where the Node bot used `URLSearchParams` (`+`); the launcher reads both the same. The logic sits
+  behind traits (metagame, Discord REST, interaction, guild), so every Node test is ported against
+  stand-ins: keys, delivery, commands, counter, recovery, instance. A side effect handled here:
+  serenity brings rustls's ring provider, so every HTTPS client now names aws-lc-rs instead of
+  relying on rustls's default. Not done: a real `/key claim` on a test guild (needs a bot token).
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite
