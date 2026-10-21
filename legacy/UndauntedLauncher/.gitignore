@@ -100,3 +100,6 @@ release-linux/
 
 #Offline-runtime
 offline-runtime/
+
+# Tauri page build
+dist-page/

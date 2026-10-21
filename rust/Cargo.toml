@@ -2,7 +2,7 @@
 # crates, the services and, from R5, the launcher backend.
 [workspace]
 resolver = "3"
-members = ["crates/*", "services/*"]
+members = ["crates/*", "services/*", "../legacy/UndauntedLauncher/src-tauri"]
 # The fuzz targets (cargo fuzz, nightly) are a workspace of their own
 exclude = ["fuzz"]
 

@@ -1,12 +1,13 @@
 # Checks every push and pull request, by code family (MIGRATION_PLAN.md R8): a pull request runs only the
 # jobs of the families it changes, and the "CI ok" job sums them up for branch protection. A push to
 # dauntless-revived always runs everything.
-#  - the Rust workspace (rust/): fmt, clippy, tests on Linux and Windows, cargo-deny
+#  - the Rust workspace (rust/, with the Tauri launcher backend): fmt, clippy, tests on Linux and Windows, cargo-deny
 #  - the server binaries: release builds for Windows x64 and Linux x64/arm64, smoke-tested with the shared
 #    HTTP-level metagame tests, kept as downloads for 7 days
 #  - the client mods: client-mods/manifest.json matches the files it lists
 #  - the four server packages: npm ci, build, unit tests
-#  - the launcher: typecheck, unit tests and the Windows installer, kept as a download for 7 days
+#  - the launcher: typecheck, unit tests and the Windows installer, kept as a download for 7 days; the Tauri
+#    launcher built on Windows and Ubuntu 22.04
 #  - the separate Linux and OpenBSD server ports (native Node services, Wine/SSH game launch wrappers, nftables/PF)
 #  - the Linux kit on the Rust services: install.sh and install-worker.sh in test mode, twice
 #  - the Windows Server kit under Windows PowerShell 5.1: parse check, PSScriptAnalyzer errors, and the
@@ -78,6 +79,9 @@ jobs:
               - legacy/UndauntedMetagame/src/drizzle/**
               - legacy/UndauntedMetagame/src/vendor/**
               - legacy/UndauntedMetagame/routes.json
+              # The Tauri launcher backend is a workspace member (R5); its build embeds the icons
+              - legacy/UndauntedLauncher/src-tauri/**
+              - legacy/UndauntedLauncher/assets/**
             native:
               - native/**
             client-mods:
@@ -154,6 +158,13 @@ jobs:
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           workspaces: rust
+
+      # The Tauri launcher (L4) draws with WebKitGTK and GTK3 on Linux
+      - name: Install the launcher's Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libayatana-appindicator3-dev patchelf
 
       - name: Format
         if: runner.os == 'Linux'
@@ -374,6 +385,55 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+
+  # The Tauri launcher (MIGRATION_PLAN.md Part A, L4): the page built for Tauri and a debug app around it,
+  # on the oldest Linux the launcher supports and on Windows. No installer yet (L45, L47).
+  launcher-tauri:
+    name: Tauri launcher (${{ matrix.os }})
+    needs: changes
+    if: needs.changes.outputs.launcher == 'true' || needs.changes.outputs.rust == 'true'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-22.04]
+    defaults:
+      run:
+        shell: bash
+        working-directory: legacy/UndauntedLauncher
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # rustup reads rust/rust-toolchain.toml and installs the pinned toolchain.
+      - name: Install the pinned toolchain
+        working-directory: rust
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: rust
+          key: tauri
+
+      - name: Install the Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libayatana-appindicator3-dev patchelf
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: legacy/UndauntedLauncher/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build the app
+        run: npm run tauri -- build --debug --no-bundle --ci
 
   launcher-linux:
     name: Launcher (Linux x64)
@@ -832,7 +892,7 @@ jobs:
   # as passed; a failed or cancelled job, or a failed change detection, fails it.
   ci-ok:
     name: CI ok
-    needs: [changes, rust, server-binaries, linux-kit, rust-deny, client-mods, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: [changes, rust, server-binaries, linux-kit, rust-deny, client-mods, node-packages, launcher, launcher-tauri, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

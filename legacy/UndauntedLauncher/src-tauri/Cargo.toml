@@ -1,0 +1,35 @@
+[package]
+name = "launcher"
+description = "Dauntless Revived Launcher: the Tauri backend (MIGRATION_PLAN.md Part A)"
+# The launcher's own version, not the workspace's: kept equal to package.json's (a test checks it).
+version = "0.1.39"
+# A member outside the workspace folder until the launcher moves to rust/launcher (R5, R7)
+workspace = "../../../rust"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[lib]
+name = "launcher"
+
+[[bin]]
+name = "dauntless-revived-launcher"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2.7", features = [] }
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+tauri = { version = "2.12", features = [] }
+url.workspace = true
+
+[features]
+# Set by `tauri build`: serve the built page from the binary instead of the Vite dev server
+custom-protocol = ["tauri/custom-protocol"]
+
+[lints]
+workspace = true

@@ -6,6 +6,11 @@ all-features = true
 [advisories]
 version = 2
 yanked = "deny"
+ignore = [
+    # Tauri 2 on Linux draws with GTK3 through gtk-rs 0.18, which is no longer maintained; its macros
+    # use proc-macro-error. Build-time only, no known vulnerability; goes when Tauri moves off GTK3.
+    { id = "RUSTSEC-2024-0370", reason = "proc-macro-error, via gtk-rs GTK3 (Tauri 2 on Linux)" },
+]
 
 [licenses]
 version = 2

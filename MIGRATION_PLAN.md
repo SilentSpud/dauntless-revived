@@ -183,6 +183,17 @@ Done so far:
   section of `docs/legal.md` (and the Finnish copy) says recording may run and what it keeps; the
   settings are in the configuration reference. Left: enabling it on the live servers, which needs a
   release of the Node services with it.
+- Launcher P1, first part (L4, L5, L8, L10): `legacy/UndauntedLauncher/src-tauri/` (crate `launcher`, Tauri
+  2.12) joined to the workspace with `package.workspace` (R5); `npm run tauri dev|build`, with the page built by
+  the same Vite config in mode `tauri` (`page:dev`, `page:build` into `dist-page/`), which drops the CSP meta tag
+  there only, so the Electron page keeps it until L51. The window is made in Rust: frameless, hidden until the
+  page loads, sized to the primary screen's work area as today, `window-state` pushed on resize; navigation
+  only to the app's own origin (WebView2 `http://tauri.localhost`, WebKitGTK `tauri://localhost`, or the dev
+  server), new windows refused, no `devtools` feature. The CSP is in `tauri.conf.json`; the capability grants
+  only `core:event:default` and the window calls. cargo-deny ignores RUSTSEC-2024-0370 (`proc-macro-error`,
+  reached through gtk-rs GTK3 on Linux). CI: the Rust job installs the WebKitGTK build packages; a new
+  `launcher-tauri` job builds the debug app on Windows and Ubuntu 22.04. Left in P1: the bridge, types and
+  isolation hook (L6, L7, L9); the close-while-playing confirmation (L5) needs the controller (L38).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
