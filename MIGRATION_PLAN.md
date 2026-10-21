@@ -282,6 +282,12 @@ Done so far:
   cannot read loads as "no key", so the import flow takes over. Tested with synthetic blobs (and Chromium's known
   `peanuts` key), a real DPAPI round trip on Windows, and on Linux in WSL. Left: the KWallet route for Plasma 5,
   and reading real 0.1.39 profiles on each desktop (L2).
+- Launcher P4, L30: `platform/game_config.rs` (`engineini.ts` and `display-repair.ts`: the two replaced Engine.ini
+  sections, GameUserSettings.ini's quality lines, ASCII or UTF-16 files, the safe 1280x720 window with a backup of
+  the file it repairs), `platform/game_folder.rs` (the four layouts, drive-letter paths only, the 150-character root
+  limit) and `platform/client_mods.rs` (the pinned DLLs and the UE4SS bundle, hash-checked before and after each
+  copy, kept files, removals and `disable`). `test/cases/game-config.json` (from the TypeScript, both platforms'
+  path rules) runs on both sides, with `Number()`'s rules in `core::text::js_number`.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
