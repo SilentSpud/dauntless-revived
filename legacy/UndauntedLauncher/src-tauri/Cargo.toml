@@ -49,18 +49,29 @@ webpki-roots = "1"
 percent-encoding.workspace = true
 rand.workspace = true
 futures-util.workspace = true
+aes-gcm.workspace = true
+aes = "0.9"
+cbc = { version = "0.2", features = ["alloc"] }
+pbkdf2 = { version = "0.13", default-features = false, features = ["hmac"] }
+sha1 = "0.11"
+base64.workspace = true
 tower-service = "0.3"
 tauri = { version = "2.12", features = ["isolation"] }
 url.workspace = true
 
 [dev-dependencies]
-base64.workspace = true
 sha1_smol = "1"
 tokio-stream = "0.1"
 tempfile.workspace = true
 rcgen = { version = "0.14.10", default-features = false, features = ["aws_lc_rs", "pem", "crypto"] }
 protocol = { workspace = true, features = ["ts"] }
 ts-rs.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_Security_Cryptography"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+secret-service = { version = "5", features = ["rt-tokio-crypto-rust"] }
 
 [features]
 # Set by `tauri build`: serve the built page from the binary instead of the Vite dev server

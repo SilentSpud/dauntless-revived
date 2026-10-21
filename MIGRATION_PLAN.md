@@ -273,6 +273,15 @@ Done so far:
   byte for byte. `platform/log.rs` is `log.ts`: registered secrets and anything shaped like a key, an
   `-AUTH_PASSWORD=` argument or a key header masked (with JavaScript's `\s`), `launcher.log` moving to
   `launcher.old.log` past 2 MiB, and library events and panics through the same mask (`test/cases/log.json`).
+- Launcher P4, L27: `platform/keystore/` is `keystore.ts` (one key per server id, the `DRK2` format, the
+  certificate binding and `rebind`, the Documents recovery copy, the backup file) over an `Encryptor`: DPAPI for the
+  user on Windows, and on Linux AES-256-GCM with a random key the Secret Service keeps (`secret-service`, zbus, pure
+  Rust). New files are `keys/<id>.key2`; an Electron `keys/<id>.key` is read once (`legacy.rs`: the `Local State`
+  key through DPAPI and AES-256-GCM on Windows; `v11` with the Secret Service password found by its attributes, or
+  `v10` with "peanuts", and AES-128-CBC on Linux), written in the new format, read back, and left in place; one it
+  cannot read loads as "no key", so the import flow takes over. Tested with synthetic blobs (and Chromium's known
+  `peanuts` key), a real DPAPI round trip on Windows, and on Linux in WSL. Left: the KWallet route for Plasma 5,
+  and reading real 0.1.39 profiles on each desktop (L2).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
