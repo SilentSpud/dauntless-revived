@@ -2,6 +2,7 @@
 //! TypeScript page the Electron launcher shows; everything the Electron main process did moves here.
 
 mod bridge;
+mod core;
 mod window;
 
 use bridge::backend::{Backend, initial_snapshot};

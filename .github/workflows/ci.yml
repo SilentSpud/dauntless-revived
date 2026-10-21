@@ -85,6 +85,7 @@ jobs:
               - legacy/UndauntedLauncher/assets/**
               - legacy/UndauntedLauncher/isolation/**
               - legacy/UndauntedLauncher/src/shared/generated/**
+              - legacy/UndauntedLauncher/test/cases/**
             native:
               - native/**
             client-mods:

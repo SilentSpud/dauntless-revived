@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { formatInvite, isPrivateModeHost, isTailscaleIPv4, isValidFingerprint, isValidHost, parseInvite, type Invite } from "../src/shared/invite";
-import { RLO } from "../src/shared/text";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 const FP = "3f".repeat(32);
 const good = "dauntless-revived://join?v=1&host=100.101.102.103&port=61000&code=ABCD-1234&name=Alex%27s%20Ramsgate";
@@ -76,95 +77,21 @@ const build2 = (over: Record<string, string | null>) =>
       .join("&"),
   );
 
-// ------------------------------------------------------------------ malformed
+// ------------------------------------------------------------------ the shared table
 
-const bad: [string, string][] = [
-  ["", "empty"],
-  ["   ", "empty"],
-  ["hello", "not_invite"],
-  ["https://example.com/join?v=1", "not_invite"],
-  ["dauntless-revived://register?v=1&host=1.2.3.4&port=1&code=abcd&name=x", "not_invite"],
-  ["dauntless-revived:join?v=1&host=1.2.3.4&port=1&code=abcd&name=x", "not_invite"],
-  ["dauntless-revived://join?v=3&host=100.64.0.1&port=61000&code=abcd&name=x", "version"],
-  ["dauntless-revived://join?v=01&host=100.64.0.1&port=61000&code=abcd&name=x", "version"],
-  ["dauntless-revived://join?host=100.64.0.1&port=61000&code=abcd&name=x", "version"],
-  ["dauntless-revived://join?v=1&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&code=abcd&name=x", "port"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&name=x", "code"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd", "name"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&extra=1", "params"],
-  ["dauntless-revived://join?v=1&v=1&host=100.64.0.1&port=61000&code=abcd&name=x", "params"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x#frag", "params"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=%E0%A4%A", "params"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&", "params"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&=x", "params"],
-  // v1 does not take the v2 fields, and v2 does not take share
-  [`dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&fp=${FP}`, "params"],
-  ["dauntless-revived://join?v=1&mode=public&host=100.64.0.1&port=61000&code=abcd&name=x", "params"],
-  ["dauntless-revived://join?v=1&host=256.1.1.1&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=1.2.3&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=01.2.3.4&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=evil.com%2F%40x&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=user%40host&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=host.123&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=0x7f.1&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=-bad-.ts.net&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=a..b&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=%5B%3A%3A1%5D&port=61000&code=abcd&name=x", "host"],
-  // v1 is plain HTTP: only Tailscale addresses, *.ts.net names and loopback
-  ["dauntless-revived://join?v=1&host=203.0.113.9&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=evil.example.com&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=192.168.1.10&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=100.128.0.1&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=ts.net&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=hostpc.ts.net.evil.com&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=hostpc&port=61000&code=abcd&name=x", "host"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=0&code=abcd&name=x", "port"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=65536&code=abcd&name=x", "port"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=061000&code=abcd&name=x", "port"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000x&code=abcd&name=x", "port"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abc&name=x", "code"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=ab%20cd&name=x", "code"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=" + "a".repeat(65) + "&name=x", "code"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=%20%20", "name"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=a%0Ab", "name"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=" + encodeURIComponent(RLO) + "evil", "name"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=" + "n".repeat(65), "name"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&share=http%3A%2F%2Flogin.tailscale.com%2Fx", "share"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&share=https%3A%2F%2Fevil.com%2F", "share"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&share=https%3A%2F%2Flogin.tailscale.com.evil.com%2F", "share"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&share=https%3A%2F%2Fa%40login.tailscale.com%2F", "share"],
-  ["dauntless-revived://join?v=1&host=100.64.0.1&port=61000&code=abcd&name=x&share=https%3A%2F%2Flogin.tailscale.com%3A8443%2F", "share"],
-  ["dauntless-revived://join?" + "x".repeat(3000), "too_long"],
-  // v2
-  [build2({ mode: null }), "mode"],
-  [build2({ mode: "private" }), "mode"],
-  [build2({ mode: "PUBLIC" }), "mode"],
-  [build2({ mode: "" }), "mode"],
-  [build2({ fp: null }), "fp"],
-  [build2({ fp: FP.toUpperCase() }), "fp"],
-  [build2({ fp: FP.slice(0, 63) }), "fp"],
-  [build2({ fp: FP + "a" }), "fp"],
-  [build2({ fp: FP.slice(0, 62) + "zz" }), "fp"],
-  [build2({ fp: FP.replace(/(..)/g, "$1:").slice(0, -1) }), "fp"],
-  [build2({ fp: "sha256%2F" + FP }), "fp"],
-  [build2({ host: null }), "host"],
-  [build2({ host: "203.0.113.999" }), "host"],
-  [build2({ host: "exa_mple.com" }), "host"],
-  [build2({ host: "https%3A%2F%2Fexample.com" }), "host"],
-  [build2({ port: "0" }), "port"],
-  [build2({ port: "443.0" }), "port"],
-  [build2({ port: "" }), "port"],
-  [build2({ code: null }), "code"],
-  [build2({ code: "a+b+c+d" }), "code"],
-  [build2({ name: null }), "name"],
-  [build2({ name: "%09tab" }), "name"],
-  [build2({ share: encodeURIComponent("https://login.tailscale.com/x") }), "params"],
-  [build2({ extra: "1" }), "params"],
-  [build2({}) + `&fp=${FP}`, "params"],
-];
+// test/cases/invite.json: the cases the Rust parser (src-tauri/src/core/invite.rs) runs too (L11)
+const cases = JSON.parse(readFileSync(path.join(__dirname, "../../test/cases/invite.json"), "utf8")) as {
+  accept: { input: string; invite: Invite }[];
+  reject: { input: string; error: string }[];
+};
 
-for (const [input, error] of bad) {
+for (const { input, invite } of cases.accept) {
+  test(`accepts: ${input.slice(0, 100)}`, () => {
+    assert.deepEqual(parseInvite(input), { ok: true, invite });
+  });
+}
+
+for (const { input, error } of cases.reject) {
   test(`rejects (${error}): ${input.slice(0, 100)}`, () => {
     const r = parseInvite(input);
     assert.equal(r.ok, false);

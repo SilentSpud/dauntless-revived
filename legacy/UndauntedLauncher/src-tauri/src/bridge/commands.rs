@@ -6,12 +6,14 @@ use serde_json::Value;
 use tauri::ipc::Channel;
 use tauri::{AppHandle, State};
 
-use super::backend::{Backend, not_yet, not_yet_error};
+use super::backend::{Backend, not_yet};
 use super::spec::{GAME_PATH_MAX, INVITE_MAX, KEY_TEXT_MAX, USERNAME_MAX, fits, is_server_id};
 use super::types::{
     ActionResult, Branding, ErrorCode, ExternalTarget, InviteCheck, LauncherError, NewsItem, OfflinePhase,
     OfflineStatus, RegisterOutcome, Settings, SettingsPatch, Snapshot, TaskProgress,
 };
+use crate::core::invite::{InviteError, parse_invite};
+use crate::core::username::{UsernameCheck, check_username, extract_account_key};
 
 type Backed<'a> = State<'a, Backend>;
 
@@ -20,12 +22,27 @@ pub fn get_snapshot(backend: Backed<'_>) -> Snapshot {
     backend.snapshot()
 }
 
+fn invite_format_error(error: InviteError) -> LauncherError {
+    LauncherError {
+        code: ErrorCode::InviteInvalidFormat,
+        detail: Some(error.as_str().to_owned()),
+    }
+}
+
+/// Whether an invite can be joined. A public invite whose certificate differs from the one this PC's
+/// key for that server belongs to says so; the key store (L27) has no keys yet, so none differs.
 #[tauri::command]
 pub fn check_invite(text: String) -> InviteCheck {
     if !fits(&text, INVITE_MAX) {
         return InviteCheck::Err(LauncherError::new(ErrorCode::InviteInvalidFormat));
     }
-    InviteCheck::Err(LauncherError::new(ErrorCode::InviteInvalid))
+    match parse_invite(&text) {
+        Ok(_) => InviteCheck::Ok {
+            certificate_changed: false,
+            previous_fingerprint: None,
+        },
+        Err(error) => InviteCheck::Err(invite_format_error(error)),
+    }
 }
 
 #[tauri::command]
@@ -34,7 +51,10 @@ pub fn submit_invite(text: String, accept_new_certificate: bool) -> ActionResult
     if !fits(&text, INVITE_MAX) {
         return ActionResult::err(ErrorCode::InviteInvalidFormat);
     }
-    not_yet()
+    match parse_invite(&text) {
+        Ok(_) => not_yet(),
+        Err(error) => ActionResult::Err(invite_format_error(error)),
+    }
 }
 
 #[tauri::command]
@@ -68,12 +88,20 @@ pub fn register(username: String) -> RegisterOutcome {
     if !fits(&username, USERNAME_MAX) {
         return RegisterOutcome::Err(LauncherError::new(ErrorCode::UsernameInvalid));
     }
-    RegisterOutcome::Err(not_yet_error())
+    let check = check_username(&username);
+    if check != UsernameCheck::Ok {
+        return RegisterOutcome::Err(LauncherError {
+            code: ErrorCode::UsernameInvalid,
+            detail: Some(check.as_str().to_owned()),
+        });
+    }
+    // No server joined yet (L38)
+    RegisterOutcome::Err(LauncherError::new(ErrorCode::ServerUnreachable))
 }
 
 #[tauri::command]
 pub fn use_existing_key(text: String) -> ActionResult {
-    if !fits(&text, KEY_TEXT_MAX) {
+    if !fits(&text, KEY_TEXT_MAX) || extract_account_key(&text).is_none() {
         return ActionResult::err(ErrorCode::KeyInvalid);
     }
     not_yet()

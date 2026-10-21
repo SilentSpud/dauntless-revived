@@ -278,7 +278,6 @@ impl Serialize for ActionResult {
 /// host:port that belongs to another certificate (`previous_fingerprint`, None if not recorded).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum InviteCheck {
-    #[cfg_attr(not(test), expect(dead_code, reason = "the controller (L38) answers with it"))]
     Ok {
         certificate_changed: bool,
         previous_fingerprint: Option<String>,

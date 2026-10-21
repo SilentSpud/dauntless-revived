@@ -5,6 +5,8 @@ import { limitedView, parseServerStatus, sortInstances } from "../src/shared/sta
 import { parseBranding, parseNews, sniffImage } from "../src/main/hostapi";
 import { BELL, RLO } from "../src/shared/text";
 import { sanitizeSettings } from "../src/main/settings";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 test("cached authenticated names preserve Unicode without relaxing registration rules", () => {
   const slot = "a".repeat(24);
@@ -188,4 +190,24 @@ test("retired OCE settings migrate to US without losing the account", () => {
   const saved=sanitizeSettings({huntRegion:"aus",usernames:{[slot]:"MiauStyleZzツ"}},"en");
   assert.equal(saved.huntRegion,"us");
   assert.equal(saved.usernames[slot],"MiauStyleZzツ");
+});
+
+// test/cases: the tables the Rust copies (src-tauri/src/core/status.rs, username.rs) run too (L12)
+const table = (name: string) => JSON.parse(readFileSync(path.join(__dirname, "../../test/cases", name), "utf8"));
+
+test("the shared ServerStatus table", () => {
+  for (const { input, expected } of table("status.json") as { input: unknown; expected: unknown }[]) {
+    assert.deepEqual(parseServerStatus(input), expected, JSON.stringify(input).slice(0, 200));
+  }
+});
+
+test("the shared username and key table", () => {
+  const cases = table("username.json") as {
+    check: { input: unknown; result: string }[];
+    plausibleKey: { input: string; ok: boolean }[];
+    extractKey: { input: string; key: string | null }[];
+  };
+  for (const { input, result } of cases.check) assert.equal(checkUsername(input), result, JSON.stringify(input));
+  for (const { input, ok } of cases.plausibleKey) assert.equal(isPlausibleAccountKey(input), ok, input);
+  for (const { input, key } of cases.extractKey) assert.equal(extractAccountKey(input), key, JSON.stringify(input).slice(0, 200));
 });

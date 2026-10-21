@@ -210,6 +210,15 @@ Done so far:
   refused. The backend behind the commands is a stub until P2-P5: actions answer `unknown` with "not in the
   Tauri launcher yet", offline answers `offline_unavailable` (L42). P1 is done apart from the close-while-playing
   confirmation (L5, with the controller) and the manual checks on Linux.
+- Launcher P2, L11 and L12: `src-tauri/src/core/` holds `invite.rs` (`parseInvite`), `status.rs`
+  (`parseServerStatus`, with the status types in `crates/protocol`) and `username.rs` (`checkUsername`,
+  `isPlausibleAccountKey`, `extractAccountKey`), on JavaScript's string rules in `text.rs` (UTF-16 lengths,
+  ECMAScript `trim` and `\s`, `decodeURIComponent`'s strict UTF-8, WHATWG URLs, the ECMAScript date-time format).
+  The tables are in `test/cases/invite.json` (38 accepted, 121 refused, including where Rust and JavaScript string
+  handling differ), `status.json` (68) and `username.json` (48), read by `cargo test` and by the node tests; they
+  were made from the TypeScript functions' own answers. Differences kept on purpose: `startedAt` in a format other
+  than ECMAScript's (which a browser's own date parser might still read) and years past ±262143 are refused. The
+  invite, register and key commands check with these now.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
