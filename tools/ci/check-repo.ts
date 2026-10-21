@@ -49,6 +49,8 @@ const ALLOWED_CONTENT: Record<string, string[]> = {
     "rust/services/gateway/tests/parity/gateway.requests.json": ["jwt", "account-key"],
     // Key-rotation replay requests with placeholder keys (one repeated hex digit).
     "rust/services/metagame/tests/parity/keyrotation.requests.json": ["account-key"],
+    // The launcher's shared username and key table: a made-up server-shaped key ("ab" 24 times).
+    "legacy/UndauntedLauncher/test/cases/username.json": ["account-key"],
 };
 
 // The only DLLs the repository may hold: Undaunted's prebuilt server DLLs, which the launcher ships and the

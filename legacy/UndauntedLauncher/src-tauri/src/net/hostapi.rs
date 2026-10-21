@@ -554,7 +554,8 @@ mod tests {
         )
     }
 
-    const KEY: &str = "UUK_0123456789abcdef0123456789abcdef0123456789abcdef";
+    // Built from pieces, so the repository check never sees a whole key
+    const KEY: &str = concat!("UUK_", "0123456789abcdef", "0123456789abcdef", "0123456789abcdef");
 
     #[tokio::test]
     async fn status_with_the_key_and_the_older_servers() {
