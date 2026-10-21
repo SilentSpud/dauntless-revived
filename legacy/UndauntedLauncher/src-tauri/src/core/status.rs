@@ -183,16 +183,21 @@ fn to_iso_string(millis: i64) -> Option<String> {
 /// ECMAScript dates reach 8.64e15 ms either side of 1970.
 const MAX_DATE_MS: i64 = 8_640_000_000_000_000;
 
-fn clean_iso(value: Option<&Value>) -> Option<String> {
-    let text = value?.as_str()?;
-    if js_length(text) > 64 {
-        return None;
-    }
+/// `new Date(Date.parse(text)).toISOString()`, or None when the date cannot be read.
+pub fn iso_date(text: &str) -> Option<String> {
     let millis = parse_iso(text)?;
     if millis.abs() > MAX_DATE_MS {
         return None;
     }
     to_iso_string(millis)
+}
+
+fn clean_iso(value: Option<&Value>) -> Option<String> {
+    let text = value?.as_str()?;
+    if js_length(text) > 64 {
+        return None;
+    }
+    iso_date(text)
 }
 
 fn player_where(value: Option<&Value>) -> PlayerWhere {

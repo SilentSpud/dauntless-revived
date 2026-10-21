@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { checkUsername, extractAccountKey, isPlausibleAccountKey } from "../src/shared/username";
 import { limitedView, parseServerStatus, sortInstances } from "../src/shared/status";
-import { parseBranding, parseNews, sniffImage } from "../src/main/hostapi";
+import { cleanNewsBody, parseBranding, parseNews, sniffImage } from "../src/main/hostapi";
 import { BELL, RLO } from "../src/shared/text";
 import { sanitizeSettings } from "../src/main/settings";
 import { readFileSync } from "node:fs";
@@ -210,4 +210,17 @@ test("the shared username and key table", () => {
   for (const { input, result } of cases.check) assert.equal(checkUsername(input), result, JSON.stringify(input));
   for (const { input, ok } of cases.plausibleKey) assert.equal(isPlausibleAccountKey(input), ok, input);
   for (const { input, key } of cases.extractKey) assert.equal(extractAccountKey(input), key, JSON.stringify(input).slice(0, 200));
+});
+
+test("the shared host API table (news, branding, images)", () => {
+  const cases = table("hostapi.json") as {
+    news: { input: unknown; expected: unknown }[];
+    branding: { input: unknown; expected: unknown }[];
+    images: { bytes: number[]; type: string | null }[];
+    newsBody: { input: unknown; expected: unknown }[];
+  };
+  for (const { input, expected } of cases.news) assert.deepEqual(parseNews(input), expected, JSON.stringify(input).slice(0, 200));
+  for (const { input, expected } of cases.branding) assert.deepEqual(parseBranding(input), expected, JSON.stringify(input).slice(0, 200));
+  for (const { bytes, type } of cases.images) assert.equal(sniffImage(Buffer.from(bytes)), type);
+  for (const { input, expected } of cases.newsBody) assert.equal(cleanNewsBody(input), expected);
 });

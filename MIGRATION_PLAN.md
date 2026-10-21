@@ -243,6 +243,11 @@ Done so far:
   request, and cancelling. It is built on hyper 1 and tokio-rustls rather than reqwest: reqwest 0.13's rustls
   feature brings the platform certificate verifier the launcher never uses, and the relay (L22) needs a hyper
   client over the same pinned connector. Tests: rcgen certificates, right, wrong and rotated, against local servers.
+- Launcher P3, L21: `net/hostapi.rs` is `hostapi.ts`: device signals, hunt region, ServerStatus (with the older
+  servers' `/dauntless-status` fallback), Register, GetUserInfo, the content probe and manifest, news, branding and
+  art, with the same answers per status code and the key header sent only to the invite's host over a pinned or
+  tailnet connection. `test/cases/hostapi.json` (news, branding, image sniffing, news bodies; from the TypeScript)
+  runs on both sides; the calls are tested against a local fake host.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
