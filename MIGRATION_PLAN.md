@@ -257,6 +257,15 @@ Done so far:
   `certificate_mismatch` and reports the fingerprint the server showed, and nothing reaches the server. The 9
   tests mirror `relay.test.ts` against a local TLS gateway. The owner check itself (`relay-owner.ts`, the Windows
   TCP table) comes with the launch code (L31).
+- Launcher P3, L23 to L25 (P3 done): `net/downloader.rs` is `downloader.ts` (biggest files first, up to 4 at once,
+  `.part` files hashed again and resumed with `Range` and `If-Range`, ETag check against the manifest, retries with
+  backoff, busy waits on 429/503 with `Retry-After`, a stall timeout, pause/resume/cancel, progress with a 5 s speed
+  meter), over a pool of pinned or tailnet connections (`net/connector.rs`, shared with the relay) or, when the host
+  names a CDN, plain HTTPS with the Mozilla roots (`webpki-roots`) and never the key. `net/verify.rs` is `verify.ts`
+  (size, then SHA-256 in 1 MiB pieces on the blocking pool, and the verified-file cache the Electron launcher
+  writes). `net/autoregion.rs` is `autoregion.ts`. Tests: the downloader and CDN suites against Rust fakes of the
+  content server (resume, corrupt transfer, damaged part, repair, cache, pause/resume, cancel, a server that ignores
+  Range, wrong key, missing file, wrong ETag, attempts running out).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

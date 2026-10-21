@@ -2518,11 +2518,15 @@ dependencies = [
  "base64 0.23.1",
  "bytes",
  "chrono",
+ "futures-util",
  "http-body-util",
  "hyper",
+ "hyper-rustls",
  "hyper-util",
+ "percent-encoding",
  "protocol",
  "proxy",
+ "rand 0.10.3",
  "rcgen",
  "rustls",
  "serde",
@@ -2532,6 +2536,7 @@ dependencies = [
  "sys-locale",
  "tauri",
  "tauri-build",
+ "tempfile",
  "tokio",
  "tokio-rustls",
  "tokio-stream",
@@ -2539,6 +2544,7 @@ dependencies = [
  "tower-service",
  "ts-rs",
  "url",
+ "webpki-roots",
 ]
 
 [[package]]

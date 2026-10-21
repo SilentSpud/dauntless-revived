@@ -39,6 +39,11 @@ tokio = { workspace = true, features = ["net", "time", "io-util", "sync", "macro
 tokio-rustls = { version = "0.26", default-features = false, features = ["aws_lc_rs", "tls12"] }
 tokio-util.workspace = true
 proxy.workspace = true
+hyper-rustls.workspace = true
+webpki-roots = "1"
+percent-encoding.workspace = true
+rand.workspace = true
+futures-util.workspace = true
 tower-service = "0.3"
 tauri = { version = "2.12", features = ["isolation"] }
 url.workspace = true
@@ -47,6 +52,7 @@ url.workspace = true
 base64.workspace = true
 sha1_smol = "1"
 tokio-stream = "0.1"
+tempfile.workspace = true
 rcgen = { version = "0.14.10", default-features = false, features = ["aws_lc_rs", "pem", "crypto"] }
 protocol = { workspace = true, features = ["ts"] }
 ts-rs.workspace = true

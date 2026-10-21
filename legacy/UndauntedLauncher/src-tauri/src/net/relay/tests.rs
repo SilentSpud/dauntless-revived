@@ -4,6 +4,7 @@ use std::sync::Mutex;
 
 use sha2::{Digest, Sha256};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
 
 use super::*;
 use crate::net::pinned::certificate_fingerprint;

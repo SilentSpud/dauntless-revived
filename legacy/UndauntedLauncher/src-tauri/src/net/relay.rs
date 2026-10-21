@@ -15,7 +15,6 @@ use std::net::SocketAddr;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -26,13 +25,12 @@ use hyper::header::{CONNECTION, CONTENT_LENGTH, HOST, HeaderMap, HeaderValue, TR
 use hyper::service::service_fn;
 use hyper::{Request, Response, StatusCode, Uri};
 use hyper_util::client::legacy::Client;
-use hyper_util::client::legacy::connect::{Connected, Connection};
 use hyper_util::rt::{TokioExecutor, TokioIo};
-use tokio::net::{TcpListener, TcpStream};
-use tokio_rustls::client::TlsStream;
+use tokio::net::TcpListener;
 use tokio_util::sync::CancellationToken;
 
-use super::pinned::{ConnectError, PinnedTarget, pinned_connect};
+use super::connector::{Host, HostConnector, pin_error};
+use super::pinned::{PinnedTarget, pinned_connect};
 
 pub const DEFAULT_RELAY_PORT: u16 = 61000;
 /// How long an upgraded connection (the chat) may be silent both ways before it is cut
@@ -203,85 +201,12 @@ fn forwarded(headers: &HeaderMap) -> HeaderMap {
     proxy::end_to_end(headers, |name| name == "host" || name == "http2-settings")
 }
 
-// ---------------------------------------------------------------- the pinned upstream connector
-
-/// A pinned TLS connection, as hyper-util's pool wants it.
-struct Pinned(TokioIo<TlsStream<TcpStream>>);
-
-impl Connection for Pinned {
-    fn connected(&self) -> Connected {
-        Connected::new()
-    }
-}
-
-impl hyper::rt::Read for Pinned {
-    fn poll_read(
-        mut self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        buf: hyper::rt::ReadBufCursor<'_>,
-    ) -> Poll<std::io::Result<()>> {
-        Pin::new(&mut self.0).poll_read(cx, buf)
-    }
-}
-
-impl hyper::rt::Write for Pinned {
-    fn poll_write(mut self: Pin<&mut Self>, cx: &mut Context<'_>, data: &[u8]) -> Poll<std::io::Result<usize>> {
-        Pin::new(&mut self.0).poll_write(cx, data)
-    }
-
-    fn poll_flush(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<std::io::Result<()>> {
-        Pin::new(&mut self.0).poll_flush(cx)
-    }
-
-    fn poll_shutdown(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<std::io::Result<()>> {
-        Pin::new(&mut self.0).poll_shutdown(cx)
-    }
-}
-
-#[derive(Clone)]
-struct Connector {
-    target: PinnedTarget,
-    timeout: Duration,
-    connections: Arc<AtomicU64>,
-}
-
-impl tower_service::Service<Uri> for Connector {
-    type Response = Pinned;
-    type Error = ConnectError;
-    type Future = Pin<Box<dyn Future<Output = Result<Pinned, ConnectError>> + Send>>;
-
-    fn poll_ready(&mut self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok(()))
-    }
-
-    fn call(&mut self, _: Uri) -> Self::Future {
-        let (target, timeout, connections) = (self.target.clone(), self.timeout, self.connections.clone());
-        Box::pin(async move {
-            let stream = pinned_connect(&target, timeout).await?;
-            connections.fetch_add(1, Ordering::Relaxed);
-            Ok(Pinned(TokioIo::new(stream)))
-        })
-    }
-}
-
-/// The pin error somewhere in an error's sources, with the fingerprint the server showed.
-fn pin_error(error: &(dyn std::error::Error + 'static)) -> Option<Option<String>> {
-    let mut source = Some(error);
-    while let Some(error) = source {
-        if let Some(ConnectError::Pin { actual }) = error.downcast_ref::<ConnectError>() {
-            return Some(actual.clone());
-        }
-        source = error.source();
-    }
-    None
-}
-
 // ---------------------------------------------------------------- the relay
 
 struct Shared {
     options: RelayOptions,
     host_header: HeaderValue,
-    client: Client<Connector, Incoming>,
+    client: Client<HostConnector, Incoming>,
     stop: CancellationToken,
     requests: AtomicU64,
     upgrades: AtomicU64,
@@ -357,12 +282,8 @@ impl Relay {
         };
         let host_header =
             HeaderValue::from_str(&host).map_err(|_| RelayError::ListenFailed("invalid target host".into()))?;
-        let tls_connections = Arc::new(AtomicU64::new(0));
-        let connector = Connector {
-            target: target.clone(),
-            timeout: options.connect_timeout,
-            connections: tls_connections.clone(),
-        };
+        let connector = HostConnector::new(Host::Pinned(target.clone()), options.connect_timeout);
+        let tls_connections = connector.opened.clone();
         let client = Client::builder(TokioExecutor::new())
             .pool_idle_timeout(Duration::from_secs(60))
             .pool_max_idle_per_host(8)
