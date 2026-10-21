@@ -44,6 +44,7 @@ pub mod routes;
 pub mod schema;
 pub mod server;
 pub mod serverstatus;
+pub mod service;
 pub mod slayerlinks;
 pub mod store;
 pub mod store_revocation;

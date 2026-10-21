@@ -15,6 +15,8 @@
 //! Offline play is off in 0.2.0 (row L42): the commands answer `offline_unavailable` without asking the
 //! controller.
 
+#[cfg(feature = "offline")]
+pub mod offline;
 pub mod platform;
 pub mod stored;
 
@@ -97,6 +99,9 @@ pub struct Config {
     pub legacy_encryptor: Option<Arc<dyn Encryptor>>,
     /// A stand-in for the game (tests)
     pub spawn: Option<Spawn>,
+    /// Offline play's stack and saves, where this build and PC have them (L43)
+    #[cfg(feature = "offline")]
+    pub offline: Option<offline::OfflineSetup>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -140,8 +145,17 @@ struct State {
     branding: Option<Branding>,
     relay: Option<Relay>,
     /// Who to tell the server the session ended for, when the game exits
-    end_playing: Option<(Endpoint, String)>,
+    end_playing: Option<EndPlaying>,
     shutting_down: bool,
+    #[cfg(feature = "offline")]
+    off: offline::OfflineState,
+}
+
+/// What a game's exit ends: an online session, or an offline one whose local stack stops with it.
+enum EndPlaying {
+    Online(Endpoint, String),
+    #[cfg(feature = "offline")]
+    Offline(Endpoint, String),
 }
 
 impl State {
@@ -292,10 +306,20 @@ impl Controller {
             }
             st.end_playing.take()
         };
-        if let Some((endpoint, key)) = end {
-            self.rt.spawn(async move {
-                let _ = end_playing(&endpoint, &key).await;
-            });
+        match end {
+            Some(EndPlaying::Online(endpoint, key)) => {
+                self.rt.spawn(async move {
+                    let _ = end_playing(&endpoint, &key).await;
+                });
+            }
+            #[cfg(feature = "offline")]
+            Some(EndPlaying::Offline(endpoint, key)) => {
+                if let Some(this) = self.me.upgrade() {
+                    self.rt
+                        .spawn(async move { this.offline_game_ended(endpoint, key).await });
+                }
+            }
+            None => {}
         }
         if let Some(this) = self.me.upgrade() {
             self.rt.spawn(async move {
@@ -330,8 +354,13 @@ impl Controller {
             .unwrap_or_else(|| c.default_install_dir.to_string_lossy().into_owned())
     }
 
-    /// True while the game runs through the local relay: closing the launcher would cut the game off.
+    /// True while the game runs through the local relay or on the offline services: closing the launcher
+    /// would cut the game off.
     pub fn keep_open(&self) -> Option<KeepOpen> {
+        #[cfg(feature = "offline")]
+        if self.offline_game_active() {
+            return Some(KeepOpen::Offline);
+        }
         self.st().relay.is_some().then_some(KeepOpen::Relay)
     }
 
@@ -1783,6 +1812,10 @@ impl Controller {
         if self.st().shutting_down || Self::is_busy(&self.st()) {
             return ActionResult::err(ErrorCode::Busy);
         }
+        #[cfg(feature = "offline")]
+        if self.st().off.blocks_online() {
+            return ActionResult::err(ErrorCode::Busy);
+        }
         if self.game.running() {
             return ActionResult::Err(self.fail(ErrorCode::AlreadyRunning, None));
         }
@@ -1847,7 +1880,14 @@ impl Controller {
             String::new()
         };
         let launched = self
-            .launch_game(&game_host, game_port, xmpp_port, &key, (endpoint, key.clone()), &suffix)
+            .launch_game(
+                &game_host,
+                game_port,
+                xmpp_port,
+                &key,
+                EndPlaying::Online(endpoint, key.clone()),
+                &suffix,
+            )
             .await;
         if launched.is_err() {
             self.stop_relay().await;
@@ -1914,7 +1954,7 @@ impl Controller {
         game_port: u16,
         xmpp_port: u16,
         key: &str,
-        end: (Endpoint, String),
+        end: EndPlaying,
         suffix: &str,
     ) -> Outcome {
         let prepared = match self.p.prepare_game_launch().await {
@@ -2114,6 +2154,8 @@ impl Controller {
         }
         self.set_status_polling(false);
         self.cancel_task();
+        #[cfg(feature = "offline")]
+        self.shutdown_offline().await;
         self.stop_relay().await;
     }
 }

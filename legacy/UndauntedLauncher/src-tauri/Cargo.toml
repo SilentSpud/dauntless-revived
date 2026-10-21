@@ -61,9 +61,17 @@ tauri = { version = "2.12", features = ["isolation"] }
 open = { version = "5.4", features = ["shellexecute-on-windows"] }
 tauri-plugin-dialog = "2.8"
 url.workspace = true
+# Offline play (feature `offline`)
+metagame = { path = "../../../rust/services/metagame", optional = true }
+deploy = { path = "../../../rust/services/deploy", optional = true }
+rcgen = { version = "0.14.10", default-features = false, features = ["aws_lc_rs", "pem", "crypto"], optional = true }
+thiserror = { workspace = true, optional = true }
 
 [dev-dependencies]
 sha1_smol = "1"
+service-kit.workspace = true
+diesel.workspace = true
+store.workspace = true
 tokio-stream = "0.1"
 tempfile.workspace = true
 rcgen = { version = "0.14.10", default-features = false, features = ["aws_lc_rs", "pem", "crypto"] }
@@ -79,6 +87,9 @@ dbus-secret-service = { version = "4.1", features = ["crypto-rust"] }
 [features]
 # Set by `tauri build`: serve the built page from the binary instead of the Vite dev server
 custom-protocol = ["tauri/custom-protocol"]
+# Offline play on the Rust metagame and DeployServer, run by this binary as `--service` (D12, L43). Off in
+# 0.2.0 (D1, L42) until X2 turns it on.
+offline = ["dep:metagame", "dep:deploy", "dep:rcgen", "dep:thiserror"]
 
 [lints]
 workspace = true

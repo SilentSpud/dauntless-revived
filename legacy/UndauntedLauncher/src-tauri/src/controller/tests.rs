@@ -80,6 +80,8 @@ struct Host {
     status_calls: Vec<(bool, bool)>,
     requests: Vec<String>,
     device_blocked: bool,
+    /// Registration without an invite code, as the offline metagame runs
+    open_registration: bool,
     counter: u32,
     /// The next ServerStatus is answered (as of its arrival) only once this is notified
     hold: Option<(tokio::sync::oneshot::Sender<()>, Arc<tokio::sync::Notify>)>,
@@ -175,7 +177,7 @@ async fn handle(host: Shared, request: Request<Incoming>) -> Response<Full<Bytes
         if h.users.values().any(|u| u.eq_ignore_ascii_case(&username)) {
             return reply(409, json!({ "error": "username_taken" }));
         }
-        if !h.valid_codes.remove(&code) {
+        if !h.open_registration && !h.valid_codes.remove(&code) {
             return reply(401, json!({ "error": "invite_invalid" }));
         }
         h.registrations.push((username.clone(), code));
@@ -371,6 +373,19 @@ impl Harness {
     }
 
     fn with_user(relay_port: u16, user: tempfile::TempDir) -> Self {
+        Self::build(
+            relay_port,
+            user,
+            #[cfg(feature = "offline")]
+            None,
+        )
+    }
+
+    fn build(
+        relay_port: u16,
+        user: tempfile::TempDir,
+        #[cfg(feature = "offline")] offline: Option<super::offline::OfflineSetup>,
+    ) -> Self {
         let install = tempfile::tempdir().unwrap();
         let config = tempfile::tempdir().unwrap();
         let fake = Arc::new(Fake {
@@ -401,6 +416,8 @@ impl Harness {
                 status_poll: Duration::from_secs(60),
                 encryptor: Arc::new(Plain),
                 legacy_encryptor: None,
+                #[cfg(feature = "offline")]
+                offline,
                 // Requests the test sends stand in for the game, so the game is this process
                 spawn: Some(Arc::new(move |dir, args, _, env| {
                     log.lock().unwrap().push((
@@ -983,3 +1000,6 @@ async fn status_polling_starts_and_stops_from_a_thread_outside_the_runtime() {
     std::thread::spawn(move || c.set_status_polling(false)).join().unwrap();
     hx.c.shutdown().await;
 }
+
+#[cfg(feature = "offline")]
+mod offline_play;

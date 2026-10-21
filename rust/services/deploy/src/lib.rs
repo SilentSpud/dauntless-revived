@@ -15,6 +15,7 @@ pub mod occupancy;
 pub mod process;
 pub mod readiness;
 pub mod remote;
+pub mod service;
 pub mod settings;
 pub mod system;
 pub mod tables;

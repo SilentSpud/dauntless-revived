@@ -126,6 +126,11 @@ fn signing(existing: &HashMap<String, String>) -> Result<(String, String), Strin
     Ok((b64.encode(key.serialize_pem()), b64.encode(key.public_key_pem())))
 }
 
+/// A fresh metagame signing pair (base64 of PKCS#8 and SPKI PEM), as the launcher's offline state keeps it.
+pub fn signing_pair() -> Result<(String, String), String> {
+    signing(&HashMap::new())
+}
+
 /// `deploy signing-keys <out file>` (the Windows kit's `dr-keys.js signing`): a fresh signing pair as the
 /// two `.env` lines the metagame reads, in a private file. Nothing is printed but a note; the caller
 /// merges the lines into the protected `metagame.env` and deletes the file.

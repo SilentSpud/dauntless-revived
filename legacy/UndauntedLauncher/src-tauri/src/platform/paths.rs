@@ -47,7 +47,10 @@ impl Paths {
         }
     }
 
-    #[cfg_attr(not(test), expect(dead_code, reason = "the tests use it"))]
+    #[cfg_attr(
+        not(any(test, feature = "offline")),
+        expect(dead_code, reason = "the tests and offline play use it")
+    )]
     pub fn keys_dir(&self) -> PathBuf {
         self.user_data.join("keys")
     }

@@ -182,6 +182,14 @@ jobs:
       - name: Tests
         run: cargo test --workspace --locked
 
+      # Offline play is compiled in only with this feature until X2 turns it on (L42, L43): check it anyway,
+      # including the launcher binary running the metagame and DeployServer as `--service`.
+      - name: Clippy (launcher with offline play)
+        run: cargo clippy -p launcher --features offline --all-targets --locked -- -D warnings
+
+      - name: Tests (launcher with offline play)
+        run: cargo test -p launcher --features offline --locked
+
   # The server binaries for every server platform (MIGRATION_PLAN.md M38, D14), built as a release would
   # build them, with the shared HTTP-level metagame tests run against each release metagame as the smoke
   # test. Kept as artifacts for a week to try on a server; nothing is published from here.

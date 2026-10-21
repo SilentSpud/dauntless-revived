@@ -374,6 +374,42 @@ Done so far:
   offline saves stay on this PC"; en, es and fi, like the other offline strings). The Tauri backend never names
   the `offline/` folder, so a profile's offline data and `.drsave` files stay as they were. The Cargo feature
   `offline` comes with L43, which has code to put behind it.
+- Launcher P7, L43 (offline orchestration, compiled in but off): the launcher's Cargo feature `offline` (off by
+  default, so 0.2.0 ships without it) links the metagame and DeployServer crates.
+  - **Services:** their `serve` moved into `metagame::service` and `deploy::service`.
+    `dauntless-revived-launcher --service metagame|deploy --env-file <file>` runs one of them (D12).
+  - **`src-tauri/src/offline/`**
+    - `layout` keeps the Electron launcher's `userData/offline` folders.
+    - `state` (`offline-state.ts`):
+      - The profile's secrets are made once (an RSA-2048 signing pair from the deploy crate's generator and a
+        game-server key). A pair whose halves don't match, or a file that can't be read, is never replaced.
+      - The two settings files are written single-quoted, so the services' `.env` reader takes them literally.
+    - `game_config` (`offline-game-config.ts`) points Game.ini's Phoenix endpoints and Engine.ini's chat at this
+      PC. build.rs copies the DLL's 167 endpoints out of `native/internal-server/dllmain.cpp` without the vendor
+      webhook path, so nothing else of that file reaches the binary, as the stage script did.
+    - `save_format` and `save` are the `.drsave` container and the restore journal, with the database half in
+      process from `metagame::offline_save` (X1).
+    - `stack` (`local-stack*.ts`):
+      - The start order, the stop order and cleanup after a failed start.
+      - `ProcessRuntime` starts this binary as each service with only the operating system's variables, logs to
+        `offline/runtime/<service>.log`, and waits for the health paths.
+      - It stops a service with `shutdown` on stdin (X7), then kills it after 7 s.
+      - Between the two starts it registers the game-server key in-process (`metagame db gs-key`).
+  - **Controller:** `controller/offline.rs` is `startOffline`, `stopOffline` and the save operations, with
+    cancellation between steps. The game's exit stops the stack, online play waits while a stack runs, closing
+    asks first while an offline game runs, and shutdown waits for a start in progress. The `.drsave` dialogs are
+    the Electron launcher's.
+  - **Startup:** only on Windows, as in the Electron launcher.
+  - **Tests:**
+    - 20 with the feature on: the offline modules, the save runtime's cases from `offline-save.test.ts` (round
+      trip across machines with credentials scrubbed, damaged saves, crash journals, refused destinations), and
+      4 controller flows (register once and reuse, memory admission, stop during a start, shutdown during a
+      start).
+    - `tests/offline_stack.rs`, where the launcher binary really runs both Rust services on free ports and stops
+      them.
+    - CI runs clippy and the tests with the feature too.
+- L44 waits for L51: `scripts/stage-offline-runtime.mjs` is still how the Electron launcher 0.1.x packages its
+  Node services, so it goes with the Electron build, not before. The Tauri launcher stages nothing.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

@@ -5,6 +5,8 @@ mod bridge;
 mod controller;
 mod core;
 mod net;
+#[cfg(feature = "offline")]
+pub mod offline;
 mod platform;
 mod window;
 
@@ -162,6 +164,9 @@ fn make_controller(
     use crate::core::manifest::GAME_MANIFEST;
     use crate::core::pins::{EXE_RELATIVE_PATH, PINNED_EXE_SHA256};
 
+    // Offline play's game executable is the current install's, known once the controller exists
+    #[cfg(feature = "offline")]
+    let game_root: Arc<OnceLock<std::sync::Weak<Controller>>> = Arc::default();
     let resources_dir = if cfg!(dev) {
         std::path::PathBuf::from(concat!(env!("CARGO_MANIFEST_DIR"), "/../assets"))
     } else {
@@ -181,7 +186,7 @@ fn make_controller(
     let config = Config {
         user_data: paths.user_data.clone(),
         documents: Some(paths.documents.clone()),
-        resources_dir,
+        resources_dir: resources_dir.clone(),
         default_install_dir: paths.default_install_dir.clone(),
         host: platform::settings::Platform::current(),
         app_version: version,
@@ -193,6 +198,8 @@ fn make_controller(
         relay_port,
         exe_pin: (EXE_RELATIVE_PATH.into(), PINNED_EXE_SHA256.into()),
         status_poll: std::time::Duration::from_millis(core::pins::STATUS_POLL_MS),
+        #[cfg(feature = "offline")]
+        offline: offline_setup(&paths, &resources_dir, &encryptor, &legacy_encryptor, game_root.clone()),
         encryptor,
         legacy_encryptor,
         spawn: None,
@@ -203,5 +210,52 @@ fn make_controller(
         documents: paths.documents,
         home: paths.home,
     };
-    Ok(Controller::new(Arc::new(platform), config))
+    let controller = Controller::new(Arc::new(platform), config);
+    #[cfg(feature = "offline")]
+    let _ = game_root.set(Arc::downgrade(&controller));
+    Ok(controller)
+}
+
+/// Offline play's stack and saves (Windows only, as in the Electron launcher).
+#[cfg(feature = "offline")]
+fn offline_setup(
+    paths: &Paths,
+    resources_dir: &std::path::Path,
+    encryptor: &Arc<dyn platform::keystore::Encryptor>,
+    legacy_encryptor: &Option<Arc<dyn platform::keystore::Encryptor>>,
+    game_root: Arc<OnceLock<std::sync::Weak<Controller>>>,
+) -> Option<controller::offline::OfflineSetup> {
+    use offline::layout::OfflineLayout;
+    use offline::stack::{ProcessRuntime, StackManager, before_start};
+
+    if !cfg!(windows) {
+        return None;
+    }
+    let program = std::env::current_exe().ok()?;
+    let layout = OfflineLayout::new(&paths.user_data, resources_dir);
+    // The offline identity stays in userData: no Documents copy, unlike online keys
+    let keys = platform::keystore::KeyStore::new(paths.keys_dir(), encryptor.clone(), legacy_encryptor.clone(), None);
+    let executable = move || {
+        let root = game_root
+            .get()
+            .and_then(std::sync::Weak::upgrade)
+            .map(|controller| controller.install_dir())
+            .unwrap_or_default();
+        std::path::Path::new(&root).join(core::pins::EXE_RELATIVE_PATH)
+    };
+    // Server diagnostics are opt-in apart from the game's own console setting
+    let server_console = std::env::var("DAUNTLESS_REVIVED_LOCAL_SERVER_CONSOLE").as_deref() == Ok("1");
+    let prepare = before_start(
+        layout.clone(),
+        executable,
+        platform::game_config::default_config_dir(),
+        server_console,
+    );
+    let runtime = ProcessRuntime::offline(program, &layout, prepare);
+    Some(controller::offline::OfflineSetup {
+        stack: Arc::new(StackManager::new(Arc::new(runtime))),
+        save: Arc::new(offline::save::PortableSave::new(layout, paths.user_data.clone(), keys)),
+        free_memory: Some(offline::free_memory),
+        port: 61000,
+    })
 }

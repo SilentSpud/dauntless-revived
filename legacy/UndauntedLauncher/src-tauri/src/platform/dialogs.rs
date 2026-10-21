@@ -91,7 +91,10 @@ pub async fn choose_open_file(app: &AppHandle, start: Option<&Path>, filter: (&s
 }
 
 pub const TEXT_FILES: (&str, &str) = ("Text", "txt");
-#[expect(dead_code, reason = "offline play returns with the Rust services (row L42, X2)")]
+#[cfg_attr(
+    not(feature = "offline"),
+    expect(dead_code, reason = "offline play returns with the Rust services (row L42, X2)")
+)]
 pub const OFFLINE_SAVES: (&str, &str) = ("Dauntless Revived offline save", "drsave");
 
 /// Why the launcher should stay open while the player closes its window.
@@ -100,7 +103,10 @@ pub enum KeepOpen {
     /// The public-mode relay carries the game's connection
     Relay,
     /// The offline services run the game's world
-    #[expect(dead_code, reason = "offline play returns with the Rust services (row L42, X2)")]
+    #[cfg_attr(
+        not(feature = "offline"),
+        expect(dead_code, reason = "offline play returns with the Rust services (row L42, X2)")
+    )]
     Offline,
 }
 

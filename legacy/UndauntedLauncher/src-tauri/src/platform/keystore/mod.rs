@@ -119,7 +119,8 @@ impl KeyStore {
         }
     }
 
-    fn file(&self, slot: &KeySlot) -> PathBuf {
+    /// The encrypted key file of a slot (the offline save restore keeps a copy of it to roll back).
+    pub fn file(&self, slot: &KeySlot) -> PathBuf {
         self.dir.join(format!("{}.key2", slot.id()))
     }
 

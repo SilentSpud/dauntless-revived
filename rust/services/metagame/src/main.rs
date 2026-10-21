@@ -109,45 +109,6 @@ fn offline_save(command: OfflineSaveCommand) -> ExitCode {
     }
 }
 
-fn serve(env_file: Option<PathBuf>) -> ExitCode {
-    let env = match Env::load(env_file.as_deref()) {
-        Ok(env) => env,
-        Err(error) => {
-            eprintln!("metagame: {error}");
-            return ExitCode::FAILURE;
-        }
-    };
-    let level = match service_kit::log::parse_level(env.get("LOG_LEVEL")) {
-        Ok(level) => level,
-        Err(error) => {
-            eprintln!("metagame: {error}");
-            return ExitCode::FAILURE;
-        }
-    };
-    service_kit::log::init(level, env.get("NODE_ENV") != Some("production"));
-    let fail = |message: String| {
-        service_kit::fatal!("{message}");
-        ExitCode::FAILURE
-    };
-    let config = match Config::from_env(&env) {
-        Ok(config) => config,
-        Err(error) => return fail(error),
-    };
-    // A bad folder, file or season stops the start here, not at a player's first request.
-    let progression = match metagame::progression_config::from_env(&env) {
-        Ok(progression) => progression,
-        Err(error) => return fail(format!("The progression config could not be loaded: {error}")),
-    };
-    let runtime = match tokio::runtime::Builder::new_multi_thread().enable_all().build() {
-        Ok(runtime) => runtime,
-        Err(error) => return fail(error.to_string()),
-    };
-    match runtime.block_on(metagame::server::run(config, progression)) {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(error) => fail(error),
-    }
-}
-
 fn migrate(env_file: Option<PathBuf>) -> ExitCode {
     let config = match Env::load(env_file.as_deref())
         .map_err(|e| e.to_string())
@@ -176,7 +137,7 @@ fn migrate(env_file: Option<PathBuf>) -> ExitCode {
 
 fn main() -> ExitCode {
     match Cli::parse().command {
-        Command::Serve { env_file } => serve(env_file),
+        Command::Serve { env_file } => metagame::service::serve(env_file.as_deref()),
         Command::Migrate { env_file } => migrate(env_file),
         Command::OfflineSave { command } => offline_save(command),
         Command::Invite { args } => match metagame::kitinvite::run(&args) {

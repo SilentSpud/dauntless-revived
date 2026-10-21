@@ -44,6 +44,14 @@ pub trait Platform: Send + Sync {
     fn collect_device_signals(&self) -> Boxed<Value>;
     /// The Visual C++ and DirectX files the game needs that Windows lacks.
     fn missing_runtimes(&self) -> (Vec<String>, Vec<String>);
+    /// Pushes offline play's status to the page (`offline-status-changed`).
+    #[cfg(feature = "offline")]
+    fn emit_offline_status(&self, _status: &crate::bridge::types::OfflineStatus) {}
+    /// The `.drsave` file to back up to (`export`) or restore from; None when cancelled.
+    #[cfg(feature = "offline")]
+    fn choose_offline_save(&self, _export: bool) -> Boxed<Option<PathBuf>> {
+        Box::pin(async { None })
+    }
 }
 
 pub struct TauriPlatform {
@@ -122,6 +130,26 @@ impl Platform for TauriPlatform {
     fn collect_device_signals(&self) -> Boxed<Value> {
         Box::pin(async {
             serde_json::to_value(crate::platform::system::collect_device_signals().await).unwrap_or(Value::Null)
+        })
+    }
+
+    #[cfg(feature = "offline")]
+    fn emit_offline_status(&self, status: &crate::bridge::types::OfflineStatus) {
+        let _ = self.app.emit_to(MAIN, "offline-status-changed", status);
+    }
+
+    #[cfg(feature = "offline")]
+    fn choose_offline_save(&self, export: bool) -> Boxed<Option<PathBuf>> {
+        let app = self.app.clone();
+        let documents = self.documents.clone();
+        Box::pin(async move {
+            if export {
+                let stamp = chrono::Utc::now().format("%Y-%m-%d");
+                let name = format!("Dauntless Revived offline save {stamp}.drsave");
+                dialogs::choose_save_file(&app, &documents, &name, dialogs::OFFLINE_SAVES).await
+            } else {
+                dialogs::choose_open_file(&app, Some(&documents), dialogs::OFFLINE_SAVES).await
+            }
         })
     }
 

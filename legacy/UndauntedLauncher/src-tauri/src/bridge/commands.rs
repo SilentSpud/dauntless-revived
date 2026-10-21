@@ -9,9 +9,11 @@ use tauri::{AppHandle, Manager, State};
 
 use super::backend::Backend;
 use super::spec::{GAME_PATH_MAX, INVITE_MAX, KEY_TEXT_MAX, USERNAME_MAX, fits, is_server_id};
+#[cfg(not(feature = "offline"))]
+use super::types::OfflinePhase;
 use super::types::{
-    ActionResult, Branding, ErrorCode, ExternalTarget, InviteCheck, LauncherError, NewsItem, OfflinePhase,
-    OfflineStatus, RegisterOutcome, Settings, SettingsPatch, Snapshot, TaskProgress,
+    ActionResult, Branding, ErrorCode, ExternalTarget, InviteCheck, LauncherError, NewsItem, OfflineStatus,
+    RegisterOutcome, Settings, SettingsPatch, Snapshot, TaskProgress,
 };
 use crate::controller::ControllerHandle;
 
@@ -151,6 +153,10 @@ pub async fn play(app: AppHandle) -> ActionResult {
 }
 
 /// Offline play is off in 0.2.0 (row L42, D1); it returns with the Rust services (X2). The page says so.
+#[cfg_attr(
+    feature = "offline",
+    allow(dead_code, reason = "without an offline stack on this PC")
+)]
 fn offline_off() -> ActionResult {
     ActionResult::Err(LauncherError {
         code: ErrorCode::OfflineUnavailable,
@@ -159,24 +165,42 @@ fn offline_off() -> ActionResult {
 }
 
 #[tauri::command]
-pub fn start_offline(username: Option<String>) -> ActionResult {
+pub async fn start_offline(username: Option<String>, app: AppHandle) -> ActionResult {
     if username.as_deref().is_some_and(|name| !fits(name, USERNAME_MAX)) {
         return ActionResult::err(ErrorCode::UsernameInvalid);
     }
-    offline_off()
+    #[cfg(feature = "offline")]
+    return controller(&app).start_offline(username).await;
+    #[cfg(not(feature = "offline"))]
+    {
+        let _ = app;
+        offline_off()
+    }
 }
 
 #[tauri::command]
-pub fn stop_offline() -> ActionResult {
-    ActionResult::Ok
+pub async fn stop_offline(app: AppHandle) -> ActionResult {
+    #[cfg(feature = "offline")]
+    return controller(&app).stop_offline().await;
+    #[cfg(not(feature = "offline"))]
+    {
+        let _ = app;
+        ActionResult::Ok
+    }
 }
 
 #[tauri::command]
-pub fn offline_status() -> OfflineStatus {
-    OfflineStatus {
-        phase: OfflinePhase::Stopped,
-        progress: None,
-        error: None,
+pub fn offline_status(app: AppHandle) -> OfflineStatus {
+    #[cfg(feature = "offline")]
+    return controller(&app).offline_status();
+    #[cfg(not(feature = "offline"))]
+    {
+        let _ = app;
+        OfflineStatus {
+            phase: OfflinePhase::Stopped,
+            progress: None,
+            error: None,
+        }
     }
 }
 
@@ -245,13 +269,25 @@ pub fn dismiss_error(app: AppHandle) {
 }
 
 #[tauri::command]
-pub fn offline_export_save() -> ActionResult {
-    offline_off()
+pub async fn offline_export_save(app: AppHandle) -> ActionResult {
+    #[cfg(feature = "offline")]
+    return controller(&app).offline_save(true).await;
+    #[cfg(not(feature = "offline"))]
+    {
+        let _ = app;
+        offline_off()
+    }
 }
 
 #[tauri::command]
-pub fn offline_import_save() -> ActionResult {
-    offline_off()
+pub async fn offline_import_save(app: AppHandle) -> ActionResult {
+    #[cfg(feature = "offline")]
+    return controller(&app).offline_save(false).await;
+    #[cfg(not(feature = "offline"))]
+    {
+        let _ = app;
+        offline_off()
+    }
 }
 
 #[tauri::command]
