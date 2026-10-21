@@ -563,28 +563,28 @@
       "a failed restoration leaves the current unrelated membership usable": "todo"
     },
     "middleman-rotation.test.ts": {
-      "shares exact availability boundaries with all rotating shop categories": "todo",
-      "rotates three stable families at the Thursday 18:00 UTC reset": "todo",
-      "lists only this week's cells, each available once": "todo",
-      "spends Aetherdust atomically and sells each weekly cell once per reset": "todo",
-      "lets only the first of two outstanding tokens buy this week's cell": "todo"
+      "shares exact availability boundaries with all rotating shop categories": "tests/m31/middleman_rotation.rs::shares_exact_availability_boundaries_with_all_rotating_shop_categories",
+      "rotates three stable families at the Thursday 18:00 UTC reset": "tests/m31/middleman_rotation.rs::rotates_three_stable_families_at_the_thursday_18_00_utc_reset",
+      "lists only this week's cells, each available once": "tests/m31/middleman_rotation.rs::lists_only_this_week_s_cells_each_available_once",
+      "spends Aetherdust atomically and sells each weekly cell once per reset": "tests/m31/middleman_rotation.rs::spends_aetherdust_atomically_and_sells_each_weekly_cell_once_per_reset",
+      "lets only the first of two outstanding tokens buy this week's cell": "tests/m31/middleman_rotation.rs::lets_only_the_first_of_two_outstanding_tokens_buy_this_week_s_cell"
     },
     "middleman-store.test.ts": {
-      "serves the two exchange-slot SKUs the 1.4.4 client has art for": "todo",
-      "unlocks each slot once through the normal two-step store transaction": "todo",
-      "is reachable by the authenticated 1.4.4 store routes while STORE remains off": "todo",
-      "hides direct Middleman offers when MIDDLEMAN_STORE is off": "todo"
+      "serves the two exchange-slot SKUs the 1.4.4 client has art for": "tests/m31/middleman_store.rs::serves_the_two_exchange_slot_skus_the_1_4_4_client_has_art_for",
+      "unlocks each slot once through the normal two-step store transaction": "tests/m31/middleman_store.rs::unlocks_each_slot_once_through_the_normal_two_step_store_transaction",
+      "is reachable by the authenticated 1.4.4 store routes while STORE remains off": "tests/m31/middleman_store.rs::is_reachable_by_the_authenticated_1_4_4_store_routes_while_store_remains_off",
+      "hides direct Middleman offers when MIDDLEMAN_STORE is off": "tests/m31/middleman_store.rs::hides_direct_middleman_offers_when_middleman_store_is_off"
     },
     "middleman.test.ts": {
-      "keeps three pending slots independent even when the client sends one generic instance id": "todo",
-      "accepts a same-version speed-up only when it keeps the slot, exchange and result": "todo",
-      "persists cell dusting as one inventory transaction": "todo",
-      "persists an Ace Chip speed-up with the fusion timer change atomically": "todo",
-      "allows the completed version-zero fusion token to be removed": "todo",
-      "lets a finished fusion be claimed after a speed-up even if the client sends its older token": "todo",
-      "lets a fusion be claimed when the removal's itemData is not the shape we expect": "todo",
-      "with strict guards, refuses early or wrong reveals and makes a completed reveal idempotent": "todo",
-      "rejects malformed fusion metadata without corrupting the inventory": "todo"
+      "keeps three pending slots independent even when the client sends one generic instance id": "tests/m31/middleman.rs::keeps_three_pending_slots_independent_even_when_the_client_sends_one_generic_instance_id",
+      "accepts a same-version speed-up only when it keeps the slot, exchange and result": "tests/m31/middleman.rs::accepts_a_same_version_speed_up_only_when_it_keeps_the_slot_exchange_and_result",
+      "persists cell dusting as one inventory transaction": "tests/m31/middleman.rs::persists_cell_dusting_as_one_inventory_transaction",
+      "persists an Ace Chip speed-up with the fusion timer change atomically": "tests/m31/middleman.rs::persists_an_ace_chip_speed_up_with_the_fusion_timer_change_atomically",
+      "allows the completed version-zero fusion token to be removed": "tests/m31/middleman.rs::allows_the_completed_version_zero_fusion_token_to_be_removed",
+      "lets a finished fusion be claimed after a speed-up even if the client sends its older token": "tests/m31/middleman.rs::lets_a_finished_fusion_be_claimed_after_a_speed_up_even_if_the_client_sends_its_older_token",
+      "lets a fusion be claimed when the removal's itemData is not the shape we expect": "tests/m31/middleman.rs::lets_a_fusion_be_claimed_when_the_removal_s_itemdata_is_not_the_shape_we_expect",
+      "with strict guards, refuses early or wrong reveals and makes a completed reveal idempotent": "tests/m31/middleman.rs::with_strict_guards_refuses_early_or_wrong_reveals_and_makes_a_completed_reveal_idempotent",
+      "rejects malformed fusion metadata without corrupting the inventory": "tests/m31/middleman.rs::rejects_malformed_fusion_metadata_without_corrupting_the_inventory"
     },
     "migrations.test.ts": {
       "the journal lists the new migrations after 0013, each later than the one before": "n/a: the Rust metagame runs no Drizzle migrations; it adopts the last Drizzle schema as its baseline (M14), checked by tests/baseline.rs",
