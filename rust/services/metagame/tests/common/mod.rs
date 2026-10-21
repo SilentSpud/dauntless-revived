@@ -198,6 +198,21 @@ impl TestApp {
         self.call("GET", path, req).await
     }
 
+    /// `call` with an owned path, for a closure that builds the path.
+    pub async fn call_owned(&self, method: &str, path: String, req: Req) -> Reply {
+        self.call(method, &path, req).await
+    }
+
+    /// `get` with an owned path, for a closure that builds the path.
+    pub async fn get_owned(&self, path: String, req: Req) -> Reply {
+        self.call("GET", &path, req).await
+    }
+
+    /// `post` with an owned path, for a closure that builds the path.
+    pub async fn post_owned(&self, path: String, req: Req) -> Reply {
+        self.call("POST", &path, req).await
+    }
+
     pub async fn post(&self, path: &str, req: Req) -> Reply {
         self.call("POST", path, req).await
     }

@@ -42,12 +42,13 @@ fn helper_config(dir: &Path, extra: &[(&str, &str)]) -> AllowlistConfig {
     config
 }
 
+/// The audit log's complete lines: a helper process may be writing the last one as it is read.
 fn audit_events(file: &Path) -> Vec<Value> {
     std::fs::read_to_string(file)
         .unwrap_or_default()
-        .lines()
-        .filter(|l| !l.is_empty())
-        .map(|l| serde_json::from_str(l).unwrap())
+        .split_inclusive('\n')
+        .filter(|l| l.ends_with('\n') && !l.trim().is_empty())
+        .map(|l| serde_json::from_str(l.trim_end()).unwrap())
         .collect()
 }
 
