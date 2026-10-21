@@ -2,6 +2,7 @@
 
 pub mod admin_accounts;
 pub mod admin_history;
+pub mod backup;
 pub mod character;
 pub mod eos;
 pub mod escalation;
@@ -29,6 +30,16 @@ use crate::app::AppState;
 /// `res.status(n).send()`: the status and no body.
 pub fn empty(status: StatusCode) -> Response {
     status.into_response()
+}
+
+/// `res.sendStatus(n)`: the status's name as text.
+pub fn send_status(status: StatusCode) -> Response {
+    (
+        status,
+        [(axum::http::header::CONTENT_TYPE, "text/plain; charset=utf-8")],
+        status.canonical_reason().unwrap_or("").to_owned(),
+    )
+        .into_response()
 }
 
 /// `res.status(n).json(value)`.
@@ -88,6 +99,7 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
     service_kit::routing::Router::new()
         .merge(login::routes())
         .merge(keyrotation::routes(state))
+        .merge(backup::routes())
         .merge(eos::routes(state))
         .merge(system::routes())
         .merge(escalation::routes())

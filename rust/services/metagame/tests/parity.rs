@@ -555,3 +555,13 @@ async fn system() {
 async fn system_plain() {
     run_area("system-plain").await;
 }
+
+#[tokio::test]
+async fn backup() {
+    run_area("backup").await;
+}
+
+#[tokio::test]
+async fn backup_off() {
+    run_area("backup-off").await;
+}

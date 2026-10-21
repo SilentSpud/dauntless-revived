@@ -74,6 +74,8 @@ pub struct Config {
     pub slayer_links: bool,
     /// `KEY_RECOVERY_SERVICE_SECRET`: the Discord bot's key recovery (`routes/keyrotation.rs`).
     pub key_recovery_secret: Option<String>,
+    /// `BACKUP_ROOT`: where POST /internal/backup writes (`routes/backup.rs`); unset turns it off.
+    pub backup_root: Option<String>,
     pub real_progression: crate::realprogression::Settings,
     /// The server's name, version and source for the status (`serverstatus.rs`).
     pub server_status: crate::serverstatus::Settings,
@@ -164,6 +166,7 @@ impl Config {
             escalation: crate::escalation::Settings::from_env(env),
             slayer_links: on_off(env, "SLAYER_LINKS", true),
             key_recovery_secret: env.raw("KEY_RECOVERY_SERVICE_SECRET").map(str::to_owned),
+            backup_root: env.raw("BACKUP_ROOT").filter(|r| !r.is_empty()).map(str::to_owned),
             real_progression: crate::realprogression::Settings::from_env(env),
             server_status: crate::serverstatus::Settings::from_env(env),
             features: Features {

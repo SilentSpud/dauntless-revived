@@ -1,0 +1,117 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /internal/backup",
+      "status": 403,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "Forbidden"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 403,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "Forbidden"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 400,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "ratelimit": "\"6-in-1hr\"; r=5; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "Bad Request"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 400,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "ratelimit": "\"6-in-1hr\"; r=4; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "Bad Request"
+    },
+    {
+      "request": "POST /internal/backup/",
+      "status": 400,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "ratelimit": "\"6-in-1hr\"; r=3; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "Bad Request"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 500,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "ratelimit": "\"6-in-1hr\"; r=2; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "Internal Server Error"
+    },
+    {
+      "request": "GET /internal/backup",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 400,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "ratelimit": "\"6-in-1hr\"; r=1; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "Bad Request"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 400,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "ratelimit": "\"6-in-1hr\"; r=0; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "Bad Request"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 429,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": "3600",
+        "ratelimit": "\"6-in-1hr\"; r=0; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "{\"error\":\"rate_limited\",\"message\":\"Too many backup requests; try again later.\"}"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 429,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "retry-after": "3600",
+        "ratelimit": "\"6-in-1hr\"; r=0; t=<s>",
+        "ratelimit-policy": "\"6-in-1hr\"; q=6; w=3600; pk=:YzNhYThlNjNjYzA2:"
+      },
+      "body": "{\"error\":\"rate_limited\",\"message\":\"Too many backup requests; try again later.\"}"
+    },
+    {
+      "request": "POST /internal/backup",
+      "status": 403,
+      "headers": {
+        "content-type": "text/plain; charset=utf-8"
+      },
+      "body": "Forbidden"
+    }
+  ]
+}

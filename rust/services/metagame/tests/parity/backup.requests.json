@@ -1,0 +1,120 @@
+{
+  "about": "POST /internal/backup: the refusals, the name check, a missing folder and the host-wide budget (MIGRATION_PLAN.md M29, area 7).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "BACKUP_ROOT": "."
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "wrong"
+      },
+      "json": {
+        "name": "2026-10-20_013000"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": "2026-10-20"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup/",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": "../2026-10-20_01"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": "2026-10-20_013000"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "name": "2026-10-20_013000"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internal/backup",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "wrong"
+      }
+    }
+  ]
+}

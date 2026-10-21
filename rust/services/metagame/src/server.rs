@@ -168,6 +168,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         slayer_links: config.slayer_links,
         guild_memory: crate::guild::Memory::default(),
         key_recovery_secret: config.key_recovery_secret.clone(),
+        backup_root: config.backup_root.clone(),
         activity: crate::activity::Activity::default(),
         server_status: config.server_status.clone(),
         status_cache: crate::serverstatus::Cache::default(),

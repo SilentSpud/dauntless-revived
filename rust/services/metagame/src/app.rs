@@ -66,6 +66,7 @@ pub struct App {
     /// Guild validate tickets and rate windows (`guild.rs`).
     pub guild_memory: crate::guild::Memory,
     pub key_recovery_secret: Option<String>,
+    pub backup_root: Option<String>,
     /// Who is playing, from the clients' heartbeats (in memory).
     pub activity: crate::activity::Activity,
     pub server_status: crate::serverstatus::Settings,

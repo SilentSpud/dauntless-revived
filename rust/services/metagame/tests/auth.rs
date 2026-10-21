@@ -15,6 +15,7 @@ use metagame::auth::{AdminKey, GameServer, MetagameAuth, Player, SoftAccount, So
 use metagame::crypto::{TokenKeys, sha256_hex};
 use metagame::db::SCHEMA;
 use metagame::origin::{OriginConfig, OwnAddresses};
+use metagame::schema::users;
 use service_kit::json::not_found;
 use service_kit::routing::Router;
 use service_kit::serve::ConnectionInfo;
@@ -32,6 +33,10 @@ struct Fixture {
 }
 
 fn fixture(account_key_recovery: bool) -> Fixture {
+    fixture_with(account_key_recovery, None)
+}
+
+fn fixture_with(account_key_recovery: bool, backup_root: Option<String>) -> Fixture {
     let dir = tempfile::tempdir().unwrap();
     let db = dir.path().join("undaunted.db");
     let store = store::Store::open(&db, &store::Options::default(), &SCHEMA).unwrap();
@@ -83,6 +88,7 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         slayer_links: true,
         guild_memory: Default::default(),
         key_recovery_secret: None,
+        backup_root,
         activity: Default::default(),
         server_status: Default::default(),
         status_cache: Default::default(),
@@ -434,5 +440,45 @@ async fn registered_callers() {
             .1,
         "false",
         "deleted account"
+    );
+}
+
+/// POST /internal/backup copies the live database into an existing folder, once.
+#[tokio::test(flavor = "multi_thread")]
+async fn a_backup_copies_the_database() {
+    let root = tempfile::tempdir().unwrap();
+    std::fs::create_dir(root.path().join("2026-10-20_013000")).unwrap();
+    let f = fixture_with(false, Some(root.path().to_string_lossy().into_owned()));
+    let backup = || async {
+        let mut request = Request::post("/internal/backup")
+            .header("x-undaunted-gameserver-apikey", GS_KEY)
+            .header("content-type", "application/json")
+            .body(Body::from(r#"{"name":"2026-10-20_013000"}"#))
+            .unwrap();
+        request.extensions_mut().insert(ConnectInfo(ConnectionInfo {
+            peer: "127.0.0.1:50000".parse().unwrap(),
+            local: "127.0.0.1:61000".parse().unwrap(),
+        }));
+        let response = metagame::server::app(f.state.clone(), false)
+            .oneshot(request)
+            .await
+            .unwrap();
+        let status = response.status();
+        let body = response.into_body().collect().await.unwrap().to_bytes();
+        (status, String::from_utf8(body.to_vec()).unwrap())
+    };
+    assert_eq!(backup().await, (StatusCode::OK, r#"{"copied":true}"#.into()));
+    let copy = root.path().join("2026-10-20_013000").join("undaunted.db");
+    let mut conn = SqliteConnection::establish(copy.to_str().unwrap()).unwrap();
+    let names: Vec<String> = users::table
+        .select(users::name)
+        .order(users::name)
+        .load(&mut conn)
+        .unwrap();
+    assert_eq!(names, ["Ada", "Bo", "Root"]);
+    assert_eq!(
+        backup().await,
+        (StatusCode::CONFLICT, "Conflict".into()),
+        "never over a backup"
     );
 }
