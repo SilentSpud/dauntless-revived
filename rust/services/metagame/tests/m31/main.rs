@@ -61,6 +61,7 @@ mod progressiondefault;
 mod progressionextras;
 mod progressionmode;
 mod progressionrank;
+mod purchasedelivery;
 mod ramspricing;
 mod realprogression;
 mod region_rejoin;

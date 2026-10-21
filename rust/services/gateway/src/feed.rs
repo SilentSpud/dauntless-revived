@@ -23,7 +23,19 @@ pub type Clock = Arc<dyn Fn() -> i64 + Send + Sync>;
 struct State {
     last_sent: HashMap<String, i64>,
     pending: HashSet<String>,
+    /// Failures in a row, and when the helper may be asked again. A helper that is not answering
+    /// must not be asked again on every single login: one live host logged 222,875 suppressed
+    /// warnings in four hours against two endpoints that were never going to answer (workers that
+    /// host was not running). The first answer of any kind clears both.
+    failures: u32,
+    skip_until: i64,
 }
+
+/// A single failure still retries at once (a worker that blips recovers on the next login); from this
+/// many failures in a row the helper is left alone for a doubling interval.
+const BACKOFF_AFTER: u32 = 3;
+const BACKOFF_BASE_MS: i64 = 2_000;
+const BACKOFF_MAX_MS: i64 = 60_000;
 
 struct Inner {
     target: String,
@@ -105,6 +117,11 @@ impl AllowlistFeed {
         let now = (inner.now)();
         {
             let mut state = inner.state.lock().unwrap_or_else(PoisonError::into_inner);
+            // Backing off from a helper that is down. The address is deliberately not recorded in
+            // `last_sent`, so it is offered again as soon as the interval passes
+            if now < state.skip_until {
+                return;
+            }
             if state
                 .last_sent
                 .get(ip)
@@ -125,10 +142,12 @@ impl AllowlistFeed {
         tokio::spawn(async move {
             match post(&inner, &ip).await {
                 Ok(200) => {
+                    inner.answered();
                     inner.mark_sent(&ip);
                     linelog::debug("allowlist refreshed", json!({ "ip": ip }));
                 }
                 Ok(400) => {
+                    inner.answered();
                     // The helper refused this address (a private one, say). Asking again every
                     // heartbeat would not change that, so wait like after a success
                     inner.mark_sent(&ip);
@@ -139,8 +158,8 @@ impl AllowlistFeed {
                         );
                     }
                 }
-                Ok(status) => inner.warn_down(&format!("status {status}")),
-                Err(detail) => inner.warn_down(&detail),
+                Ok(status) => inner.failed(&format!("status {status}")),
+                Err(detail) => inner.failed(&detail),
             }
             let mut state = inner.state.lock().unwrap_or_else(PoisonError::into_inner);
             state.pending.remove(&ip);
@@ -182,6 +201,26 @@ impl Inner {
             .unwrap_or_else(PoisonError::into_inner)
             .last_sent
             .insert(ip.to_owned(), now);
+    }
+
+    /// Any answer, a refusal included, proves the helper is up.
+    fn answered(&self) {
+        let mut state = self.state.lock().unwrap_or_else(PoisonError::into_inner);
+        state.failures = 0;
+        state.skip_until = 0;
+    }
+
+    fn failed(&self, detail: &str) {
+        {
+            let mut state = self.state.lock().unwrap_or_else(PoisonError::into_inner);
+            state.failures += 1;
+            if state.failures >= BACKOFF_AFTER {
+                let doublings = (state.failures - BACKOFF_AFTER).min(31);
+                let wait = BACKOFF_BASE_MS.saturating_mul(1 << doublings).min(BACKOFF_MAX_MS);
+                state.skip_until = (self.now)() + wait;
+            }
+        }
+        self.warn_down(detail);
     }
 
     fn warn_down(&self, detail: &str) {
@@ -231,7 +270,7 @@ mod tests {
                 );
                 let body = axum::body::to_bytes(request.into_body(), 1024).await.unwrap();
                 let parsed: serde_json::Value = serde_json::from_slice(&body).unwrap();
-                assert_eq!(parsed["ip"], "8.8.8.8");
+                assert!(parsed["ip"].is_string());
                 count.fetch_add(1, Ordering::SeqCst);
                 axum::http::StatusCode::from_u16(status.load(Ordering::SeqCst)).unwrap()
             }
@@ -271,5 +310,83 @@ mod tests {
         feed.report("unknown");
         feed.idle().await;
         assert_eq!(feed.sent(), 1);
+    }
+    /// A feed on a test clock for one helper (`feed-backoff.test.ts`)
+    fn on_clock(url: String) -> (AllowlistFeed, Arc<std::sync::atomic::AtomicI64>) {
+        let now = Arc::new(std::sync::atomic::AtomicI64::new(1_000_000));
+        let clock = now.clone();
+        let feed = AllowlistFeed::with_clock(
+            &Allowlist {
+                url,
+                secret: "test-secret-test-secret-test-secret".into(),
+                refresh: Duration::from_secs(60),
+                timeout: Duration::from_secs(1),
+                additional_urls: Vec::new(),
+            },
+            Arc::new(move || clock.load(Ordering::SeqCst)),
+        );
+        (feed, now)
+    }
+
+    #[tokio::test]
+    async fn a_helper_that_keeps_failing_is_left_alone_instead_of_retried_on_every_login() {
+        linelog::set_sink(Some(Box::new(|_, _| {})));
+        let count = Arc::new(AtomicU64::new(0));
+        let (feed, now) = on_clock(helper(Arc::new(AtomicU16::new(503)), count.clone()).await);
+        // Distinct addresses, so the refresh interval never hides the behaviour under test
+        for i in 0..12 {
+            feed.report(&format!("8.8.8.{i}"));
+            feed.idle().await;
+        }
+        // Three attempts before the backoff engages, and nothing after it does
+        assert_eq!(count.load(Ordering::SeqCst), 3, "attempts before backing off");
+
+        // Still inside the first backoff window: nothing is sent
+        now.fetch_add(1_500, Ordering::SeqCst);
+        feed.report("9.9.9.9");
+        feed.idle().await;
+        assert_eq!(count.load(Ordering::SeqCst), 3, "sent a request while backing off");
+
+        // Past it: exactly one probe, which fails and extends the window again
+        now.fetch_add(1_000, Ordering::SeqCst);
+        feed.report("9.9.9.10");
+        feed.idle().await;
+        assert_eq!(
+            count.load(Ordering::SeqCst),
+            4,
+            "did not probe once the backoff elapsed"
+        );
+    }
+
+    #[tokio::test]
+    async fn an_answer_clears_the_backoff_so_a_recovered_helper_is_used_again_at_once() {
+        linelog::set_sink(Some(Box::new(|_, _| {})));
+        let count = Arc::new(AtomicU64::new(0));
+        let status = Arc::new(AtomicU16::new(503));
+        let (feed, now) = on_clock(helper(status.clone(), count.clone()).await);
+        for i in 0..6 {
+            feed.report(&format!("8.8.8.{i}"));
+            feed.idle().await;
+        }
+        assert_eq!(count.load(Ordering::SeqCst), 3);
+
+        status.store(200, Ordering::SeqCst);
+        now.fetch_add(2_500, Ordering::SeqCst);
+        feed.report("9.9.9.9");
+        feed.idle().await;
+        assert_eq!(
+            count.load(Ordering::SeqCst),
+            4,
+            "did not probe after the backoff elapsed"
+        );
+
+        // The helper answered, so the next login goes straight through with no waiting
+        feed.report("9.9.9.10");
+        feed.idle().await;
+        assert_eq!(
+            count.load(Ordering::SeqCst),
+            5,
+            "still backing off after the helper recovered"
+        );
     }
 }

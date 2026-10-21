@@ -189,6 +189,24 @@ Done so far:
   move the guild clock, so skipping some breaks the rest; the guild parity scripts cover the routes),
   the tests that put one router in their own app (backup, health, moderation, Discord stats), the
   matchmaking tests with their own servers, and chat (M32). Then: the port to Rust tests.
+- Metagame B2, M31, third part: every `node:test` test of `legacy/UndauntedMetagame/test` has its Rust port
+  or a reason it does not apply, listed in `rust/services/metagame/tests/ported.json` (791 of 791) and checked
+  by `tests/ported.rs`. The ports are integration tests in one binary (`tests/m31`, 764 tests) on a temp
+  database per test, with the Node tests' helpers ported beside them: the store kit, scripted deploy servers
+  (raw TCP, so an answer can be held, dropped or slowed), the social client, and for chat the client model
+  (`chatclient.rs`) and the raw client (`chatwire.rs`). Every chat server a test starts checks that no stanza
+  outside a room reached a player from their own account (`chatinvariant.ts`). For the tests the app gained
+  clocks it can move (`party_clock`, the guild memory's), and chat a manual tick, an output observer, a friends
+  lookup for presence and its largest backlog. Bugs found and fixed on the way: two identical direct joins at
+  once both launched a server; a repeated game-server key header counted as a key; the `features:` start line
+  and the `BODY_LOG_PER_PATH` warning were missing; chat's task picked among ready events at random, so a
+  friendship change could be handled after a frame that came later.
+- Catch-up (D15, X3), first pass: no `rust-port-start` tag was cut, so the lists run from where this branch
+  last met upstream (`175f4e9`). Upstream's two later Node fixes are in `legacy/` and ported with their tests:
+  `7c1191d` (the inventory core refuses a transaction that pays for instanced items the character already
+  holds, so a purchase retried under a new transactionId cannot charge twice; M44) and `14351fc` (the
+  gateway's allowlist feed leaves a helper alone for a doubling interval, 2 s up to a minute, after three
+  failures in a row, and any answer clears it; S2). Each later pass starts from the last upstream commit taken.
 - Metagame B3, M32-M34: chat (`chat/`, from `realtime/*.ts`), on by default on `CHAT_PORT` as in
   Node, started before the HTTP listener and closed with it (`<close/>`, at most 1 s). One task owns
   all of chat and answers frames one at a time, in order, as Node's thread did; each connection has a

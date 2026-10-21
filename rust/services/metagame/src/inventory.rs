@@ -881,6 +881,7 @@ pub fn apply(
             return Err(Fail::Broken("the stored instanced items are not a list".into()));
         };
         let mut changed = false;
+        let mut skipped_adds = 0;
         if settings.fusion_guards {
             middleman::validate_completions(
                 &items,
@@ -910,6 +911,9 @@ pub fn apply(
                 match find_instanced(&items, incoming) {
                     Some(index) => {
                         if assert_existing_write(&items[index], incoming, operation)? == WriteKind::Skip {
+                            if operation == "add" {
+                                skipped_adds += 1;
+                            }
                             continue;
                         }
                         items[index] = incoming.clone();
@@ -928,6 +932,29 @@ pub fn apply(
         }
         if changed {
             new_instanced = Some(jsjson::stringify(&Value::Array(items)));
+        }
+        // An add skipped because the character already holds that exact instance delivered nothing: the
+        // grant happened in an earlier transaction. When the same request also takes payment, it is a
+        // repeat of a purchase that already succeeded (a retry under a fresh transactionId, which the
+        // ledger above cannot recognise), and letting it through debits a second time for one delivery.
+        // Refuse it, so nothing is written and the player keeps both the item and their currency. A
+        // retry that repeats the transactionId and body never reaches here; the ledger answers it.
+        if skipped_adds > 0
+            && skipped_adds == prepared.add_instanced.len()
+            && (!prepared.remove_stacked.is_empty() || !prepared.remove_instanced.is_empty())
+        {
+            tracing::warn!(
+                event = "inventory_duplicate_delivery",
+                userId = user_id.as_str(),
+                characterId = character_id.as_str(),
+                transactionId = js_string_of(prepared.request.transaction_id.as_ref()).as_str(),
+                caller = caller.as_str(),
+                skipped = skipped_adds,
+                "Refusing a transaction that pays for instanced items the character already holds"
+            );
+            return Err(Fail::Conflict(format!(
+                "Refusing payment for {skipped_adds} instanced item(s) characterId {character_id} already holds"
+            )));
         }
     }
 

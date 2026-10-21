@@ -787,6 +787,12 @@
       "premium rank follows the free rank only with premium": "tests/m31/progressionrank.rs::premium_rank_follows_the_free_rank_only_with_premium",
       "the old stub values: earned never exceeds the stub's confirmed rank, so nothing was pending": "tests/m31/progressionrank.rs::the_old_stub_values_earned_never_exceeds_the_stub_s_confirmed_rank_so_nothing_was_pending"
     },
+    "purchasedelivery.test.ts": {
+      "takes no currency and writes nothing when the grant would be skipped": "tests/m31/purchasedelivery.rs::takes_no_currency_and_writes_nothing_when_the_grant_would_be_skipped",
+      "still delivers and charges when the same request also brings a new instance": "tests/m31/purchasedelivery.rs::still_delivers_and_charges_when_the_same_request_also_brings_a_new_instance",
+      "leaves a free re-add alone: nothing is paid, so nothing is refused": "tests/m31/purchasedelivery.rs::leaves_a_free_re_add_alone_nothing_is_paid_so_nothing_is_refused",
+      "answers a true retry from the ledger, without reaching the refusal": "tests/m31/purchasedelivery.rs::answers_a_true_retry_from_the_ledger_without_reaching_the_refusal"
+    },
     "ramspricing.test.ts": {
       "pilot price tiers, bundle cap and account isolation": "tests/m31/ramspricing.rs::pilot_price_tiers_bundle_cap_and_account_isolation",
       "native pilot transport preserves canonical Rams accounting and isolates other accounts": "tests/m31/ramspricing.rs::native_pilot_transport_preserves_canonical_rams_accounting_and_isolates_other_accounts",
