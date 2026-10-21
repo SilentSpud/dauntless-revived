@@ -183,6 +183,13 @@ impl Store {
     }
 }
 
+/// Brings one connection's database to the current schema as [`Store::open`] does (adopting a Drizzle
+/// database at the baseline), without switching it to WAL: for a private copy, such as an offline save
+/// being imported (X1), that must stay a single file.
+pub fn migrate(conn: &mut Connection, schema: &Schema) -> Result<(), Error> {
+    adopt::prepare(conn, schema)
+}
+
 fn checkout<E: From<Error>>(pool: &Pool<Manager>) -> Result<PooledConnection<Manager>, E> {
     pool.get().map_err(|e| E::from(Error::Pool(e)))
 }

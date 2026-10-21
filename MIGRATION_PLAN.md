@@ -34,7 +34,23 @@ Done so far:
   overwrites, and leaves a single-file copy in rollback-journal mode.
 - Metagame B1: M19, `metagame db integrity|backup|add-invite|del-invite|make-admin|gs-key|journal delete|wal <db> …`
   with dr-db's checks and messages (`metagame db:` instead of `dr-db:`), never migrating or creating the file; the
-  kits switch to it in M39-M41. `offline-save` (X1) waits for the launcher.
+  kits switch to it in M39-M41.
+- X1 (offline saves' database half): `metagame::offline_save` is `offline-save-db.cjs`, and
+  `metagame offline-save export|import` offers it on the command line (the key comes on stdin, the answer is JSON).
+  - Export copies a stopped offline database with `store::backup` and changes only the copy. It gets a new random
+    `UUK_` key, the six credential tables are emptied, the account's token epoch goes up, and `secure_delete` plus
+    `VACUUM` rewrite it. It refuses `-wal`, `-shm` and `-journal` files left beside the database.
+  - Import checks a private copy. Its bookkeeping tables must be the ones Drizzle and Diesel make. Its history must
+    be a nonempty prefix of the frozen Drizzle migrations (`metagame::drizzle_frozen`, embedded, checked against
+    `legacy/UndauntedMetagame/src/drizzle` by a test) or of the Diesel migrations, with the schema that prefix makes.
+    The remaining Drizzle SQL is replayed, then `store::migrate` adopts the baseline and runs newer Diesel
+    migrations; `store::migrate` is new, the same as `Store::open` but without switching the file to WAL. The
+    result must have the current schema, pass `integrity_check`, stay in rollback-journal mode, and hold exactly one
+    account for the key (the declared one, with no credentials left).
+  - Tests: 5 cases (round trip, an older launcher's database, a forged hash, an extra table, a future migration, no
+    history, leftover credentials, journal files beside the database, a missing file).
+  - Checked by hand: a save exported by the Node helper itself (`offline-save-fixture.cjs`) and a 20-migration
+    offline database both import with the Rust CLI, keeping their characters and inventories.
 - Metagame B1: M9 and the rest of M10 in `metagame::auth` and `metagame::origin`: `MetagameAuth`, `Player`,
   `SoftPlayer`, `GameServer`, `AdminKey`, `UserKey` and `SoftAccount` extractors with the Node middleware's refusals
   (tested with the permissions tests' cases), token epoch and ban checks, the gateway/proxy/local-caller rules, the
