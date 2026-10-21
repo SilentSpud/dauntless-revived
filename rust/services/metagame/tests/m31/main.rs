@@ -7,7 +7,9 @@ mod common;
 
 mod accountrecovery;
 mod backup;
+mod branding;
 mod capacityturns;
+mod cooldownsbounties;
 mod devicesignals;
 mod discordlinks;
 mod discordstats;
@@ -22,5 +24,7 @@ mod progressionrank;
 mod ramspricing;
 mod regionprobes;
 mod shoplayout;
+mod shutdown;
 mod storage;
+mod store_maintenance;
 mod unlocker_detection;

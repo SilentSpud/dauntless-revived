@@ -49,8 +49,8 @@
       "starting a cooldown by id records it now": "todo"
     },
     "branding.test.ts": {
-      "no string in src/ calls the product Undaunted, apart from wire identifiers": "todo",
-      "would notice the product name coming back": "todo"
+      "no string in src/ calls the product Undaunted, apart from wire identifiers": "tests/m31/branding.rs::no_string_in_src_calls_the_product_undaunted_apart_from_wire_identifiers",
+      "would notice the product name coming back": "tests/m31/branding.rs::would_notice_the_product_name_coming_back"
     },
     "capacityturns.test.ts": {
       "oldest capacity retry blocks later regional launches including while in flight": "tests/m31/capacityturns.rs::oldest_capacity_retry_blocks_later_regional_launches_including_while_in_flight",
@@ -136,14 +136,14 @@
       "whispers reach the other player with a full sender JID, shown by username": "todo"
     },
     "cooldownsbounties.test.ts": {
-      "the batch PUT is stored exactly as sent and read back as an object map with an int code": "todo",
-      "a start PUT (no body) stamps now; old harvest cooldowns are pruned, bounty tokens never": "todo",
-      "keeps accounts apart": "todo",
-      "an empty board for a new account, with draft_data": "todo",
-      "partial upserts: select, progress, draft saves with empty bounty lists never remove anything": "todo",
-      "keeps a newer stored bounty over a stale write, and a new bounty takes over its slot": "todo",
-      "delete removes claimed or abandoned bounties; unknown ids are fine": "todo",
-      "always sends drafted_timestamp, even if the stored element lacks it": "todo"
+      "the batch PUT is stored exactly as sent and read back as an object map with an int code": "tests/m31/cooldownsbounties.rs::the_batch_put_is_stored_exactly_as_sent_and_read_back_as_an_object_map_with_an_int_code",
+      "a start PUT (no body) stamps now; old harvest cooldowns are pruned, bounty tokens never": "tests/m31/cooldownsbounties.rs::a_start_put_no_body_stamps_now_old_harvest_cooldowns_are_pruned_bounty_tokens_never",
+      "keeps accounts apart": "tests/m31/cooldownsbounties.rs::keeps_accounts_apart",
+      "an empty board for a new account, with draft_data": "tests/m31/cooldownsbounties.rs::an_empty_board_for_a_new_account_with_draft_data",
+      "partial upserts: select, progress, draft saves with empty bounty lists never remove anything": "tests/m31/cooldownsbounties.rs::partial_upserts_select_progress_draft_saves_with_empty_bounty_lists_never_remove_anything",
+      "keeps a newer stored bounty over a stale write, and a new bounty takes over its slot": "tests/m31/cooldownsbounties.rs::keeps_a_newer_stored_bounty_over_a_stale_write_and_a_new_bounty_takes_over_its_slot",
+      "delete removes claimed or abandoned bounties; unknown ids are fine": "tests/m31/cooldownsbounties.rs::delete_removes_claimed_or_abandoned_bounties_unknown_ids_are_fine",
+      "always sends drafted_timestamp, even if the stored element lacks it": "tests/m31/cooldownsbounties.rs::always_sends_drafted_timestamp_even_if_the_stored_element_lacks_it"
     },
     "creator.test.ts": {
       "native POST grants exactly 10000 Rams to the authenticated account; GET never grants": "todo",
@@ -587,11 +587,11 @@
       "rejects malformed fusion metadata without corrupting the inventory": "todo"
     },
     "migrations.test.ts": {
-      "the journal lists the new migrations after 0013, each later than the one before": "todo",
-      "the new migration files only create tables and indexes": "todo",
-      "US migration preserves EU, OCE and Germany preferences and enforces ownership": "todo",
-      "Germany migration preserves existing preferences and enforces supported regions": "todo",
-      "keeps every row of a released database, adds empty tables, and the previous build's migrator still runs": "todo"
+      "the journal lists the new migrations after 0013, each later than the one before": "n/a: the Rust metagame runs no Drizzle migrations; it adopts the last Drizzle schema as its baseline (M14), checked by tests/baseline.rs",
+      "the new migration files only create tables and indexes": "n/a: Drizzle migration files; the Rust schema is the baseline cut from them (tests/baseline.rs::the_baseline_is_cut_from_the_last_drizzle_migration)",
+      "US migration preserves EU, OCE and Germany preferences and enforces ownership": "tests/baseline.rs::drizzle_history_and_baseline_give_the_same_schema",
+      "Germany migration preserves existing preferences and enforces supported regions": "tests/baseline.rs::drizzle_history_and_baseline_give_the_same_schema",
+      "keeps every row of a released database, adds empty tables, and the previous build's migrator still runs": "tests/baseline.rs::a_node_database_is_adopted_with_its_data"
     },
     "moderation.test.ts": {
       "temporary account-only bans expire, preserve history and reject invalid durations": "todo",
@@ -820,7 +820,7 @@
       "retired OCE never advertises a probe even with stale flags": "tests/m31/regionprobes.rs::retired_oce_never_advertises_a_probe_even_with_stale_flags"
     },
     "routes.test.ts": {
-      "routes.json lists every route with its middleware": "todo"
+      "routes.json lists every route with its middleware": "tests/parity.rs::route_table_matches_node"
     },
     "serverstatus.test.ts": {
       "reads the heartbeat's map as a package path or a bare name": "todo",
@@ -847,7 +847,7 @@
       "weekly stock is stable, rotates, preserves prices and corrects category tags": "tests/m31/shoplayout.rs::weekly_stock_is_stable_rotates_preserves_prices_and_corrects_category_tags"
     },
     "shutdown.test.ts": {
-      "Metagame shutdown is idempotent and releases listeners (${Mode})": "todo"
+      "Metagame shutdown is idempotent and releases listeners (${Mode})": "tests/m31/shutdown.rs::metagame_shutdown_is_idempotent_and_releases_listeners_mode"
     },
     "slayerlinks.test.ts": {
       "a friend is invited, accepts, both see the link, outsiders cannot touch it, and it is removed for both": "todo",
@@ -901,8 +901,8 @@
       "refuses another player's character": "tests/m31/storage.rs::refuses_another_player_s_character"
     },
     "store-maintenance.test.ts": {
-      "curated shop has exactly 30 free cosmetics and blocks excluded direct purchases": "todo",
-      "revocation removes only recorded grants, preserves earned ownership, and cannot run twice": "todo"
+      "curated shop has exactly 30 free cosmetics and blocks excluded direct purchases": "tests/m31/store_maintenance.rs::curated_shop_has_exactly_30_free_cosmetics_and_blocks_excluded_direct_purchases",
+      "revocation removes only recorded grants, preserves earned ownership, and cannot run twice": "tests/store.rs::revoking_free_purchases_previews_applies_and_verifies"
     },
     "trials.test.ts": {
       "serves an opt-in current Trials schedule without changing the default stub": "todo",
