@@ -5,6 +5,7 @@
 pub mod body;
 pub mod collate;
 pub mod env;
+pub mod js;
 pub mod jsjson;
 pub mod json;
 pub mod log;

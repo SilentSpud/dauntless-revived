@@ -11,6 +11,7 @@ publish.workspace = true
 [dependencies]
 axum.workspace = true
 base64.workspace = true
+chrono.workspace = true
 dotenvy.workspace = true
 flate2.workspace = true
 gethostname.workspace = true

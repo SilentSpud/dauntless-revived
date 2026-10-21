@@ -207,6 +207,18 @@ Done so far:
   the helpers that read client text (JIDs, nicknames, the trace redaction, log text) for panics, and
   checks that a parsed tree holds nothing longer than its input. First run: 10 minutes, about 470,000
   inputs from the parity scripts' frames, nothing found. Left: the 24-hour run before cutover.
+- Part C, S1: the content server (`rust/services/content`, binary `content`: `serve` and `verify`).
+  Every route, the path, key, range and conditional checks, the startup check of the game folder and
+  the files that change after it, the per-account and server-wide download slots, the two-minute idle
+  cut, the art pack and the news (file and GitHub), and its own JSON log format, kept as it was. The
+  1.4.4 manifest is built into the binary (`CONTENT_MANIFEST` names another file), so the binary needs
+  no `data/` folder next to it. No zip handling was needed (`yauzl` was a dependency the server never
+  used). Parity: `tests/parity` builds the same game folder, art pack and news for Node
+  (`record.cjs`) and Rust with a fake metagame and sends raw HTTP, the path as written: two scripts,
+  56 replies, statuses, headers and bodies equal. The stalled-client slot test and the download log
+  test are ported. Throughput, 4 parallel downloads of a 512 MB file on loopback: Rust about
+  5.5 GB/s, Node about 3.8 GB/s. `service_kit::js` now holds the JavaScript-semantics helpers the
+  metagame had, shared with the content server. Left: the launcher downloader tests (L23) against it.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite
