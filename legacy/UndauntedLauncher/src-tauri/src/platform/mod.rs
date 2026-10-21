@@ -6,9 +6,11 @@ pub mod client_mods;
 pub mod game_config;
 pub mod game_folder;
 pub mod keystore;
+pub mod launch;
 pub mod log;
 pub mod paths;
 pub mod settings;
+pub mod system;
 
 #[cfg(test)]
 mod game_config_tests;

@@ -9,4 +9,5 @@ pub mod hostapi;
 pub mod http;
 pub mod pinned;
 pub mod relay;
+pub mod relay_owner;
 pub mod verify;

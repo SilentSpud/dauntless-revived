@@ -288,6 +288,13 @@ Done so far:
   limit) and `platform/client_mods.rs` (the pinned DLLs and the UE4SS bundle, hash-checked before and after each
   copy, kept files, removals and `disable`). `test/cases/game-config.json` (from the TypeScript, both platforms'
   path rules) runs on both sides, with `Number()`'s rules in `core::text::js_number`.
+- Launcher P4, L31 and L33: `platform/launch.rs` (contract 6's arguments with `-epiclocale`, the masked launch line,
+  the one game process and its exit code, running clients through tasklist and PowerShell or pgrep that never read
+  other command lines back, the DirectX and Visual C++ runtime checks, the exit-code messages), `net/relay_owner.rs`
+  (`relay-owner.ts`: the client row of the netstat table and the game's exact process id, shared fresh snapshots,
+  one retry for a missing row, 64 waiting at most, closed elsewhere; checked against a real loopback socket on
+  Windows) and `platform/system.rs` (Tailscale's usual places, free space via `fs4`, the device signals' two fixed
+  PowerShell queries and their placeholders).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
