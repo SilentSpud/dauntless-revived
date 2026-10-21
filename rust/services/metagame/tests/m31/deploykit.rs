@@ -156,11 +156,13 @@ impl RecordingDeploy {
     }
 }
 
-/// How a scripted deploy server answers one matchmaking call.
+/// How a scripted deploy server answers one call.
 #[derive(Clone)]
 pub(crate) enum Answer {
     /// Status, body and any extra headers
     Reply(u16, String, Vec<(String, String)>),
+    /// The headers at once, the body only when released
+    SlowBody(u16, String),
     /// The connection is closed without an answer
     Drop,
 }
@@ -172,17 +174,23 @@ impl Answer {
 }
 
 type Script = Box<dyn Fn(&Value, usize) -> Answer + Send + Sync>;
+type Health = Box<dyn Fn() -> Answer + Send + Sync>;
 
 /// A deploy server stand-in on raw TCP, so a test can hold an answer, drop the connection or send
-/// any body (the Node tests replaced `fetch` or wrote to the socket). Every call's body is recorded;
-/// `script` picks the answer from the body and the call's number (from 1); with `hold` set, answers
-/// wait for `release`.
+/// any body (the Node tests replaced `fetch` or wrote to the socket). Every matchmaking call's body
+/// is recorded; `script` picks its answer from the body and the call's number (from 1), and the
+/// health snapshot (GET /gameservers) answers from `health`. With `hold` set, answers wait for
+/// `release`; a held call whose client gives up is counted in `aborted`.
 #[derive(Clone)]
 pub(crate) struct ScriptedDeploy {
     pub address: String,
     pub calls: Arc<Mutex<Vec<Value>>>,
+    pub health_calls: Arc<std::sync::atomic::AtomicUsize>,
+    pub aborted: Arc<std::sync::atomic::AtomicUsize>,
     script: Arc<Mutex<Script>>,
+    health: Arc<Mutex<Health>>,
     hold: Arc<Mutex<bool>>,
+    hold_health: Arc<Mutex<bool>>,
     releases: tokio::sync::watch::Sender<u64>,
 }
 
@@ -193,8 +201,14 @@ impl ScriptedDeploy {
         let deploy = Self {
             address,
             calls: Arc::default(),
+            health_calls: Arc::default(),
+            aborted: Arc::default(),
             script: Arc::new(Mutex::new(Box::new(script))),
+            health: Arc::new(Mutex::new(Box::new(|| {
+                Answer::json(200, json!({"servers": [], "complete": false}))
+            }))),
             hold: Arc::default(),
+            hold_health: Arc::default(),
             releases: tokio::sync::watch::channel(0).0,
         };
         let shared = deploy.clone();
@@ -206,11 +220,34 @@ impl ScriptedDeploy {
         deploy
     }
 
+    /// Waits for `release`; false when the client closed the connection first.
+    async fn held(&self, stream: &mut tokio::net::TcpStream) -> bool {
+        use tokio::io::AsyncReadExt;
+        let mut releases = self.releases.subscribe();
+        let seen = *releases.borrow_and_update();
+        let mut byte = [0u8; 1];
+        loop {
+            tokio::select! {
+                changed = releases.changed() => {
+                    if changed.is_err() || *releases.borrow() != seen {
+                        return true;
+                    }
+                }
+                read = stream.read(&mut byte) => {
+                    if matches!(read, Ok(0) | Err(_)) {
+                        self.aborted.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
     async fn answer(self, mut stream: tokio::net::TcpStream) {
         use tokio::io::{AsyncReadExt, AsyncWriteExt};
         let mut data = Vec::new();
         let mut buffer = [0u8; 4096];
-        let body = loop {
+        let (request_line, body) = loop {
             let Ok(read) = stream.read(&mut buffer).await else {
                 return;
             };
@@ -221,18 +258,23 @@ impl ScriptedDeploy {
             let Some(end) = data.windows(4).position(|w| w == b"\r\n\r\n") else {
                 continue;
             };
-            let head = String::from_utf8_lossy(&data[..end]).to_lowercase();
+            let head = String::from_utf8_lossy(&data[..end]).to_string();
             let length = head
+                .to_lowercase()
                 .lines()
-                .find_map(|line| line.strip_prefix("content-length:"))
-                .and_then(|v| v.trim().parse::<usize>().ok())
+                .find_map(|line| line.strip_prefix("content-length:").map(|v| v.trim().to_owned()))
+                .and_then(|v| v.parse::<usize>().ok())
                 .unwrap_or(0);
             if data.len() >= end + 4 + length {
-                break data[end + 4..end + 4 + length].to_vec();
+                let first = head.lines().next().unwrap_or_default().to_owned();
+                break (first, data[end + 4..end + 4 + length].to_vec());
             }
         };
-        let parsed: Value = serde_json::from_slice(&body).unwrap_or(json!({}));
-        let (answer, held) = {
+        let (answer, held) = if request_line.starts_with("GET ") {
+            self.health_calls.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            ((self.health.lock().unwrap())(), *self.hold_health.lock().unwrap())
+        } else {
+            let parsed: Value = serde_json::from_slice(&body).unwrap_or(json!({}));
             let mut calls = self.calls.lock().unwrap();
             calls.push(parsed.clone());
             let number = calls.len();
@@ -241,14 +283,9 @@ impl ScriptedDeploy {
                 *self.hold.lock().unwrap(),
             )
         };
-        if held {
-            let mut releases = self.releases.subscribe();
-            let seen = *releases.borrow_and_update();
-            while *releases.borrow() == seen {
-                if releases.changed().await.is_err() {
-                    return;
-                }
-            }
+        let slow = matches!(answer, Answer::SlowBody(..));
+        if held && !slow && !self.held(&mut stream).await {
+            return;
         }
         match answer {
             Answer::Drop => drop(stream),
@@ -265,6 +302,18 @@ impl ScriptedDeploy {
                 let _ = stream.write_all(response.as_bytes()).await;
                 let _ = stream.shutdown().await;
             }
+            Answer::SlowBody(status, body) => {
+                let head = format!(
+                    "HTTP/1.1 {status} X\r\ncontent-type: application/json\r\ncontent-length: {}\r\nconnection: close\r\n\r\n",
+                    body.len()
+                );
+                let _ = stream.write_all(head.as_bytes()).await;
+                if !self.held(&mut stream).await {
+                    return;
+                }
+                let _ = stream.write_all(body.as_bytes()).await;
+                let _ = stream.shutdown().await;
+            }
         }
     }
 
@@ -272,9 +321,17 @@ impl ScriptedDeploy {
         *self.script.lock().unwrap() = Box::new(script);
     }
 
+    pub(crate) fn set_health(&self, health: impl Fn() -> Answer + Send + Sync + 'static) {
+        *self.health.lock().unwrap() = Box::new(health);
+    }
+
     /// Answers wait for `release` from now on (true) or go out at once (false).
     pub(crate) fn hold(&self, hold: bool) {
         *self.hold.lock().unwrap() = hold;
+    }
+
+    pub(crate) fn hold_health(&self, hold: bool) {
+        *self.hold_health.lock().unwrap() = hold;
     }
 
     /// Sends every held answer.

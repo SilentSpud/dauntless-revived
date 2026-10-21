@@ -300,7 +300,8 @@ pub struct State {
     last_sent: HashMap<String, LastSent>,
     waits: HashMap<String, CapacityWait>,
     turns: CapacityTurns,
-    roster: Roster,
+    /// Who is in which candidate, and who still polls (`MatchmakingRoster`).
+    pub roster: Roster,
     health: Option<Health>,
     next_serial: u64,
 }

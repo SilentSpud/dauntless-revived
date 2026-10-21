@@ -37,6 +37,7 @@ mod loadoutslots;
 mod masteryported;
 mod matchmaking;
 mod matchmakingfailure;
+mod matchmakingrecovery;
 mod middleman;
 mod middleman_rotation;
 mod middleman_store;

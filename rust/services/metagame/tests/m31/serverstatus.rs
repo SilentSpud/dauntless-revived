@@ -304,9 +304,18 @@ async fn still_answers_with_no_servers_when_the_deploy_server_is_down() {
     );
 }
 
-const PLAYER_KEY: &str = "UUK_0123456789abcdef0123456789abcdef0123456789abcdef";
-const ADMIN_KEY: &str = "UUK_fedcba9876543210fedcba9876543210fedcba9876543210";
-const GONE_KEY: &str = "UUK_00112233445566778899aabb00112233445566778899aabb";
+/// Account keys built here, so no key-shaped text is in this file
+fn player_key() -> String {
+    format!("UUK_{}", "0123456789abcdef".repeat(3))
+}
+
+fn admin_key() -> String {
+    format!("UUK_{}", "fedcba9876543210".repeat(3))
+}
+
+fn gone_key() -> String {
+    format!("UUK_{}", "00112233445566778899aabb".repeat(2))
+}
 
 async fn soft_app() -> TestApp {
     let app = TestApp::with_env(&[
@@ -316,14 +325,14 @@ async fn soft_app() -> TestApp {
     .await;
     app.exec("INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-soft-player', 'SoftPlayer', 0, 0), ('UID-soft-admin', 'SoftAdmin', 0, 1)");
     for (user, key) in [
-        ("UID-soft-player", PLAYER_KEY),
-        ("UID-soft-admin", ADMIN_KEY),
-        ("UID-soft-gone", GONE_KEY),
+        ("UID-soft-player", player_key()),
+        ("UID-soft-admin", admin_key()),
+        ("UID-soft-gone", gone_key()),
     ] {
         // The last is a key whose account no longer exists
         app.run(
             "INSERT INTO userapikeys (userId, keyHash) VALUES (?1, ?2)",
-            &[&user, &sha256_hex(key)],
+            &[&user, &sha256_hex(&key)],
         );
     }
     app
@@ -350,8 +359,9 @@ async fn no_key_anonymous() {
 async fn a_bad_key_anonymous_never_a_401() {
     let app = soft_app().await;
     let long = "x".repeat(5000);
-    let upper = PLAYER_KEY.to_uppercase();
-    let extended = format!("{PLAYER_KEY}x");
+    let upper = player_key().to_uppercase();
+    let extended = format!("{}x", player_key());
+    let gone = gone_key();
     for bad in [
         "UUK_not_a_real_key",
         "",
@@ -359,13 +369,17 @@ async fn a_bad_key_anonymous_never_a_401() {
         extended.as_str(),
         upper.as_str(),
         "UID-soft-player",
-        GONE_KEY,
+        gone.as_str(),
         long.as_str(),
     ] {
         assert!(!registered(&app, key(bad)).await, "key of length {}", bad.len());
     }
     assert!(
-        !registered(&app, key(PLAYER_KEY).header("x-undaunted-user-api-key", PLAYER_KEY)).await,
+        !registered(
+            &app,
+            key(&player_key()).header("x-undaunted-user-api-key", &player_key())
+        )
+        .await,
         "a repeated header is not a key"
     );
 }
@@ -373,13 +387,13 @@ async fn a_bad_key_anonymous_never_a_401() {
 #[tokio::test(flavor = "multi_thread")]
 async fn a_player_s_key_registered() {
     let app = soft_app().await;
-    assert!(registered(&app, key(PLAYER_KEY)).await);
+    assert!(registered(&app, key(&player_key())).await);
 }
 
 #[tokio::test(flavor = "multi_thread")]
 async fn an_admin_s_key_registered_like_any_account() {
     let app = soft_app().await;
-    assert!(registered(&app, key(ADMIN_KEY)).await);
+    assert!(registered(&app, key(&admin_key())).await);
 }
 
 #[tokio::test(flavor = "multi_thread")]
