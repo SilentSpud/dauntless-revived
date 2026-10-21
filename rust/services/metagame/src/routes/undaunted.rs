@@ -668,7 +668,7 @@ async fn guild_invite(
         Err(refused) => return Ok(refused),
     };
     super::guild::sweep(&state).await?;
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let (shared, user, them) = (state.clone(), from.clone(), to.clone());
     let (reply, why) = state
         .store

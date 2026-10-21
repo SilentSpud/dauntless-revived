@@ -206,10 +206,21 @@ pub fn list_blocked(conn: &mut Conn, account: &str) -> QueryResult<Vec<String>> 
 /// `SendOrAcceptFriendRequest`: a request the other side already sent is accepted; asking again, or
 /// asking an existing friend, changes nothing.
 pub fn send_or_accept(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str) -> QueryResult<Changed> {
+    send_or_accept_at(conn, recent, me, them, now_ms())
+}
+
+/// [`send_or_accept`] at `now`, for the limits' tests (Node's `SetFriendsClockForTests`).
+pub fn send_or_accept_at(
+    conn: &mut Conn,
+    recent: &RecentRequests,
+    me: &str,
+    them: &str,
+    now: i64,
+) -> QueryResult<Changed> {
     let (outcome, requested_at) = if me == them {
         (Outcome::Refused(400, "self"), 0)
     } else {
-        request_in_tx(conn, recent, me, them)?
+        request_in_tx(conn, recent, me, them, now)?
     };
     tracing::info!("friends: request by={me} to={them} -> {}", outcome.shown());
     let event = (outcome == Outcome::Done("accepted")).then(|| FriendshipEvent::Accepted {
@@ -221,7 +232,13 @@ pub fn send_or_accept(conn: &mut Conn, recent: &RecentRequests, me: &str, them: 
 }
 
 /// The outcome, and when the accepted request was made
-fn request_in_tx(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str) -> QueryResult<(Outcome, i64)> {
+fn request_in_tx(
+    conn: &mut Conn,
+    recent: &RecentRequests,
+    me: &str,
+    them: &str,
+    now: i64,
+) -> QueryResult<(Outcome, i64)> {
     let outcome = |o: Outcome| Ok((o, 0));
     if !account_exists(conn, them)? {
         return outcome(Outcome::Refused(404, "not_found"));
@@ -231,7 +248,6 @@ fn request_in_tx(conn: &mut Conn, recent: &RecentRequests, me: &str, them: &str)
     }
     let (low, high) = pair(me, them);
     let existing: Option<FriendshipRow> = friendships::table.find((low, high)).first(conn).optional()?;
-    let now = now_ms();
     if let Some((_, _, requester, status, created_at, _)) = existing {
         if status == "ACCEPTED" {
             return outcome(Outcome::Done("already_friends"));

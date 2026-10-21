@@ -166,11 +166,26 @@ pub struct MemoryState {
 }
 
 #[derive(Debug, Default)]
-pub struct Memory(Mutex<MemoryState>);
+pub struct Memory(Mutex<MemoryState>, std::sync::atomic::AtomicI64);
 
 impl Memory {
     pub fn lock(&self) -> MutexGuard<'_, MemoryState> {
         self.0.lock().unwrap_or_else(std::sync::PoisonError::into_inner)
+    }
+
+    /// `GuildNow`: the clock the guild routes use, the real time plus what tests moved it by.
+    pub fn now(&self) -> i64 {
+        crate::time::now_ms() + self.1.load(std::sync::atomic::Ordering::Relaxed)
+    }
+
+    /// Moves [`Memory::now`] on (Node's `SetGuildClockForTests`).
+    pub fn advance_for_tests(&self, ms: i64) {
+        self.1.fetch_add(ms, std::sync::atomic::Ordering::Relaxed);
+    }
+
+    /// Forgets the tickets and windows, as a restart does (`ResetGuildMemoryForTests`).
+    pub fn reset_for_tests(&self) {
+        *self.lock() = MemoryState::default();
     }
 }
 

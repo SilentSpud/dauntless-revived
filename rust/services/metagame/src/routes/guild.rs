@@ -24,7 +24,6 @@ use super::{empty, fall_through, field, json};
 use crate::app::{AppError, AppState};
 use crate::auth::{GameServer, MetagameAuth, Player, metagame_auth};
 use crate::guild::{self, Binding, Created, Reply};
-use crate::time::now_ms;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
@@ -78,7 +77,7 @@ async fn player_on(state: &AppState, parts: &Parts) -> Result<Player, Response> 
 
 /// `Sweep`: at most once a minute, expired invites go.
 pub(crate) async fn sweep(state: &AppState) -> Result<(), AppError> {
-    let now = now_ms();
+    let now = state.guild_memory.now();
     if guild::sweep_due(&state.guild_memory, now) {
         state
             .store
@@ -99,7 +98,7 @@ async fn invites(State(state): State<AppState>, auth: MetagameAuth) -> Result<Re
     }
     sweep(&state).await?;
     let user = caller(&auth);
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let reply = state
         .store
         .read(move |conn| guild::own_invites(conn, user.as_deref(), now).map_err(AppError::from))
@@ -149,7 +148,7 @@ async fn validate(
             }
         );
     }
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let name = field(&body, "name").cloned();
     let nameplate = field(&body, "nameplate").cloned();
     let (shared, id, n, p) = (state.clone(), user.clone(), name.clone(), nameplate.clone());
@@ -188,7 +187,7 @@ async fn create(
             Err(refused) => return Ok(refused),
         };
     sweep(&state).await?;
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let leader_value = field(&body, "leader_account_id").cloned();
     let name = field(&body, "name").cloned();
     let nameplate = field(&body, "nameplate").cloned();
@@ -334,7 +333,7 @@ async fn invite(State(state): State<AppState>, parts: Parts, params: Params) -> 
         Err(refused) => return Ok(refused),
     };
     sweep(&state).await?;
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let target = params.get("accountId").unwrap_or("").to_owned();
     let (shared, user, them) = (state.clone(), player.user_id.clone(), target.clone());
     let (reply, why) = state
@@ -353,7 +352,7 @@ async fn accept(State(state): State<AppState>, parts: Parts, params: Params) -> 
         Ok(player) => player,
         Err(refused) => return Ok(refused),
     };
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let invite = params.get("inviteId").unwrap_or("").to_owned();
     let shared = state.clone();
     let reply = state
@@ -369,7 +368,7 @@ async fn decline(State(state): State<AppState>, parts: Parts, params: Params) ->
         Ok(player) => player,
         Err(refused) => return Ok(refused),
     };
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let invite = params.get("inviteId").unwrap_or("").to_owned();
     let shared = state.clone();
     let reply = state
@@ -388,7 +387,7 @@ async fn rank(State(state): State<AppState>, parts: Parts, params: Params) -> Re
         Ok(player) => player,
         Err(refused) => return Ok(refused),
     };
-    let now = now_ms();
+    let now = state.guild_memory.now();
     let target = params.get("accountId").unwrap_or("").to_owned();
     let rank = params.get("rank").unwrap_or("").to_owned();
     let reply = state
