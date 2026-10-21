@@ -14,6 +14,7 @@ pub mod crypto;
 pub mod db;
 pub mod dbtools;
 pub mod entitlements;
+pub mod escalation;
 pub mod friends;
 pub mod guild;
 pub mod health;

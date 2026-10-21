@@ -149,6 +149,8 @@ async function main() {
       results.push({ request: `${request.method} ${request.path}`, status: response.status, headers: recorded, body: normalize(text) });
       if (request.pauseMs) await new Promise((resolve) => setTimeout(resolve, request.pauseMs));
     }
+    // "finalQueries": SQL returning one text column "j" (JSON), compared after the requests
+    for (const sql of script.finalQueries ?? []) results.push({ request: `sql ${sql}`, status: 0, headers: {}, body: normalize(db.$client.prepare(sql).get().j ?? "null") });
     if (script.deploy !== undefined) results.push({ request: "deploy server", status: 0, headers: {}, body: normalize(JSON.stringify(asked)) });
   } finally {
     deploy.close();

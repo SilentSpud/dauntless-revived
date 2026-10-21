@@ -136,6 +136,12 @@ Done so far:
   Discord bot's link proof, challenge and confirmation behind `KEY_RECOVERY_SERVICE_SECRET`, with the
   per-id limit, the auth epoch bump and the chat revocation. Two parity scripts (`keyrotation`,
   `keyrotation-off`, 26 replies) match Node; both harnesses normalize recovered 64-digit keys.
+- Metagame B2, area 6 of M29, second part: escalation (`routes/escalation.ts`). The season registry,
+  `ESCALATION_MODE` and `ESCALATION_STRICT`, real-mode reads and the world server's saves with the hard
+  and soft rules, versions, replays and the audit rows. Four parity scripts (`escalation`,
+  `escalation-strict`, `escalation-stub`, `escalation-mixed`, 63 replies) match Node, including the
+  stored rows: the harnesses gained `finalQueries`, SQL whose one JSON column is compared after the
+  requests.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

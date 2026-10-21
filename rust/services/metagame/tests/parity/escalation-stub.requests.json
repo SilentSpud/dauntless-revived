@@ -1,0 +1,42 @@
+{
+  "about": "Escalation in the default stub mode, and real mode for stub-mode accounts (MIGRATION_PLAN.md M29, area 6).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 3,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    }
+  ]
+}

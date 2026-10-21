@@ -278,6 +278,23 @@ async fn run_area(area: &str) {
             tokio::time::sleep(std::time::Duration::from_millis(ms)).await;
         }
     }
+    // "finalQueries": SQL returning one text column "j" (JSON), compared after the requests
+    #[derive(diesel::QueryableByName)]
+    struct Json {
+        #[diesel(sql_type = diesel::sql_types::Nullable<diesel::sql_types::Text>)]
+        j: Option<String>,
+    }
+    for sql in script["finalQueries"].as_array().into_iter().flatten() {
+        let sql = sql.as_str().unwrap();
+        let mut conn = SqliteConnection::establish(db.to_str().unwrap()).unwrap();
+        let row: Json = diesel::sql_query(sql).get_result(&mut conn).unwrap();
+        actual.push(json!({
+            "request": format!("sql {sql}"),
+            "status": 0,
+            "headers": {},
+            "body": normalize(row.j.as_deref().unwrap_or("null")),
+        }));
+    }
     if script.get("deploy").is_some() {
         let asked = Value::Array(asked.lock().unwrap().clone());
         actual.push(json!({
@@ -497,4 +514,24 @@ async fn keyrotation() {
 #[tokio::test(flavor = "multi_thread")]
 async fn keyrotation_off() {
     run_area("keyrotation-off").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn escalation() {
+    run_area("escalation").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn escalation_strict() {
+    run_area("escalation-strict").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn escalation_stub() {
+    run_area("escalation-stub").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn escalation_mixed() {
+    run_area("escalation-mixed").await;
 }

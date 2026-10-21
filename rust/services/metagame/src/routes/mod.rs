@@ -4,6 +4,7 @@ pub mod admin_accounts;
 pub mod admin_history;
 pub mod character;
 pub mod eos;
+pub mod escalation;
 pub mod friends;
 pub mod guild;
 pub mod inventory;
@@ -88,6 +89,7 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
         .merge(keyrotation::routes(state))
         .merge(eos::routes(state))
         .merge(system::routes())
+        .merge(escalation::routes())
         .merge(friends::routes())
         .merge(character::routes())
         .merge(inventory::routes())

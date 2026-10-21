@@ -1,0 +1,65 @@
+{
+  "about": "Escalation with ESCALATION_MODE=real for a stub-mode account (PROGRESSION_MODE=stub, UID-b listed real) (MIGRATION_PLAN.md M29, area 6).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "ESCALATION_MODE": "real",
+    "PROGRESSION_MODE": "stub",
+    "PROGRESSION_REAL_ACCOUNTS": "UID-b"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 3,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-b",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-b",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 3,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    }
+  ],
+  "finalQueries": [
+    "SELECT json_group_array(json_object('accountId', accountId, 'caller', caller, 'route', route, 'body', body, 'status', status, 'reply', reply, 'note', note)) AS j FROM (SELECT * FROM progression_events ORDER BY id)",
+    "SELECT json_group_array(json_object('accountId', accountId, 'seasonId', seasonId, 'level', level, 'xp', xp, 'updateVersion', updateVersion, 'contentHash', substr(contentHash, 1, 12))) AS j FROM (SELECT * FROM escalationprogression ORDER BY accountId, seasonId)",
+    "SELECT json_group_array(json_object('accountId', accountId, 'talentId', talentId, 'rank', rank)) AS j FROM (SELECT * FROM escalationtalents ORDER BY accountId, talentId)",
+    "SELECT json_group_array(json_object('accountId', accountId, 'unlockId', unlockId)) AS j FROM (SELECT * FROM escalationunlocks ORDER BY accountId, unlockId)"
+  ]
+}

@@ -1,0 +1,349 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":0,\"next_level_xp\":0,\"talents_progress\":[],\"unlock_progress\":[],\"update_version\":0}}"
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_1/UID-a",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":0,\"next_level_xp\":0,\"talents_progress\":[],\"unlock_progress\":[],\"update_version\":0}}"
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_9/UID-a",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"Unknown escalation season ESC_SEASON_9\",\"payload\":null}"
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_1/UID-a",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-none",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"unknown account\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_9/UID-a",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"unknown escalation season ESC_SEASON_9\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_5/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"escalation season ESC_SEASON_5 is disabled in this client\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Escalation snapshot must be an object\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Escalation snapshot must be an object\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"escalation_level must be an integer from 0 to 25\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"escalation_level must be an integer from 0 to 25\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"escalation_level must be an integer from 0 to 25\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"next_level_xp must be a non-negative int32\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"next_level_xp must be a non-negative int32\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"update_version must be a positive int32\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"update_version must be a positive int32\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"talents_progress and unlock_progress must be arrays\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Unknown talent NOPE for ESC_SEASON_1\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Unknown talent undefined for ESC_SEASON_1\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Talent ESC_TALENT_S1_TIER1_PASSIVE listed twice\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Talent ESC_TALENT_S1_TIER1_UPGRADETWO rank must be 0..1\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Unknown unlock ESC_Reward_9 for ESC_SEASON_1\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Unlock ESC_Reward_3 listed twice\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"Unlock ESC_Reward_3 collected must be a boolean\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":3,\"next_level_xp\":700,\"talents_progress\":[{\"rank\":2,\"talent_id\":\"ESC_TALENT_S1_TIER1_UPGRADEONE\"},{\"rank\":1,\"talent_id\":\"ESC_TALENT_S1_TIER2_PASSIVE\"}],\"unlock_progress\":[{\"collected\":true,\"reward_id\":\"ESC_Reward_3\"}],\"update_version\":1}}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":3,\"next_level_xp\":700,\"talents_progress\":[{\"rank\":2,\"talent_id\":\"ESC_TALENT_S1_TIER1_UPGRADEONE\"},{\"rank\":1,\"talent_id\":\"ESC_TALENT_S1_TIER2_PASSIVE\"}],\"unlock_progress\":[{\"collected\":true,\"reward_id\":\"ESC_Reward_3\"}],\"update_version\":1}}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"update_version 1 was already saved with other content\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":6,\"next_level_xp\":100,\"talents_progress\":[{\"rank\":3,\"talent_id\":\"ESC_TALENT_S1_TIER1_UPGRADEONE\"}],\"unlock_progress\":[{\"collected\":true,\"reward_id\":\"ESC_Reward_3\"}],\"update_version\":3}}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"stale snapshot: version 2 is older than the stored 3\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"snapshot would lower progress from level 6 with 100 XP to level 5 with 900 XP\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"snapshot would lower progress from level 6 with 100 XP to level 6 with 50 XP\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"snapshot would un-collect ESC_Reward_3\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"save over level 6 carries the old stub values (level 25 with 99999 XP); the world server must load the season again\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":25,\"next_level_xp\":100,\"talents_progress\":[],\"unlock_progress\":[{\"collected\":true,\"reward_id\":\"ESC_Reward_3\"},{\"collected\":true,\"reward_id\":\"ESC_Reward_7\"}],\"update_version\":5}}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":25,\"next_level_xp\":99999,\"talents_progress\":[],\"unlock_progress\":[{\"collected\":true,\"reward_id\":\"ESC_Reward_3\"},{\"collected\":true,\"reward_id\":\"ESC_Reward_7\"}],\"update_version\":6}}"
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":25,\"next_level_xp\":99999,\"talents_progress\":[],\"unlock_progress\":[{\"collected\":true,\"reward_id\":\"ESC_Reward_3\"},{\"collected\":true,\"reward_id\":\"ESC_Reward_7\"}],\"update_version\":6}}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-b",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"first save carries the old stub values (level 25 with 99999 XP); the world server must load the season again\",\"payload\":null}"
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_2/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":0,\"next_level_xp\":0,\"talents_progress\":[],\"unlock_progress\":[],\"update_version\":0}}"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'caller', caller, 'route', route, 'body', body, 'status', status, 'reply', reply, 'note', note)) AS j FROM (SELECT * FROM progression_events ORDER BY id)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"accountId\":\"UID-none\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":404,\"reply\":null,\"note\":\"season ESC_SEASON_1; unknown account\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":404,\"reply\":null,\"note\":\"season ESC_SEASON_9; unknown escalation season ESC_SEASON_9\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_5; escalation season ESC_SEASON_5 is disabled in this client\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":null,\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Escalation snapshot must be an object\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"[1]\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Escalation snapshot must be an object\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":26,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; escalation_level must be an integer from 0 to 25\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":-1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; escalation_level must be an integer from 0 to 25\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1.5,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; escalation_level must be an integer from 0 to 25\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":-1,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; next_level_xp must be a non-negative int32\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":\\\"5\\\",\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; next_level_xp must be a non-negative int32\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":0}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; update_version must be a positive int32\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":2147483648}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; update_version must be a positive int32\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":{},\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; talents_progress and unlock_progress must be arrays\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[{\\\"rank\\\":1,\\\"talent_id\\\":\\\"NOPE\\\"}],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Unknown talent NOPE for ESC_SEASON_1\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":1,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[null],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Unknown talent undefined for ESC_SEASON_1\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":5,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_PASSIVE\\\"},{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_PASSIVE\\\"}],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Talent ESC_TALENT_S1_TIER1_PASSIVE listed twice\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":5,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADETWO\\\"}],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Talent ESC_TALENT_S1_TIER1_UPGRADETWO rank must be 0..1\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":5,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_9\\\"}],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Unknown unlock ESC_Reward_9 for ESC_SEASON_1\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":5,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"},{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Unlock ESC_Reward_3 listed twice\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":5,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":\\\"yes\\\",\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}\",\"status\":400,\"reply\":null,\"note\":\"season ESC_SEASON_1; Unlock ESC_Reward_3 collected must be a boolean\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":700,\\\"talents_progress\\\":[{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"},{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER2_PASSIVE\\\"},{\\\"rank\\\":0,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADETWO\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"},{\\\"collected\\\":false,\\\"reward_id\\\":\\\"ESC_Reward_2\\\"}],\\\"update_version\\\":1}\",\"status\":200,\"reply\":\"{\\\"code\\\":null,\\\"message\\\":\\\"OK\\\",\\\"payload\\\":{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":700,\\\"talents_progress\\\":[{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"},{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER2_PASSIVE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}}\",\"note\":\"season ESC_SEASON_1; accepted although talent ESC_TALENT_S1_TIER2_PASSIVE needs 4 points spent in earlier tiers, found 2; unlock ESC_Reward_3 is collected at level 3 but needs level 5 (ESCALATION_STRICT=0)\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":700,\\\"talents_progress\\\":[{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"},{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER2_PASSIVE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}\",\"status\":200,\"reply\":\"{\\\"code\\\":null,\\\"message\\\":\\\"OK\\\",\\\"payload\\\":{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":700,\\\"talents_progress\\\":[{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"},{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER2_PASSIVE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}}\",\"note\":\"season ESC_SEASON_1; replay of version 1, nothing changed\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":701,\\\"talents_progress\\\":[{\\\"rank\\\":2,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; update_version 1 was already saved with other content\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":6,\\\"next_level_xp\\\":100,\\\"talents_progress\\\":[{\\\"rank\\\":3,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":3}\",\"status\":200,\"reply\":\"{\\\"code\\\":null,\\\"message\\\":\\\"OK\\\",\\\"payload\\\":{\\\"escalation_level\\\":6,\\\"next_level_xp\\\":100,\\\"talents_progress\\\":[{\\\"rank\\\":3,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_UPGRADEONE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":3}}\",\"note\":\"season ESC_SEASON_1\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":7,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":2}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; stale snapshot: version 2 is older than the stored 3\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":5,\\\"next_level_xp\\\":900,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":4}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; snapshot would lower progress from level 6 with 100 XP to level 5 with 900 XP\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":6,\\\"next_level_xp\\\":50,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":4}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; snapshot would lower progress from level 6 with 100 XP to level 6 with 50 XP\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":7,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":4}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; snapshot would un-collect ESC_Reward_3\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":25,\\\"next_level_xp\\\":99999,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":5}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; save over level 6 carries the old stub values (level 25 with 99999 XP); the world server must load the season again\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":25,\\\"next_level_xp\\\":100,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"},{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_7\\\"}],\\\"update_version\\\":5}\",\"status\":200,\"reply\":\"{\\\"code\\\":null,\\\"message\\\":\\\"OK\\\",\\\"payload\\\":{\\\"escalation_level\\\":25,\\\"next_level_xp\\\":100,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"},{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_7\\\"}],\\\"update_version\\\":5}}\",\"note\":\"season ESC_SEASON_1\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":25,\\\"next_level_xp\\\":99999,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"},{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_7\\\"}],\\\"update_version\\\":6}\",\"status\":200,\"reply\":\"{\\\"code\\\":null,\\\"message\\\":\\\"OK\\\",\\\"payload\\\":{\\\"escalation_level\\\":25,\\\"next_level_xp\\\":99999,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"},{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_7\\\"}],\\\"update_version\\\":6}}\",\"note\":\"season ESC_SEASON_1\"},{\"accountId\":\"UID-b\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":25,\\\"next_level_xp\\\":99999,\\\"talents_progress\\\":[],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; first save carries the old stub values (level 25 with 99999 XP); the world server must load the season again\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'seasonId', seasonId, 'level', level, 'xp', xp, 'updateVersion', updateVersion, 'contentHash', substr(contentHash, 1, 12))) AS j FROM (SELECT * FROM escalationprogression ORDER BY accountId, seasonId)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"accountId\":\"UID-a\",\"seasonId\":\"ESC_SEASON_1\",\"level\":25,\"xp\":99999,\"updateVersion\":6,\"contentHash\":\"67f64fa53749\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'talentId', talentId, 'rank', rank)) AS j FROM (SELECT * FROM escalationtalents ORDER BY accountId, talentId)",
+      "status": 0,
+      "headers": {},
+      "body": "[]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'unlockId', unlockId)) AS j FROM (SELECT * FROM escalationunlocks ORDER BY accountId, unlockId)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"accountId\":\"UID-a\",\"unlockId\":\"ESC_Reward_3\"},{\"accountId\":\"UID-a\",\"unlockId\":\"ESC_Reward_7\"}]"
+    }
+  ]
+}

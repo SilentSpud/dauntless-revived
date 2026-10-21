@@ -1,0 +1,53 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"talent ESC_TALENT_S1_TIER2_PASSIVE needs 4 points spent in earlier tiers, found 0; unlock ESC_Reward_3 is collected at level 3 but needs level 5 (ESCALATION_STRICT=1)\",\"payload\":null}"
+    },
+    {
+      "request": "POST /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":3,\"next_level_xp\":0,\"talents_progress\":[{\"rank\":1,\"talent_id\":\"ESC_TALENT_S1_TIER1_PASSIVE\"}],\"unlock_progress\":[],\"update_version\":1}}"
+    },
+    {
+      "request": "GET /escalation/ESC_SEASON_1/UID-a",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"escalation_level\":3,\"next_level_xp\":0,\"talents_progress\":[{\"rank\":1,\"talent_id\":\"ESC_TALENT_S1_TIER1_PASSIVE\"}],\"unlock_progress\":[],\"update_version\":1}}"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'caller', caller, 'route', route, 'body', body, 'status', status, 'reply', reply, 'note', note)) AS j FROM (SELECT * FROM progression_events ORDER BY id)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":700,\\\"talents_progress\\\":[{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER2_PASSIVE\\\"}],\\\"unlock_progress\\\":[{\\\"collected\\\":true,\\\"reward_id\\\":\\\"ESC_Reward_3\\\"}],\\\"update_version\\\":1}\",\"status\":409,\"reply\":null,\"note\":\"season ESC_SEASON_1; talent ESC_TALENT_S1_TIER2_PASSIVE needs 4 points spent in earlier tiers, found 0; unlock ESC_Reward_3 is collected at level 3 but needs level 5 (ESCALATION_STRICT=1)\"},{\"accountId\":\"UID-a\",\"caller\":\"gameserver\",\"route\":\"POST /escalation/:season/:uid\",\"body\":\"{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_PASSIVE\\\"}],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}\",\"status\":200,\"reply\":\"{\\\"code\\\":null,\\\"message\\\":\\\"OK\\\",\\\"payload\\\":{\\\"escalation_level\\\":3,\\\"next_level_xp\\\":0,\\\"talents_progress\\\":[{\\\"rank\\\":1,\\\"talent_id\\\":\\\"ESC_TALENT_S1_TIER1_PASSIVE\\\"}],\\\"unlock_progress\\\":[],\\\"update_version\\\":1}}\",\"note\":\"season ESC_SEASON_1\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'seasonId', seasonId, 'level', level, 'xp', xp, 'updateVersion', updateVersion, 'contentHash', substr(contentHash, 1, 12))) AS j FROM (SELECT * FROM escalationprogression ORDER BY accountId, seasonId)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"accountId\":\"UID-a\",\"seasonId\":\"ESC_SEASON_1\",\"level\":3,\"xp\":0,\"updateVersion\":1,\"contentHash\":\"7f6ab67958d4\"}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'talentId', talentId, 'rank', rank)) AS j FROM (SELECT * FROM escalationtalents ORDER BY accountId, talentId)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"accountId\":\"UID-a\",\"talentId\":\"ESC_TALENT_S1_TIER1_PASSIVE\",\"rank\":1}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('accountId', accountId, 'unlockId', unlockId)) AS j FROM (SELECT * FROM escalationunlocks ORDER BY accountId, unlockId)",
+      "status": 0,
+      "headers": {},
+      "body": "[]"
+    }
+  ]
+}

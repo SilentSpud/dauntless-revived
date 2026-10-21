@@ -1,0 +1,664 @@
+{
+  "about": "Escalation seasons with ESCALATION_MODE=real: reads, the hard and soft rules, versions and replays (MIGRATION_PLAN.md M29, area 6).",
+  "env": {
+    "AUTH_MODE": "APIKEY",
+    "NODE_ENV": "production",
+    "ESCALATION_MODE": "real"
+  },
+  "gameServerKey": "test-gameserver-key-0123456789abcdef",
+  "setup": [
+    "INSERT INTO users (userId, name, notes, isAdmin) VALUES ('UID-a', 'Ada', 0, 0), ('UID-b', 'Bo', 0, 0)",
+    "INSERT INTO gameserverapikeys (keyHash) VALUES ('b42f983bfe5a4b2e0c1317fc96ea62cefb259ddbb2b3c2cbb1619c2faaafddff')"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_9/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {}
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {},
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-none",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_9/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_5/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "raw": "[1]"
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 26,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": -1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1.5,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": -1,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": "5",
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 0
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 2147483648
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": {},
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [
+          {
+            "rank": 1,
+            "talent_id": "NOPE"
+          }
+        ],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 1,
+        "next_level_xp": 0,
+        "talents_progress": [
+          null
+        ],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 5,
+        "next_level_xp": 0,
+        "talents_progress": [
+          {
+            "rank": 1,
+            "talent_id": "ESC_TALENT_S1_TIER1_PASSIVE"
+          },
+          {
+            "rank": 2,
+            "talent_id": "ESC_TALENT_S1_TIER1_PASSIVE"
+          }
+        ],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 5,
+        "next_level_xp": 0,
+        "talents_progress": [
+          {
+            "rank": 2,
+            "talent_id": "ESC_TALENT_S1_TIER1_UPGRADETWO"
+          }
+        ],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 5,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_9"
+          }
+        ],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 5,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          },
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 5,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": "yes",
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 3,
+        "next_level_xp": 700,
+        "talents_progress": [
+          {
+            "rank": 2,
+            "talent_id": "ESC_TALENT_S1_TIER1_UPGRADEONE"
+          },
+          {
+            "rank": 1,
+            "talent_id": "ESC_TALENT_S1_TIER2_PASSIVE"
+          },
+          {
+            "rank": 0,
+            "talent_id": "ESC_TALENT_S1_TIER1_UPGRADETWO"
+          }
+        ],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          },
+          {
+            "collected": false,
+            "reward_id": "ESC_Reward_2"
+          }
+        ],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 3,
+        "next_level_xp": 700,
+        "talents_progress": [
+          {
+            "rank": 2,
+            "talent_id": "ESC_TALENT_S1_TIER1_UPGRADEONE"
+          },
+          {
+            "rank": 1,
+            "talent_id": "ESC_TALENT_S1_TIER2_PASSIVE"
+          }
+        ],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 3,
+        "next_level_xp": 701,
+        "talents_progress": [
+          {
+            "rank": 2,
+            "talent_id": "ESC_TALENT_S1_TIER1_UPGRADEONE"
+          }
+        ],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-b}}",
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 6,
+        "next_level_xp": 100,
+        "talents_progress": [
+          {
+            "rank": 3,
+            "talent_id": "ESC_TALENT_S1_TIER1_UPGRADEONE"
+          }
+        ],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 3
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 7,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 2
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 5,
+        "next_level_xp": 900,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 6,
+        "next_level_xp": 50,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 7,
+        "next_level_xp": 0,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 25,
+        "next_level_xp": 99999,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          }
+        ],
+        "update_version": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 25,
+        "next_level_xp": 100,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          },
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_7"
+          }
+        ],
+        "update_version": 5
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 25,
+        "next_level_xp": 99999,
+        "talents_progress": [],
+        "unlock_progress": [
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_3"
+          },
+          {
+            "collected": true,
+            "reward_id": "ESC_Reward_7"
+          }
+        ],
+        "update_version": 6
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_1/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/escalation/ESC_SEASON_1/UID-b",
+      "headers": {
+        "x-undaunted-gameserver-apikey": "{{gs}}"
+      },
+      "json": {
+        "escalation_level": 25,
+        "next_level_xp": 99999,
+        "talents_progress": [],
+        "unlock_progress": [],
+        "update_version": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/escalation/ESC_SEASON_2/UID-a",
+      "headers": {
+        "authorization": "{{bearer:UID-a}}"
+      }
+    }
+  ],
+  "finalQueries": [
+    "SELECT json_group_array(json_object('accountId', accountId, 'caller', caller, 'route', route, 'body', body, 'status', status, 'reply', reply, 'note', note)) AS j FROM (SELECT * FROM progression_events ORDER BY id)",
+    "SELECT json_group_array(json_object('accountId', accountId, 'seasonId', seasonId, 'level', level, 'xp', xp, 'updateVersion', updateVersion, 'contentHash', substr(contentHash, 1, 12))) AS j FROM (SELECT * FROM escalationprogression ORDER BY accountId, seasonId)",
+    "SELECT json_group_array(json_object('accountId', accountId, 'talentId', talentId, 'rank', rank)) AS j FROM (SELECT * FROM escalationtalents ORDER BY accountId, talentId)",
+    "SELECT json_group_array(json_object('accountId', accountId, 'unlockId', unlockId)) AS j FROM (SELECT * FROM escalationunlocks ORDER BY accountId, unlockId)"
+  ]
+}
