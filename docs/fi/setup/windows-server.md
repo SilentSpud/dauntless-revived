@@ -81,7 +81,7 @@ oman välittimen. Siksi välittimen portti on aina 61000.
 
 | Portti | Kenelle auki | Huomioita |
 |:-------|:-------------|:----------|
-| TCP 443 (`-GatewayPort`) | Kaikille | Yhdyskäytävä, vain TLS, vain `node.exe`. |
+| TCP 443 (`-GatewayPort`) | Kaikille | Yhdyskäytävä, vain TLS, vain `gateway.exe`. |
 | UDP 8770-8777 | Vain kirjautuneiden pelaajien osoitteille | Sallittujen listan sääntö; kiinni kun kukaan ei pelaa ja aina kun palvelin on pysäytetty. Vain pelin ohjelma voi vastaanottaa. |
 | TCP 22 | Kaikille, **vain avaimella** | OpenSSH omaa ylläpitoasi varten. SSH:n yli tehty asennus laittaa salasanakirjautumisen pois (avainkirjautuminen on jo todistettu); muuten asennus varoittaa. Rajaa tämä omaan osoitteeseesi palveluntarjoajalla. |
 | TCP 3389 | Vain `-AdminIp` | Etätyöpöytä, jos käytät sitä. Ilman `-AdminIp`:tä asennus **laittaa pois** koko internetille auki olevan etätyöpöytäsäännön (käytä avainpohjaista SSH:ta); `-KeepRdpOpen` jättää sen auki. |
@@ -172,8 +172,14 @@ Repositorion kansiossa omalla koneellasi:
     -GameZip D:\BaseGame144.zip `
     -RestoreFrom C:\dr\backups\2026-10-01_200000 `
     -AdminIp 198.51.100.20 `
-    -ServerName "Lauantain Ramsgate"
+    -ServerName "Lauantain Ramsgate" `
+    -ServerBinaries C:\dr\server-x86_64-pc-windows-msvc
 ```
+
+`-ServerBinaries` on kansio, jossa ovat palvelimen ohjelmat tälle koodille: commitin CI-ajon
+`server-x86_64-pc-windows-msvc`-lataus (Actions, ajo, Artifacts). Sen voi jättää pois, kun
+työkopiosi `rust\target\release` sisältää käännöksen (`cargo build --release`). Ohjelmat
+tarkistetaan palvelimella niiden `SHA256SUMS`-tiedostoa vasten.
 
 Uudelle palvelimelle, jolla ei ole vielä tietokantaa, käytä `-RestoreFrom`:n sijaan
 `-OwnerName <käyttäjänimesi>`. Näin komento etenee:
@@ -204,12 +210,13 @@ tekemättä niitä.
 
 1. **Esitarkistus:** ylläpitäjän oikeudet, Windows Server 2019 (koontiversio 17763) tai uudempi,
    työpöytäkokemus, 8 Gt muistia, 40 Gt levytilaa, vapaat portit.
-2. **Esivaatimukset:** Node.js (kiinnitetty versio, tarkistettu sekä omaa kiinnitystämme että
-   nodejs.org:n `SHASUMS256.txt`:tä vasten), Visual C++ 2015-2022 x64 -ajonaikainen kirjasto ja
-   DirectX June 2010 (molemmat tarkistetaan Microsoftin allekirjoituksesta). Kaikki lataukset
-   käyttävät TLS 1.2:ta.
-3. **Palvelinkoodi:** käännetään komennoilla `npm ci` ja `npm run build` kansioon
-   `C:\DauntlessRevived\app`: metagame, deploy-palvelin, sisältöpalvelin sekä yhdyskäytävä ja sen apuri.
+2. **Esivaatimukset:** Visual C++ 2015-2022 x64 -ajonaikainen kirjasto ja DirectX June 2010
+   (molemmat tarkistetaan Microsoftin allekirjoituksesta). Kaikki lataukset käyttävät TLS 1.2:ta.
+   Node.js:ää ei tarvita.
+3. **Palvelinkoodi:** kopioidaan kansioon `C:\DauntlessRevived\app`, ja palvelimen ohjelmat
+   kansioon `C:\DauntlessRevived\app\bin`: `metagame.exe`, `deploy.exe`, `content.exe`,
+   `gateway.exe` ja yhdyskäytävän `allowlist.exe` (`-ServerBinaries`-kansiosta, tarkistettuina
+   niiden `SHA256SUMS`-tiedostoa vasten).
 4. **Pelitiedostot:** zipin SHA-256 tarkistetaan, se puretaan Windowsin omalla `tar.exe`:llä,
    jokainen tiedosto tarkistetaan sisältöluetteloa vasten, ja kaksi palvelimen DLL-tiedostoa
    asennetaan kiinnitetyillä tiivisteillä.
@@ -423,8 +430,9 @@ kerrotaan sivulla [Palvelin ryhmälle]({{ admin_page.url | relative_url }}#switc
 ### Päivitykset
 
 `Deploy-Remote.ps1 -Server <osoite> -Update` lähettää nykyisen commitisi ja ajaa palvelimella
-`Update-DauntlessServer.ps1`:n. Se kääntää uuden koodin palvelimen pyöriessä, ottaa varmuuskopion,
-vaihtaa uuteen ja tarkistaa, että metagame vastaa ja yhdyskäytävä vastaa kutsujen varmenteella. Jos
+`Update-DauntlessServer.ps1`:n (anna uuden commitin `-ServerBinaries`, kuten asennuksessa). Se
+laittaa uuden koodin ja ohjelmat paikoilleen palvelimen pyöriessä, ottaa varmuuskopion, vaihtaa
+uuteen ja tarkistaa, että metagame vastaa ja yhdyskäytävä vastaa kutsujen varmenteella. Jos
 tarkistus ei onnistu kolmessa minuutissa, se palaa itse edelliseen versioon.
 `Update-DauntlessServer.ps1 -Rollback` tekee saman käsin. Asetuksiin (paitsi `metagame.env`-tiedoston
 `GIT_COMMIT`-arvoon, johon kirjataan uusi commit), avaimiin, varmenteeseen,
@@ -541,7 +549,8 @@ estämään saapuvat yhteydet oletuksena. Tiedoston `data\config\server.json` ko
 kertoo, mitä ne olivat ennen (katso ennen kuin poistat kansion); ottaaksesi etätyöpöydän taas käyttöön
 ota sen sääntö takaisin käyttöön (`Enable-NetFirewallRule`) tai aja asennus uudelleen `-AdminIp <IP>`. Jos käytit `-InteractiveSession`:ia, laita myös automaattinen kirjautuminen pois:
 `Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' AutoAdminLogon 0`.
-Node.js:n ja Visual C++ -kirjaston voi poistaa kohdasta "Sovellukset ja ominaisuudet".
+Visual C++ -kirjaston (ja Node.js:n palvelimelta, joka asennettiin ennen Rust-palveluja) voi
+poistaa kohdasta "Sovellukset ja ominaisuudet".
 
 Nämä asennusohjelman muutokset jäävät myös voimaan:
 

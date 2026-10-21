@@ -116,7 +116,6 @@ Mitkä skriptit tarvitsevat ylläpitäjänä avatun PowerShellin ("Suorita järj
 | `Write-PerformanceLog.ps1` | Palvelin | Suorituskykymittaus heti, tai minuutin välein hiekkalaatikossa. Asennetulla palvelimella kokonaisuuden valvoja ottaa mittauksen jo minuutin välein. |
 | `Receive-Upload.ps1` | Palvelin | Osissa tehtävän lähetyksen palvelinpää. `Deploy-Remote.ps1` kutsuu sitä; sinä et. |
 | `DauntlessServer.Common.ps1`, `DauntlessServer.Performance.ps1` | Molemmat | Yhteiset apufunktiot, jotka skriptit lataavat: kiinnitykset, kutsut, kiinnitetty HTTPS, prosessit; suorituskykymittari. |
-| `lib\dr-db.js`, `lib\dr-keys.js`, `lib\verify-game.js` | Palvelin | Node-apuohjelmat, joita skriptit kutsuvat. |
 | `tests\Test-*.ps1` | Kehityskone | Paketin omat testit. |
 
 ### Deploy-Remote.ps1 {#deploy-remoteps1}
@@ -296,12 +295,15 @@ GitHubista `$DRRepo.PinnedRef`:n eli `friends-v1`:n. **Varo:** uusi ajo kansiost
 tapahdu repositoriokopiossa, joten ilman lähdeparametria se lataa `friends-v1`:n. Säilyttääksesi
 asennetun koodin asenna uudelleen `Deploy-Remote.ps1`:llä, joka lähettää koodin uudelleen, tai anna
 `-Ref <asennettu commit>`, jos se commit on GitHubissa. Jo käännettyä committia ei käännetä
-uudelleen, ellei sen nimi pääty `-dirty`- tai `-worktree`-päätteeseen tai ole `unknown`.
-Kääntäminen kopioi lähdekoodin kansioon `<root>\app.new` (ilman `node_modules`-kansioita,
-käännöstuloksia, `.git`-kansiota, `.env`-tiedostoja, avaimia, varmenteita, tietokantoja ja lokeja),
-ajaa `npm ci`:n ja `npm run build`:in neljässä palvelinpaketissa (`legacy/UndauntedMetagame`,
-`legacy/UndauntedDeployServer`, `legacy/UndauntedContent` ja `legacy/UndauntedGateway`; käynnistintä ei käännetä) ja
-vaihtaa sen sitten käyttöön. Vanha käännös jää talteen nimellä `app.prev`.
+uudelleen, ellei sen nimi pääty `-dirty`- tai `-worktree`-päätteeseen tai ole `unknown` tai ellei
+`-ServerBinaries`-parametria anneta. Asennus kopioi lähdekoodin kansioon `<root>\app.new` (ilman
+Rust-lähdekoodia, `node_modules`-kansioita, käännöstuloksia, `.git`-kansiota, `.env`-tiedostoja,
+avaimia, varmenteita, tietokantoja ja lokeja), laittaa palveluohjelmat (`metagame.exe`,
+`gateway.exe`, `allowlist.exe`, `content.exe`, `deploy.exe`) kansioon `<root>\app.new\bin` ja
+vaihtaa sen sitten käyttöön. Vanha jää talteen nimellä `app.prev`. Ohjelmat tulevat
+`-ServerBinaries`-kansiosta (koodin CI-ajon `server-x86_64-pc-windows-msvc`-lataus, joka
+tarkistetaan sen `SHA256SUMS`-tiedostoa vasten) tai lähdekoodin release-käännöksestä
+(`rust\target\release`).
 
 **Omistaja, palautus ja varmenne**
 
@@ -344,7 +346,7 @@ vaihtaa sen sitten käyttöön. Vanha käännös jää talteen nimellä `app.pre
 
 | Parametri | Tyyppi | Oletus | Mitä se tekee |
 |:----------|:-------|:-------|:--------------|
-| `-Sandbox` | valitsin | pois | Testiasennus kehityskoneelle. Se ohittaa Node.js:n, ajonaikaiset kirjastot, Tailscalen, palomuurin, tilit ja tehtävät. Kaikki kuuntelee osoitteessa `127.0.0.1` 620xx-porteissa, myös yhdyskäytävä. Sallittujen listan apuri pyörii kuivaharjoitustilassa, deploy-palvelinta tai pelipalvelimia ei ajeta, ja kaikki pyörii nykyisellä käyttäjällä. Tarvitsee `-InstallRoot`:n ja `-GameDir`:n. |
+| `-Sandbox` | valitsin | pois | Testiasennus kehityskoneelle. Se ohittaa ajonaikaiset kirjastot, Tailscalen, palomuurin, tilit ja tehtävät. Kaikki kuuntelee osoitteessa `127.0.0.1` 620xx-porteissa, myös yhdyskäytävä. Sallittujen listan apuri pyörii kuivaharjoitustilassa, deploy-palvelinta tai pelipalvelimia ei ajeta, ja kaikki pyörii nykyisellä käyttäjällä. Tarvitsee `-InstallRoot`:n ja `-GameDir`:n. |
 | `-ContentManifest` | polku | sisäänrakennettu luettelo | Sisältöluettelo korvikepelikansiolle. Torjutaan ilman `-Sandbox`:ia. |
 | `-AllowlistDryRun` | valitsin | pois | Sallittujen listan apuri vain kirjaa lokiin palomuurimuutoksen, jonka se tekisi. `-Sandbox` pakottaa sen päälle. **Uusi ajo ei muista sitä.** |
 | `-NoStart` | valitsin | pois | Ei käynnistä kokonaisuutta lopuksi. Ensimmäinen varmuuskopio otetaan silti. |
@@ -666,23 +668,24 @@ C:\DauntlessRevived\bin\Write-PerformanceLog.ps1 -Once
 `upload.json`-tiedoston osakoon on oltava 1 Mt:n ja 2 Gt:n välillä. Jokainen kutsu tulostaa yhden
 `DRJSON:{...}`-rivin.
 
-### Apuskriptit kansiossa lib\ {#helper-scripts-in-lib}
+### Palveluohjelmien työkalut {#helper-scripts-in-lib}
 
-Paketin skriptit kutsuvat näitä palvelimen `node.exe`:llä. Aja niitä käsin vain, kun tiedät miksi.
+Paketin skriptit kutsuvat näitä kansion `<root>\app\bin` palveluohjelmien alikomentoja. Aja niitä
+käsin vain, kun tiedät miksi.
 
 | Komento | Mitä se tekee |
 |:--------|:--------------|
-| `node dr-db.js integrity <metagame-kansio> <tietokanta>` | Vain lukeva eheystarkistus. Tulostaa `ok, <n> users`. |
-| `node dr-db.js backup <metagame-kansio> <tietokanta> <kohde>` | SQLiten online backup (turvallinen metagamen pyöriessä), sitten kopion tarkistus. |
-| `node dr-db.js add-invite <metagame-kansio> <tietokanta> <koodi>` ja `del-invite ...` | Lisää tai poistaa kertakäyttöisen kutsukoodin. Asennusohjelma käyttää tätä omistajan rekisteröimiseen. |
-| `node dr-db.js make-admin <metagame-kansio> <tietokanta> <UserId>` | Tekee tilistä ylläpitäjän. |
-| `node dr-db.js gs-key <metagame-kansio> <tietokanta> <avaintiedosto>` | Rekisteröi pelipalvelimen avaimen SHA-256:n. Avain luetaan tiedostosta, sen on oltava vähintään 32 merkkiä pitkä, eikä sitä koskaan tulosteta. |
-| `node dr-keys.js signing <tulostiedosto>` | Kirjoittaa uuden RSA-2048-avainparin RS256-tunnusten allekirjoitukseen kahtena `.env`-rivinä (`AUTH_SIGNING_PRIVKEY_B64`, `AUTH_SIGNING_PUBKEY_B64`). Se ei tulosta mitään salaista, mutta **tulostiedosto on salainen: älä koskaan jaa, älä koskaan committoi.** Asennusohjelma yhdistää sen `metagame.env`-tiedostoon ja poistaa tiedoston. |
-| `node verify-game.js <manifest.json> <pelikansio> [--quick]` | Tarkistaa jokaisen luettelossa olevan tiedoston koon ja SHA-256:n (`--quick`: vain koon). Ylimääräiset tiedostot ohitetaan. Paluukoodi `0`: kaikki täsmäävät, `1`: poikkeama, `2`: käyttövirhe, vaarallinen polku luettelossa tai lukuvirhe. |
+| `metagame.exe db integrity <tietokanta>` | Vain lukeva eheystarkistus. Tulostaa `ok, <n> users`. |
+| `metagame.exe db backup <tietokanta> <kohde>` | SQLiten online backup (turvallinen metagamen pyöriessä), sitten kopion tarkistus. Ei koskaan kirjoita olemassa olevan päälle. |
+| `metagame.exe db add-invite <tietokanta> <koodi>` ja `del-invite ...` | Lisää tai poistaa kertakäyttöisen kutsukoodin. Asennusohjelma käyttää tätä omistajan rekisteröimiseen. |
+| `metagame.exe db make-admin <tietokanta> <UserId>` | Tekee tilistä ylläpitäjän. |
+| `metagame.exe db gs-key <tietokanta> <avaintiedosto>` | Rekisteröi pelipalvelimen avaimen SHA-256:n. Avain luetaan tiedostosta, sen on oltava vähintään 32 merkkiä pitkä, eikä sitä koskaan tulosteta. |
+| `deploy.exe signing-keys <tulostiedosto>` | Kirjoittaa uuden RSA-2048-avainparin RS256-tunnusten allekirjoitukseen kahtena `.env`-rivinä (`AUTH_SIGNING_PRIVKEY_B64`, `AUTH_SIGNING_PUBKEY_B64`). Se ei tulosta mitään salaista, mutta **tulostiedosto on salainen: älä koskaan jaa, älä koskaan committoi.** Asennusohjelma yhdistää sen `metagame.env`-tiedostoon ja poistaa tiedoston. |
+| `content.exe verify --manifest <manifest.json> --game-dir <pelikansio> [--quick]` | Tarkistaa jokaisen luettelossa olevan tiedoston koon ja SHA-256:n (`--quick`: vain koon). Ylimääräiset tiedostot luetellaan, mutta niitä ei lasketa. Paluukoodi `0`, kun kaikki täsmäävät. |
+| `gateway.exe make-cert --host <nimi> --cert <tiedosto> --key <tiedosto>` | Tekee yhdyskäytävän itse allekirjoitetun varmenteen (asennusohjelma julkisessa tilassa); `--fingerprint <varmenne>` tulostaa varmenteen sormenjäljen. |
 
-`dr-db.js` lataa `better-sqlite3`:n metagamen omasta `node_modules`-kansiosta ja päättyy
-paluukoodilla `1` missä tahansa virheessä. `<metagame-kansio>` on `<root>\app\UndauntedMetagame` ja
-tietokanta on `<root>\data\undaunted.db`.
+`db`-työkalut eivät koskaan luo tietokantaa eivätkä aja sen migraatioita; tietokanta on
+`<root>\data\undaunted.db`, ja jokainen päättyy paluukoodilla `1` missä tahansa virheessä.
 
 ### Palautus, paluu edelliseen versioon ja poistaminen {#restore-rollback-and-uninstall}
 
@@ -746,7 +749,6 @@ asennuskohtaisesti, nimiä ei.
 | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedLauncher/src/main/constants.ts`, sisältöluettelo |
 | `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | samat tiedostot kuin `dxgi.dll`:llä |
-| Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | vain paketissa; sen on vastattava myös nodejs.org:n `SHASUMS256.txt`-tiedostoa |
 | Tailscale 1.102.4 MSI (yksityinen tila) | `80EB007E39DFEBE17299FA1A09C79A8E1D934F76E0246C0817EBE3AF675B7EF6` | vain paketissa; sen on vastattava myös julkaistua `.sha256`-tiedostoa |
 
 Koontiversion merkkijono on `dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827`:
@@ -1094,7 +1096,7 @@ käyttövirhettä ja `1` mitä tahansa muuta virhettä.
 | `npm run icon [-- --check]` | `node scripts/make-icon.mjs` | Kopioi käynnistimen kuvakkeet (`assets/icon.ico`, `assets/icon.png`) ja sen ikkunassa näkyvät logo- ja tunnuskuvat (`src/renderer/brand/`) kansiosta `brand/`, jossa `python3 brand/build.py` tekee ne. Valitsimella `--check` se vain vertaa ja päättyy koodiin 1, jos jokin kopio puuttuu tai on vanhentunut; yksikkötestit ajavat sen. |
 
 Käynnistin tarvitsee Node.js:n version 20.19 tai uudemman (`engines` sen `package.json`-tiedostossa).
-Palvelinpaketti asentaa palvelimelle Node.js:n version 24.19.0.
+Palvelin ei tarvitse Node.js:ää: palvelinpaketti ajaa Rust-palveluohjelmia.
 
 ### Muut npm-pakettien skriptit {#other-package-scripts}
 

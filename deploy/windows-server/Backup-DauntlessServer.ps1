@@ -39,8 +39,7 @@ $Root = Resolve-DRRoot $Root $PSScriptRoot
 $P = Get-DRPaths $Root
 $cfg = $null
 if (Test-Path -LiteralPath $P.ServerJson) { $cfg = Get-DRConfig $Root }
-$node = Get-DRConfigValue $cfg 'NodePath' 'node'
-$metaDir = Join-Path $P.App 'UndauntedMetagame'
+$metagame = Get-DRMetagameExe $P
 
 if (-not $PSCmdlet.ShouldProcess($P.Backups, 'Back up the database and secrets')) { return }
 
@@ -78,8 +77,34 @@ New-Item -ItemType Directory -Force -Path $dest | Out-Null
 # 1. The database. No database yet (fresh install before the first start) is not an error.
 $dbNote = 'no database yet'
 if (Test-Path -LiteralPath $P.Db) {
-    $code = Invoke-DRNative -FilePath $node -Arguments @((Join-Path $PSScriptRoot 'lib\dr-db.js'), 'backup', $metaDir, $P.Db, (Join-Path $dest 'undaunted.db'), '--online', $P.DeployEnv) `
-        -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'backup-db')
+    if (-not $metagame) {
+        Log "backup FAILED: no metagame.exe in $($P.App)\bin to copy the database with"
+        Remove-Item -LiteralPath $dest -Recurse -Force -ErrorAction SilentlyContinue
+        exit 1
+    }
+    $copy = Join-Path $dest 'undaunted.db'
+    # A running metagame copies its own database (POST /internal/backup into BACKUP_ROOT\<name>), so
+    # the copy never competes with its writes. With nothing listening on its port it is stopped, and
+    # metagame.exe db backup copies the file. A live backup that times out may still be copying: no
+    # second copy then.
+    $code = -1
+    $key = (Read-DREnv $P.DeployEnv)['METAGAME_API_KEY']
+    $metaPort = Get-DRPort $cfg 'metagame'
+    $listening = [bool](Get-NetTCPConnection -LocalPort $metaPort -State Listen -ErrorAction SilentlyContinue)
+    if ($key -and $listening) {
+        $live = Invoke-DRHttp -Method POST -Url "http://127.0.0.1:$metaPort/internal/backup" -Headers @{ 'x-undaunted-gameserver-apikey' = $key } -Body @{ name = $stamp } -TimeoutSec 905
+        if ($live.Status -eq 200) {
+            $code = Invoke-DRNative -FilePath $metagame -Arguments @('db', 'integrity', $copy) -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'backup-db')
+            if ($code -eq 0) { Add-Content -LiteralPath (Join-Path $P.Logs 'backup-db.out.log') -Value ('db ' + (Get-Content -LiteralPath (Join-Path $P.Logs 'backup-db.out.log') | Select-Object -Last 1)) }
+        } elseif ($live.Status -ne 404) {
+            Log "backup FAILED: the metagame's live backup did not succeed ($(if ($live.Status) { "HTTP $($live.Status)" } else { $live.Error }))"
+            Remove-Item -LiteralPath $dest -Recurse -Force -ErrorAction SilentlyContinue
+            exit 1
+        }
+    }
+    if ($code -eq -1) {
+        $code = Invoke-DRNative -FilePath $metagame -Arguments @('db', 'backup', $P.Db, $copy) -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'backup-db')
+    }
     if ($code -ne 0) {
         Log "backup FAILED: the database copy did not pass its check (see $($P.Logs)\backup-db.err.log)"
         Remove-Item -LiteralPath $dest -Recurse -Force -ErrorAction SilentlyContinue

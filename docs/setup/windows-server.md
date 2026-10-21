@@ -79,7 +79,7 @@ own relay. That is why the relay port is fixed at 61000.
 
 | Port | Open to | Notes |
 |:-----|:--------|:------|
-| TCP 443 (`-GatewayPort`) | Everyone | The gateway, TLS only, `node.exe` only. |
+| TCP 443 (`-GatewayPort`) | Everyone | The gateway, TLS only, `gateway.exe` only. |
 | UDP 8770-8777 | Only addresses of players who logged in | The allowlist rule; closed while nobody plays and whenever the stack is stopped. Only the game executable may receive. |
 | TCP 22 | Everyone, **key login only** | OpenSSH, for your own administration. A deploy over SSH turns password login off (key login is already proven); otherwise the installer warns. Limit this to your own address at the provider. |
 | TCP 3389 | Only `-AdminIp` | Remote Desktop, if you use it. Without `-AdminIp` the installer **turns off** any internet-open RDP rule (use key-only SSH instead); `-KeepRdpOpen` leaves it open. |
@@ -165,8 +165,14 @@ From the repository folder on your PC:
     -GameZip D:\BaseGame144.zip `
     -RestoreFrom C:\dr\backups\2026-10-01_200000 `
     -AdminIp 198.51.100.20 `
-    -ServerName "Saturday Ramsgate"
+    -ServerName "Saturday Ramsgate" `
+    -ServerBinaries C:\dr\server-x86_64-pc-windows-msvc
 ```
+
+`-ServerBinaries` is the folder with the server's programs for that code: the
+`server-x86_64-pc-windows-msvc` download of the commit's CI run (Actions, the run, Artifacts), or
+leave it out when `rust\target\release` in your checkout holds a build (`cargo build --release`).
+They are checked against their `SHA256SUMS` on the server.
 
 Use `-OwnerName <your username>` instead of `-RestoreFrom` for a brand-new server with an empty
 database. What happens:
@@ -195,11 +201,11 @@ Desktop). Every step is safe to repeat, and `-WhatIf` lists every change without
 
 1. **Preflight:** administrator, Windows Server 2019 (build 17763) or newer, Desktop Experience,
    8 GB RAM, 40 GB disk budget, free ports.
-2. **Prerequisites:** Node.js (pinned version, checked against both our pin and nodejs.org's
-   `SHASUMS256.txt`), the Visual C++ 2015-2022 x64 runtime and the DirectX June 2010 runtime (both
-   checked by their Microsoft signature). All downloads use TLS 1.2.
-3. **Server code:** built with `npm ci` and `npm run build` in `C:\DauntlessRevived\app`: the
-   metagame, the deploy server, the content server and the gateway with its allowlist helper.
+2. **Prerequisites:** the Visual C++ 2015-2022 x64 runtime and the DirectX June 2010 runtime (both
+   checked by their Microsoft signature). All downloads use TLS 1.2. No Node.js.
+3. **Server code:** copied to `C:\DauntlessRevived\app`, with the server's programs in
+   `C:\DauntlessRevived\app\bin`: `metagame.exe`, `deploy.exe`, `content.exe`, `gateway.exe` and
+   the gateway's `allowlist.exe` (from `-ServerBinaries`, checked against their `SHA256SUMS`).
 4. **Game files:** the zip's SHA-256 is checked, it is extracted with Windows' own `tar.exe`, every
    file is checked against the content manifest, and the two server DLLs are installed with their
    pinned hashes.
@@ -405,8 +411,9 @@ on [Run it for a group]({{ admin_page.url | relative_url }}#switching-features-o
 ### Updates
 
 `Deploy-Remote.ps1 -Server <address> -Update` uploads your current commit and runs
-`Update-DauntlessServer.ps1` on the server. It builds the new code while the server keeps running,
-takes a backup, switches over, and checks that the metagame answers and the gateway answers with the
+`Update-DauntlessServer.ps1` on the server (pass `-ServerBinaries` for the new commit, as for the
+install). It puts the new code and programs in place while the server keeps running, takes a backup,
+switches over, and checks that the metagame answers and the gateway answers with the
 invite certificate. If that check fails within 3 minutes, it switches back to the previous build by
 itself. `Update-DauntlessServer.ps1 -Rollback` does the same by hand. Settings (apart from `GIT_COMMIT` in
 `metagame.env`, which records the new commit), keys, the certificate,
@@ -515,7 +522,8 @@ Some firewall changes are not undone by that: Remote Desktop rules limited to `-
 the folder); to use Remote Desktop again, re-enable its rule (`Enable-NetFirewallRule`) or re-run the
 installer with `-AdminIp <your IP>`. If you used `-InteractiveSession`, also
 turn auto-logon off: `Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
-AutoAdminLogon 0`. Node.js and the Visual C++ runtime can be removed in "Apps and features".
+AutoAdminLogon 0`. The Visual C++ runtime (and Node.js, on a server installed before the Rust services) can be removed
+in "Apps and features".
 
 The snippet also leaves these installer changes in place:
 

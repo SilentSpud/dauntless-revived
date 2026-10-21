@@ -20,11 +20,6 @@ $script:DRPinned = @{
         'dxgi.dll'                    = '9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F'
         'UndauntedInternalServer.dll' = '6f2433abebdee451edfc9060fa58eb3e2a3e73e5f7063de05386316b52d7b30b'
     }
-    # Node.js LTS: the version the fork is developed and tested on. better-sqlite3 is a native
-    # module built for this Node major version. SHA-256 from nodejs.org/dist/v24.19.0/SHASUMS256.txt;
-    # the installer also re-reads that file and requires both to agree.
-    NodeVersion     = '24.19.0'
-    NodeMsiSha256   = 'F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351'
     # Bun: runs the operator tools (tools/*.ts: owner dashboard, Discord status, worker health). The
     # baseline build, which runs on any x64 CPU, from github.com/oven-sh/bun; SHA-256 from that
     # release's SHASUMS256.txt, which Install-DRBun also re-reads and requires to agree. Keep the
@@ -228,7 +223,7 @@ function Get-DRChatState($Paths, $Config) {
     return 'on in metagame.env but not listening (see the metagame log)'
 }
 
-# UTF-8 without BOM (Node reads .env and JSON as UTF-8; a BOM would end up in the first key).
+# UTF-8 without BOM (the services read .env and JSON as UTF-8; a BOM would end up in the first key).
 function Write-DRText([string]$Path, [string]$Text) {
     $dir = Split-Path $Path -Parent
     if ($dir -and -not (Test-Path -LiteralPath $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
@@ -819,10 +814,14 @@ function Test-DRLocalAddress([string]$Address) {
 }
 
 # ---------------------------------------------------------------------------------------------
-# Components. Processes are identified by their command line (the absolute path of the component's
-# entry script under our root), never by name alone: the host may run other Node programs, and its
-# owner's own game client is the same exe as the game servers.
-#   Script   entry point, relative to the component folder
+# Components: the Rust service binaries in <root>\app\bin (MIGRATION_PLAN.md M40). Processes are
+# identified by their full executable path under our root, never by name alone: the host may run
+# other programs of the same name, and its owner's own game client is the same exe as the game servers.
+#   Exe      the binary, relative to the app folder
+#   Args     its arguments before --env-file
+#   Dir      its working directory, relative to the app folder (the metagame reads its store images there)
+#   Legacy   the Node entry script this component had before M40, relative to the app folder: an
+#            upgrade from a Node install finds and stops those processes too
 #   Env      the Get-DRPaths property of its .env file
 #   PortKey  its key in server.json "Ports"
 #   Bind     'local' (always 127.0.0.1), 'bind' (the configured bind address), 'gateway'
@@ -830,27 +829,42 @@ function Test-DRLocalAddress([string]$Address) {
 # elevated task (it changes one firewall rule); everything else runs as the service account.
 # ---------------------------------------------------------------------------------------------
 $script:DRComponents = [ordered]@{
-    metagame  = @{ Dir = 'UndauntedMetagame';     Script = 'dist\server.js';           Env = 'MetaEnv';      PortKey = 'metagame';  Bind = 'bind';    Label = 'metagame' }
-    content   = @{ Dir = 'UndauntedContent';      Script = 'dist\server.js';           Env = 'ContentEnv';   PortKey = 'content';   Bind = 'bind';    Label = 'content server' }
-    deploy    = @{ Dir = 'UndauntedDeployServer'; Script = 'dist\server.js';           Env = 'DeployEnv';    PortKey = 'deploy';    Bind = 'local';   Label = 'deploy server' }
-    gateway   = @{ Dir = 'UndauntedGateway';      Script = 'dist\server.js';           Env = 'GatewayEnv';   PortKey = 'gateway';   Bind = 'gateway'; Label = 'gateway' }
-    allowlist = @{ Dir = 'UndauntedGateway';      Script = 'dist\allowlist\server.js'; Env = 'AllowlistEnv'; PortKey = 'allowlist'; Bind = 'local';   Label = 'allowlist helper' }
+    metagame  = @{ Exe = 'bin\metagame.exe';  Args = @('serve'); Dir = 'UndauntedMetagame';     Legacy = 'UndauntedMetagame\dist\server.js';           Env = 'MetaEnv';      PortKey = 'metagame';  Bind = 'bind';    Label = 'metagame' }
+    content   = @{ Exe = 'bin\content.exe';   Args = @('serve'); Dir = 'UndauntedContent';      Legacy = 'UndauntedContent\dist\server.js';            Env = 'ContentEnv';   PortKey = 'content';   Bind = 'bind';    Label = 'content server' }
+    deploy    = @{ Exe = 'bin\deploy.exe';    Args = @('serve'); Dir = 'UndauntedDeployServer'; Legacy = 'UndauntedDeployServer\dist\server.js';       Env = 'DeployEnv';    PortKey = 'deploy';    Bind = 'local';   Label = 'deploy server' }
+    gateway   = @{ Exe = 'bin\gateway.exe';   Args = @('serve'); Dir = 'UndauntedGateway';      Legacy = 'UndauntedGateway\dist\server.js';            Env = 'GatewayEnv';   PortKey = 'gateway';   Bind = 'gateway'; Label = 'gateway' }
+    allowlist = @{ Exe = 'bin\allowlist.exe'; Args = @();        Dir = 'UndauntedGateway';      Legacy = 'UndauntedGateway\dist\allowlist\server.js';  Env = 'AllowlistEnv'; PortKey = 'allowlist'; Bind = 'local';   Label = 'allowlist helper' }
 }
 # Start order; stop runs in reverse. The allowlist helper comes first so the gateway can report to it.
 $script:DRComponentOrder = @('allowlist', 'metagame', 'content', 'gateway', 'deploy')
-# Packages to build (a folder may hold more than one component).
-$script:DRPackages = @('UndauntedMetagame', 'UndauntedDeployServer', 'UndauntedContent', 'UndauntedGateway')
+# The binaries of a server install, as the CI server-binaries job builds them (SHA256SUMS lists them).
+$script:DRBinaries = @('metagame', 'gateway', 'allowlist', 'content', 'deploy')
 
-function Get-DRComponentScript($Paths, [string]$Component) {
-    $c = $script:DRComponents[$Component]
-    return (Join-Path (Join-Path $Paths.App $c.Dir) $c.Script)
+function Get-DRComponentExe($Paths, [string]$Component) {
+    return (Join-Path $Paths.App $script:DRComponents[$Component].Exe)
+}
+
+# metagame.exe for the database tools (metagame.exe db ...): the installed one, else the one an update
+# has just put in app.new (the first update from a Node install backs up before it switches), else none.
+function Get-DRMetagameExe($Paths) {
+    foreach ($app in $Paths.App, "$($Paths.App).new") {
+        $exe = Join-Path $app 'bin\metagame.exe'
+        if (Test-Path -LiteralPath $exe) { return $exe }
+    }
+    return $null
 }
 
 function Get-DRComponentProcesses($Paths, [string]$Component) {
-    $script = Get-DRComponentScript $Paths $Component
-    @(Get-CimInstance Win32_Process -Filter "Name='node.exe'" -ErrorAction SilentlyContinue |
-        Where-Object { $_.CommandLine -and $_.CommandLine.IndexOf($script, [StringComparison]::OrdinalIgnoreCase) -ge 0 -and
-                       $_.CommandLine.Substring($_.CommandLine.IndexOf($script, [StringComparison]::OrdinalIgnoreCase) + $script.Length) -match '^("|\s|$)' })
+    $c = $script:DRComponents[$Component]
+    $exe = Get-DRComponentExe $Paths $Component
+    $name = Split-Path $exe -Leaf
+    $legacy = Join-Path $Paths.App $c.Legacy
+    @(Get-CimInstance Win32_Process -Filter "Name='$name' OR Name='node.exe'" -ErrorAction SilentlyContinue |
+        Where-Object {
+            if ($_.Name -ieq $name) { return ($_.ExecutablePath -and ($_.ExecutablePath -ieq $exe)) }
+            $_.CommandLine -and $_.CommandLine.IndexOf($legacy, [StringComparison]::OrdinalIgnoreCase) -ge 0 -and
+                $_.CommandLine.Substring($_.CommandLine.IndexOf($legacy, [StringComparison]::OrdinalIgnoreCase) + $legacy.Length) -match '^("|\s|$)'
+        })
 }
 
 function Get-DRGameServers([string]$GameDir) {
@@ -1035,39 +1049,68 @@ function Test-DRSignature([string]$Path, [string]$Publisher) {
 }
 
 # ---------------------------------------------------------------------------------------------
-# Server code: copied from a folder (a checkout, or an extracted source zip) into <root>\app.new, then
-# npm ci + npm run build for every package, then swapped in (the previous build stays as app.prev).
-# Returns the list of packages that were built.
+# Server code: the source folder (a checkout, or an extracted source zip) is copied into <root>\app.new
+# for what the services read beside their binaries (the store images, the pinned DLLs, the content
+# manifest, the DLL's endpoint table), the service binaries go to app.new\bin, and app.new is swapped
+# in (the previous app stays as app.prev). MIGRATION_PLAN.md M40.
 # ---------------------------------------------------------------------------------------------
-function Get-DRBuildEnvironment([string]$NodeExe) {
-    # SSH services can retain the PATH from before Node's MSI installation. npm itself is
-    # invoked by absolute path, but dependency install scripts still execute "node".
-    return @{ NODE_ENV = 'development'; npm_config_update_notifier = 'false'; npm_config_fund = 'false'; npm_config_audit = 'false'; Path = "$(Split-Path $NodeExe -Parent);$env:Path" }
-}
 
-# A Dauntless Revived source folder: the Node packages in legacy\ (since the Rust port began) or, in older
-# code, at the top level.
+# A Dauntless Revived source folder: the service folders in legacy\ (since the Rust port began) or, in
+# older code, at the top level.
 function Test-DRSource([string]$Dir) {
     (Test-Path -LiteralPath (Join-Path $Dir 'legacy\UndauntedMetagame\package.json')) -or (Test-Path -LiteralPath (Join-Path $Dir 'UndauntedMetagame\package.json'))
 }
 
-function Build-DRApp {
-    param($Paths, [string]$From, [string]$NodeExe, [hashtable]$Version)
+# The folder that holds the service binaries for an install: -ServerBinaries (a CI server-binaries
+# download, or a cargo target folder), else the release build in the source checkout. Every binary must
+# be there; a SHA256SUMS file next to them must list each one with its hash.
+function Resolve-DRServerBinaries([string]$Explicit, [string]$From) {
+    $dir = $null
+    if ($Explicit) {
+        $dir = [IO.Path]::GetFullPath($Explicit)
+        if (-not (Test-Path -LiteralPath $dir -PathType Container)) { Stop-DR "-ServerBinaries $dir is not a folder" }
+    } elseif ($From -and (Test-Path -LiteralPath (Join-Path $From 'rust\target\release\metagame.exe'))) {
+        $dir = Join-Path $From 'rust\target\release'
+    } else {
+        Stop-DR ('This code runs as Rust binaries, and none were given. Pass -ServerBinaries <folder>: the ' +
+            'server-x86_64-pc-windows-msvc download of this commit''s CI run, or rust\target\release after ' +
+            'cargo build --release in a checkout.')
+    }
+    $sums = Join-Path $dir 'SHA256SUMS'
+    $listed = @{}
+    if (Test-Path -LiteralPath $sums) {
+        foreach ($line in Get-Content -LiteralPath $sums) {
+            if ($line -match '^([0-9A-Fa-f]{64})\s+\*?(\S+)$') { $listed[$Matches[2]] = $Matches[1].ToUpperInvariant() }
+        }
+    }
+    foreach ($b in $script:DRBinaries) {
+        $exe = Join-Path $dir "$b.exe"
+        if (-not (Test-Path -LiteralPath $exe)) { Stop-DR "$exe is missing" }
+        if (Test-Path -LiteralPath $sums) {
+            if (-not $listed.ContainsKey("$b.exe")) { Stop-DR "$sums does not list $b.exe" }
+            if ((Get-DRSha256 $exe) -ne $listed["$b.exe"]) { Stop-DR "$exe does not match its SHA-256 in $sums. Not installing it." }
+        }
+    }
+    return $dir
+}
+
+function Install-DRApp {
+    param($Paths, [string]$From, [string]$Binaries, [hashtable]$Version)
     $appNew = "$($Paths.App).new"
     if (Test-Path -LiteralPath $appNew) { Remove-Item -LiteralPath $appNew -Recurse -Force }
-    Write-DRInfo 'copying the source (without node_modules, build output, .git and .env files) ...'
+    Write-DRInfo 'copying the source (without the Rust sources, node_modules, build output, .git and .env files) ...'
     # The server uses the pinned prebuilt DLLs; of native\internal-server it needs only dllmain.cpp (the
     # endpoint table for Game.ini), not the ~100 MB of engine SDK headers the DLL is built from.
     $dllSrc = Join-Path $From 'native\internal-server'
     $code = Invoke-DRNative -FilePath 'robocopy.exe' -Arguments @($From, $appNew, '/E', '/XD', 'node_modules', 'dist', 'build', 'out', '.git', '.vite', 'staging',
-        (Join-Path $dllSrc 'SDK'), (Join-Path $dllSrc 'MinHook'),
+        (Join-Path $From 'rust'), (Join-Path $dllSrc 'SDK'), (Join-Path $dllSrc 'MinHook'),
         '/XF', '.env', '*.db', '*.db-journal', '*.db-wal', '*.db-shm', '*.log', '*.key', '*.pem', (Join-Path $dllSrc 'Assertions.inl'),
         '/NFL', '/NDL', '/NJH', '/NJS', '/NP', '/R:1', '/W:1') -LogBase (Join-Path $Paths.Logs 'install\source-copy')
     if ($code -ge 8) { Stop-DR "Copying the source failed (robocopy exit code $code)" }
     # .env files of the source must never come along, whatever their name
     Get-ChildItem -LiteralPath $appNew -Recurse -Force -Filter '.env*' -File | Where-Object { $_.Name -ne '.env.example' } | Remove-Item -Force
-    # The source keeps the Node packages in legacy\; the app keeps them at its top level, where the services,
-    # the updates and the backups expect them.
+    # The source keeps the service folders in legacy\; the app keeps them at its top level, where the
+    # services, the updates and the backups expect them.
     $legacy = Join-Path $appNew 'legacy'
     if (Test-Path -LiteralPath $legacy) {
         foreach ($d in @(Get-ChildItem -LiteralPath $legacy -Force)) {
@@ -1077,35 +1120,18 @@ function Build-DRApp {
         }
         Remove-Item -LiteralPath $legacy -Recurse -Force
     }
-    $npmCli = Join-Path (Split-Path $NodeExe -Parent) 'node_modules\npm\bin\npm-cli.js'
-    if (-not (Test-Path -LiteralPath $npmCli)) { Stop-DR "npm not found next to $NodeExe" }
-    $built = @()
-    foreach ($pkg in $script:DRPackages) {
-        $dir = Join-Path $appNew $pkg
-        if (-not (Test-Path -LiteralPath (Join-Path $dir 'package.json'))) {
-            if ($pkg -in 'UndauntedMetagame', 'UndauntedDeployServer') { Stop-DR "$pkg is missing from the source" }
-            Write-DRWarn "this code version has no $pkg; skipping it"
-            continue
-        }
-        # NODE_ENV=production would make npm ci skip the TypeScript compiler.
-        $envs = Get-DRBuildEnvironment $NodeExe
-        Write-DRInfo "npm ci + build: $pkg (a few minutes) ..."
-        $code = Invoke-DRNative -FilePath $NodeExe -Arguments @($npmCli, 'ci', '--no-audit', '--no-fund') -WorkingDirectory $dir -LogBase (Join-Path $Paths.Logs "install\npm-ci-$pkg") -Environment $envs -LowPriority
-        if ($code -ne 0) { Show-DRLogTail (Join-Path $Paths.Logs "install\npm-ci-$pkg"); Stop-DR "npm ci failed in $pkg" }
-        $code = Invoke-DRNative -FilePath $NodeExe -Arguments @($npmCli, 'run', 'build') -WorkingDirectory $dir -LogBase (Join-Path $Paths.Logs "install\npm-build-$pkg") -Environment $envs -LowPriority
-        if ($code -ne 0) { Show-DRLogTail (Join-Path $Paths.Logs "install\npm-build-$pkg"); Stop-DR "the build failed in $pkg" }
-        foreach ($c in $script:DRComponents.Keys) {
-            $cd = $script:DRComponents[$c]
-            if ($cd.Dir -eq $pkg -and -not (Test-Path -LiteralPath (Join-Path $dir $cd.Script))) { Stop-DR "the build of $pkg has no $($cd.Script) ($($cd.Label))" }
-        }
-        if ($pkg -in 'UndauntedMetagame', 'UndauntedDeployServer' -and -not (Test-Path -LiteralPath (Join-Path $dir 'node_modules\better-sqlite3\build\Release\better_sqlite3.node'))) {
-            Stop-DR "better-sqlite3 has no native module in $pkg (see $($Paths.Logs)\install\npm-ci-$pkg.err.log)"
-        }
-        Write-DROk "$pkg built"
-        $built += $pkg
+    $bin = Join-Path $appNew 'bin'
+    New-Item -ItemType Directory -Force -Path $bin | Out-Null
+    $hashes = [ordered]@{}
+    foreach ($b in $script:DRBinaries) {
+        $target = Join-Path $bin "$b.exe"
+        Copy-Item -LiteralPath (Join-Path $Binaries "$b.exe") -Destination $target -Force
+        Unblock-File -LiteralPath $target
+        $hashes["$b.exe"] = Get-DRSha256 $target
     }
+    Write-DROk "service binaries from $Binaries"
+    $Version['binaries'] = $hashes
     Write-DRText -Path (Join-Path $appNew 'VERSION.json') -Text ($Version | ConvertTo-Json)
-    return ,$built
 }
 
 # app.new -> app, the old app -> app.prev. Nothing of the app may be running.

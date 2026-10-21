@@ -233,14 +233,16 @@ installer. That key should have no sudo access and no general shell.
 
 The Linux port does not yet have the Windows kit's transactional update/rollback script.
 
-Before updating, back up the data directory. The database can be copied safely while the metagame
-runs:
+Before updating, take a backup. It is safe while the services run:
 
 ```bash
-sudo -u dauntless /opt/dauntless-revived/bin/metagame db backup \
-  /var/lib/dauntless-revived/undaunted.db \
-  /var/lib/dauntless-revived/undaunted-backup.db
+sudo ./deploy/linux-server/stack.sh backup
 ```
+
+It writes `/var/lib/dauntless-revived/backups/<date_time>/`: the database (an online copy through
+`metagame db backup`, checked after), and in `secrets/` the settings, the game-server key and the
+gateway certificate. Copy that folder off the host. Never copy `undaunted.db` by hand while the
+metagame runs: recent changes may still be in its WAL file.
 
 Then pull/copy the newer source and re-run the installer with the same arguments (it builds or
 takes the new binaries and migrates the database before the services start). Keep the same

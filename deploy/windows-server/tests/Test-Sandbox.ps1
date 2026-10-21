@@ -16,6 +16,9 @@
 #>
 param(
     [string]$SandboxDir = 'C:\dr\sandbox-ws2019',
+    # The service binaries to install (a cargo target folder or a CI server-binaries download).
+    # Default: rust\target\debug of this checkout, else rust\target\release.
+    [string]$ServerBinaries,
     [switch]$KeepSandbox,
     [switch]$SkipRestore
 )
@@ -70,8 +73,13 @@ function Get-ChatUpgradeStatus([int]$Port, [string]$Fingerprint) {
     } catch { return -1 } finally { if ($client) { $client.Close() } }
 }
 function Get-LivePids { foreach ($p in 61000, 61001) { $c = Get-NetTCPConnection -LocalPort $p -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1; if ($c) { "$p=$($c.OwningProcess)" } else { "$p=down" } } }
+# The sandbox's services: the binaries under its root (and, from an old Node install, node.exe
+# processes whose command line names it).
 function Get-SandboxNodes([string]$Under) {
-    @(Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -and $_.CommandLine.IndexOf($Under, [StringComparison]::OrdinalIgnoreCase) -ge 0 })
+    @(Get-CimInstance Win32_Process | Where-Object {
+        ($_.ExecutablePath -and $_.ExecutablePath.StartsWith($Under, [StringComparison]::OrdinalIgnoreCase)) -or
+        ($_.Name -eq 'node.exe' -and $_.CommandLine -and $_.CommandLine.IndexOf($Under, [StringComparison]::OrdinalIgnoreCase) -ge 0)
+    })
 }
 function Stop-Sandbox([string]$R) {
     if (Test-Path -LiteralPath (Join-Path $R 'data\config\server.json')) { [void](Run-Kit (Join-Path $R 'bin\Stack.ps1') @('stop', '-Root', $R, '-NoBackup')) }
@@ -110,14 +118,22 @@ try {
     Write-DRText -Path $manifest -Text (([ordered]@{ build = $DRPinned.Build; totalBytes = $total; files = $entries }) | ConvertTo-Json -Depth 4)
     Check 'stand-in game folder' (Test-Path -LiteralPath (Join-Path $game 'Archon\Binaries\Win64'))
 
-    $common = @('-Sandbox', '-Mode', 'Public', '-GameDir', $game, '-ContentManifest', $manifest, '-ServerName', 'Sandbox Ramsgate', '-PublicHost', '127.0.0.1', '-Chat', 'On')
+    if (-not $ServerBinaries) {
+        $repo = Split-Path (Split-Path $Kit -Parent) -Parent
+        foreach ($t in 'debug', 'release') {
+            $d = Join-Path $repo "rust\target\$t"
+            if (Test-Path -LiteralPath (Join-Path $d 'metagame.exe')) { $ServerBinaries = $d; break }
+        }
+    }
+    Check 'service binaries to install' ([bool]$ServerBinaries) 'build them first: cargo build --bins -p metagame -p gateway -p content -p deploy (in rust\)'
+    $common = @('-Sandbox', '-Mode', 'Public', '-GameDir', $game, '-ContentManifest', $manifest, '-ServerName', 'Sandbox Ramsgate', '-PublicHost', '127.0.0.1', '-Chat', 'On', '-ServerBinaries', $ServerBinaries)
 
     # ------------------------------------------------------------------------------------------
     Step 'Installer -WhatIf (nothing may be created)'
     $w = Run-Kit (Join-Path $Kit 'Install-DauntlessServer.ps1') (@('-InstallRoot', $Root, '-OwnerName', 'SandboxOwner', '-WhatIf') + $common)
     Check 'what-if run exits 0' ($w.Code -eq 0) (($w.Out | Select-Object -Last 8) -join ' | ')
     Check 'what-if created nothing' (-not (Test-Path -LiteralPath $Root))
-    Check 'what-if lists the build step' ($w.Text -match 'What if: Performing the operation "Copy the server code and build it')
+    Check 'what-if lists the code step' ($w.Text -match 'What if: Performing the operation "Copy the server code and install its service binaries')
     Check 'what-if lists the certificate step' ($w.Text -match 'certificate')
 
     # ------------------------------------------------------------------------------------------
@@ -230,7 +246,7 @@ try {
     Start-Sleep -Seconds 4   # the allowlist helper applies changes at most every 3 s
     $audit = @(Get-Content -LiteralPath (Join-Path $Root 'data\allowlist\audit.log') -ErrorAction SilentlyContinue | ForEach-Object { try { $_ | ConvertFrom-Json } catch {} })
     Check 'login fed the allowlist helper (127.0.0.1 added)' (@($audit | Where-Object { $_.event -eq 'added' -and $_.ip -eq '127.0.0.1' }).Count -ge 1) "$(@($audit).Count) audit lines"
-    Check 'dry-run: the rule change is only logged' (@($audit | Where-Object { $_.event -eq 'dry_run' -and $_.script -match 'DauntlessRevived-GamePorts-Allowlist' -and $_.script -match "'127\.0\.0\.1'" }).Count -ge 1)
+    Check 'dry-run: the rule change is only logged' (@($audit | Where-Object { $_.event -eq 'dry_run' -and $_.rule -match 'allowlist' -and @($_.ips) -contains '127.0.0.1' }).Count -ge 1)
     $gwOut = Get-Content -LiteralPath (Join-Path $Root 'data\logs\gateway.out.log') -Raw -ErrorAction SilentlyContinue
     Check 'gateway access log has no keys' ($gwOut -and -not $gwOut.Contains($friendKey) -and -not $gwOut.Contains($meta['GATEWAY_SECRET']))
     $friendKey = $null
@@ -238,7 +254,7 @@ try {
     # ------------------------------------------------------------------------------------------
     Step 'Update from the checkout, then roll back (builds again)'
     $repo = Split-Path (Split-Path $Kit -Parent) -Parent
-    $up = Run-Kit (Join-Path $bin 'Update-DauntlessServer.ps1') @('-Root', $Root, '-SourceDir', $repo, '-Force')
+    $up = Run-Kit (Join-Path $bin 'Update-DauntlessServer.ps1') @('-Root', $Root, '-SourceDir', $repo, '-Force', '-ServerBinaries', $ServerBinaries)
     Check 'update exits 0 and checks the server through the gateway' ($up.Code -eq 0 -and $up.Text -match 'the server is up on') (($up.Out | Where-Object { $_ -match 'FAIL|WARN' } | Select-Object -First 4) -join ' | ')
     Check 'the previous build is kept for a rollback' (Test-Path -LiteralPath (Join-Path $Root 'app.prev\VERSION.json'))
     Check 'the update took a backup first' ($up.Text -match 'backup: ')

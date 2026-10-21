@@ -56,7 +56,6 @@ $Root = Resolve-DRRoot $Root $PSScriptRoot
 $P = Get-DRPaths $Root
 $Cfg = Get-DRConfig $Root
 $Mode = Get-DRMode $Cfg
-$Node = Get-DRConfigValue $Cfg 'NodePath' 'node'
 $Bind = Get-DRConfigValue $Cfg 'BindAddress' '127.0.0.1'
 $GatewayBind = Get-DRConfigValue $Cfg 'GatewayBind' '0.0.0.0'
 $Fingerprint = [string](Get-DRConfigValue $Cfg 'CertFingerprint' '')
@@ -283,9 +282,9 @@ function Start-Component([string]$C) {
         return $false
     }
     $dir = Join-Path $P.App $DRComponents[$C].Dir
-    $script = Get-DRComponentScript $P $C
+    $exe = Get-DRComponentExe $P $C
     $envFile = $P.($DRComponents[$C].Env)
-    if (-not (Test-Path -LiteralPath $script)) { Say "!! $(Label $C) is not built ($script missing)"; return $false }
+    if (-not (Test-Path -LiteralPath $exe)) { Say "!! $(Label $C) is not installed ($exe missing)"; return $false }
     if (-not (Test-Path -LiteralPath $envFile)) { Say "!! $(Label $C) has no configuration ($envFile missing)"; return $false }
     if ($C -eq 'allowlist' -and -not (Get-DRConfigValue $Cfg 'AllowlistDryRun' $false) -and -not ($IsSystem -or (Test-DRAdmin))) {
         Say '!! the allowlist helper changes a firewall rule and must run elevated (its own scheduled task)'
@@ -300,12 +299,13 @@ function Start-Component([string]$C) {
     Rotate-Log $C $logDir
     # The .env file must win: a variable already set in this process would override its value.
     foreach ($k in @((Read-DREnv $envFile).Keys)) { [Environment]::SetEnvironmentVariable($k, $null, 'Process') }
-    # Started through cmd.exe with ShellExecute (Start-Process without redirection), so node inherits
-    # no handles from this PowerShell: a caller that reads this script's output is never kept waiting
-    # by the server, and cmd.exe writes node's output to the log files.
+    # Started through cmd.exe with ShellExecute (Start-Process without redirection), so the service
+    # inherits no handles from this PowerShell: a caller that reads this script's output is never kept
+    # waiting by the server, and cmd.exe writes the service's output to the log files.
     $out = Join-Path $logDir "$C.out.log"
     $err = Join-Path $logDir "$C.err.log"
-    $inner = '"{0}" "--env-file={1}" "{2}" 1>>"{3}" 2>>"{4}"' -f $Node, $envFile, $script, $out, $err
+    $verbs = (@($DRComponents[$C].Args) | ForEach-Object { "$_ " }) -join ''
+    $inner = '"{0}" {1}"--env-file={2}" 1>>"{3}" 2>>"{4}"' -f $exe, $verbs, $envFile, $out, $err
     $proc = Start-Process -FilePath (Join-Path $env:WINDIR 'System32\cmd.exe') -ArgumentList ('/d /s /c "' + $inner + '"') `
         -WorkingDirectory $dir -WindowStyle Hidden -PassThru
     for ($i = 0; $i -lt 60; $i++) {

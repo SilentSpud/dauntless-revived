@@ -126,6 +126,21 @@ fn signing(existing: &HashMap<String, String>) -> Result<(String, String), Strin
     Ok((b64.encode(key.serialize_pem()), b64.encode(key.public_key_pem())))
 }
 
+/// `deploy signing-keys <out file>` (the Windows kit's `dr-keys.js signing`): a fresh signing pair as the
+/// two `.env` lines the metagame reads, in a private file. Nothing is printed but a note; the caller
+/// merges the lines into the protected `metagame.env` and deletes the file.
+pub fn signing_keys_file(out: &Path) -> Result<(), String> {
+    let (private, public) = signing(&HashMap::new())?;
+    write_private(
+        out,
+        &format!(
+            "AUTH_SIGNING_PRIVKEY_B64={private}
+AUTH_SIGNING_PUBKEY_B64={public}
+"
+        ),
+    )
+}
+
 fn port(text: Option<&String>, default: u32) -> Option<u32> {
     match text {
         None => Some(default),
@@ -421,6 +436,23 @@ pub fn generate(argv: &[String]) -> Result<String, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn signing_keys_are_two_env_lines_of_base64_pem() {
+        use base64::Engine;
+        let dir = tempfile::tempdir().unwrap();
+        let out = dir.path().join("signing.tmp");
+        signing_keys_file(&out).unwrap();
+        let env = read_env(&out);
+        assert_eq!(env.len(), 2);
+        let pem = |name: &str| {
+            String::from_utf8(base64::engine::general_purpose::STANDARD.decode(&env[name]).unwrap()).unwrap()
+        };
+        // The PEM headers, built so the repository check does not take this test for a key
+        let header = |kind: &str| format!("-----BEGIN {kind} KEY-----");
+        assert!(pem("AUTH_SIGNING_PRIVKEY_B64").starts_with(&header("PRIVATE")));
+        assert!(pem("AUTH_SIGNING_PUBKEY_B64").starts_with(&header("PUBLIC")));
+    }
 
     fn run(platform: &str, root: &Path, extra: &[&str]) -> (PathBuf, PathBuf) {
         let (data, config, game) = (root.join("data"), root.join("config"), root.join("game"));

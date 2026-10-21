@@ -3,9 +3,11 @@
     Updates the server code of an installed Dauntless Revived server, with an automatic rollback.
 
 .DESCRIPTION
-    1. Builds the new code into <root>\app.new while the server keeps running (below normal priority):
-       from an uploaded source zip (-SourceZip, what Deploy-Remote.ps1 -Update sends), a folder
-       (-SourceDir), or GitHub (-Ref <tag, branch or commit>).
+    1. Puts the new code into <root>\app.new while the server keeps running: from an uploaded source
+       zip (-SourceZip, what Deploy-Remote.ps1 -Update sends), a folder (-SourceDir), or GitHub
+       (-Ref <tag, branch or commit>), with its service binaries in app.new\bin: -ServerBinaries (the
+       CI download for that commit, checked against its SHA256SUMS), or a release build in the source.
+       The first update from a Node build also stops the Node processes and starts the binaries.
     2. Takes a backup (the metagame may migrate the database when it starts), stops the stack, puts the
        new build in place (the old one stays as app.prev) and refreshes the kit scripts in <root>\bin
        from the new code.
@@ -29,6 +31,7 @@ param(
     [Parameter(ParameterSetName = 'Zip')][string]$SourceCommit,
     [Parameter(ParameterSetName = 'Dir', Mandatory = $true)][string]$SourceDir,
     [Parameter(ParameterSetName = 'Rollback', Mandatory = $true)][switch]$Rollback,
+    [string]$ServerBinaries,
     [switch]$Force,
     [int]$HealthTimeoutSec = 180
 )
@@ -71,8 +74,12 @@ function Update-Kit([string]$From) {
     $kit = Join-Path $From 'deploy\windows-server'
     if (-not (Test-Path -LiteralPath (Join-Path $kit 'DauntlessServer.Common.ps1'))) { Write-DRWarn 'the new code has no deploy\windows-server; kit scripts left as they are'; return }
     foreach ($f in Get-ChildItem -LiteralPath $kit -File | Where-Object { $_.Extension -in '.ps1', '.vbs', '.md' }) { Copy-Item -LiteralPath $f.FullName -Destination $P.Bin -Force }
-    New-Item -ItemType Directory -Force -Path (Join-Path $P.Bin 'lib') | Out-Null
-    Get-ChildItem -LiteralPath (Join-Path $kit 'lib') -File | Where-Object { $_.Extension -in '.js', '.cjs' } | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $P.Bin 'lib') -Force }
+    # A kit with Node helpers (one rolled back to) brings them along; one without removes the old ones
+    $lib = Join-Path $kit 'lib'
+    if (Test-Path -LiteralPath $lib) {
+        New-Item -ItemType Directory -Force -Path (Join-Path $P.Bin 'lib') | Out-Null
+        Get-ChildItem -LiteralPath $lib -File | Where-Object { $_.Extension -in '.js', '.cjs' } | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $P.Bin 'lib') -Force }
+    } elseif (Test-Path -LiteralPath (Join-Path $P.Bin 'lib')) { Remove-Item -LiteralPath (Join-Path $P.Bin 'lib') -Recurse -Force }
     Write-DROk "kit scripts in $($P.Bin) refreshed from the new code"
 }
 
@@ -126,7 +133,6 @@ try {
     $Cfg = Get-DRConfig $Root
     $Sandbox = [bool](Get-DRConfigValue $Cfg 'Sandbox' $false)
     if (-not $Sandbox -and -not (Test-DRAdmin)) { Stop-DR 'Run this in an elevated PowerShell (Run as administrator).' }
-    $NodeExe = Get-DRConfigValue $Cfg 'NodePath' 'node'
     $installed = Get-DRConfigValue $Cfg 'Commit' 'unknown'
     Write-DRStep "Updating $Root ($(Get-DRMode $Cfg) mode, installed code $installed)"
 
@@ -180,11 +186,11 @@ try {
         if ($commit -notmatch '^[0-9a-f]{40}$') { Stop-DR "Could not resolve '$refUsed' to a commit." }
     }
     Write-DROk "new code: $kind $commit"
-    if ($commit -eq $installed -and $commit -notmatch '-(dirty|worktree)$' -and -not $Force) { Write-DROk 'that code is already installed; nothing to do (-Force rebuilds anyway)'; exit 0 }
+    if ($commit -eq $installed -and $commit -notmatch '-(dirty|worktree)$' -and -not $Force -and -not $ServerBinaries) { Write-DROk 'that code is already installed; nothing to do (-Force installs it again)'; exit 0 }
 
-    # 2. Build next to the running server
-    Write-DRStep 'Building (the server keeps running)'
-    if (-not $PSCmdlet.ShouldProcess("$($P.App).new", "Build $commit with npm ci + npm run build")) { exit 0 }
+    # 2. The new code and binaries next to the running server
+    Write-DRStep 'Preparing (the server keeps running)'
+    if (-not $PSCmdlet.ShouldProcess("$($P.App).new", "Put $commit and its service binaries in place")) { exit 0 }
     if ($kind -eq 'github') {
         $zip = Join-Path $P.Downloads "source-$commit.zip"
         if (-not (Test-Path -LiteralPath $zip)) { Save-DRDownload ("https://codeload.github.com/{0}/{1}/zip/{2}" -f $DRRepo.Owner, $DRRepo.Name, $commit) $zip }
@@ -193,10 +199,8 @@ try {
         $from = Expand-DRSourceZip $P ([IO.Path]::GetFullPath($SourceZip)) 'upload'
     }
     $ver = [ordered]@{ commit = $commit; ref = $refUsed; source = $kind; sourceUrl = $DRRepo.Url; installedAt = (Get-Date).ToString('o') }
-    $built = Build-DRApp -Paths $P -From $from -NodeExe $NodeExe -Version $ver
-    foreach ($c in @(Get-DRConfigValue $Cfg 'Components' @())) {
-        if ($built -notcontains $DRComponents[$c].Dir) { Stop-DR "The new code has no $($DRComponents[$c].Dir), which this server runs ($c). Not switching." }
-    }
+    $binaries = Resolve-DRServerBinaries $ServerBinaries $from
+    Install-DRApp -Paths $P -From $from -Binaries $binaries -Version $ver
     foreach ($dll in $DRPinned.Dlls.Keys) {
         $inGame = Join-Path (Split-Path (Join-Path (Get-DRConfigValue $Cfg 'GameDir' '') $DRPinned.ExeRelative) -Parent) $dll
         if (-not $Sandbox -and (-not (Test-Path -LiteralPath $inGame) -or (Get-DRSha256 $inGame) -ne $DRPinned.Dlls[$dll])) { Write-DRWarn "$dll in the game folder is missing or changed; run Install-DauntlessServer.ps1 to repair it" }

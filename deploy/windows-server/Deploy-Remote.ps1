@@ -10,7 +10,9 @@
       1. Checks the server: Windows PowerShell 5.1, administrator session.
       2. Uploads this kit and the server code: a git archive of the current commit (or, with
          -WorkingTree, the working tree without ignored files and secrets), or -Source GitHub -Ref <ref>
-         to let the server download a pushed ref itself.
+         to let the server download a pushed ref itself; and the service binaries for that code
+         (-ServerBinaries: the CI download of that commit, or by default this checkout's
+         rust\target\release), checked by their SHA-256 after the upload.
       3. -RestoreFrom: uploads a backup folder (database and keys) into a folder only Administrators and
          SYSTEM can read, and deletes it from the server after a successful install.
       4. -GameZip: uploads the 10.5 GB game zip in parts (-ChunkSizeMB, default 256). The zip is checked
@@ -64,6 +66,9 @@ param(
     [ValidateSet('Upload', 'GitHub')][string]$Source = 'Upload',
     [string]$Ref,
     [switch]$WorkingTree,
+    # The service binaries for the code (metagame.exe and the rest): a CI server-x86_64-pc-windows-msvc
+    # download. Default: rust\target\release in this checkout, when it holds a build.
+    [string]$ServerBinaries,
     [switch]$InteractiveSession,
     [ValidateSet('On', 'Off')][string]$Chat,
     [switch]$Update,
@@ -538,6 +543,39 @@ $os = Get-CimInstance Win32_OperatingSystem
             $sourceArgs = @('-SourceZip', $remoteZip, '-SourceCommit', $commit)
         } else {
             $sourceArgs = @('-Ref', $(if ($Ref) { $Ref } else { $DRRepo.PinnedRef }))
+        }
+
+        # The service binaries, beside the code: the server checks them against SHA256SUMS when it has one
+        $binLocal = $null
+        if ($ServerBinaries) { $binLocal = [IO.Path]::GetFullPath($ServerBinaries) }
+        else {
+            $release = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\rust\target\release'))
+            if (Test-Path -LiteralPath (Join-Path $release 'metagame.exe')) { $binLocal = $release }
+        }
+        if ($binLocal) {
+            Write-DRStep 'Uploading the service binaries'
+            $binStage = Join-Path $stage 'binaries'
+            New-Item -ItemType Directory -Force -Path $binStage | Out-Null
+            $names = @($DRBinaries | ForEach-Object { "$_.exe" })
+            if (Test-Path -LiteralPath (Join-Path $binLocal 'SHA256SUMS')) { $names += 'SHA256SUMS' }
+            foreach ($n in $names) {
+                if (-not (Test-Path -LiteralPath (Join-Path $binLocal $n))) { Stop-DR "$binLocal has no $n" }
+                Copy-Item -LiteralPath (Join-Path $binLocal $n) -Destination $binStage
+            }
+            $binRemote = Join-Path $RemoteSource 'binaries'
+            [void](Invoke-Remote "`$b = $(ConvertTo-DRPsLiteral $binRemote); if (Test-Path -LiteralPath `$b) { Remove-Item -LiteralPath `$b -Recurse -Force }; 'DRJSON:{}'")
+            Send-Item $binStage $RemoteSource -Recurse
+            $hashesHere = [ordered]@{}
+            foreach ($n in $names) { $hashesHere[$n] = Get-DRSha256 (Join-Path $binStage $n) }
+            $br = Invoke-Remote "`$b = $(ConvertTo-DRPsLiteral $binRemote); `$h = @{}; foreach (`$f in Get-ChildItem -LiteralPath `$b -File) { `$h[`$f.Name] = (Get-FileHash -LiteralPath `$f.FullName -Algorithm SHA256).Hash }; 'DRJSON:' + (`$h | ConvertTo-Json -Compress)"
+            $bj = Get-RemoteJson $br
+            foreach ($n in $names) {
+                if (-not $bj -or [string]$bj.$n -ne $hashesHere[$n]) { Stop-DR "$n arrived damaged (SHA-256 differs)." }
+            }
+            Write-DROk "service binaries uploaded and checked ($binLocal)"
+            $sourceArgs += @('-ServerBinaries', $binRemote)
+        } elseif ($Source -eq 'Upload') {
+            Write-DRWarn 'no service binaries given (-ServerBinaries) and none built in rust\target\release: the server must find them in the code'
         }
 
         $restoreRemote = $null

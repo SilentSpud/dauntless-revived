@@ -36,10 +36,6 @@ foreach ($f in @(Get-ChildItem -LiteralPath $Kit -Filter *.ps1) + @(Get-ChildIte
 }
 
 Write-Host '== invite strings'
-$pathBefore = $env:Path
-$buildEnv = Get-DRBuildEnvironment 'C:\Program Files\nodejs\node.exe'
-Check 'build PATH finds the configured Node in an old SSH session' ($buildEnv.Path.StartsWith('C:\Program Files\nodejs;') -and $buildEnv.NODE_ENV -eq 'development')
-Check 'build environment does not change the operator PATH' ($env:Path -ceq $pathBefore)
 $fp = 'ab' * 32
 $v2 = New-DRInviteString -Mode Public -ServerHost '203.0.113.7' -Port 443 -Fingerprint $fp -Code 'ABCD-EFGH-JKLM' -Name "Alex's Ramsgate"
 Check 'v2 layout' ($v2 -ceq "dauntless-revived://join?v=2&mode=public&host=203.0.113.7&port=443&fp=$fp&code=ABCD-EFGH-JKLM&name=Alex's%20Ramsgate") $v2
@@ -104,15 +100,16 @@ Check '.env round trip' ($back['A'] -eq '1' -and $back['SERVER_NAME'] -eq 'Two w
 Check '.env unchanged write reports no change' (-not (Write-DREnv $envFile ([ordered]@{ A = '1'; SERVER_NAME = 'Two words'; C = 'x=y' }) @('header')))
 
 Write-Host '== certificate fingerprint and TLS pinning'
-$gw = Join-Path (Split-Path $Kit -Parent | Split-Path -Parent) 'legacy\UndauntedGateway'
-$makeCert = Join-Path $gw 'tools\make-cert.js'
+$repo = Split-Path $Kit -Parent | Split-Path -Parent
+$makeCert = @('debug', 'release') | ForEach-Object { Join-Path $repo "rust\target\$_\gateway.exe" } | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+# The stand-in servers below are small Node scripts (test tooling; the kit itself needs no Node)
 $node = (Get-Command node.exe).Source
 $server = $null
-if (-not (Test-Path -LiteralPath (Join-Path $gw 'node_modules\node-forge'))) {
-    Check 'legacy\UndauntedGateway\node_modules present (npm ci there first)' $false
+if (-not $makeCert) {
+    Check 'rust\target\debug\gateway.exe present (cargo build --bins -p gateway in rust\ first)' $false
 } else {
     $cert = Join-Path $WorkDir 'cert.pem'; $key = Join-Path $WorkDir 'key.pem'
-    $out = & $node $makeCert --host 127.0.0.1 --host test.invalid --cert $cert --key $key --json 2>&1 | Out-String
+    $out = & $makeCert make-cert --host 127.0.0.1 --host test.invalid --cert $cert --key $key --json 2>&1 | Out-String
     $info = $out | ConvertFrom-Json
     $mine = Get-DRCertFingerprint $cert
     Check 'fingerprint matches make-cert' ($mine -eq $info.fingerprint -and (Test-DRFingerprint $mine)) "$mine vs $($info.fingerprint)"

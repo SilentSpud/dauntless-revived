@@ -31,9 +31,16 @@ if(!`$db){throw 'No fresh database backup'}
     & scp.exe -q -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$knownHosts" -o ConnectTimeout=15 -i $IdentityFile "Administrator@${SourceHost}:$($info.path)" $partial
     if ($LASTEXITCODE) { throw 'Database transfer failed' }
     if ((Get-FileHash $partial -Algorithm SHA256).Hash -ne $info.hash) { throw 'Transferred database hash mismatch' }
-    $verifier = Join-Path $Root 'Verify-Backup.mjs'
-    'import {DatabaseSync} from "node:sqlite"; const d=new DatabaseSync(process.argv[2],{readOnly:true});if(d.prepare("PRAGMA quick_check").get().quick_check!=="ok")throw Error("Database check failed");d.close();' | Set-Content $verifier -Encoding ascii
-    & 'C:\Program Files\nodejs\node.exe' $verifier $partial
+    # The copy is checked with this host's own metagame.exe (metagame db integrity); a host still on the
+    # Node services checks it with Node's SQLite instead.
+    $metagame = Join-Path $Root 'app\bin\metagame.exe'
+    if (Test-Path -LiteralPath $metagame) {
+        & $metagame db integrity $partial
+    } else {
+        $verifier = Join-Path $Root 'Verify-Backup.mjs'
+        'import {DatabaseSync} from "node:sqlite"; const d=new DatabaseSync(process.argv[2],{readOnly:true});if(d.prepare("PRAGMA quick_check").get().quick_check!=="ok")throw Error("Database check failed");d.close();' | Set-Content $verifier -Encoding ascii
+        & 'C:\Program Files\nodejs\node.exe' $verifier $partial
+    }
     if ($LASTEXITCODE) { throw 'Transferred database integrity check failed' }
     Move-Item -LiteralPath $partial -Destination (Join-Path $dest $name)
     @{at=[DateTime]::UtcNow.ToString('o');file=$name;sha256=$info.hash;verified=$true} | ConvertTo-Json | Set-Content (Join-Path $dest 'last-success.json')

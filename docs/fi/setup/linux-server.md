@@ -199,13 +199,17 @@ eikä yleistä shelliä.
 Linux-portissa ei vielä ole Windows-paketin transaktionaalista päivitystä ja automaattista
 palautusta.
 
-SQLite-varmuuskopio (turvallinen myös metagamen ollessa käynnissä):
+Varmuuskopio (turvallinen myös palvelujen ollessa käynnissä):
 
 ```bash
-sudo -u dauntless /opt/dauntless-revived/bin/metagame db backup \
-  /var/lib/dauntless-revived/undaunted.db \
-  /var/lib/dauntless-revived/undaunted-backup.db
+sudo ./deploy/linux-server/stack.sh backup
 ```
+
+Se kirjoittaa kansion `/var/lib/dauntless-revived/backups/<päivä_aika>/`: tietokannan (online-kopio
+`metagame db backup` -komennolla, tarkistettuna) ja `secrets/`-kansioon asetukset,
+pelipalvelinavaimen ja yhdyskäytävän varmenteen. Kopioi kansio pois palvelimelta. Älä kopioi
+`undaunted.db`:tä käsin metagamen ollessa käynnissä: viimeisimmät muutokset voivat olla vielä sen
+WAL-tiedostossa.
 
 Päivitä lähdekoodi ja aja asennin uudelleen samoilla asetuksilla (se kääntää tai ottaa uudet
 ohjelmat ja päivittää tietokannan ennen palvelujen käynnistystä). Säilytä samat data- ja

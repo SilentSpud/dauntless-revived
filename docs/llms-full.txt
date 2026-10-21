@@ -3525,7 +3525,7 @@ own relay. That is why the relay port is fixed at 61000.
 
 | Port | Open to | Notes |
 |:-----|:--------|:------|
-| TCP 443 (`-GatewayPort`) | Everyone | The gateway, TLS only, `node.exe` only. |
+| TCP 443 (`-GatewayPort`) | Everyone | The gateway, TLS only, `gateway.exe` only. |
 | UDP 8770-8777 | Only addresses of players who logged in | The allowlist rule; closed while nobody plays and whenever the stack is stopped. Only the game executable may receive. |
 | TCP 22 | Everyone, **key login only** | OpenSSH, for your own administration. A deploy over SSH turns password login off (key login is already proven); otherwise the installer warns. Limit this to your own address at the provider. |
 | TCP 3389 | Only `-AdminIp` | Remote Desktop, if you use it. Without `-AdminIp` the installer **turns off** any internet-open RDP rule (use key-only SSH instead); `-KeepRdpOpen` leaves it open. |
@@ -3611,8 +3611,14 @@ From the repository folder on your PC:
     -GameZip D:\BaseGame144.zip `
     -RestoreFrom C:\dr\backups\2026-10-01_200000 `
     -AdminIp 198.51.100.20 `
-    -ServerName "Saturday Ramsgate"
+    -ServerName "Saturday Ramsgate" `
+    -ServerBinaries C:\dr\server-x86_64-pc-windows-msvc
 ```
+
+`-ServerBinaries` is the folder with the server's programs for that code: the
+`server-x86_64-pc-windows-msvc` download of the commit's CI run (Actions, the run, Artifacts), or
+leave it out when `rust\target\release` in your checkout holds a build (`cargo build --release`).
+They are checked against their `SHA256SUMS` on the server.
 
 Use `-OwnerName <your username>` instead of `-RestoreFrom` for a brand-new server with an empty
 database. What happens:
@@ -3641,11 +3647,11 @@ Desktop). Every step is safe to repeat, and `-WhatIf` lists every change without
 
 1. **Preflight:** administrator, Windows Server 2019 (build 17763) or newer, Desktop Experience,
    8 GB RAM, 40 GB disk budget, free ports.
-2. **Prerequisites:** Node.js (pinned version, checked against both our pin and nodejs.org's
-   `SHASUMS256.txt`), the Visual C++ 2015-2022 x64 runtime and the DirectX June 2010 runtime (both
-   checked by their Microsoft signature). All downloads use TLS 1.2.
-3. **Server code:** built with `npm ci` and `npm run build` in `C:\DauntlessRevived\app`: the
-   metagame, the deploy server, the content server and the gateway with its allowlist helper.
+2. **Prerequisites:** the Visual C++ 2015-2022 x64 runtime and the DirectX June 2010 runtime (both
+   checked by their Microsoft signature). All downloads use TLS 1.2. No Node.js.
+3. **Server code:** copied to `C:\DauntlessRevived\app`, with the server's programs in
+   `C:\DauntlessRevived\app\bin`: `metagame.exe`, `deploy.exe`, `content.exe`, `gateway.exe` and
+   the gateway's `allowlist.exe` (from `-ServerBinaries`, checked against their `SHA256SUMS`).
 4. **Game files:** the zip's SHA-256 is checked, it is extracted with Windows' own `tar.exe`, every
    file is checked against the content manifest, and the two server DLLs are installed with their
    pinned hashes.
@@ -3851,8 +3857,9 @@ on [Run it for a group](https://mixutin.github.io/dauntless-revived/setup/admin.
 ### Updates
 
 `Deploy-Remote.ps1 -Server <address> -Update` uploads your current commit and runs
-`Update-DauntlessServer.ps1` on the server. It builds the new code while the server keeps running,
-takes a backup, switches over, and checks that the metagame answers and the gateway answers with the
+`Update-DauntlessServer.ps1` on the server (pass `-ServerBinaries` for the new commit, as for the
+install). It puts the new code and programs in place while the server keeps running, takes a backup,
+switches over, and checks that the metagame answers and the gateway answers with the
 invite certificate. If that check fails within 3 minutes, it switches back to the previous build by
 itself. `Update-DauntlessServer.ps1 -Rollback` does the same by hand. Settings (apart from `GIT_COMMIT` in
 `metagame.env`, which records the new commit), keys, the certificate,
@@ -3961,7 +3968,8 @@ Some firewall changes are not undone by that: Remote Desktop rules limited to `-
 the folder); to use Remote Desktop again, re-enable its rule (`Enable-NetFirewallRule`) or re-run the
 installer with `-AdminIp <your IP>`. If you used `-InteractiveSession`, also
 turn auto-logon off: `Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
-AutoAdminLogon 0`. Node.js and the Visual C++ runtime can be removed in "Apps and features".
+AutoAdminLogon 0`. The Visual C++ runtime (and Node.js, on a server installed before the Rust services) can be removed
+in "Apps and features".
 
 The snippet also leaves these installer changes in place:
 
@@ -4211,14 +4219,16 @@ installer. That key should have no sudo access and no general shell.
 
 The Linux port does not yet have the Windows kit's transactional update/rollback script.
 
-Before updating, back up the data directory. The database can be copied safely while the metagame
-runs:
+Before updating, take a backup. It is safe while the services run:
 
 ```bash
-sudo -u dauntless /opt/dauntless-revived/bin/metagame db backup \
-  /var/lib/dauntless-revived/undaunted.db \
-  /var/lib/dauntless-revived/undaunted-backup.db
+sudo ./deploy/linux-server/stack.sh backup
 ```
+
+It writes `/var/lib/dauntless-revived/backups/<date_time>/`: the database (an online copy through
+`metagame db backup`, checked after), and in `secrets/` the settings, the game-server key and the
+gateway certificate. Copy that folder off the host. Never copy `undaunted.db` by hand while the
+metagame runs: recent changes may still be in its WAL file.
 
 Then pull/copy the newer source and re-run the installer with the same arguments (it builds or
 takes the new binaries and migrates the database before the services start). Keep the same
@@ -7041,7 +7051,7 @@ them are named `dauntless-revived-*` (for example `dauntless-revived-metagame`).
 | `legacy/UndauntedContent/` | The content server: game files, news and the art pack for registered launchers. `data/dauntless-1.4.4.json` is the game manifest (410 files) that the launcher also compiles in. | `dist/`, `build/` |
 | `legacy/UndauntedLauncher/` | This fork's friend launcher (Electron). `assets/` holds the two pinned prebuilt DLLs, `dxgi.dll` and `UndauntedInternalServer.dll`, which every setup installs (host, server kit, friend kit and launcher), and the icons (copies from `brand/launcher/`). `src/renderer/brand/` holds copies of the logo and emblem images the window shows. `scripts/` holds the test runner, the brand image copier (`make-icon.mjs`) and `collect-release.ps1`. | `.vite/` (`npm start`), `out/` (`npm run package` and `npm run make`), `.test-build/` (tests), `release/` (the release files that `scripts/collect-release.ps1` collects after `npm run make`: the installer, the Squirrel update files, the zip and `SHA256SUMS.txt`). |
 | `native/internal-server/` | The C++ source of the server DLL: a Visual Studio solution, `dllmain.cpp` (with the endpoint table that `Game.ini` is generated from), the `SDK/` engine headers and `MinHook/`. No script or workflow in this repository builds it; everyone runs the prebuilt DLLs from `legacy/UndauntedLauncher/assets/`. Since the MinHook include fix (September 2026) it compiles with the Visual Studio 2022 Build Tools (Release, x64), but no DLL built here is shipped. | Visual Studio output (`x64/`, `*.dll` and the like) |
-| `deploy/windows-server/` | The Windows server kit: the scripts, `lib/` (Node helpers `dr-db.js`, `dr-keys.js`, `verify-game.js`) and `tests/`. | none |
+| `deploy/windows-server/` | The Windows server kit: the scripts and `tests/`. | none |
 | `friend-kit/` | The Tailscale-only setup and play scripts for invited friends. | `tools/make-friend-kit.ps1` builds the zip outside the repository |
 | `tools/` | `build-llms.ts`, `sync-roadmap.ts`, `make-friend-kit.ps1`, `make-game-manifest.ts`, and in `ci/` what CI uses: `check-repo.ts` (the repository check) and `launcher-version.ts` (the launcher version rules). | none |
 | `docs/` | This site (GitHub Pages, Jekyll). `docs/fi/` holds the Finnish pages, `docs/_data/faq_en.yml` and `faq_fi.yml` the FAQ entries. | none |
@@ -7120,7 +7130,7 @@ but cannot change them, so a compromised game server cannot change what an admin
 |:-----|:--------------|:----------------|:-----------|
 | `C:\DauntlessRevived\` | The root. Everything below inherits its permissions unless listed. | read | the installer |
 | `bin\` | A copy of the kit: `*.ps1`, `*.vbs`, `*.md` and `lib\*.js`. The scheduled tasks run `Stack.ps1` and `backup-hidden.vbs` from here. | read | the installer; `Update-DauntlessServer.ps1` refreshes it from the new code |
-| `app\` | The built server code: the repository without `.git`, `node_modules`, build output, `.env` files, keys, certificates, databases, logs and the DLL's engine headers and MinHook, then `npm ci` and `npm run build` in UndauntedMetagame, UndauntedDeployServer, UndauntedContent and UndauntedGateway. `app\VERSION.json` records the commit, ref, source, source URL and install time. Each component runs with its package folder as working directory. | read | the installer and the updater |
+| `app\` | The server code: the repository without the Rust sources, `.git`, `node_modules`, build output, `.env` files, keys, certificates, databases, logs and the DLL's engine headers and MinHook, with the service binaries (`metagame.exe`, `gateway.exe`, `allowlist.exe`, `content.exe`, `deploy.exe`) in `app\bin`. `app\VERSION.json` records the commit, ref, source, source URL, install time and each binary's SHA-256. Each component runs with its service folder (`UndauntedMetagame` and so on) as working directory. | read | the installer and the updater |
 | `app.new\` | A build in progress. After a failed update step it keeps the new build. | read | the installer and the updater |
 | `app.prev\` | The previous build, for `Update-DauntlessServer.ps1 -Rollback`. | read | the installer and the updater |
 | `app.failed\` | A build that failed the updater's health check and was rolled back automatically. | read | the updater |
@@ -7138,7 +7148,7 @@ but cannot change them, so a compromised game server cannot change what an admin
 | `data\allowlist\` | Public mode: the allowlist helper's `audit.log`, `state.json` (the addresses currently let in), `allowlist.pid`, its logs and its supervisor's `supervisor.log`. | read | the allowlist helper (SYSTEM) |
 | `data\sandbox-profile\` | Only with `-Sandbox`: stands in for the service account's profile. | | the installer |
 | `backups\` | One folder per backup and `backup.log` (see [Backups](https://mixutin.github.io/dauntless-revived/reference/files.html#backups)). **Secret: never share, never commit.** | modify | the backup script |
-| `downloads\` | What the installer downloaded: the Node.js MSI, the VC++ and DirectX runtimes (with `dxredist\`), the Tailscale MSI in private mode, source zips from GitHub (`source-<commit>.zip`, unpacked into `source-<12 hex>\`), an uploaded source zip unpacked into `source-upload\`, and, with `-GameZipUrl`, `BaseGame144.zip` (`.partial` while downloading). | read | the installer and the updater |
+| `downloads\` | What the installer downloaded: the VC++ and DirectX runtimes (with `dxredist\`), the Tailscale MSI in private mode, source zips from GitHub (`source-<commit>.zip`, unpacked into `source-<12 hex>\`), an uploaded source zip unpacked into `source-upload\`, and, with `-GameZipUrl`, `BaseGame144.zip` (`.partial` while downloading). | read | the installer and the updater |
 | `staging\` | What `Deploy-Remote.ps1` uploads: `kit\` (the kit it runs from), `source\source-<12 hex>.zip` (the server code), `upload\` (the resumable game-zip upload: `upload.json`, `partNNNNN` files with their `.ok` marks, removed as they are joined, and the finished `BaseGame144.zip` with its `.ok`, which stays for repairs). | read | `Deploy-Remote.ps1`, over SSH as an administrator |
 | `staging\restore\` | A backup uploaded for `-RestoreFrom`. The uploaded copy is deleted after a successful install. **Holds keys while it is there.** | no access | `Deploy-Remote.ps1` |
 
@@ -7173,7 +7183,6 @@ empty value means "use the coded default". It holds no secrets, but
 | `Components` | The components this install runs: `allowlist` and `gateway` in public mode, `metagame`, `content` if it was built, `deploy` except in a sandbox. Missing: metagame, content and deploy. | `Stack.ps1`, the updater |
 | `AllowlistDryRun` | `true`: the allowlist helper only logs the firewall changes it would make. | `Stack.ps1` |
 | `GameDir` | The game folder, the one that holds `Archon\`. | `Stack.ps1`, the updater, installer re-runs |
-| `NodePath` | The `node.exe` that runs everything. | `Stack.ps1`, the updater, the backup |
 | `ServiceUser` | The service account (`dauntless`; empty in a sandbox). | `Stack.ps1`, the installer |
 | `ServiceProfile` | The service account's profile folder, under which its `Game.ini` and `Engine.ini` are. | nothing (for your information) |
 | `InteractiveSession` | Whether `-InteractiveSession` was used. | `Stack.ps1`, for a hint |
@@ -7210,7 +7219,6 @@ Outside the root, the kit also writes:
 - the service account's game config, `Game.ini` and `Engine.ini` in
   `<profile of dauntless>\AppData\Local\Archon\Saved\Config\WindowsClient\` (the profile path is
   `ServiceProfile` in `server.json`); see [Game settings](https://mixutin.github.io/dauntless-revived/reference/game-settings.html);
-- Node.js (pinned MSI) in its default folder, recorded as `NodePath` in `server.json`;
 - the scheduled tasks, firewall rules and a few system settings, listed on
   [Scripts and parameters](https://mixutin.github.io/dauntless-revived/reference/scripts.html) and
   [Ports and network](https://mixutin.github.io/dauntless-revived/reference/ports.html).
@@ -7426,7 +7434,7 @@ usernames and, in public mode, players' IP addresses, so read a log before you s
 | `data\allowlist\supervisor.log` | The same for the allowlist helper's supervisor (SYSTEM). | As above. |
 | `data\logs\bodies.log` | Only with `LOG_BODIES=1`: one JSON object per line, `t` (arrival), `method`, `url`, `gs`, `body`, `status` and `ms` (plus `"aborted": true` when the connection closed first), written once the answer is done, for a fixed list of routes (progression, Hunt Pass, bounties, cooldowns, Escalation, entitlements, loadout unlocks, the store (`/product`, `/token`, `/notification`), balance and `/reconcile`, Slayer Links, inventory, matchmaking candidates, parties, friends and account lookups), bodies cut at 8 KB (64 KB for inventory), tokens and account keys removed, at most `BODY_LOG_PER_PATH` lines per path when that is set. The kit forces `LOG_BODIES=0` in public mode. Private: it records what players' games send. | Never rotated. |
 | `data\logs\backup-db.out.log`, `backup-db.err.log` | The database copy of the latest backup (`db ok, <n> users`). | Overwritten by each backup. |
-| `data\logs\install\<step>.out.log`, `.err.log` | The output of each installer and updater step: source copy, `npm ci` and `npm run build` per package, the Node.js, runtime and Tailscale installs, game extraction and check, certificate, keys, owner account. | Overwritten when the step runs again. |
+| `data\logs\install\<step>.out.log`, `.err.log` | The output of each installer and updater step: source copy, the runtime and Tailscale installs, game extraction and check, certificate, keys, owner account. | Overwritten when the step runs again. |
 | `backups\backup.log` | One line per backup: time, folder, size, the database check and how many backups are kept. | Moved to `backup.log.1` when over 5 MB. |
 | `data\logs\performance\performance-<yyyy-MM-dd>.csv` | The [performance log](https://mixutin.github.io/dauntless-revived/reference/files.html#performance-log): one sample a minute from the stack supervisor, and any `Write-PerformanceLog.ps1` run. Counts only. | A new file every UTC day; files older than 30 days are deleted. |
 
@@ -8140,7 +8148,7 @@ DLL is an offset into the pinned exe, so the exe hash is what keeps the DLL safe
 | Exe SHA-256 | Before every PLAY | `setup.ps1`, and `play.ps1` on every launch | Before anything runs from the game folder; stops if it is wrong (not enforced under `-Sandbox`) | `tools/make-game-manifest.ts` |
 | DLL SHA-256s | On install, and before every PLAY (repairs them) | `setup.ps1` before and after copying; `play.ps1` on every launch | Before and after copying | `tools/make-friend-kit.ps1` before packing |
 | Build string | The compiled-in manifest must carry it, or the launcher refuses the manifest | Not checked | Warns if `Version.txt` names another build | `tools/make-game-manifest.ts` checks `Version.txt` inside the zip; the content server only logs a warning for a manifest with another build |
-| Every game file | Each download is checked against the compiled-in manifest; Repair re-hashes every file | Not checked | `lib/verify-game.js` hashes every file against the manifest | The content server checks sizes at startup and serves only listed files |
+| Every game file | Each download is checked against the compiled-in manifest; Repair re-hashes every file | Not checked | `content.exe verify` hashes every file against the manifest | The content server checks sizes at startup and serves only listed files |
 
 ### Where the pins live
 
@@ -8334,7 +8342,6 @@ Which scripts need an elevated PowerShell ("Run as administrator"):
 | `Write-PerformanceLog.ps1` | The server | A performance sample now, or every minute in a sandbox. The stack supervisor already takes one every minute on an installed server. |
 | `Receive-Upload.ps1` | The server | The server side of the chunked upload. `Deploy-Remote.ps1` calls it; you do not. |
 | `DauntlessServer.Common.ps1`, `DauntlessServer.Performance.ps1` | Both | Shared helpers the scripts dot-source: pins, invites, pinned HTTPS, processes; the performance sampler. |
-| `lib\dr-db.js`, `lib\dr-keys.js`, `lib\verify-game.js` | The server | Node helpers the scripts call. |
 | `tests\Test-*.ps1` | A development PC | The kit's own tests. |
 
 ### Deploy-Remote.ps1
@@ -8509,11 +8516,13 @@ With none of the three, the installer builds the checkout it runs in, if it runs
 a source parameter it downloads `friends-v1`. To keep the installed code, re-deploy with
 `Deploy-Remote.ps1`, which uploads the code again, or pass `-Ref <the installed commit>` if that
 commit is on GitHub. A commit that is already built is not rebuilt, unless it ends in `-dirty` or
-`-worktree` or is `unknown`. The build copies the source into `<root>\app.new` (without
-`node_modules`, build output, `.git`, `.env` files, keys, certificates, databases and logs), runs
-`npm ci` and `npm run build` in the four server packages (`legacy/UndauntedMetagame`,
-`legacy/UndauntedDeployServer`, `legacy/UndauntedContent` and `legacy/UndauntedGateway`; the launcher is not built), then
-swaps it in, keeping the old build as `app.prev`.
+`-worktree` or is `unknown`, or `-ServerBinaries` is given. The install copies the source into
+`<root>\app.new` (without the Rust sources, `node_modules`, build output, `.git`, `.env` files, keys,
+certificates, databases and logs), puts the service binaries (`metagame.exe`, `gateway.exe`,
+`allowlist.exe`, `content.exe`, `deploy.exe`) in `<root>\app.new\bin`, then swaps it in, keeping the
+old one as `app.prev`. The binaries come from `-ServerBinaries` (the `server-x86_64-pc-windows-msvc`
+download of the code's CI run, checked against its `SHA256SUMS`) or from a release build in the source
+(`rust\target\release`).
 
 **Owner, restore and certificate**
 
@@ -8556,7 +8565,7 @@ swaps it in, keeping the old build as `app.prev`.
 
 | Parameter | Type | Default | What it does |
 |:----------|:-----|:--------|:-------------|
-| `-Sandbox` | switch | off | A test install on a development PC. It skips Node.js, the runtimes, Tailscale, the firewall, the accounts and the tasks. Everything listens on `127.0.0.1` on the 620xx ports, including the gateway. The allowlist helper runs in dry-run, no deploy server or game server runs, and everything runs as the current user. Needs `-InstallRoot` and `-GameDir`. |
+| `-Sandbox` | switch | off | A test install on a development PC. It skips the runtimes, Tailscale, the firewall, the accounts and the tasks. Everything listens on `127.0.0.1` on the 620xx ports, including the gateway. The allowlist helper runs in dry-run, no deploy server or game server runs, and everything runs as the current user. Needs `-InstallRoot` and `-GameDir`. |
 | `-ContentManifest` | path | the built-in manifest | A manifest for a stand-in game folder. Refused without `-Sandbox`. |
 | `-AllowlistDryRun` | switch | off | The allowlist helper only logs the firewall change it would make. Forced on by `-Sandbox`. **Not remembered by re-runs.** |
 | `-NoStart` | switch | off | Does not start the stack at the end. The first backup is still taken. |
@@ -8863,23 +8872,24 @@ The server side of `Deploy-Remote.ps1`'s chunked upload. You do not run it yours
 
 The part size in `upload.json` must be between 1 MB and 2 GB. Each call prints one `DRJSON:{...}` line.
 
-### Helper scripts in lib\
+### Tools in the service binaries
 
-The kit scripts call these with the server's `node.exe`. Run them by hand only when you know why.
+The kit scripts call these subcommands of the service binaries in `<root>\app\bin`. Run them by hand
+only when you know why.
 
 | Command | What it does |
 |:--------|:-------------|
-| `node dr-db.js integrity <metagame folder> <db>` | Read-only integrity check. Prints `ok, <n> users`. |
-| `node dr-db.js backup <metagame folder> <db> <destination>` | SQLite online backup (safe while the metagame runs), then checks the copy. |
-| `node dr-db.js add-invite <metagame folder> <db> <code>` and `del-invite ...` | Adds or deletes a one-use invite code. The installer uses this to register the owner. |
-| `node dr-db.js make-admin <metagame folder> <db> <UserId>` | Makes an account an admin. |
-| `node dr-db.js gs-key <metagame folder> <db> <key file>` | Registers the SHA-256 of the game-server key. The key is read from the file, needs at least 32 characters and is never printed. |
-| `node dr-keys.js signing <out file>` | Writes a new RSA-2048 key pair for RS256 token signing as two `.env` lines (`AUTH_SIGNING_PRIVKEY_B64`, `AUTH_SIGNING_PUBKEY_B64`). Prints nothing secret, but **the output file is secret: never share, never commit.** The installer merges it into `metagame.env` and deletes the file. |
-| `node verify-game.js <manifest.json> <game folder> [--quick]` | Checks every file in the manifest for size and SHA-256 (`--quick`: size only). Extra files are ignored. Exit code `0` all match, `1` a mismatch, `2` a usage error, an unsafe path in the manifest or a read error. |
+| `metagame.exe db integrity <db>` | Read-only integrity check. Prints `ok, <n> users`. |
+| `metagame.exe db backup <db> <destination>` | SQLite online backup (safe while the metagame runs), then checks the copy. Never overwrites. |
+| `metagame.exe db add-invite <db> <code>` and `del-invite ...` | Adds or deletes a one-use invite code. The installer uses this to register the owner. |
+| `metagame.exe db make-admin <db> <UserId>` | Makes an account an admin. |
+| `metagame.exe db gs-key <db> <key file>` | Registers the SHA-256 of the game-server key. The key is read from the file, needs at least 32 characters and is never printed. |
+| `deploy.exe signing-keys <out file>` | Writes a new RSA-2048 key pair for RS256 token signing as two `.env` lines (`AUTH_SIGNING_PRIVKEY_B64`, `AUTH_SIGNING_PUBKEY_B64`). Prints nothing secret, but **the output file is secret: never share, never commit.** The installer merges it into `metagame.env` and deletes the file. |
+| `content.exe verify --manifest <manifest.json> --game-dir <game folder> [--quick]` | Checks every file in the manifest for size and SHA-256 (`--quick`: size only). Extra files are listed, not counted. Exit code `0` when all match. |
+| `gateway.exe make-cert --host <name> --cert <file> --key <file>` | Makes the gateway's self-signed certificate (the installer, in public mode); `--fingerprint <cert>` prints a certificate's fingerprint. |
 
-`dr-db.js` loads `better-sqlite3` from the metagame's own `node_modules`, and exits with `1` on any
-failure. The `<metagame folder>` is `<root>\app\UndauntedMetagame` and the database is
-`<root>\data\undaunted.db`.
+The `db` tools never create or migrate a database; the database is `<root>\data\undaunted.db`, and
+each exits with `1` on any failure.
 
 ### Restore, rollback and uninstall
 
@@ -8942,7 +8952,6 @@ install; the names cannot.
 | `Archon\Binaries\Win64\Dauntless-Win64-Shipping.exe` | `D3D41E614908D2BEFD518B27046D9822D6130EF12BA3504BABBDB786BEF9CFF4` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-game-manifest.ts`, `legacy/UndauntedLauncher/src/main/constants.ts`, the content manifest |
 | `dxgi.dll` | `9A431D7B6FD20C43FA92BEBD91C3BC023EC7A3FCBC52871C41F4DF293D4B0D1F` | `friend-kit/setup.ps1`, `friend-kit/play.ps1`, `tools/make-friend-kit.ps1`, `legacy/UndauntedLauncher/src/main/constants.ts` |
 | `UndauntedInternalServer.dll` | `520EC588A0554E374B2B0D084CD7F7F08D59A9CB80362679845719D64A0D0933` | the same files as `dxgi.dll` |
-| Node.js 24.19.0 MSI (`node-v24.19.0-x64.msi`) | `F0F66C2A80C08A30A5AB5179EE9EA9E45F9B46289436A8CC87FF833B852DB351` | only the kit; it must also match nodejs.org's `SHASUMS256.txt` |
 | Tailscale 1.102.4 MSI (private mode) | `80EB007E39DFEBE17299FA1A09C79A8E1D934F76E0246C0817EBE3AF675B7EF6` | only the kit; it must also match the published `.sha256` file |
 
 The build string is `dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-15_239827`: the installer
@@ -9275,8 +9284,8 @@ failure.
 | `npm test [-- <filter>]` | `node scripts/run-tests.mjs` | Compiles the tests into `.test-build\` and runs them one file at a time. With a filter, only test files whose name contains it. |
 | `npm run icon [-- --check]` | `node scripts/make-icon.mjs` | Copies the launcher's icons (`assets/icon.ico`, `assets/icon.png`) and the logo and emblem images its window shows (`src/renderer/brand/`) from `brand/`, where `python3 brand/build.py` makes them. With `--check` it only compares, and exits with 1 if a copy is missing or out of date; the unit tests run that. |
 
-The launcher needs Node.js 20.19 or newer (`engines` in its `package.json`). The server kit installs
-Node.js 24.19.0 on a server.
+The launcher needs Node.js 20.19 or newer (`engines` in its `package.json`). A server needs no
+Node.js: the server kit runs the Rust service binaries.
 
 ### Other package scripts
 

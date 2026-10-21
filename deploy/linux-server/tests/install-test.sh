@@ -46,6 +46,16 @@ grep -q "^Fingerprint: " "$work/install-2.log" || fail "the install does not pri
 [ "$(grep "^Fingerprint: " "$work/install-1.log")" = "$(grep "^Fingerprint: " "$work/install-2.log")" ] ||
   fail "the second install made a new certificate"
 
+# stack.sh backup: the database through metagame db backup, the settings and secrets beside it
+sh "$work/opt/deploy/linux-server/stack.sh" backup --config-dir "$work/etc" > "$work/backup.log" ||
+  { cat "$work/backup.log" >&2; fail "stack.sh backup"; }
+backup=$(sed -n 's/^backup: //p' "$work/backup.log")
+[ -n "$backup" ] && [ -d "$backup" ] || fail "the backup folder is not named"
+"$work/opt/bin/metagame" db integrity "$backup/undaunted.db" | grep -q "^ok, " || fail "the backup database"
+for f in metagame.env deployserver.env gameserver.key tls/gateway-cert.pem tls/gateway-key.pem; do
+  [ -f "$backup/secrets/$f" ] || fail "the backup has no $f"
+done
+
 for unit in "$kit"/systemd/*.service; do
   grep -q "@NODE@" "$unit" && fail "$(basename "$unit") still names Node"
   grep -q "^ExecStart=@ROOT@/bin/" "$unit" || fail "$(basename "$unit") does not start a binary from bin/"

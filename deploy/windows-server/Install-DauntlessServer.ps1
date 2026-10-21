@@ -11,13 +11,13 @@
       1. Preflight: administrator, 64-bit Windows Server 2019 (build 17763) or newer with the Desktop
          Experience (the game servers are the game's own exe and import DirectX/dxgi), 8 GB RAM or more,
          a 40 GB disk budget for the game zip, the extracted game and the server, free ports.
-      2. Prerequisites: Node.js LTS (pinned version, SHA-256 checked against the pin and against that
-         release's SHASUMS256.txt), the Microsoft Visual C++ 2015-2022 x64 runtime and the DirectX June
-         2010 runtime (both checked by their Microsoft Authenticode signature). Private mode also
-         installs Tailscale (pinned SHA-256) and signs in.
+      2. Prerequisites: the Microsoft Visual C++ 2015-2022 x64 runtime and the DirectX June 2010
+         runtime (both checked by their Microsoft Authenticode signature). Private mode also installs
+         Tailscale (pinned SHA-256) and signs in. No Node.js: the services are Rust binaries.
       3. Server code: from an uploaded source zip (-SourceZip, what Deploy-Remote.ps1 sends), a folder
-         (-SourceDir), the checkout this script runs in, or GitHub for a pinned ref (-Ref). Built with
-         npm ci + npm run build in <root>\app, never in the source.
+         (-SourceDir), the checkout this script runs in, or GitHub for a pinned ref (-Ref), copied to
+         <root>\app with the service binaries in <root>\app\bin: -ServerBinaries (the CI download for
+         that commit, checked against its SHA256SUMS), or a release build in the source checkout.
       4. Game files: the verified 1.4.4 zip (SHA-256 556B9A64...BC6D; -GameZip, or -GameZipUrl which
          downloads with resume) extracted with tar.exe, every file checked against the content manifest,
          and the two server DLLs (pinned hashes).
@@ -25,7 +25,7 @@
          endpoints, Engine.ini memory caps and chat override). Its password is random and never shown;
          every run of this script sets a new one, and Task Scheduler keeps it, encrypted, for the
          account's tasks (some Server 2019 images refuse password-less S4U tasks for non-admins).
-      6. Public mode: a self-signed TLS certificate for the gateway (the gateway's make-cert tool; ECDSA,
+      6. Public mode: a self-signed TLS certificate for the gateway (gateway.exe make-cert; RSA-2048,
          10 years, SAN = -PublicHost). Its SHA-256 fingerprint goes into every invite, so keep it: a
          new certificate invalidates all invites. No Windows certificate store is touched.
       7. Configuration: .env files with fresh RS256 signing keys, a game-server key, the gateway secret
@@ -35,7 +35,7 @@
          allowlist secret file only by Administrators and SYSTEM).
       8. The database and the owner (admin) account, whose key goes to <root>\data\keys\owner.key and is
          never printed; or the database and keys from a backup (-RestoreFrom).
-      9. Windows Firewall, public mode: inbound TCP <GatewayPort> from anywhere (node.exe only); UDP
+      9. Windows Firewall, public mode: inbound TCP <GatewayPort> from anywhere (gateway.exe only); UDP
          8770-8777 only through the rule "Dauntless Revived game ports (allowlist)" (created disabled; the
          allowlist helper fills in the addresses of players who logged in); SSH 22 kept (password login
          turned off when installed over SSH); RDP 3389 limited to -AdminIp, or, without -AdminIp, any
@@ -52,8 +52,8 @@
     automatically at boot (its password is kept as an LSA secret, as Windows' own auto-logon does), the
     stack starts at that logon, and the session is locked straight away.
 
-    -Sandbox is for testing the kit on a development PC: it skips every system-level step (Node,
-    runtimes, Tailscale, firewall, accounts, tasks), listens on 127.0.0.1 only (the gateway too), uses
+    -Sandbox is for testing the kit on a development PC: it skips every system-level step (runtimes,
+    Tailscale, firewall, accounts, tasks), listens on 127.0.0.1 only (the gateway too), uses
     spare ports (metagame 62000, deploy 62001, content 62002, allowlist 62005, gateway 62443), runs the
     allowlist helper in dry-run mode, never starts a deploy server or game server, runs as the current
     user, needs a stand-in game folder (-GameDir) and an explicit -InstallRoot.
@@ -85,6 +85,10 @@
 .PARAMETER SourceZip
     A zip of the server source (git archive), as uploaded by Deploy-Remote.ps1. -SourceCommit names its
     commit for the version reports.
+.PARAMETER ServerBinaries
+    The folder with the service binaries (metagame.exe, gateway.exe, allowlist.exe, content.exe,
+    deploy.exe): the server-x86_64-pc-windows-msvc download of the code's CI run, checked against its
+    SHA256SUMS. Without it, the source must hold a release build (rust\target\release).
 .PARAMETER OwnerName
     Username of the owner (admin) account: 3-16 letters, digits or _. Not used with -RestoreFrom (the
     backup has the accounts).
@@ -119,6 +123,7 @@ param(
     [string]$SourceDir,
     [string]$SourceZip,
     [string]$SourceCommit,
+    [string]$ServerBinaries,
     [switch]$InteractiveSession,
     [ValidateSet('On', 'Off')][string]$Chat,
     [switch]$NewCertificate,
@@ -160,8 +165,9 @@ function Invoke-KitScript([string]$Name, [string[]]$Arguments) {
     return $code
 }
 
+# The metagame's database tools: metagame.exe db <command> <database> [args].
 function Invoke-DbTool([string[]]$DbArgs, [string]$LogName) {
-    $code = Invoke-DRNative -FilePath $NodeExe -Arguments (@((Join-Path $P.Bin 'lib\dr-db.js')) + $DbArgs) -WorkingDirectory $P.Root `
+    $code = Invoke-DRNative -FilePath (Join-Path $P.App 'bin\metagame.exe') -Arguments (@('db') + $DbArgs) -WorkingDirectory $P.Root `
         -LogBase (Join-Path $P.Logs "install\$LogName")
     $msg = (Get-Content -LiteralPath (Join-Path $P.Logs "install\$LogName.out.log") -ErrorAction SilentlyContinue | Select-Object -Last 1)
     $err = (Get-Content -LiteralPath (Join-Path $P.Logs "install\$LogName.err.log") -ErrorAction SilentlyContinue | Where-Object { $_.Trim() } | Select-Object -Last 1)
@@ -531,8 +537,9 @@ try {
         foreach ($f in Get-ChildItem -LiteralPath $PSScriptRoot -File | Where-Object { $_.Extension -in '.ps1', '.vbs', '.md' }) {
             Copy-Item -LiteralPath $f.FullName -Destination $P.Bin -Force
         }
-        New-Item -ItemType Directory -Force -Path (Join-Path $P.Bin 'lib') | Out-Null
-        Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'lib') -File | Where-Object { $_.Extension -in '.js', '.cjs' } | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $P.Bin 'lib') -Force }
+        # The Node helpers of earlier kits (dr-db.js and the rest) are gone: the binaries do their work
+        $oldLib = Join-Path $P.Bin 'lib'
+        if (Test-Path -LiteralPath $oldLib) { Remove-Item -LiteralPath $oldLib -Recurse -Force }
     }
     Write-DROk "folders under $Root"
 
@@ -540,44 +547,9 @@ try {
     Write-DRStep 'Prerequisites'
     # ---------------------------------------------------------------------------------------------
     Enable-DRTls12
-    $NodeExe = Join-Path $env:ProgramFiles 'nodejs\node.exe'
     if ($Sandbox) {
-        $cmd = Get-Command node.exe -ErrorAction SilentlyContinue
-        if (-not $cmd) { Stop-DR 'Node.js is not on PATH.' }
-        $NodeExe = $cmd.Source
-        Write-DRSkip "sandbox: using the Node.js already installed ($NodeExe, $((& $NodeExe --version)))"
         Write-DRSkip 'sandbox: Visual C++ runtime, DirectX runtime and Tailscale not installed'
     } else {
-        # Node.js
-        $nodeOk = $false
-        if (Test-Path -LiteralPath $NodeExe) {
-            $v = (& $NodeExe --version).Trim().TrimStart('v')
-            if ($v -eq $DRPinned.NodeVersion) { Write-DROk "Node.js $v"; $nodeOk = $true }
-            elseif ($v.Split('.')[0] -eq $DRPinned.NodeVersion.Split('.')[0]) { Write-DROk "Node.js $v (same major version as the pinned $($DRPinned.NodeVersion); keeping it)"; $nodeOk = $true }
-            else { Write-DRWarn "Node.js $v found; installing the pinned $($DRPinned.NodeVersion)" }
-        }
-        if (-not $nodeOk) {
-            $ver = $DRPinned.NodeVersion
-            $msiName = "node-v$ver-x64.msi"
-            $msi = Join-Path $P.Downloads $msiName
-            if (Test-Do "Node.js $ver ($msiName from nodejs.org)" 'Download, verify and install') {
-                Save-DRDownload "https://nodejs.org/dist/v$ver/$msiName" $msi
-                $sums = Get-DRDownloadText "https://nodejs.org/dist/v$ver/SHASUMS256.txt"
-                $line = ($sums -split "`n" | Where-Object { $_ -match "\s$([regex]::Escape($msiName))\s*$" } | Select-Object -First 1)
-                $published = if ($line) { ($line.Trim() -split '\s+')[0].ToUpperInvariant() } else { '' }
-                $actual = Get-DRSha256 $msi
-                if ($published -ne $DRPinned.NodeMsiSha256) { Stop-DR "SHASUMS256.txt for Node.js $ver does not list the pinned hash for $msiName. Not installing." }
-                if ($actual -ne $DRPinned.NodeMsiSha256) { Stop-DR "$msiName does not match its pinned SHA-256. Not installing." }
-                Write-DROk "$msiName matches the pinned SHA-256 and SHASUMS256.txt"
-                $code = Invoke-DRNative -FilePath 'msiexec.exe' -Arguments @('/i', $msi, '/qn', '/norestart', '/l*v', (Join-Path $P.Logs 'install\node-msi.log')) -LogBase (Join-Path $P.Logs 'install\node-msiexec')
-                if ($code -ne 0 -and $code -ne 3010) { Stop-DR "Node.js installer failed (exit code $code, log $($P.Logs)\install\node-msi.log)" }
-                Write-DROk "Node.js $ver installed"
-            }
-        }
-        # A fresh MSI install reaches PATH only in new logon sessions, but npm's install scripts
-        # (cmd.exe -> node, e.g. better-sqlite3's prebuild-install) run in this one.
-        $nodeDir = Split-Path -Parent $NodeExe
-        if (($env:Path -split ';') -notcontains $nodeDir) { $env:Path = "$nodeDir;$env:Path"; Write-DROk "Node.js added to this session's PATH ($nodeDir)" }
         # Visual C++ 2015-2022 x64 (UndauntedInternalServer.dll imports MSVCP140 and VCRUNTIME140_1)
         $vcMissing = @('MSVCP140.dll', 'VCRUNTIME140.dll', 'VCRUNTIME140_1.dll') | Where-Object { -not (Test-Path -LiteralPath (Join-Path $sys32 $_)) }
         if (-not $vcMissing) { Write-DROk 'Visual C++ 2015-2022 x64 runtime' }
@@ -633,7 +605,6 @@ try {
             }
         } else { Write-DRSkip 'public mode: no Tailscale' }
     }
-    if (-not (Test-Path -LiteralPath $NodeExe) -and $IsWhatIf) { Write-DRInfo "(what-if: Node.js would be at $NodeExe)" }
 
     # Where the metagame and content server listen.
     $BindIp = '127.0.0.1'
@@ -721,16 +692,18 @@ try {
     }
 
     $versionFile = Join-Path $P.App 'VERSION.json'
-    $built = (Test-Path -LiteralPath $versionFile) -and (Test-Path -LiteralPath (Join-Path $P.App 'UndauntedMetagame\dist\server.js'))
+    $built = (Test-Path -LiteralPath $versionFile) -and (Test-Path -LiteralPath (Join-Path $P.App 'bin\metagame.exe'))
     $sameCode = $false
     if ($built) {
         $prev = Get-Content -LiteralPath $versionFile -Raw | ConvertFrom-Json
         $sameCode = ($prev.commit -eq $commit -and $commit -ne 'unknown' -and $commit -notmatch '-(dirty|worktree)$')
-        if ($sameCode -and $Public -and -not (Test-Path -LiteralPath (Get-DRComponentScript $P 'gateway'))) { $sameCode = $false }
+        if ($sameCode -and $Public -and -not (Test-Path -LiteralPath (Get-DRComponentExe $P 'gateway'))) { $sameCode = $false }
+        # Binaries given for the same code replace the installed ones (a rebuild of that commit)
+        if ($sameCode -and $ServerBinaries) { $sameCode = $false }
     }
     if ($sameCode) {
         Write-DROk "code $commit is already installed and built"
-    } elseif (Test-Do "$($P.App) (from $sourceKind)" 'Copy the server code and build it with npm ci + npm run build') {
+    } elseif (Test-Do "$($P.App) (from $sourceKind)" 'Copy the server code and install its service binaries') {
         $copyFrom = $source
         if ($sourceKind -eq 'github') {
             $zip = Join-Path $P.Downloads "source-$commit.zip"
@@ -740,14 +713,14 @@ try {
             $copyFrom = Expand-DRSourceZip $P ([IO.Path]::GetFullPath($SourceZip)) 'upload'
         }
         $ver = [ordered]@{ commit = $commit; ref = $refUsed; source = $sourceKind; sourceUrl = $DRRepo.Url; installedAt = (Get-Date).ToString('o') }
-        $builtPkgs = Build-DRApp -Paths $P -From $copyFrom -NodeExe $NodeExe -Version $ver
-        if ($Public -and $builtPkgs -notcontains 'UndauntedGateway') { Stop-DR 'This code version has no UndauntedGateway; public mode needs it. Use newer code, or -Mode Private.' }
+        $binaries = Resolve-DRServerBinaries $ServerBinaries $copyFrom
+        Install-DRApp -Paths $P -From $copyFrom -Binaries $binaries -Version $ver
         Switch-DRApp $P
         Write-DROk "server code $commit installed in $($P.App)"
     }
-    $hasPkg = { param($d) (Test-Path -LiteralPath (Join-Path (Join-Path $P.App $d) 'package.json')) -or ($IsWhatIf -and -not (Test-Path -LiteralPath $P.App)) }
-    $contentAvailable = & $hasPkg 'UndauntedContent'
-    if ($Public -and -not (& $hasPkg 'UndauntedGateway') -and -not $IsWhatIf) { Stop-DR 'Public mode needs UndauntedGateway, which the installed code does not have.' }
+    $hasExe = { param($c) (Test-Path -LiteralPath (Get-DRComponentExe $P $c)) -or ($IsWhatIf -and -not (Test-Path -LiteralPath $P.App)) }
+    $contentAvailable = & $hasExe 'content'
+    if ($Public -and -not (& $hasExe 'gateway') -and -not $IsWhatIf) { Stop-DR 'Public mode needs the gateway, which the installed code does not have.' }
 
     # ---------------------------------------------------------------------------------------------
     Write-DRStep 'Game files'
@@ -787,9 +760,9 @@ try {
     if ($Sandbox) {
         if ($exeOk) { Write-DROk 'the game exe is the verified 1.4.4 build' }
         else { Write-DRWarn "sandbox: $GameRoot is a stand-in; the exe hash is not the 1.4.4 build (not enforced in a sandbox)" }
-        if ($ContentManifest -and (Test-Path -LiteralPath (Join-Path $P.Bin 'lib\verify-game.js'))) {
-            $code = Invoke-DRNative -FilePath $NodeExe -Arguments @((Join-Path $P.Bin 'lib\verify-game.js'), $manifest, $GameRoot) -LogBase (Join-Path $P.Logs 'install\verify-game')
-            $summary = Get-Content -LiteralPath (Join-Path $P.Logs 'install\verify-game.out.log') | Select-Object -Last 1
+        if ($ContentManifest -and (Test-Path -LiteralPath (Get-DRComponentExe $P 'content'))) {
+            $code = Invoke-DRNative -FilePath (Get-DRComponentExe $P 'content') -Arguments @('verify', '--manifest', $manifest, '--game-dir', $GameRoot) -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'install\verify-game')
+            $summary = Get-Content -LiteralPath (Join-Path $P.Logs 'install\verify-game.out.log') | Where-Object { $_ -match '^ok: ' } | Select-Object -Last 1
             if ($code -ne 0) { Stop-DR "The stand-in game folder does not match its manifest: $summary" }
             Write-DROk "stand-in game folder: $summary"
         }
@@ -801,8 +774,8 @@ try {
         else { Write-DRWarn 'Version.txt is missing or names another build' }
         if (Test-Path -LiteralPath $manifest) {
             Write-DRInfo 'checking every game file against the content manifest (SHA-256 of ~10.9 GB) ...'
-            $code = Invoke-DRNative -FilePath $NodeExe -Arguments @((Join-Path $P.Bin 'lib\verify-game.js'), $manifest, $GameRoot) -LogBase (Join-Path $P.Logs 'install\verify-game') -LowPriority
-            $summary = Get-Content -LiteralPath (Join-Path $P.Logs 'install\verify-game.out.log') | Select-Object -Last 1
+            $code = Invoke-DRNative -FilePath (Get-DRComponentExe $P 'content') -Arguments @('verify', '--manifest', $manifest, '--game-dir', $GameRoot) -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'install\verify-game') -LowPriority
+            $summary = Get-Content -LiteralPath (Join-Path $P.Logs 'install\verify-game.out.log') | Where-Object { $_ -match '^ok: ' } | Select-Object -Last 1
             if ($code -ne 0) { Get-Content -LiteralPath (Join-Path $P.Logs 'install\verify-game.out.log') | Select-Object -First 20 | ForEach-Object { Write-DRInfo $_ }; Stop-DR "The game files do not match the manifest: $summary" }
             Write-DROk $summary
         } else { Write-DRWarn 'no content manifest in this code version; only the exe was checked' }
@@ -903,16 +876,16 @@ try {
                 Write-DROk "certificate restored from the backup (fingerprint $Fingerprint)"
             }
         } else {
-            $makeCert = Join-Path $P.App 'UndauntedGateway\tools\make-cert.js'
+            $makeCert = Get-DRComponentExe $P 'gateway'
             if ($haveCert -and $NewCertificate) { Write-DRWarn 'a NEW certificate replaces the old one: every invite handed out so far stops working' }
             if (-not (Test-Path -LiteralPath $makeCert)) {
-                if ($IsWhatIf) { Write-DRInfo "(what-if: a certificate for $PubHost would be made with the gateway's make-cert tool)" }
-                else { Stop-DR "The gateway's make-cert tool is missing ($makeCert)." }
+                if ($IsWhatIf) { Write-DRInfo "(what-if: a certificate for $PubHost would be made with gateway.exe make-cert)" }
+                else { Stop-DR "The gateway is missing ($makeCert)." }
             } elseif (Test-Do $P.Tls "Create a self-signed certificate for $PubHost (10 years)") {
                 $tmpCert = "$($P.GatewayCert).new"; $tmpKey = "$($P.GatewayKey).new"
                 Remove-Item -LiteralPath $tmpCert, $tmpKey -Force -ErrorAction SilentlyContinue
-                $code = Invoke-DRNative -FilePath $NodeExe -Arguments @($makeCert, '--host', $PubHost, '--cert', $tmpCert, '--key', $tmpKey) `
-                    -WorkingDirectory (Join-Path $P.App 'UndauntedGateway') -LogBase (Join-Path $P.Logs 'install\make-cert')
+                $code = Invoke-DRNative -FilePath $makeCert -Arguments @('make-cert', '--host', $PubHost, '--cert', $tmpCert, '--key', $tmpKey) `
+                    -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'install\make-cert')
                 if ($code -ne 0 -or -not (Test-Path -LiteralPath $tmpCert) -or -not (Test-Path -LiteralPath $tmpKey)) {
                     Show-DRLogTail (Join-Path $P.Logs 'install\make-cert'); Stop-DR "make-cert failed (exit code $code)"
                 }
@@ -960,7 +933,7 @@ try {
     elseif (Test-Do 'token-signing keys' 'Generate a new RS256 key pair') {
         $tmp = Join-Path $P.Keys 'signing.tmp'
         try {
-            $code = Invoke-DRNative -FilePath $NodeExe -Arguments @((Join-Path $P.Bin 'lib\dr-keys.js'), 'signing', $tmp) -LogBase (Join-Path $P.Logs 'install\keys')
+            $code = Invoke-DRNative -FilePath (Get-DRComponentExe $P 'deploy') -Arguments @('signing-keys', $tmp) -WorkingDirectory $P.Root -LogBase (Join-Path $P.Logs 'install\keys')
             if ($code -ne 0) { Stop-DR 'Generating the signing keys failed.' }
             $gen = Read-DREnv $tmp
             $meta['AUTH_SIGNING_PRIVKEY_B64'] = $gen['AUTH_SIGNING_PRIVKEY_B64']
@@ -1117,7 +1090,6 @@ try {
         Components         = $components
         AllowlistDryRun    = [bool]$AllowlistDryRun
         GameDir            = $GameRoot
-        NodePath           = $NodeExe
         ServiceUser        = ''      # set once the scheduled tasks exist (below)
         ServiceProfile     = $svcProfile
         InteractiveSession = [bool]$InteractiveSession
@@ -1174,7 +1146,6 @@ try {
     # ---------------------------------------------------------------------------------------------
     Write-DRStep 'Database and owner account'
     # ---------------------------------------------------------------------------------------------
-    $metaDir = Join-Path $P.App 'UndauntedMetagame'
     if ($IsWhatIf) {
         if ($restore) { Write-DRInfo "(what-if: the database and keys would be restored from $restore)" }
         elseif (-not (Test-Path -LiteralPath $P.OwnerKey)) { Write-DRInfo "(what-if: the metagame would start once and create the owner account '$OwnerName'; its key would go to $($P.OwnerKey))" }
@@ -1182,7 +1153,7 @@ try {
         if ($restore) {
             if (Test-Path -LiteralPath $P.Db) { Write-DRWarn "a database already exists at $($P.Db); not overwriting it with the backup (delete it first to restore)" }
             else {
-                $chk = Invoke-DbTool @('integrity', $metaDir, (Join-Path $restore 'undaunted.db')) 'restore-check'
+                $chk = Invoke-DbTool @('integrity', (Join-Path $restore 'undaunted.db')) 'restore-check'
                 if ($chk.Code -ne 0) { Stop-DR "The backup database fails its check: $($chk.Error)" }
                 Copy-Item -LiteralPath (Join-Path $restore 'undaunted.db') -Destination $P.Db
                 Write-DROk "database restored ($($chk.Message))"
@@ -1202,7 +1173,7 @@ try {
         try {
             $st = Invoke-DRHttp -Url "http://$metaAddr/dauntless-status" -TimeoutSec 10
             if ($st.Status -ne 200) { Stop-DR "The metagame did not come up (see $($P.Logs)\metagame.err.log)." }
-            $gs = Invoke-DbTool @('gs-key', $metaDir, $P.Db, $P.GsKey) 'gs-key'
+            $gs = Invoke-DbTool @('gs-key', $P.Db, $P.GsKey) 'gs-key'
             if ($gs.Code -ne 0) { Stop-DR "Registering the game-server key failed: $($gs.Error)" }
             Write-DROk $gs.Message
 
@@ -1218,11 +1189,11 @@ try {
                 if (-not $OwnerName) { Stop-DR 'An owner username is needed (-OwnerName).' }
                 if (Test-Path -LiteralPath $P.OwnerKey) { Stop-DR "$($P.OwnerKey) exists but does not work here. Move it away if you want a new owner account." }
                 $boot = New-DRInviteCode
-                $add = Invoke-DbTool @('add-invite', $metaDir, $P.Db, $boot) 'owner-invite'
+                $add = Invoke-DbTool @('add-invite', $P.Db, $boot) 'owner-invite'
                 if ($add.Code -ne 0) { Stop-DR "Could not prepare the owner registration: $($add.Error)" }
                 try {
                     $reg = Invoke-DRHttp -Method POST -Url "$api/Register" -Body @{ Username = $OwnerName; InviteCode = $boot }
-                } finally { [void](Invoke-DbTool @('del-invite', $metaDir, $P.Db, $boot) 'owner-invite-cleanup') }
+                } finally { [void](Invoke-DbTool @('del-invite', $P.Db, $boot) 'owner-invite-cleanup') }
                 if ($reg.Status -eq 409) { Stop-DR "The username '$OwnerName' is taken. Run again with another -OwnerName." }
                 if ($reg.Status -ne 200 -or -not $reg.Json.UUK) { Stop-DR "Registering the owner failed (HTTP $($reg.Status) $(Get-DRErrorCode $reg))." }
                 $uuk = [string]$reg.Json.UUK
@@ -1231,7 +1202,7 @@ try {
                 $me = Invoke-DRHttp -Url "$api/GetUserInfo" -Headers @{ 'x-undaunted-user-api-key' = $uuk }
                 $uuk = $null
                 if ($me.Status -ne 200) { Stop-DR 'The new owner key does not work.' }
-                $adm = Invoke-DbTool @('make-admin', $metaDir, $P.Db, [string]$me.Json.UserId) 'owner-admin'
+                $adm = Invoke-DbTool @('make-admin', $P.Db, [string]$me.Json.UserId) 'owner-admin'
                 if ($adm.Code -ne 0) { Stop-DR "Making the owner an admin failed: $($adm.Error)" }
                 Write-DROk "owner account '$OwnerName' created as admin; key saved to $($P.OwnerKey) (not shown)"
             }
@@ -1268,8 +1239,8 @@ try {
         if (Test-Do "Windows Firewall group '$($DRNames.FirewallGroup)'" "Allow TCP $($ports.gateway) (gateway) from anywhere; UDP $UdpBegin-$UdpEnd only through the allowlist rule") {
             Get-NetFirewallRule -Group $DRNames.FirewallGroup -ErrorAction SilentlyContinue | Where-Object { $_.Name -ne $DRNames.AllowlistRuleName } | Remove-NetFirewallRule
             New-NetFirewallRule -Group $DRNames.FirewallGroup -DisplayName "Dauntless Revived - gateway (TCP $($ports.gateway))" -Direction Inbound -Action Allow -Profile Any `
-                -Protocol TCP -LocalPort $ports.gateway -Program $NodeExe -Enabled True | Out-Null
-            Write-DROk "inbound TCP $($ports.gateway) (node.exe, the gateway) from anywhere"
+                -Protocol TCP -LocalPort $ports.gateway -Program (Get-DRComponentExe $P 'gateway') -Enabled True | Out-Null
+            Write-DROk "inbound TCP $($ports.gateway) (gateway.exe) from anywhere"
             # The helper keeps this rule's addresses and enabled state; only the game exe may receive.
             $al = Get-NetFirewallRule -Name $DRNames.AllowlistRuleName -ErrorAction SilentlyContinue
             if ($al) {
@@ -1430,20 +1401,21 @@ try {
             Get-NetFirewallRule -Group $DRNames.FirewallGroup -ErrorAction SilentlyContinue | Remove-NetFirewallRule
             $common = @{ Group = $DRNames.FirewallGroup; Direction = 'Inbound'; Action = 'Allow'; Profile = 'Any'; RemoteAddress = '100.64.0.0/10'; Enabled = 'True' }
             if ($ts) { $common.InterfaceAlias = $ts.Name } else { Write-DRWarn 'no Tailscale adapter found; the rules are limited by address only' }
-            New-NetFirewallRule @common -DisplayName "Dauntless Revived - metagame (TCP $($ports.metagame), Tailscale only)" -Protocol TCP -LocalPort $ports.metagame -Program $NodeExe | Out-Null
+            New-NetFirewallRule @common -DisplayName "Dauntless Revived - metagame (TCP $($ports.metagame), Tailscale only)" -Protocol TCP -LocalPort $ports.metagame -Program (Get-DRComponentExe $P 'metagame') | Out-Null
             if ($components -contains 'content') {
-                New-NetFirewallRule @common -DisplayName "Dauntless Revived - content server (TCP $($ports.content), Tailscale only)" -Protocol TCP -LocalPort $ports.content -Program $NodeExe | Out-Null
+                New-NetFirewallRule @common -DisplayName "Dauntless Revived - content server (TCP $($ports.content), Tailscale only)" -Protocol TCP -LocalPort $ports.content -Program (Get-DRComponentExe $P 'content') | Out-Null
             }
             New-NetFirewallRule @common -DisplayName "Dauntless Revived - game servers (UDP $UdpBegin-$UdpEnd, Tailscale only)" -Protocol UDP -LocalPort "$UdpBegin-$UdpEnd" -Program $exe | Out-Null
-            Write-DROk "inbound: TCP $($ports.metagame)$(if ($components -contains 'content') { ", $($ports.content)" }) (node.exe) and UDP $UdpBegin-$UdpEnd (game exe), from 100.64.0.0/10$(if ($ts) { " on '$($ts.Name)'" }) only"
+            Write-DROk "inbound: TCP $($ports.metagame)$(if ($components -contains 'content') { ", $($ports.content)" }) (metagame.exe, content.exe) and UDP $UdpBegin-$UdpEnd (game exe), from 100.64.0.0/10$(if ($ts) { " on '$($ts.Name)'" }) only"
             Write-DROk "no rule for TCP $($ports.deploy) (deploy server, loopback only)"
         }
     }
     if (-not $Sandbox) {
         # Rules made elsewhere for the same programs (for example by an "allow access" prompt) could open more.
-        $others = @(Get-NetFirewallApplicationFilter -Program $NodeExe, $exe -ErrorAction SilentlyContinue | Get-NetFirewallRule -ErrorAction SilentlyContinue |
+        $programs = @('metagame', 'content', 'gateway') | ForEach-Object { Get-DRComponentExe $P $_ }
+        $others = @(Get-NetFirewallApplicationFilter -Program (@($programs) + $exe) -ErrorAction SilentlyContinue | Get-NetFirewallRule -ErrorAction SilentlyContinue |
             Where-Object { $_.Group -ne $DRNames.FirewallGroup -and $_.Direction -eq 'Inbound' -and $_.Enabled -eq 'True' })
-        foreach ($o in $others) { Write-DRWarn "other inbound rule for node.exe or the game: '$($o.DisplayName)' ($($o.Action)). Remove it unless you need it: Remove-NetFirewallRule -Name '$($o.Name)'" }
+        foreach ($o in $others) { Write-DRWarn "other inbound rule for a service or the game: '$($o.DisplayName)' ($($o.Action)). Remove it unless you need it: Remove-NetFirewallRule -Name '$($o.Name)'" }
         if ($fwChanges.Count -and -not $IsWhatIf) { $cfg.FirewallChanges = @($fwChanges | Select-Object -Unique); Save-DRConfig $Root ([pscustomobject]$cfg) }
     }
 

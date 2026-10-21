@@ -109,7 +109,12 @@ sudo ./deploy/linux-server/stack.sh status
 sudo ./deploy/linux-server/stack.sh restart
 sudo ./deploy/linux-server/stack.sh logs
 sudo ./deploy/linux-server/stack.sh restart deploy
+sudo ./deploy/linux-server/stack.sh backup
 ```
+
+`backup` writes `<data-dir>/backups/<date_time>/` with the database (an online copy through
+`metagame db backup`, checked after) and, in `secrets/`, the settings, the game-server key and the
+gateway certificate (`--dest <dir>` writes elsewhere, `--config-dir <dir>` reads another config).
 
 ## Create an invite
 

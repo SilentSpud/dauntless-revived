@@ -10,7 +10,8 @@
 #  - the separate Linux and OpenBSD server ports (native Node services, Wine/SSH game launch wrappers, nftables/PF)
 #  - the Linux kit on the Rust services: install.sh and install-worker.sh in test mode, twice
 #  - the Windows Server kit under Windows PowerShell 5.1: parse check, PSScriptAnalyzer errors, and the
-#    kit's own tests (unit checks, remote deployment against a local folder, an end-to-end sandbox install)
+#    kit's own tests (unit checks, remote deployment against a local folder, an end-to-end sandbox install
+#    of the Rust service binaries)
 #  - the docs site: generated files current, and the same Jekyll build GitHub Pages runs
 #  - repository hygiene: no secrets or game files in the tracked files or in the commits being pushed
 #    (tools/ci/check-repo.ts)
@@ -643,9 +644,9 @@ jobs:
   server-kit:
     name: Server kit (Windows PowerShell 5.1)
     needs: changes
-    if: needs.changes.outputs.deploy == 'true'
+    if: needs.changes.outputs.deploy == 'true' || needs.changes.outputs.rust == 'true'
     runs-on: windows-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     defaults:
       run:
         shell: powershell
@@ -654,16 +655,27 @@ jobs:
         with:
           persist-credentials: false
 
-      # The sandbox test builds all four server packages with npm ci, so their lockfiles key the cache.
+      # Test-KitUnit's stand-in servers are small Node scripts (test tooling; the kit itself runs the
+      # Rust binaries and needs no Node).
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: |
-            legacy/UndauntedMetagame/package-lock.json
-            legacy/UndauntedGateway/package-lock.json
-            legacy/UndauntedContent/package-lock.json
-            legacy/UndauntedDeployServer/package-lock.json
+
+      # The kit installs the service binaries (MIGRATION_PLAN.md M40); the tests take them from rust/target/debug.
+      - name: Install the pinned toolchain
+        shell: bash
+        working-directory: rust
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: rust
+          key: server-kit
+
+      - name: Build the service binaries
+        shell: bash
+        working-directory: rust
+        run: cargo build --locked --bins -p metagame -p gateway -p content -p deploy
 
       - name: Every PowerShell script parses in Windows PowerShell 5.1
         run: |
@@ -696,11 +708,6 @@ jobs:
           }
           if ($count) { throw "PSScriptAnalyzer: $count error(s)" }
           Write-Output "PSScriptAnalyzer $((Get-Module PSScriptAnalyzer).Version): no errors in $($files.Count) scripts"
-
-      - name: Install the gateway's dependencies (Test-KitUnit uses its certificate tool)
-        shell: pwsh
-        working-directory: legacy/UndauntedGateway
-        run: npm ci --no-audit --no-fund
 
       - name: Unit checks (Test-KitUnit.ps1)
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File deploy\windows-server\tests\Test-KitUnit.ps1 -WorkDir "$env:RUNNER_TEMP\dr-kit-unit"

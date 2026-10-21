@@ -224,6 +224,27 @@ Done so far:
   its own until M41). CI's `linux-kit` job runs `tests/install-test.sh`: both installers in test mode,
   twice, as an upgrade, plus a tampered binary that must be refused. The setup page (both languages) and
   the kit README say so. Left: an install on the canary itself (D23), which is the cutover (M42).
+- Metagame B5, M40 and M45: the Windows kit runs the Rust services. The installer, `Update-DauntlessServer.ps1`
+  and `Deploy-Remote.ps1` take the binaries from `-ServerBinaries <folder>` (the CI
+  `server-x86_64-pc-windows-msvc` download, checked against its `SHA256SUMS`; `Deploy-Remote.ps1` uploads
+  them and compares their SHA-256 on the server) or a release build in the source, and put them in
+  `<root>\app\bin` with the rest of the code. `Stack.ps1` starts `bin\<service>.exe serve --env-file=...` and
+  finds a component's processes by their full executable path, and also by the old Node entry script, so
+  the first update of a Node install stops the Node processes (and a rollback to the Node build still
+  works, with the Node kit it brings along). The firewall rules name `gateway.exe`, `metagame.exe` and
+  `content.exe`. The Node helpers are gone: `metagame.exe db` for the database steps, `deploy.exe
+  signing-keys` (new) for the token-signing pair, `content.exe verify` for the game files, `gateway.exe
+  make-cert` for the certificate; the installer installs no Node.js and `NodePath` is no longer written.
+  The backup (M45) asks a running metagame for its live copy (`POST /internal/backup`) and otherwise
+  copies with `metagame.exe db backup`; whether the metagame runs is read from its port, not from a
+  localized error text. The weekly receiver checks its copy with the host's own `metagame.exe`, or with
+  Node's SQLite on a host still on Node. The Linux kit gains `stack.sh backup` (M45's Linux half): the
+  database through `metagame db backup` and the settings, game-server key and certificate beside it, in
+  `<data>/backups/<date_time>`; `tests/install-test.sh` checks it. CI's `server-kit` job builds the binaries and runs the three kit
+  tests on them, on every change to the kit or the services; `Test-Sandbox.ps1` installs, updates, rolls
+  back and restores the Rust stack. The reference docs (both languages) and the kit README say so. Left:
+  `tests\Test-Sandbox.ps1` on a real Windows Server and the first update of a production Node install
+  (the cutover, M42).
 - Metagame B3, M32-M34: chat (`chat/`, from `realtime/*.ts`), on by default on `CHAT_PORT` as in
   Node, started before the HTTP listener and closed with it (`<close/>`, at most 1 s). One task owns
   all of chat and answers frames one at a time, in order, as Node's thread did; each connection has a

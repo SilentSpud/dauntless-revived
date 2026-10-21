@@ -647,7 +647,7 @@ lataamisen turvallisena.
 | Exen SHA-256 | Ennen jokaista PELAA-painallusta | `setup.ps1`, ja `play.ps1` jokaisella käynnistyksellä | Ennen kuin pelikansiosta ajetaan mitään; pysähtyy, jos tiiviste on väärä (ei pakoteta `-Sandbox`-asennuksessa) | `tools/make-game-manifest.ts` |
 | DLL-tiedostojen SHA-256 | Asennuksessa ja ennen jokaista PELAA-painallusta (korjaa ne) | `setup.ps1` ennen kopiointia ja sen jälkeen; `play.ps1` jokaisella käynnistyksellä | Ennen kopiointia ja sen jälkeen | `tools/make-friend-kit.ps1` ennen pakkaamista |
 | Versiomerkkijono | Käynnistimeen käännetyssä sisältöluettelossa on oltava se, tai käynnistin hylkää luettelon | Ei tarkisteta | Varoittaa, jos `Version.txt` nimeää toisen version | `tools/make-game-manifest.ts` tarkistaa zipin sisällä olevan `Version.txt`-tiedoston; sisältöpalvelin vain kirjaa varoituksen, jos luettelossa on toinen versio |
-| Jokainen pelitiedosto | Jokainen lataus tarkistetaan käynnistimeen käännettyä sisältöluetteloa vasten; Korjaa-toiminto laskee jokaisen tiedoston tiivisteen uudelleen | Ei tarkisteta | `lib/verify-game.js` tarkistaa jokaisen tiedoston tiivisteen luetteloa vasten | Sisältöpalvelin tarkistaa koot käynnistyessään ja jakaa vain luettelossa olevia tiedostoja |
+| Jokainen pelitiedosto | Jokainen lataus tarkistetaan käynnistimeen käännettyä sisältöluetteloa vasten; Korjaa-toiminto laskee jokaisen tiedoston tiivisteen uudelleen | Ei tarkisteta | `content.exe verify` tarkistaa jokaisen tiedoston tiivisteen luetteloa vasten | Sisältöpalvelin tarkistaa koot käynnistyessään ja jakaa vain luettelossa olevia tiedostoja |
 
 ### Missä kiinnitykset ovat {#pin-locations}
 

@@ -53,6 +53,9 @@ enum Command {
         #[arg(trailing_var_arg = true, allow_hyphen_values = true)]
         args: Vec<String>,
     },
+    /// Writes a fresh metagame token-signing key pair to a private file as two `.env` lines (the
+    /// Windows kit's installer).
+    SigningKeys { out: PathBuf },
 }
 
 fn process_env() -> std::collections::HashMap<String, String> {
@@ -133,6 +136,18 @@ fn main() -> ExitCode {
                 }
                 Err(error) => {
                     eprintln!("generate-config: {error}");
+                    ExitCode::FAILURE
+                }
+            };
+        }
+        Some(Command::SigningKeys { out }) => {
+            return match deploy::kitconfig::signing_keys_file(&out) {
+                Ok(()) => {
+                    println!("signing keys written");
+                    ExitCode::SUCCESS
+                }
+                Err(error) => {
+                    eprintln!("signing-keys: {error}");
                     ExitCode::FAILURE
                 }
             };

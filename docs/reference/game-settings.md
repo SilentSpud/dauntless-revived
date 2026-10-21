@@ -618,7 +618,7 @@ DLL is an offset into the pinned exe, so the exe hash is what keeps the DLL safe
 | Exe SHA-256 | Before every PLAY | `setup.ps1`, and `play.ps1` on every launch | Before anything runs from the game folder; stops if it is wrong (not enforced under `-Sandbox`) | `tools/make-game-manifest.ts` |
 | DLL SHA-256s | On install, and before every PLAY (repairs them) | `setup.ps1` before and after copying; `play.ps1` on every launch | Before and after copying | `tools/make-friend-kit.ps1` before packing |
 | Build string | The compiled-in manifest must carry it, or the launcher refuses the manifest | Not checked | Warns if `Version.txt` names another build | `tools/make-game-manifest.ts` checks `Version.txt` inside the zip; the content server only logs a warning for a manifest with another build |
-| Every game file | Each download is checked against the compiled-in manifest; Repair re-hashes every file | Not checked | `lib/verify-game.js` hashes every file against the manifest | The content server checks sizes at startup and serves only listed files |
+| Every game file | Each download is checked against the compiled-in manifest; Repair re-hashes every file | Not checked | `content.exe verify` hashes every file against the manifest | The content server checks sizes at startup and serves only listed files |
 
 ### Where the pins live {#pin-locations}
 
