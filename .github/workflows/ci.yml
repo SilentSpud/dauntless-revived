@@ -2,6 +2,8 @@
 # jobs of the families it changes, and the "CI ok" job sums them up for branch protection. A push to
 # dauntless-revived always runs everything.
 #  - the Rust workspace (rust/): fmt, clippy, tests on Linux and Windows, cargo-deny
+#  - the server binaries: release builds for Windows x64 and Linux x64/arm64, smoke-tested with the shared
+#    HTTP-level metagame tests, kept as downloads for 7 days
 #  - the client mods: client-mods/manifest.json matches the files it lists
 #  - the four server packages: npm ci, build, unit tests
 #  - the launcher: typecheck, unit tests and the Windows installer, kept as a download for 7 days
@@ -160,6 +162,87 @@ jobs:
 
       - name: Tests
         run: cargo test --workspace --locked
+
+  # The server binaries for every server platform (MIGRATION_PLAN.md M38, D14), built as a release would
+  # build them, with the shared HTTP-level metagame tests run against each release metagame as the smoke
+  # test. Kept as artifacts for a week to try on a server; nothing is published from here.
+  server-binaries:
+    name: Server binaries (${{ matrix.target }})
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+    defaults:
+      run:
+        shell: bash
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # rustup reads rust/rust-toolchain.toml and installs the pinned toolchain.
+      - name: Install the pinned toolchain
+        working-directory: rust
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: rust
+          key: release-${{ matrix.target }}
+
+      - name: Build the release binaries
+        working-directory: rust
+        run: cargo build --release --locked --target "$TARGET" --bins -p metagame -p gateway -p content -p deploy -p discord-bot
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: legacy/UndauntedMetagame/package-lock.json
+
+      - name: Smoke test, the shared HTTP-level tests against the release metagame
+        working-directory: legacy/UndauntedMetagame
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+          node -e "require('fs').rmSync('build',{recursive:true,force:true})"
+          npx tsc -p tsconfig.test.json
+          ext=""; [ "$RUNNER_OS" = Windows ] && ext=".exe"
+          npm run test:rust -- "../../rust/target/$TARGET/release/metagame$ext"
+
+      - name: Collect the binaries and their SHA-256 sums
+        run: |
+          set -euo pipefail
+          ext=""; [ "$RUNNER_OS" = Windows ] && ext=".exe"
+          out="server-binaries/$TARGET"
+          mkdir -p "$out"
+          for bin in metagame gateway allowlist content deploy discord-bot; do
+            cp "rust/target/$TARGET/release/$bin$ext" "$out/"
+          done
+          (cd "$out" && sha256sum -- * > SHA256SUMS && cat SHA256SUMS)
+
+      # Not kept for pull requests from forks: their code is not reviewed yet, and a download on this
+      # repository's run page would look official.
+      - name: Keep the binaries for a week
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: server-${{ matrix.target }}
+          path: server-binaries/${{ matrix.target }}/
+          if-no-files-found: error
+          retention-days: 7
 
   rust-deny:
     name: Rust licences and advisories
@@ -713,7 +796,7 @@ jobs:
   # as passed; a failed or cancelled job, or a failed change detection, fails it.
   ci-ok:
     name: CI ok
-    needs: [changes, rust, rust-deny, client-mods, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: [changes, rust, server-binaries, rust-deny, client-mods, node-packages, launcher, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

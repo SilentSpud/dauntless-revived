@@ -207,6 +207,12 @@ Done so far:
   holds, so a purchase retried under a new transactionId cannot charge twice; M44) and `14351fc` (the
   gateway's allowlist feed leaves a helper alone for a doubling interval, 2 s up to a minute, after three
   failures in a row, and any answer clears it; S2). Each later pass starts from the last upstream commit taken.
+- Metagame B5, M38, first part: CI's `server-binaries` job builds the release binaries (`metagame`, `gateway`,
+  `allowlist`, `content`, `deploy`, `discord-bot`; fat LTO, the release profile) for the three D14 targets,
+  runs the shared HTTP-level metagame tests (`npm run test:rust`, M31) against each release `metagame`, and
+  keeps each target's files with their `SHA256SUMS` as a 7-day artifact; nothing is published. Left: the
+  chat, backup and shutdown items of the smoke list on every target, and release archives for the kits
+  (M39, M40), which also carry the store images and progression config next to the binary.
 - Metagame B3, M32-M34: chat (`chat/`, from `realtime/*.ts`), on by default on `CHAT_PORT` as in
   Node, started before the HTTP listener and closed with it (`<close/>`, at most 1 s). One task owns
   all of chat and answers frames one at a time, in order, as Node's thread did; each connection has a
