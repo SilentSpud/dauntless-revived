@@ -62,6 +62,7 @@ pub struct App {
     pub matchmaking: crate::matchmaking::Matchmaking,
     pub guilds: crate::guild::Settings,
     pub escalation: crate::escalation::Settings,
+    pub slayer_links: bool,
     /// Guild validate tickets and rate windows (`guild.rs`).
     pub guild_memory: crate::guild::Memory,
     pub key_recovery_secret: Option<String>,

@@ -70,6 +70,8 @@ pub struct Config {
     pub matchmaking: crate::matchmaking::Settings,
     pub guilds: crate::guild::Settings,
     pub escalation: crate::escalation::Settings,
+    /// `SLAYER_LINKS` (on/off, default on).
+    pub slayer_links: bool,
     /// `KEY_RECOVERY_SERVICE_SECRET`: the Discord bot's key recovery (`routes/keyrotation.rs`).
     pub key_recovery_secret: Option<String>,
     pub real_progression: crate::realprogression::Settings,
@@ -158,6 +160,7 @@ impl Config {
             matchmaking: crate::matchmaking::Settings::from_env(env),
             guilds: crate::guild::Settings::from_env(env),
             escalation: crate::escalation::Settings::from_env(env),
+            slayer_links: on_off(env, "SLAYER_LINKS", true),
             key_recovery_secret: env.raw("KEY_RECOVERY_SERVICE_SECRET").map(str::to_owned),
             real_progression: crate::realprogression::Settings::from_env(env),
             features: Features {

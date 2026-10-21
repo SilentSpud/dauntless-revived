@@ -1,0 +1,29 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /slayerlink/status_good",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "POST /slayerlink/availability",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "DELETE /slayerlink/links",
+      "status": 404,
+      "headers": {},
+      "body": ""
+    }
+  ]
+}

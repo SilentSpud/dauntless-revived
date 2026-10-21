@@ -35,6 +35,7 @@ pub mod routes;
 #[allow(non_snake_case)]
 pub mod schema;
 pub mod server;
+pub mod slayerlinks;
 pub mod store;
 pub mod store_revocation;
 pub mod storeimages;

@@ -80,6 +80,7 @@ fn fixture(account_key_recovery: bool) -> Fixture {
         matchmaking: Default::default(),
         guilds: Default::default(),
         escalation: Default::default(),
+        slayer_links: true,
         guild_memory: Default::default(),
         key_recovery_secret: None,
         health: Arc::new(metagame::health::Health::new(false)),

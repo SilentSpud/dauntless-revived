@@ -1,0 +1,661 @@
+{
+  "about": "Recorded by record.cjs from the Node metagame; do not edit.",
+  "results": [
+    {
+      "request": "GET /slayerlink/status_good",
+      "status": 401,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /slayerlink/status_good",
+      "status": 403,
+      "headers": {},
+      "body": ""
+    },
+    {
+      "request": "GET /slayerlink/status_good",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[],\"links\":[],\"config\":{\"link_duration_hours\":168,\"invite_expiry_hours\":24}}}"
+    },
+    {
+      "request": "GET /slayerlink/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[]}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"no account to invite\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"no such account\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"the slot must be 1 to 3\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"the slot must be 1 to 3\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"you cannot link with yourself\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"no such account\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"blocked\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 403,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"403\",\"message\":\"only friends can link\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"this player already invited you\",\"payload\":null}"
+    },
+    {
+      "request": "GET /slayerlink/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[{\"account_id\":\"UID-b\",\"slot\":1,\"direction\":\"Sent\",\"status\":\"Pending\",\"expires\":\"<date>\",\"link_id\":\"<uuid>\"}]}}"
+    },
+    {
+      "request": "GET /slayerlink/invites",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[{\"account_id\":\"UID-a\",\"slot\":1,\"direction\":\"Received\",\"status\":\"Pending\",\"expires\":\"<date>\",\"link_id\":\"<uuid>\"}]}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"the action must be accept, reject or cancel\",\"payload\":null}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"the action must be accept, reject or cancel\",\"payload\":null}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"404\",\"message\":\"no such invite\",\"payload\":null}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"the invite was already accepted\",\"payload\":null}"
+    },
+    {
+      "request": "GET /slayerlink/links",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"links\":[{\"account_id\":\"UID-b\",\"linked_account_id\":\"UID-b\",\"slot\":1,\"ends\":\"<date>\",\"link_id\":\"<uuid>\",\"prize_pool\":[]}]}}"
+    },
+    {
+      "request": "GET /slayerlink/status_good",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[],\"links\":[{\"account_id\":\"UID-c\",\"linked_account_id\":\"UID-c\",\"slot\":1,\"ends\":\"<date>\",\"link_id\":\"link-run\",\"prize_pool\":[]},{\"account_id\":\"UID-a\",\"linked_account_id\":\"UID-a\",\"slot\":2,\"ends\":\"<date>\",\"link_id\":\"<uuid>\",\"prize_pool\":[]}],\"config\":{\"link_duration_hours\":168,\"invite_expiry_hours\":24}}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"already linked with this player\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"the slot is already linked\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"the slot already has an invite waiting\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/availability",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"availability\":[{\"account_id\":\"UID-b\",\"available\":false},{\"account_id\":\"UID-c\",\"available\":false},{\"account_id\":\"UID-d\",\"available\":false},{\"account_id\":\"UID-e\",\"available\":false},{\"account_id\":\"UID-f\",\"available\":false},{\"account_id\":\"UID-none\",\"available\":false},{\"account_id\":\"UID-a\",\"available\":false}]}}"
+    },
+    {
+      "request": "POST /slayerlink/availability",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"availability\":[{\"account_id\":\"UID-a\",\"available\":false},{\"account_id\":\"UID-c\",\"available\":true},{\"account_id\":\"UID-e\",\"available\":false}]}}"
+    },
+    {
+      "request": "POST /slayerlink/availability",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"availability\":[]}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"the invite was already declined\",\"payload\":null}"
+    },
+    {
+      "request": "DELETE /slayerlink/invites/x",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "DELETE /slayerlink/invites/UID-d",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "DELETE /slayerlink/invites/UID-d",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /slayerlink/links",
+      "status": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"400\",\"message\":\"no slot or account\",\"payload\":null}"
+    },
+    {
+      "request": "DELETE /slayerlink/links?slot=2",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /slayerlink/links?slot=1&account_id=UID-c",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /slayerlink/links",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "DELETE /slayerlink/links",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{}}"
+    },
+    {
+      "request": "GET /slayerlink/status_good",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"invites\":[],\"links\":[],\"config\":{\"link_duration_hours\":168,\"invite_expiry_hours\":24}}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "POST /slayerlink/invite",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":null,\"message\":\"OK\",\"payload\":{\"link_id\":\"<uuid>\"}}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"too many invites: at most 20 in 10 minutes\",\"payload\":null}"
+    },
+    {
+      "request": "PUT /slayerlink/invite",
+      "status": 409,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"code\":\"409\",\"message\":\"too many invites: at most 20 in 10 minutes\",\"payload\":null}"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('senderId', senderId, 'targetId', targetId, 'senderSlot', senderSlot, 'status', status, 'old', inviteId LIKE 'inv-%')) AS j FROM (SELECT * FROM slayerlinkinvites ORDER BY createdAt, senderId, targetId, status)",
+      "status": 0,
+      "headers": {},
+      "body": "[{\"senderId\":\"UID-a\",\"targetId\":\"UID-b\",\"senderSlot\":1,\"status\":\"ACCEPTED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":2,\"status\":\"DECLINED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-d\",\"senderSlot\":3,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-d\",\"senderSlot\":3,\"status\":\"DECLINED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-d\",\"senderSlot\":3,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0},{\"senderId\":\"UID-a\",\"targetId\":\"UID-c\",\"senderSlot\":1,\"status\":\"CANCELED\",\"old\":0}]"
+    },
+    {
+      "request": "sql SELECT json_group_array(json_object('senderId', senderId, 'targetId', targetId, 'senderSlot', senderSlot, 'targetSlot', targetSlot, 'linkId', CASE WHEN linkId LIKE 'link-%' THEN linkId ELSE 'new' END)) AS j FROM (SELECT * FROM slayerlinks ORDER BY createdAt, senderId)",
+      "status": 0,
+      "headers": {},
+      "body": "[]"
+    }
+  ]
+}

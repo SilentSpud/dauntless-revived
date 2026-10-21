@@ -142,6 +142,9 @@ Done so far:
   `escalation-strict`, `escalation-stub`, `escalation-mixed`, 63 replies) match Node, including the
   stored rows: the harnesses gained `finalQueries`, SQL whose one JSON column is compared after the
   requests.
+- Metagame B2, area 6 of M29, third part: Slayer Links (`routes/slayerlinks.ts`). Invites, answers,
+  links, availability, the deletes, expiry and sweeps, and the invite window, behind `SLAYER_LINKS`. Two
+  parity scripts (`slayerlinks`, `slayerlinks-off`, 87 replies) match Node, stored rows included.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

@@ -535,3 +535,13 @@ async fn escalation_stub() {
 async fn escalation_mixed() {
     run_area("escalation-mixed").await;
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn slayerlinks() {
+    run_area("slayerlinks").await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn slayerlinks_off() {
+    run_area("slayerlinks-off").await;
+}

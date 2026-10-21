@@ -164,6 +164,7 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         matchmaking: crate::matchmaking::Matchmaking::new(config.matchmaking.clone()),
         guilds: config.guilds.clone(),
         escalation: config.escalation,
+        slayer_links: config.slayer_links,
         guild_memory: crate::guild::Memory::default(),
         key_recovery_secret: config.key_recovery_secret.clone(),
         health: Arc::new(Health::new(config.backend_health)),

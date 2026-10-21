@@ -14,6 +14,7 @@ pub mod login;
 pub mod matchmaking;
 pub mod party;
 pub mod progression;
+pub mod slayerlinks;
 pub mod store;
 pub mod system;
 pub mod trials;
@@ -98,6 +99,7 @@ pub fn all(state: &AppState) -> service_kit::routing::Router<AppState> {
         .merge(trials::routes())
         .merge(matchmaking::routes())
         .merge(party::routes())
+        .merge(slayerlinks::routes())
         .merge(progression::routes(state))
         .merge(loadout::routes())
         .merge(admin_accounts::routes(state))
