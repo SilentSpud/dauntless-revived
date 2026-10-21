@@ -11,6 +11,7 @@ import { GetDb } from "../src/db";
 import { gameserverapikeys, userapikeys, users } from "../src/db/schema";
 import { HashUserAPIKey, SignMetagameJWTForUid } from "../src/controllers/auth";
 import { SetPartyClockForTests } from "../src/controllers/party";
+import { NodeOnly } from "./rustserver";
 
 // Parties over HTTP (roadmap 1.9): three players' clients (A, B, C; tokens for throwaway
 // accounts in this test's own database) walk the plan's tests T1-T7 that need no game,
@@ -268,7 +269,7 @@ describe("T7: promote, kick, decline, leave", () => {
         assert.deepEqual([Alone.partyId, Alone.leaderPlayerId, Alone.candidateState, Alone.playerStates.length], [PartyB, A, "QUEUED_FOR_START", 1]);
     });
 
-    it("PARTY_SOLO_STUB=0 answers a party of one without the placeholder candidate (Idle to the client), read on every poll", async () => {
+    it("PARTY_SOLO_STUB=0 answers a party of one without the placeholder candidate (Idle to the client), read on every poll", NodeOnly("changes a switch Node reads on every poll"), async () => {
         process.env.PARTY_SOLO_STUB = "0";
 
         try{
@@ -432,7 +433,7 @@ describe("friends list and blocklist", () => {
         assert.equal((await Call("POST", `/friends/api/public/friends/${A}/${A}`, { as: A })).status, 400);
     });
 
-    it("a block removes the party invites between the two and stops friend requests and party invites both ways", async () => {
+    it("a block removes the party invites between the two and stops friend requests and party invites both ways", NodeOnly("moves the party clock"), async () => {
         // C declined A's invite in T7: A waits 2 minutes before inviting C again (everyone is in a
         // party of one here, so moving the party clock sweeps nobody)
         assert.equal((await Invite(A, C, "")).status, 409, "declined a moment ago");
@@ -502,7 +503,7 @@ describe("heartbeats", () => {
 describe("one queued join per player (the 22 September 2026 two-player test)", () => {
     after(() => SetPartyClockForTests());
 
-    it("a stale join, the same player's new join and a second player's join for the same hunt: one server expecting two accounts", async () => {
+    it("a stale join, the same player's new join and a second player's join for the same hunt: one server expecting two accounts", NodeOnly("moves the party clock"), async () => {
         let Offset = 0;
         SetPartyClockForTests(() => Date.now() + Offset);
 

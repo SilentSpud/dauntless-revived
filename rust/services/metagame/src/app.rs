@@ -67,6 +67,7 @@ pub struct App {
     pub guild_memory: crate::guild::Memory,
     pub key_recovery_secret: Option<String>,
     pub backup_root: Option<String>,
+    pub body_log: Option<Arc<crate::bodylog::BodyLog>>,
     pub discord_key_state_file: Option<String>,
     pub developer_accounts: Vec<String>,
     pub device_signal_key: Option<Vec<u8>>,

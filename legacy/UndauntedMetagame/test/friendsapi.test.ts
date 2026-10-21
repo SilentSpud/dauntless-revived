@@ -12,6 +12,7 @@ import { ClearServerStatusCache } from "../src/controllers/serverstatus";
 import { GetOnlinePlayerActivity } from "../src/controllers/undauntedapi";
 import { FakeDeployServer, StartFakeDeployServer, ThreeServers } from "./fakedeploy";
 import { FRIENDS_API_PORT, FRIENDS_DEPLOYSERVER_PORT } from "./friendsenv";
+import { NodeOnly } from "./rustserver";
 
 // The account routes and ServerStatus over HTTP, as the launcher and host scripts call them.
 // The app listens on a spare loopback port; the deploy server is a fake on another.
@@ -304,7 +305,7 @@ describe("GET /undaunted/api/ServerStatus", () => {
 });
 
 describe("GET /dauntless-status", () => {
-    it("keeps the nine fields the client reads and adds the source link, and says nothing about players", async () => {
+    it("keeps the nine fields the client reads and adds the source link, and says nothing about players", NodeOnly("reads the app's player activity in process"), async () => {
         const Reply = await Call("GET", "/dauntless-status");
         const Keys = Object.keys(Reply.json);
 

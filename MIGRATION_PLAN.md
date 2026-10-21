@@ -59,7 +59,7 @@ Done so far:
   identical; each later area adds its own script. The route table is checked against `routes.json`, and a test runs
   the binary through start, a request and `shutdown`. Deliberate differences: `AUTH_MODE`, `DB_FILENAME` and valid
   signing keys are required at start (Node started and then hung or failed every login), and the feature switches
-  are read once at start. Not yet: `LOG_BODIES`.
+  are read once at start. `LOG_BODIES` came later, with M31.
 - Metagame B2, area 2 of M29, first part: characters (list, create, save with the version check and the
   `SERIE_dojo` trigger), the active character, save history with its retention and both admin rollbacks, and
   entitlements (the real-mode routes, the stub replies and fall-throughs of stub mode, and the admin grant and
@@ -174,11 +174,21 @@ Done so far:
   `METAGAME_RUST_BIN` names it (same database, same environment; restarted when a test changes the
   environment or resets what the app keeps in memory). The 16 test files on it: Node 256/256; Rust 246
   pass, 0 fail, and 10 marked Node-only (`NodeOnly`: they move the app's clock or hand it store offers
-  in process). Found on the way: the Rust listener now sets `TCP_NODELAY` like Node's; and Node's
-  `fetch` (undici) waits for its half-second timer before reusing a keep-alive connection to hyper,
-  so the Rust calls go through `node:http` (the game's libcurl and the Tauri launcher don't use
-  undici). Left: the HTTP tests with their own servers (friends, party, guild, matchmaking,
-  moderation, backup, health, platform; chat after M32), then the port to Rust tests.
+  in process). Found on the way: the Rust listener now sets `TCP_NODELAY` like Node's; and on this
+  Windows host Node's `fetch` (undici 8.9, Node 26.7) takes about half a second to reuse an idle
+  keep-alive connection to any server outside its own process (a raw socket server shows it too),
+  so the test calls go through `node:http`. Node tools that call the metagame with `fetch` (the
+  Discord bot) will see that delay against any server.
+- Metagame B2, M31, second part: `LOG_BODIES` (`bodylog.rs`: the routes, the redaction, the size caps,
+  `BODY_LOG_PER_PATH`, aborted answers), and `test/rustshim.ts` for the tests that start the app
+  themselves: preloaded, it starts the Rust binary in `app.listen`'s place, sends `fetch` to it through
+  `node:http`, passes the server's log lines to the app's logger, and restarts it after a
+  `Reset...ForTests` hook. `npm run test:rust -- <binary>` runs 21 files (the 16 on `appclient.ts`,
+  then friendsapi, partyhttp, platform, progressiondefault and socialflow): Rust 272 pass, 0 fail, 10
+  Node-only; the same files pass on Node. Not run against Rust: guildhttp (its tests share state and
+  move the guild clock, so skipping some breaks the rest; the guild parity scripts cover the routes),
+  the tests that put one router in their own app (backup, health, moderation, Discord stats), the
+  matchmaking tests with their own servers, and chat (M32). Then: the port to Rust tests.
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
 move from Node to Rust. This replaces the earlier plan to move the metagame to Bun first: the Bun step would rewrite

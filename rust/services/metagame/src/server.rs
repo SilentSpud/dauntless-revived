@@ -120,7 +120,13 @@ pub fn app(state: AppState, log_requests: bool) -> axum::Router {
             .layer(from_fn_with_state(state.clone(), ban_check))
             .layer(from_fn_with_state(state.clone(), refuse_proxied_dev_logins))
             .layer(from_fn_with_state(body_config(), parse_bodies))
-            .layer(log),
+            .layer(log)
+            .option_layer(
+                state
+                    .body_log
+                    .clone()
+                    .map(|log| from_fn_with_state(log, crate::bodylog::body_log)),
+            ),
     )
 }
 
@@ -169,6 +175,10 @@ pub fn prepare(config: &Config, progression: ProgressionConfig) -> Result<Prepar
         guild_memory: crate::guild::Memory::default(),
         key_recovery_secret: config.key_recovery_secret.clone(),
         backup_root: config.backup_root.clone(),
+        body_log: config
+            .body_log
+            .as_ref()
+            .map(|s| Arc::new(crate::bodylog::BodyLog::new(s))),
         discord_key_state_file: config.discord_key_state_file.clone(),
         developer_accounts: config.developer_accounts.clone(),
         device_signal_key: config.device_signal_key.clone(),

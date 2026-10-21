@@ -12,6 +12,7 @@ import { SignMetagameJWTForUid } from "../src/controllers/auth";
 import { ResetFriendsMemoryForTests, SetFriendsClockForTests } from "../src/controllers/friends";
 import { SetPartyClockForTests } from "../src/controllers/party";
 import { RecordingDeploy, StartRecordingDeploy } from "./partyenv";
+import { NodeOnly } from "./rustserver";
 import {
     AddUserInfo, ParseAccountMappings, ParseBlockList, ParseFriendsList, ParseInvitations, ParsePhoenixEnvelope, GuildErrorOf,
     SocialClient, Transport, UserInfo
@@ -374,7 +375,7 @@ describe("10. friends limits and the block alias", () => {
         assert.deepEqual(ParseBlockList((await Call("GET", `/friends/api/public/blocklist/${A}`, { as: A })).text), []);
     });
 
-    it("20 new requests per 10 minutes, at most 50 unanswered; accepting an inbound request is never limited", async () => {
+    it("20 new requests per 10 minutes, at most 50 unanswered; accepting an inbound request is never limited", NodeOnly("moves the friends clock"), async () => {
         let Offset = 0;
         SetFriendsClockForTests(() => Date.now() + Offset);
         ResetFriendsMemoryForTests();
@@ -476,7 +477,7 @@ describe("11. party invites: blocks, declines and the sender's limit", () => {
         assert.deepEqual((await Poll(R)).json.playerStates.map((State: any) => State.playerId), [R], "R stays in their own party");
     });
 
-    it("a declined sender waits 2 minutes before inviting the same player again; other senders do not", async () => {
+    it("a declined sender waits 2 minutes before inviting the same player again; other senders do not", NodeOnly("moves the party clock"), async () => {
         assert.equal(await SendInvite(P, Q), 200);
         assert.equal(await Decline(Q, P), 200);
         assert.deepEqual(await InvitesOf(Q), []);
@@ -487,7 +488,7 @@ describe("11. party invites: blocks, declines and the sender's limit", () => {
         assert.equal(await SendInvite(P, Q), 200, "two minutes later");
     });
 
-    it("a sender sends at most 20 invites per 10 minutes (409), counted across declines", async () => {
+    it("a sender sends at most 20 invites per 10 minutes (409), counted across declines", NodeOnly("moves the party clock"), async () => {
         let Shift = 2 * 60 * 1000 + 1000;
         SetPartyClockForTests(() => Date.now() + Shift);
 

@@ -5,6 +5,7 @@ pub mod accounts;
 pub mod activity;
 pub mod app;
 pub mod auth;
+pub mod bodylog;
 pub mod bounties;
 pub mod characterprogress;
 pub mod characters;

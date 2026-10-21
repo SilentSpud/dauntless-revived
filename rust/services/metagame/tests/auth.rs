@@ -89,6 +89,7 @@ fn fixture_with(account_key_recovery: bool, backup_root: Option<String>) -> Fixt
         guild_memory: Default::default(),
         key_recovery_secret: None,
         backup_root,
+        body_log: None,
         discord_key_state_file: None,
         developer_accounts: Vec::new(),
         device_signal_key: None,

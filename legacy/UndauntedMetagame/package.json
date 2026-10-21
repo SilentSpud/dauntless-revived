@@ -10,7 +10,8 @@
     "postbuild": "node scripts/write-build-info.js",
     "start": "node --env-file=.env dist/server.js",
     "db:generate": "drizzle-kit generate",
-    "test": "node -e \"require('fs').rmSync('build',{recursive:true,force:true})\" && tsc -p tsconfig.test.json && node --test \"build/test/**/*.test.js\""
+    "test": "node -e \"require('fs').rmSync('build',{recursive:true,force:true})\" && tsc -p tsconfig.test.json && node --test \"build/test/**/*.test.js\"",
+    "test:rust": "node scripts/test-against-rust.cjs"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
