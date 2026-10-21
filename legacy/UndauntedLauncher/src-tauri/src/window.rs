@@ -3,9 +3,7 @@
 
 use tauri::webview::{NewWindowResponse, PageLoadEvent};
 use tauri::window::Color;
-use tauri::{
-    AppHandle, Emitter, Monitor, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent,
-};
+use tauri::{AppHandle, Emitter, Monitor, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent};
 use url::Url;
 
 pub const MAIN: &str = "main";
@@ -30,10 +28,7 @@ fn fit(work: Option<(f64, f64)>) -> ((f64, f64), (f64, f64)) {
 fn work_area(monitor: &Monitor) -> (f64, f64) {
     let scale = monitor.scale_factor();
     let size = monitor.work_area().size;
-    (
-        f64::from(size.width) / scale,
-        f64::from(size.height) / scale,
-    )
+    (f64::from(size.width) / scale, f64::from(size.height) / scale)
 }
 
 /// The app's own page, as each webview serves it, or the Vite dev server in development.
@@ -51,8 +46,7 @@ pub fn is_app_url(url: &Url, dev: Option<&Url>) -> bool {
 }
 
 pub fn create(app: &AppHandle) -> tauri::Result<WebviewWindow> {
-    let ((width, height), (min_width, min_height)) =
-        fit(app.primary_monitor()?.as_ref().map(work_area));
+    let ((width, height), (min_width, min_height)) = fit(app.primary_monitor()?.as_ref().map(work_area));
     let dev = if cfg!(dev) {
         app.config().build.dev_url.clone()
     } else {
@@ -96,10 +90,7 @@ mod tests {
     #[test]
     fn only_the_app_page_may_load() {
         assert!(is_app_url(&url("tauri://localhost/index.html"), None));
-        assert!(is_app_url(
-            &url("http://tauri.localhost/index.html#x"),
-            None
-        ));
+        assert!(is_app_url(&url("http://tauri.localhost/index.html#x"), None));
         assert!(is_app_url(&url("https://tauri.localhost/"), None));
         for other in [
             "https://example.com/",
@@ -111,28 +102,16 @@ mod tests {
             assert!(!is_app_url(&url(other), None), "{other}");
         }
         let dev = url("http://localhost:5173/");
-        assert!(is_app_url(
-            &url("http://localhost:5173/src/index.html"),
-            Some(&dev)
-        ));
+        assert!(is_app_url(&url("http://localhost:5173/src/index.html"), Some(&dev)));
         assert!(!is_app_url(&url("http://localhost:5174/"), Some(&dev)));
         assert!(!is_app_url(&url("tauri://localhost/"), Some(&dev)));
     }
 
     #[test]
     fn the_window_fits_small_screens() {
-        assert_eq!(
-            fit(Some((1920.0, 1040.0))),
-            ((1280.0, 760.0), (1024.0, 640.0))
-        );
-        assert_eq!(
-            fit(Some((1366.0, 728.0))),
-            ((1280.0, 728.0), (1024.0, 640.0))
-        );
-        assert_eq!(
-            fit(Some((1280.0, 680.0))),
-            ((1280.0, 680.0), (1024.0, 640.0))
-        );
+        assert_eq!(fit(Some((1920.0, 1040.0))), ((1280.0, 760.0), (1024.0, 640.0)));
+        assert_eq!(fit(Some((1366.0, 728.0))), ((1280.0, 728.0), (1024.0, 640.0)));
+        assert_eq!(fit(Some((1280.0, 680.0))), ((1280.0, 680.0), (1024.0, 640.0)));
         assert_eq!(fit(None), ((1280.0, 760.0), (1024.0, 640.0)));
     }
 }

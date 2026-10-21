@@ -19,13 +19,18 @@ name = "dauntless-revived-launcher"
 path = "src/main.rs"
 
 [build-dependencies]
-tauri-build = { version = "2.7", features = [] }
+tauri-build = { version = "2.7", features = ["isolation"] }
 
 [dependencies]
+protocol.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-tauri = { version = "2.12", features = [] }
+tauri = { version = "2.12", features = ["isolation"] }
 url.workspace = true
+
+[dev-dependencies]
+protocol = { workspace = true, features = ["ts"] }
+ts-rs.workspace = true
 
 [features]
 # Set by `tauri build`: serve the built page from the binary instead of the Vite dev server

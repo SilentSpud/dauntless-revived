@@ -194,6 +194,22 @@ Done so far:
   reached through gtk-rs GTK3 on Linux). CI: the Rust job installs the WebKitGTK build packages; a new
   `launcher-tauri` job builds the debug app on Windows and Ubuntu 22.04. Left in P1: the bridge, types and
   isolation hook (L6, L7, L9); the close-while-playing confirmation (L5) needs the controller (L38).
+- Launcher P1, second part (L6, L7, L9): the bridge. `src-tauri/src/bridge/types.rs` mirrors `shared/types.ts`
+  (the status types moved to `crates/protocol`, with a `ts` feature); `spec.rs` is the fixed command list with
+  each argument's shape and limit. A test generates, and fails when stale, `src/shared/generated/types.ts` (ts-rs,
+  plus `CommandName`), `isolation/commands.js` and `permissions/app-commands.toml`; `build.rs` gives each command
+  its ACL permission and the capability grants only that set; `test/generated-types.test.ts` fails to compile if
+  a generated type and the hand-written one differ. Command names are the IPC names without `dr:` in snake_case;
+  the window controls use Tauri's window calls; pushes are the events `snapshot`, `invite-link`, `window-state`,
+  `offline-status-changed`, and progress goes over a `Channel` throttled to about 10/s in Rust.
+  `src/renderer/api.ts` implements `LauncherApi` with a deadline on every call (an hour for file dialogs);
+  `tauri-bridge.ts` sets `window.launcher` from it in the Tauri build only, until L40. The isolation hook allows
+  only listed commands and Tauri's event and window calls, with exact argument names, types and lengths.
+  Checked in the running app (WebView2, debug build, over the DevTools protocol): listed calls answer; an
+  `fs` plugin call, a 1 MB username and an extra argument never settle; no CSP meta tag; `window.open` is
+  refused. The backend behind the commands is a stub until P2-P5: actions answer `unknown` with "not in the
+  Tauri launcher yet", offline answers `offline_unavailable` (L42). P1 is done apart from the close-while-playing
+  confirmation (L5, with the controller) and the manual checks on Linux.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

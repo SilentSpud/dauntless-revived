@@ -28,6 +28,7 @@ const URI_COMPONENT: &AsciiSet = &NON_ALPHANUMERIC
     .remove(b')');
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS))]
 #[serde(rename_all = "lowercase")]
 pub enum ServerMode {
     Private,

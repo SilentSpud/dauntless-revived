@@ -11,9 +11,14 @@ publish.workspace = true
 [dependencies]
 percent-encoding.workspace = true
 serde.workspace = true
+ts-rs = { workspace = true, optional = true }
 
 [dev-dependencies]
 serde_json.workspace = true
 
 [lints]
 workspace = true
+
+[features]
+# TypeScript declarations of the types the launcher page shows (L6)
+ts = ["dep:ts-rs"]

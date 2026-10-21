@@ -5,3 +5,4 @@
 //! the one the TypeScript code reads and writes today.
 
 pub mod invite;
+pub mod status;

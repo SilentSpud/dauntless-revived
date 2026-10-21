@@ -79,9 +79,12 @@ jobs:
               - legacy/UndauntedMetagame/src/drizzle/**
               - legacy/UndauntedMetagame/src/vendor/**
               - legacy/UndauntedMetagame/routes.json
-              # The Tauri launcher backend is a workspace member (R5); its build embeds the icons
+              # The Tauri launcher backend is a workspace member (R5); its build embeds the icons and the
+              # isolation frame, and its tests check the files generated from it
               - legacy/UndauntedLauncher/src-tauri/**
               - legacy/UndauntedLauncher/assets/**
+              - legacy/UndauntedLauncher/isolation/**
+              - legacy/UndauntedLauncher/src/shared/generated/**
             native:
               - native/**
             client-mods:
