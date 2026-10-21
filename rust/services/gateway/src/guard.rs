@@ -148,6 +148,9 @@ pub struct Guard<S> {
     sleep: Pin<Box<Sleep>>,
     /// The 408 being written (how much of it is out) before the connection ends
     goodbye: Option<usize>,
+    /// The write side is shut: what the client still sends is read and dropped until it closes, for
+    /// at most a second (`sleep`)
+    closing: bool,
 }
 
 impl<S> Guard<S> {
@@ -158,6 +161,7 @@ impl<S> Guard<S> {
             phases,
             sleep: Box::pin(tokio::time::sleep_until(deadline)),
             goodbye: None,
+            closing: false,
         }
     }
 
@@ -174,8 +178,24 @@ impl<S> Guard<S> {
     }
 }
 
-impl<S: AsyncWrite + Unpin> Guard<S> {
-    /// Writes the 408 (for at most a second more), then ends the connection.
+impl<S: AsyncRead + AsyncWrite + Unpin> Guard<S> {
+    /// Reads and drops what the client still sends: ready once it closes (or the read fails). A
+    /// socket closed with unread input is reset, and on Windows a reset drops the answer the client
+    /// has not read yet.
+    fn linger(&mut self, cx: &mut Context<'_>) -> Poll<()> {
+        let mut scratch = [0u8; 1024];
+        loop {
+            let mut buf = ReadBuf::new(&mut scratch);
+            match Pin::new(&mut self.inner).poll_read(cx, &mut buf) {
+                Poll::Pending => return Poll::Pending,
+                Poll::Ready(Ok(())) if !buf.filled().is_empty() => {}
+                Poll::Ready(_) => return Poll::Ready(()),
+            }
+        }
+    }
+
+    /// Writes the 408, shuts the write side and lingers (for at most a second more in all), then
+    /// ends the connection.
     fn say_goodbye(&mut self, cx: &mut Context<'_>) -> Poll<std::io::Result<()>> {
         let timed_out = || Poll::Ready(Err(std::io::ErrorKind::TimedOut.into()));
         if self.sleep.as_mut().poll(cx).is_ready() {
@@ -193,9 +213,21 @@ impl<S: AsyncWrite + Unpin> Guard<S> {
             }
         }
         self.goodbye = Some(written);
-        match Pin::new(&mut self.inner).poll_flush(cx) {
+        if !self.closing {
+            match Pin::new(&mut self.inner).poll_flush(cx) {
+                Poll::Pending => return Poll::Pending,
+                Poll::Ready(Err(_)) => return timed_out(),
+                Poll::Ready(Ok(())) => {}
+            }
+            match Pin::new(&mut self.inner).poll_shutdown(cx) {
+                Poll::Pending => return Poll::Pending,
+                Poll::Ready(Err(_)) => return timed_out(),
+                Poll::Ready(Ok(())) => self.closing = true,
+            }
+        }
+        match self.linger(cx) {
             Poll::Pending => Poll::Pending,
-            Poll::Ready(_) => timed_out(),
+            Poll::Ready(()) => timed_out(),
         }
     }
 }
@@ -227,7 +259,7 @@ impl<S: AsyncRead + AsyncWrite + Unpin> AsyncRead for Guard<S> {
     }
 }
 
-impl<S: AsyncWrite + Unpin> AsyncWrite for Guard<S> {
+impl<S: AsyncRead + AsyncWrite + Unpin> AsyncWrite for Guard<S> {
     fn poll_write(mut self: Pin<&mut Self>, cx: &mut Context<'_>, data: &[u8]) -> Poll<std::io::Result<usize>> {
         match Pin::new(&mut self.inner).poll_write(cx, data) {
             Poll::Ready(result) => {
@@ -243,8 +275,22 @@ impl<S: AsyncWrite + Unpin> AsyncWrite for Guard<S> {
         Pin::new(&mut self.inner).poll_flush(cx)
     }
 
+    /// Shuts the write side, then lingers: hyper ends a connection here after an answer that closes
+    /// it, such as a 413 sent before the client finished its body.
     fn poll_shutdown(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<std::io::Result<()>> {
-        Pin::new(&mut self.inner).poll_shutdown(cx)
+        if !self.closing {
+            match Pin::new(&mut self.inner).poll_shutdown(cx) {
+                Poll::Ready(Ok(())) => {}
+                other => return other,
+            }
+            self.closing = true;
+            let until = Instant::now() + Duration::from_secs(1);
+            self.sleep.as_mut().reset(until);
+        }
+        if self.sleep.as_mut().poll(cx).is_ready() {
+            return Poll::Ready(Ok(()));
+        }
+        self.linger(cx).map(Ok)
     }
 }
 
@@ -273,14 +319,39 @@ mod tests {
     async fn a_new_connection_gets_the_headers_time_and_a_408() {
         let (near, mut far) = tokio::io::duplex(256);
         let mut guard = Guard::new(near, Phases::new(HEADERS, KEEP_ALIVE, IDLE));
+        // The client reads the 408 to the end, then closes
+        let client = tokio::spawn(async move {
+            let mut said = Vec::new();
+            far.read_to_end(&mut said).await.unwrap();
+            said
+        });
         let started = Instant::now();
         assert_eq!(read_error(&mut guard).await, std::io::ErrorKind::TimedOut);
         assert_eq!(started.elapsed(), HEADERS);
-        drop(guard);
+        let said = client.await.unwrap();
+        assert!(said.starts_with(b"HTTP/1.1 408 "));
+        assert!(said.ends_with(b"{\"error\":\"request_timeout\"}"));
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn after_the_408_the_rest_of_a_slow_head_is_read_for_at_most_a_second() {
+        let (near, mut far) = tokio::io::duplex(256);
+        let mut guard = Guard::new(near, Phases::new(HEADERS, KEEP_ALIVE, IDLE));
+        far.write_all(b"GET / HTTP/1.1\r\n").await.unwrap();
+        let started = Instant::now();
+        let reading = tokio::spawn(async move {
+            let error = read_error(&mut guard).await;
+            (error, guard)
+        });
+        // Still sending after the 408: read and dropped, so the close does not reset the connection
+        tokio::time::sleep(HEADERS + Duration::from_millis(500)).await;
+        far.write_all(b"X-Slow: 1\r\n").await.unwrap();
+        let (error, _guard) = reading.await.unwrap();
+        assert_eq!(error, std::io::ErrorKind::TimedOut);
+        assert_eq!(started.elapsed(), HEADERS + Duration::from_secs(1));
         let mut said = Vec::new();
         far.read_to_end(&mut said).await.unwrap();
         assert!(said.starts_with(b"HTTP/1.1 408 "));
-        assert!(said.ends_with(b"{\"error\":\"request_timeout\"}"));
     }
 
     #[tokio::test(start_paused = true)]
@@ -300,7 +371,8 @@ mod tests {
             drop(far);
         });
         assert_eq!(read_error(&mut guard).await, std::io::ErrorKind::TimedOut);
-        assert_eq!(started.elapsed(), Duration::from_secs(70));
+        // The 408 at 70 s, then a second for a client that never closes
+        assert_eq!(started.elapsed(), Duration::from_secs(71));
     }
 
     #[tokio::test(start_paused = true)]
