@@ -806,7 +806,12 @@ async fn a_new_certificate_for_the_same_server_never_gets_the_stored_key_before_
             detail: Some(fp.clone())
         })
     );
-    assert_eq!(first.lock().unwrap().requests.len(), before, "nothing was sent");
+    // Only the background news and art loads that registering started may still arrive
+    let after: Vec<String> = first.lock().unwrap().requests[before..].to_vec();
+    assert!(
+        after.iter().all(|r| r.starts_with("GET /content/v1/")),
+        "nothing was sent for the refused invite: {after:?}"
+    );
     assert_eq!(
         hx.c.snapshot().server.unwrap().fingerprint,
         Some(fp.clone()),
