@@ -410,6 +410,11 @@ Done so far:
     - CI runs clippy and the tests with the feature too.
 - L44 waits for L51: `scripts/stage-offline-runtime.mjs` is still how the Electron launcher 0.1.x packages its
   Node services, so it goes with the Electron build, not before. The Tauri launcher stages nothing.
+- L46, the updater's key: `src-tauri/updater.key.pub` is the public half of the minisign key pair that signs the
+  Tauri launcher's updates (made with `tauri signer generate`, key id `06A6E0C9A12B64D5`). It goes into
+  `tauri.conf.json` as `plugins.updater.pubkey` when the updater plugin is added. The private key and its
+  password stay off the repository: the release workflow reads them from the secrets
+  `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
