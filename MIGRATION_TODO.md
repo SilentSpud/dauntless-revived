@@ -19,6 +19,9 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
 - [ ] Update bridge on a clean VM: install 0.1.39 → bridge → Tauri, keys and settings intact; then one Tauri →
       Tauri update. [L3]
 - [ ] The same against the real bridge release: a 0.1.39 install reaches the newest 0.2.x in two hops. [L50]
+- [ ] The page on Windows 11, Ubuntu 22.04 and 24.04, Fedora and SteamOS (NVIDIA and Wayland too, with the
+      `WEBKIT_DISABLE_DMABUF_RENDERER` fallback), in all nine languages: screenshots match, and ja and ru find
+      their fonts. [L1, L41]
 - [ ] Window behaviour on Windows and Linux. [L5]
 - [ ] Dialogs, in two languages. [L36]
 - [ ] Old account keys read back: real 0.1.39 profiles on Windows, gnome-keyring and KWallet (KWallet and a

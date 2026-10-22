@@ -6,8 +6,43 @@ Status: in progress. Written 2026-10-20. The spikes that could run on a developm
 are in section 3.4.
 
 Completed rows are ~~struck through~~ in the tables below: their work is done in this repository. Checks that
-need real machines, live servers or a release are in [MIGRATION_TODO.md](MIGRATION_TODO.md). What each finished
-row did, and how it was checked, is logged in the last section, [Completed work](#completed-work).
+need real machines, live servers or a release are in [MIGRATION_TODO.md](MIGRATION_TODO.md). Every work row that
+is not struck through still has work left; [What's left](#whats-left) lists them with what blocks each. The
+decisions (D), the end state, the spike results and the risk tables are reference, not work, and are never
+struck through. What each finished row did, and how it was checked, is logged in the last section,
+[Completed work](#completed-work).
+
+## What's left
+
+Reviewed 2026-10-22. Phase and step rows (P9, P10, B0, B4, B5, steps 1 and 4–8) stay open while any row in them
+does. "You" means the maintainer: a release, a live server, the canary or a real machine.
+
+| Row | What's left | Blocked by |
+| --- | --- | --- |
+| L44 | Delete `scripts/stage-offline-runtime.mjs` | L51: the Electron 0.1.x builds still package offline mode with it |
+| L49 | Publish 0.2.0-beta as a prerelease; a week of testing with no key, save or language regressions | You: `launcher-tauri-release.yml` publishes only from the default branch, so `plan` has to be merged first |
+| L50 | Set `BRIDGE_TARGET` to the released 0.2.0 installer and its SHA-256, publish Electron 0.1.40 to the Squirrel feed | L49: the bridge pins the hash of the real 0.2.0 installer |
+| L50a | 0.3.0 removes the Squirrel files from the feed and deletes the migrated Electron key copies | L50, and time for 0.1.x installs to take the bridge |
+| L51 | Delete the Electron main process, Forge and `electron*` dependencies; update the READMEs, `LINUX.md`, notices and credits | L50: the bridge release is still an Electron build |
+| L52–L59 | The SolidJS page | On hold: another maintainer's rework of the launcher UI ([MIGRATION_TODO.md](MIGRATION_TODO.md), later work) |
+| M1 | Baseline numbers of the Node metagame | You: the canary with a production database copy |
+| M35 | Replay the traffic corpus against Node and Rust and triage every diff (also SB1's text check) | The corpus from the live servers (M2 capture, you); the final run waits for M44 |
+| M36 | The same load on Rust on the canary and on a Windows host like production | M1's numbers; the canary |
+| M37 | Several days on the canary with invited players | M35 and M36 passing; the canary |
+| M38 | Server release archives for the kits (binaries with the store images and progression config) and their workflow; the smoke list on every target | The workflow: nothing, it can be written now (publishing waits for M42). The smoke list: a machine per target |
+| M41 | Delete the OpenBSD kit, its CI job and docs | M43 |
+| M42 | Production cutover: the canary, then the first Windows region, then the second | M35–M37 passing, M46 between the canary and the regions; you |
+| M43 | Delete the TS metagame and the traffic corpus | Every server on Rust for one release (M42) |
+| M44 | Port every Node metagame commit since the port started | Done right before the final M35 run; Node changes until then add to the list |
+| M46 | Rollback rehearsal: back to Node, then restore a backup and forward to Rust | M42's canary cutover |
+| M47 | Rewrite `docs/setup/` and `docs/operations/` (English and Finnish) for the Rust kits | The Part B cutover: until then the guides must stay right for the Node servers; checked by a fresh canary install |
+| X2 | Turn offline mode back on in 0.2.x | M35 and M37 on the canary, a canary soak of the Rust DeployServer, and a 0.2.x release (L49) |
+| X3 | The catch-up lists of the metagame (M44), gateway, content server, DeployServer, bot, the Node helpers in `deploy/` and `tools/` (the launcher's is done) | Each component's cutover |
+| X6 | Remove each npm Dependabot entry with its folder; the `bun` entry for `/rust/launcher/ui`; hashes for server binaries in releases; the false-positive portal and a clean Windows install with Defender and SmartScreen on, per release | The folder deletions (L51, M43, Part C), R7, M38 and the releases |
+| X9 | Review and sign each component's section of `SECURITY_REVIEW.md` after a 24-hour run of its fuzz targets | Each component's cutover PR |
+| R7 | Move the launcher to `rust/launcher/` | L51: the launcher must be Tauri only |
+| R9 | Per-family build steps in `CONTRIBUTING.md`, `.github/CODEOWNERS`, docs links by the new paths | The last moves and deletions (R7, M43, L51, Part C), so the paths are final; the owners are yours to name |
+| R10 | Add each `legacy/Undaunted*/` folder to the path sweep, and the old `tools/` script names | Each folder's deletion |
 
 Goal: one Rust codebase for the launcher and every server, running as fast as possible. The launcher moves from
 Electron to Tauri 2 (its TypeScript page stays). The metagame, gateway, content server, DeployServer and Discord bot
@@ -137,11 +172,11 @@ corpus (M2) once the port is stable.
 
 | # | Blocker | Why it blocks | Plan |
 | --- | --- | --- | --- |
-| LB1 | Existing account keys | Keys in `userData/keys` are Electron `safeStorage` blobs: Windows = `v10` AES-256-GCM with the key DPAPI-wrapped in `userData/Local State` (`os_crypt.encrypted_key`); Linux = `v11` AES-128-CBC with a PBKDF2 key from the Secret Service item with `application=Dauntless Revived Launcher` (label "Chromium Safe Storage") (or `v10` with the fixed key on basic_text). Lose this and every friend re-registers. | One-time reader for the Chromium os_crypt formats in Rust (D7); re-store with native DPAPI / Secret Service; keep the old file until the new one reads back. P0 spike done on Windows against a real 0.1.39 profile and on gnome-keyring against Electron 44.4.3 (section 3.4); KWallet and a real Linux profile remain. Fallback if it fails on some system: the existing "import key backup" flow |
+| ~~LB1~~ | ~~Existing account keys~~ | ~~Keys in `userData/keys` are Electron `safeStorage` blobs: Windows = `v10` AES-256-GCM with the key DPAPI-wrapped in `userData/Local State` (`os_crypt.encrypted_key`); Linux = `v11` AES-128-CBC with a PBKDF2 key from the Secret Service item with `application=Dauntless Revived Launcher` (label "Chromium Safe Storage") (or `v10` with the fixed key on basic_text). Lose this and every friend re-registers.~~ | ~~One-time reader for the Chromium os_crypt formats in Rust (D7); re-store with native DPAPI / Secret Service; keep the old file until the new one reads back. P0 spike done on Windows against a real 0.1.39 profile and on gnome-keyring against Electron 44.4.3 (section 3.4); KWallet and a real Linux profile remain. Fallback if it fails on some system: the existing "import key backup" flow~~ |
 
 | # | Blocker | Why it blocks | Plan |
 | --- | --- | --- | --- |
-| SB1 | JSON output compatibility | `JSON.stringify` omits `undefined` fields, keeps `null`, prints `1.0` as `1`, and has JS number semantics; `serde_json` prints `1.0` for an `f64` and emits every field unless told otherwise | Integer fields are integer types; `Option` fields that TS left `undefined` get `skip_serializing_if`; a JS-compatible float formatter for the few real floats; JSON diff in M35 compares values *and* text |
+| ~~SB1~~ | ~~JSON output compatibility~~ | ~~`JSON.stringify` omits `undefined` fields, keeps `null`, prints `1.0` as `1`, and has JS number semantics; `serde_json` prints `1.0` for an `f64` and emits every field unless told otherwise~~ | ~~Integer fields are integer types; `Option` fields that TS left `undefined` get `skip_serializing_if`; a JS-compatible float formatter for the few real floats; JSON diff in M35 compares values *and* text~~ |
 
 ### 3.4 Spike results
 
@@ -185,8 +220,8 @@ Three tracks: launcher (Part A), metagame (Part B), other services (Part C). The
 | Step | Launcher | Metagame | Services |
 | --- | --- | --- | --- |
 | 1 | P0 spikes (L1–L3; partly run, section 3.4) | B0: tag `rust-port-start` (D15); baseline numbers, traffic capture in the gateway, route inventory, workspace (M1–M4) | Repository: move the C++ DLL, set up `rust/`, CI by family (R1–R4, R8) |
-| 2 | P1–P2 skeleton, Rust core (L4–L18), using `protocol` (X4) | B1: `service-kit`, `store`, migrator, auth, logging (M5–M28) | Tools to TypeScript on Bun (T1–T10) |
-| 3 | P3–P4 net + platform (L19–L37), `proxy` crate (X5) | B2: domain areas one PR each (M29–M31) | Content (S1) |
+| ~~2~~ | ~~P1–P2 skeleton, Rust core (L4–L18), using `protocol` (X4)~~ | ~~B1: `service-kit`, `store`, migrator, auth, logging (M5–M28)~~ | ~~Tools to TypeScript on Bun (T1–T10)~~ |
+| ~~3~~ | ~~P3–P4 net + platform (L19–L37), `proxy` crate (X5)~~ | ~~B2: domain areas one PR each (M29–M31)~~ | ~~Content (S1)~~ |
 | 4 | P5–P7 controller, page, offline orchestration ready but off (L38–L44) | B2 continued; B3 chat (M32–M34) | Gateway + allowlist (S2–S3) |
 | 5 | P8–P9: 0.2.0, Squirrel bridge (L45–L50) | B4: Node catch-up, shadow traffic, performance, soak (M44, M35–M37) | DeployServer (S4) |
 | 6 | 0.2.x: offline mode back on `--service` modes once the canary has passed (X2) | B5: binaries, server kits, backups, docs, cutover: canary, rollback rehearsal, then the two Windows regions (M38–M43, M45–M47) | Cut over S1–S4 with the metagame |
@@ -275,9 +310,9 @@ Order = PR order within each phase. Every row ends with its ported tests green.
 
 | # | Phase | Area | Today | Tauri replacement | Notes / risks | Verify |
 | --- | --- | --- | --- | --- | --- | --- |
-| L1 | P0 Spikes | Webview look | Electron Chromium | Bare Tauri app loading today's built renderer with a stub `api.ts` | Check `backdrop-filter`, fonts, `prefers-reduced-motion`, canvas speed in WebKitGTK. Render every language: ja needs a CJK font and ru Cyrillic in the font stack on Linux (fontconfig fallback). First run on WebView2 and WebKitGTK 2.52: section 3.4 | Screenshots match on Win11, Ubuntu 22.04 + 24.04, Fedora, SteamOS (incl. NVIDIA + Wayland, `WEBKIT_DISABLE_DMABUF_RENDERER` fallback) in all 9 languages |
-| L2 | P0 Spikes | Key read (D7) | `safeStorage.decryptString` | Windows: read `userData/Local State`, base64-decode `os_crypt.encrypted_key`, strip the `DPAPI` prefix, `CryptUnprotectData` → 32-byte key; blob = `v10` + 12-byte nonce + ciphertext + 16-byte tag → AES-256-GCM. Linux: get the secret from the Secret Service item with `xdg:schema=chrome_libsecret_os_crypt_password_v2` and `application=Dauntless Revived Launcher` (gnome-keyring; its label, "Chromium Safe Storage", is the same for every Electron app, so never search by label) or, on KDE, from KWallet over D-Bus (`org.kde.kwalletd6`, falling back to `kwalletd5`; Electron's "`<app> Keys`" folder), PBKDF2-HMAC-SHA1(secret, `saltysalt`, 1 round, 16 bytes) → AES-128-CBC with an IV of 16 spaces, PKCS#7; `v10` blobs use the fixed `peanuts` password | LB1. Windows and the Secret Service lookup are confirmed (section 3.4). Still to record: the KWallet folder and entry names Electron 44 uses on Plasma 5 and 6 | Decrypt keys saved by 0.1.39 on Windows 11, GNOME (gnome-keyring), KDE Plasma 5 and 6 (KWallet) and SteamOS desktop mode; results match `chromium-safestorage-core` in a test |
-| L3 | P0 Spikes | Update bridge | Squirrel | Electron 0.1.x test build that installs a Tauri NSIS build and removes the Squirrel install (D2) | Shortcuts, `dauntless-revived://` handler and Start-menu entry point at the new exe afterwards; userData untouched | Clean VM: install 0.1.39 → bridge → Tauri, keys/settings intact; then one Tauri → Tauri update |
+| ~~L1~~ | ~~P0 Spikes~~ | ~~Webview look~~ | ~~Electron Chromium~~ | ~~Bare Tauri app loading today's built renderer with a stub `api.ts`~~ | ~~Check `backdrop-filter`, fonts, `prefers-reduced-motion`, canvas speed in WebKitGTK. Render every language: ja needs a CJK font and ru Cyrillic in the font stack on Linux (fontconfig fallback). First run on WebView2 and WebKitGTK 2.52: section 3.4~~ | ~~Screenshots match on Win11, Ubuntu 22.04 + 24.04, Fedora, SteamOS (incl. NVIDIA + Wayland, `WEBKIT_DISABLE_DMABUF_RENDERER` fallback) in all 9 languages~~ |
+| ~~L2~~ | ~~P0 Spikes~~ | ~~Key read (D7)~~ | ~~`safeStorage.decryptString`~~ | ~~Windows: read `userData/Local State`, base64-decode `os_crypt.encrypted_key`, strip the `DPAPI` prefix, `CryptUnprotectData` → 32-byte key; blob = `v10` + 12-byte nonce + ciphertext + 16-byte tag → AES-256-GCM. Linux: get the secret from the Secret Service item with `xdg:schema=chrome_libsecret_os_crypt_password_v2` and `application=Dauntless Revived Launcher` (gnome-keyring; its label, "Chromium Safe Storage", is the same for every Electron app, so never search by label) or, on KDE, from KWallet over D-Bus (`org.kde.kwalletd6`, falling back to `kwalletd5`; Electron's "`<app> Keys`" folder), PBKDF2-HMAC-SHA1(secret, `saltysalt`, 1 round, 16 bytes) → AES-128-CBC with an IV of 16 spaces, PKCS#7; `v10` blobs use the fixed `peanuts` password~~ | ~~LB1. Windows and the Secret Service lookup are confirmed (section 3.4). Still to record: the KWallet folder and entry names Electron 44 uses on Plasma 5 and 6~~ | ~~Decrypt keys saved by 0.1.39 on Windows 11, GNOME (gnome-keyring), KDE Plasma 5 and 6 (KWallet) and SteamOS desktop mode; results match `chromium-safestorage-core` in a test~~ |
+| ~~L3~~ | ~~P0 Spikes~~ | ~~Update bridge~~ | ~~Squirrel~~ | ~~Electron 0.1.x test build that installs a Tauri NSIS build and removes the Squirrel install (D2)~~ | ~~Shortcuts, `dauntless-revived://` handler and Start-menu entry point at the new exe afterwards; userData untouched~~ | ~~Clean VM: install 0.1.39 → bridge → Tauri, keys/settings intact; then one Tauri → Tauri update~~ |
 | ~~L4~~ | ~~P1 Skeleton~~ | ~~Project, CI~~ | ~~Forge, `vite.main/preload` configs, `electron`~~ | ~~`legacy/UndauntedLauncher/src-tauri/` as a workspace member (R5); `npm run tauri dev/build`; renderer Vite config unchanged apart from `server.strictPort` and `envPrefix`~~ | ~~Linux CI needs `libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libayatana-appindicator3-dev patchelf`~~ | ~~CI green on windows-latest + ubuntu-22.04~~ |
 | ~~L5~~ | ~~P1 Skeleton~~ | ~~Window~~ | ~~Frameless `BrowserWindow`, custom min/max/close, `onWindowState`~~ | ~~`tauri.conf.json` window with `decorations: false`; drag via `data-tauri-drag-region`; `getCurrentWindow().minimize()/toggleMaximize()`; resize event → `onWindowState`~~ | ~~Close-while-game-runs: `WindowEvent::CloseRequested` + `api.prevent_close()` in Rust, then today's confirmation~~ | ~~Manual on both OSes~~ |
 | ~~L6~~ | ~~P1 Skeleton~~ | ~~Shared types~~ | ~~`shared/types.ts`, `ipc-validate.ts`~~ | ~~`serde` structs/enums mirroring `Snapshot`, `Settings`, `ErrorCode`, `ExternalTarget`, `TaskProgress`, `OfflineStatus`, `Language`, `GameLanguage`; wire types (invite, status, registration, manifest) come from `crates/protocol` (X4); `ts-rs` generates TS types and the command list into `src/shared/generated/`~~ | ~~One source of truth for the bridge; CI fails if the generated files are stale~~ | ~~`cargo test` + `tsc` on the generated types~~ |
@@ -315,7 +350,7 @@ Order = PR order within each phase. Every row ends with its ported tests green.
 | ~~L38~~ | ~~P5 Controller~~ | ~~State machine~~ | ~~`controller.ts` (1.7k)~~ | ~~`Controller` actor task with a command channel; `commands.rs` forwards to it; `app.manage(ControllerHandle)`~~ | ~~Port last in P5 so every dependency exists; `Snapshot` shape unchanged~~ | ~~`controller.test.ts` port (whole public-mode flow) with fakes from `test/fakes.ts`~~ |
 | ~~L39~~ | ~~P5 Controller~~ | ~~Status polling~~ | ~~`setStatusPolling`, `STATUS_POLL_MS`~~ | ~~`tokio::time::interval`, paused via `watch` when hidden or the game runs~~ | ~~—~~ | ~~Controller test~~ |
 | ~~L40~~ | ~~P6 Renderer~~ | ~~API swap~~ | ~~`window.launcher` (global from preload)~~ | ~~`import { api } from "./api"`; remove `global.d.ts`~~ | ~~Mechanical~~ | ~~`ui.test.ts`, `mods-page.test.ts`, `brand.test.ts` keep running on Node~~ |
-| L41 | P6 Renderer | WebKit differences | Chromium-only CSS/JS | Fix what row L1 finds on the real distros. The spike found no CSS that WebKitGTK 2.52 drops (`backdrop-filter`, `:has()`, `scrollbar-*`, `color-mix()`, `text-wrap` all work). The font stacks (`Bahnschrift`, `Segoe UI`, `Cascadia Mono`) name only Windows fonts, so Linux shows the distro's sans-serif, as the Electron Linux build does; ja needs any CJK font through fontconfig, so deb/rpm recommend one (`fonts-noto-cjk`, `google-noto-sans-cjk-fonts`) | Fixes in the shared CSS, not per-OS forks | Visual check on both webviews, all languages |
+| ~~L41~~ | ~~P6 Renderer~~ | ~~WebKit differences~~ | ~~Chromium-only CSS/JS~~ | ~~Fix what row L1 finds on the real distros. The spike found no CSS that WebKitGTK 2.52 drops (`backdrop-filter`, `:has()`, `scrollbar-*`, `color-mix()`, `text-wrap` all work). The font stacks (`Bahnschrift`, `Segoe UI`, `Cascadia Mono`) name only Windows fonts, so Linux shows the distro's sans-serif, as the Electron Linux build does; ja needs any CJK font through fontconfig, so deb/rpm recommend one (`fonts-noto-cjk`, `google-noto-sans-cjk-fonts`)~~ | ~~Fixes in the shared CSS, not per-OS forks~~ | ~~Visual check on both webviews, all languages~~ |
 | ~~L42~~ | ~~P7 Offline~~ | ~~Offline mode off in 0.2.0 (D1)~~ | ~~`utilityProcess.fork` + `local-service-runner.cjs` on Electron's Node~~ | ~~Offline mode behind a Cargo feature `offline`, off in 0.2.0; the offline page says it returns in a later update; nothing in `offline/` or the player's saves is touched~~ | ~~Players lose offline play from the bridge release until X2~~ | ~~The offline page shows the notice; `offline/` is byte-identical after the update~~ |
 | ~~L43~~ | ~~P7 Offline~~ | ~~Offline orchestration~~ | ~~`offline-save*.ts`, `offline-state.ts`, `offline-game-config.ts`, `local-stack*.ts`~~ | ~~Ported to Rust and wired to the `--service` modes (D12) and the metagame crate's save import/export and key registration (X1); compiled in but off until X2~~ | ~~The `.cjs` helpers are not ported: the metagame crate replaces them (X1)~~ | ~~`offline-save`, `offline-runtime`, `local-stack` ports run against the Rust services; `portable-save-*` probes against the fixture~~ |
 | L44 | P7 Offline | Staging script removed | `scripts/stage-offline-runtime.mjs` (`@electron/rebuild` for `better-sqlite3`) | Deleted: the services are part of the launcher binary, nothing to stage | — | Packaged offline smoke runs against the `--service` modes |
@@ -340,7 +375,7 @@ Order = PR order within each phase. Every row ends with its ported tests green.
 
 | Phase | Content | Depends on |
 | --- | --- | --- |
-| P0 | Spikes: look + fonts in all languages, key read, update bridge (L1–L3); go/no-go. Partly run (section 3.4) | — |
+| ~~P0~~ | ~~Spikes: look + fonts in all languages, key read, update bridge (L1–L3); go/no-go. Partly run (section 3.4)~~ | — |
 | ~~P1~~ | ~~Tauri skeleton, bridge, capabilities, isolation, CSP (L4–L10)~~ | ~~P0~~ |
 | ~~P2~~ | ~~Rust core, i18n split and export, manifest, pins (L11–L18)~~ | ~~P1~~ |
 | ~~P3~~ | ~~Pinned TLS, HTTP, relay, downloader, verify (L19–L25); the relay is the riskiest code~~ | ~~P2~~ |
@@ -427,9 +462,9 @@ matchmaking, party, friends, guild, chat connect + room message, backup endpoint
 | Phase | Content |
 | --- | --- |
 | B0 | Groundwork (M1–M4) |
-| B1 | Foundations: `service-kit`, `store`, auth, logging, config (M5–M28) |
-| B2 | Domain areas (M29–M31) |
-| B3 | Chat (M32–M34) |
+| ~~B1~~ | ~~Foundations: `service-kit`, `store`, auth, logging, config (M5–M28)~~ |
+| ~~B2~~ | ~~Domain areas (M29–M31)~~ |
+| ~~B3~~ | ~~Chat (M32–M34)~~ |
 | B4 | Node catch-up, shadow traffic, performance, soak (M44, M35–M37) |
 | B5 | Binaries, kits, kit backups, cutover, rollback rehearsal, docs, removal (M38–M43, M45–M47) |
 
@@ -1286,3 +1321,10 @@ through in the tables above; what still needs a real machine, a live server or a
   (`/tools`) entries with the npm policy. Left: removing each npm entry with its folder, the
   `/rust/launcher/ui` entry after R7, and the release checks (hashes, the false-positive portal, a clean
   Windows install with Defender and SmartScreen on).
+- Plan review (2026-10-22): rows whose work in this repository was done, with only checks on real machines left,
+  are now struck through like the others, and those checks are in `MIGRATION_TODO.md`. L1 and L41: the spike ran
+  on WebView2 and WebKitGTK 2.52 and the page's fixes landed (L40, L41); left are the screenshots on the real
+  distros in every language. L2 and LB1: the reader handles Windows, the Secret Service and KWallet (`os.rs`);
+  left are real 0.1.39 profiles on each desktop. L3, and with it P0: the bridge is written (L50); left is the
+  clean-VM run. SB1: integer types, `skip_serializing_if` and the JS-compatible JSON writer (`jsjson`) are in;
+  the text diff is part of M35. B1 to B3 and steps 2 and 3 of section 5: every row in them is struck.
