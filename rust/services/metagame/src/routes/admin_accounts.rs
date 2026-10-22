@@ -190,7 +190,8 @@ async fn register_account(State(state): State<AppState>, ExpressBody(body): Expr
         }
         Ok(account) => {
             tracing::info!("Registered {} as {}", account.user_id, account.username);
-            Ok(json(StatusCode::OK, json!({"UUK": account.key})))
+            let answer = protocol::account::Registered { key: account.key };
+            Ok(json(StatusCode::OK, serde_json::to_value(answer).unwrap_or_default()))
         }
     }
 }

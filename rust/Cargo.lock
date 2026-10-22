@@ -744,6 +744,7 @@ dependencies = [
  "hyper",
  "hyper-rustls",
  "hyper-util",
+ "protocol",
  "regex",
  "rustls",
  "serde",

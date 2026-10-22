@@ -1,22 +1,10 @@
 // The game manifest (shared contract 4, row L17): the exact list of Dauntless 1.4.4 files, their sizes
 // and SHA-256 hashes, checked as `src/main/manifest.ts` checks it, with the same reasons. build.rs
 // includes this file to refuse a malformed compiled-in manifest, so it names what it needs from its
-// includer: `serde_json::Value`, `sha2::{Digest, Sha256}` and the pins (`pins.rs`).
+// includer: `serde_json::Value`, `sha2::{Digest, Sha256}` and the pins (`pins.rs`). The types are the
+// content server's too (`protocol::manifest`, X4).
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ManifestFile {
-    pub path: String,
-    pub size: u64,
-    pub sha256: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct GameManifest {
-    pub build: String,
-    pub total_bytes: u64,
-    /// Sorted by path
-    pub files: Vec<ManifestFile>,
-}
+pub use protocol::manifest::{GameManifest, ManifestFile};
 
 /// `con`, `prn`, `aux`, `nul`, `com0`-`com9`, `lpt0`-`lpt9`, `conin$`, `conout$`, with or without an
 /// extension, in any case.

@@ -449,6 +449,16 @@ Done so far:
     - Not run yet: it can only publish from the default branch, so its first run is the beta (L49).
   - **Left in P8:** the clean-VM install, update and uninstall checks; a Tauri-to-Tauri update; a refused bad
     signature; and the distro install checks (all manual or at the beta).
+- X4, shared wire types (done): `crates/protocol` now owns all four contracts its row names.
+  - **Invite and server status** were already there.
+  - **`protocol::manifest`** (`GameManifest`, `ManifestFile`): the content server serves it, and the launcher
+    checks against it, build.rs included.
+  - **`protocol::account`** (`RegisterRequest`, `Registered`): the launcher sends the request and reads the
+    answer; the metagame writes the answer. The metagame still reads a Register body as leniently as Node did.
+  - **Status:** the metagame builds `protocol::status::ServerStatus` instead of writing the JSON by hand, in the
+    same field order. Only one thing changes: a player count the deploy server reports below 0 is shown as 0.
+  - A field changed in `protocol` now breaks the metagame, the content server, the launcher backend and the
+    page's generated types together.
 - X3, the Electron launcher's catch-up list (before the beta, L49). There is no `rust-port-start` tag, so the list
   runs from `175f4e9`, where this branch last met upstream (as the first catch-up pass did). It covers
   `legacy/UndauntedLauncher/src/main*`, `src/preload.ts` and `runtime/`. Upstream (`mixutin/dauntless-revived` at
@@ -1045,7 +1055,7 @@ Order = PR order within each phase. Every row ends with its ported tests green.
 | P7 | Offline mode off in 0.2.0, Rust orchestration ready for X2 (L42–L44) | P5 |
 | P8 | Packaging, updater, release (L45–L48) | P6 |
 | P9 | Beta, bridge release, cleanup (L49–L51) | P8 |
-| P10 | SolidJS page (L52–L59), shipped in 0.2.x releases | P9 |
+| P10 | SolidJS page (L52–L59), shipped in 0.2.x releases. On hold: it waits for another maintainer's rework of the launcher UI (MIGRATION_TODO.md, later work) | P9 |
 
 P3 and P4 can run in parallel, and P6 can start on a fake backend right after P1. 0.2.0 ships without offline mode
 (L42).

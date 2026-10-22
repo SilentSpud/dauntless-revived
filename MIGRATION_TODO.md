@@ -28,6 +28,13 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
 - [ ] Offline start/stop, save export/import and key registration on both OSes, once offline mode returns.
       [X2]
 - [ ] Beta checklist per OS, and a week with no key, save or language regressions before cutover. [L49]
+- [ ] The Tauri launcher with a real profile: join, register, install, play, offline save backup and restore.
+      The debug build was checked only with a throwaway profile. [L38, L43]
+- [ ] Linux without a Secret Service: the packaged launcher installs gnome-keyring and libsecret once and starts
+      again. [X3]
+- [ ] A Tauri to Tauri update on Windows and on the AppImage, and an update with a wrong signature refused. [L46]
+- [ ] deb and rpm install on Ubuntu 22.04/24.04, Debian 12 and Fedora; the AppImage on Arch and SteamOS. [L47]
+- [ ] The first run of `launcher-tauri-release.yml` (the beta): files, checksums, attestations. [L48]
 
 ### Metagame (Part B)
 
@@ -96,6 +103,12 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
 
 ## Later work
 
+- **SolidJS page (P10, L52 to L59).** Waits for another maintainer's rework of the launcher UI, then is done
+  against the reworked page rather than today's `index.ts`. The rows in the plan stay the method: one Solid
+  store fed by `api.onSnapshot`, one component per page, `t()` on a language signal, listeners in
+  `onMount`/`onCleanup`, the scene kept imperative, Vitest component tests, then `dom.ts` deleted. Nothing in
+  the Tauri port depends on it: `src/renderer/backend.ts` and `src/shared/art.ts` are the page's only Tauri
+  pieces, so the rework keeps working with both launchers.
 - **Serenity.** The bot dropped serenity because 0.12.5, its latest release, pins rustls 0.22, whose webpki has
   open advisories, so cargo-deny fails. Serenity's `next` branch already uses rustls 0.23 and has a
   `rustls_backend_no_provider` feature (so aws-lc-rs works), but it is unreleased, would need a git dependency

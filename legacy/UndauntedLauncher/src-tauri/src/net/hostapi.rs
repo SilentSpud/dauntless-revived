@@ -169,7 +169,11 @@ pub enum RegisterResult {
 
 pub async fn register_account(endpoint: &Endpoint, username: &str, invite_code: &str) -> RegisterResult {
     let mut request_options = options(Method::POST, 20000, 64 * 1024);
-    request_options.body = Some(serde_json::json!({ "Username": username, "InviteCode": invite_code }).to_string());
+    let body = protocol::account::RegisterRequest {
+        username: username.to_owned(),
+        invite_code: invite_code.to_owned(),
+    };
+    request_options.body = serde_json::to_string(&body).ok();
     let failed = |error| RegisterResult::Err { error, message: None };
     let response = match request(endpoint, "/undaunted/api/Register", request_options).await {
         Ok(response) => response,
@@ -181,8 +185,10 @@ pub async fn register_account(endpoint: &Endpoint, username: &str, invite_code: 
     let server_error = body.and_then(|body| body.get("error")).and_then(Value::as_str);
     let message = body.and_then(|body| clean_text(body.get("message"), 200));
     match response.status {
-        200 => match body.and_then(|body| body.get("UUK")).and_then(Value::as_str) {
-            Some(key) if is_plausible_account_key(key) => RegisterResult::Ok { key: key.to_owned() },
+        200 => match body
+            .and_then(|body| serde_json::from_value::<protocol::account::Registered>(Value::Object(body.clone())).ok())
+        {
+            Some(answer) if is_plausible_account_key(&answer.key) => RegisterResult::Ok { key: answer.key },
             _ => failed(ErrorCode::ServerError),
         },
         400 => {

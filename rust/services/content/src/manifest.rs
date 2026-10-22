@@ -12,35 +12,18 @@ pub const EXPECTED_BUILD: &str = "dauntless_rel-1.4.4_Shipping_2020-10-28_20-11-
 /// `data/dauntless-1.4.4.json`, built in.
 pub const BUILT_IN: &str = include_str!("../../../../legacy/UndauntedContent/data/dauntless-1.4.4.json");
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ManifestFile {
-    pub path: String,
-    pub size: u64,
-    pub sha256: String,
-}
+/// The manifest's shape is the launcher's too (X4).
+pub use protocol::manifest::{GameManifest as Manifest, ManifestFile};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Manifest {
-    pub build: String,
-    pub total_bytes: u64,
-    pub files: Vec<ManifestFile>,
-}
-
-impl Manifest {
-    /// What `/content/v1/manifest` answers: the manifest with `downloadBaseUrl` when one is set, as
-    /// `JSON.stringify({...manifest, downloadBaseUrl})` writes it.
-    pub fn to_json(&self, download_base_url: Option<&str>) -> String {
-        let files: Vec<Value> = self
-            .files
-            .iter()
-            .map(|f| json!({"path": f.path, "size": f.size, "sha256": f.sha256}))
-            .collect();
-        let mut value = json!({"build": self.build, "totalBytes": self.total_bytes, "files": files});
-        if let Some(base) = download_base_url {
-            value["downloadBaseUrl"] = json!(base);
-        }
-        service_kit::jsjson::stringify(&value)
+/// What `/content/v1/manifest` answers: the manifest with `downloadBaseUrl` when one is set, as
+/// `JSON.stringify({...manifest, downloadBaseUrl})` writes it.
+pub fn to_json(manifest: &Manifest, download_base_url: Option<&str>) -> String {
+    // The JSON value first, so `downloadBaseUrl` lands last as JSON.stringify puts it
+    let mut value = serde_json::to_value(manifest).unwrap_or(Value::Null);
+    if let Some(base) = download_base_url {
+        value["downloadBaseUrl"] = json!(base);
     }
+    service_kit::jsjson::stringify(&value)
 }
 
 /// A segment: letters, digits, "_", "-" and "."; not starting or ending with "."; at most 128.

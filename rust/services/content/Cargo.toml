@@ -9,6 +9,7 @@ repository.workspace = true
 publish.workspace = true
 
 [dependencies]
+protocol.workspace = true
 axum.workspace = true
 bytes = "1"
 chrono.workspace = true

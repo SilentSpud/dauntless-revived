@@ -62,7 +62,7 @@ pub struct App {
 
 impl App {
     pub fn new(deps: Deps) -> AppState {
-        let manifest_text = deps.manifest.to_json(deps.download_base_url.as_deref());
+        let manifest_text = crate::manifest::to_json(&deps.manifest, deps.download_base_url.as_deref());
         let digest: String = Sha256::digest(manifest_text.as_bytes())
             .iter()
             .map(|b| format!("{b:02x}"))

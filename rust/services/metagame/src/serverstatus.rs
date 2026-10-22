@@ -14,6 +14,7 @@ use std::sync::OnceLock;
 use std::time::{Duration, Instant};
 
 use diesel::prelude::*;
+use protocol::status::{InstanceKind, PlayerWhere, RegistrationMode, ServerStatus, StatusInstance, StatusPlayer};
 use serde_json::{Value, json};
 use service_kit::collate::locale_compare;
 use service_kit::env::Env;
@@ -362,35 +363,62 @@ fn select_persistent<'a>(worlds: &[&'a Gameserver], port: Option<i64>) -> Option
         .or_else(|| worlds.first().copied())
 }
 
-fn registration(app: &AppState) -> &'static str {
+fn registration(app: &AppState) -> RegistrationMode {
     let mode = app
         .registration_mode
         .read()
         .unwrap_or_else(std::sync::PoisonError::into_inner)
         .clone();
     match mode.as_deref() {
-        Some("OPEN") => "OPEN",
-        Some("INVITECODE") => "INVITECODE",
-        _ => "NONE",
+        Some("OPEN") => RegistrationMode::Open,
+        Some("INVITECODE") => RegistrationMode::Invitecode,
+        _ => RegistrationMode::None,
     }
 }
 
-fn status_with(app: &AppState, players: Vec<Value>, instances: Vec<Value>, limited: bool) -> Value {
+/// A count for the status: what the deploy server reported, never below 0.
+fn count(value: i64) -> u32 {
+    u32::try_from(value.max(0)).unwrap_or(u32::MAX)
+}
+
+fn place_of(place: &str) -> PlayerWhere {
+    match place {
+        "menu" => PlayerWhere::Menu,
+        "city" => PlayerWhere::City,
+        "hunt" => PlayerWhere::Hunt,
+        "dojo" => PlayerWhere::Dojo,
+        "tutorial" => PlayerWhere::Tutorial,
+        _ => PlayerWhere::Unknown,
+    }
+}
+
+fn kind_of(kind: &str) -> InstanceKind {
+    match kind {
+        "city" => InstanceKind::City,
+        "dojo" => InstanceKind::Dojo,
+        "tutorial" => InstanceKind::Tutorial,
+        _ => InstanceKind::Hunt,
+    }
+}
+
+/// The status as the launcher reads it: one type for both (`protocol::status`, X4).
+fn status_with(app: &AppState, players: Vec<StatusPlayer>, instances: Vec<StatusInstance>, limited: bool) -> Value {
     let identity = &app.server_status;
-    json!({
-        "name": identity.name,
-        "online": true,
-        "version": identity.version,
-        "commit": identity.commit,
-        "sourceUrl": identity.source_url,
-        "registration": registration(app),
-        "playersOnline": players.len(),
-        "players": players,
-        "instances": instances,
-        "contentPort": identity.content_port,
-        "uptimeSeconds": started().elapsed().as_secs(),
-        "limited": limited,
-    })
+    let status = ServerStatus {
+        name: identity.name.clone(),
+        online: true,
+        version: identity.version.clone(),
+        commit: identity.commit.clone(),
+        source_url: Some(identity.source_url.clone()),
+        registration: Some(registration(app)),
+        players_online: u32::try_from(players.len()).unwrap_or(u32::MAX),
+        players,
+        instances,
+        content_port: identity.content_port,
+        uptime_seconds: u32::try_from(started().elapsed().as_secs()).unwrap_or(u32::MAX),
+        limited,
+    };
+    serde_json::to_value(status).unwrap_or(Value::Null)
 }
 
 /// `BuildServerStatus`: the full variant.
@@ -464,21 +492,29 @@ async fn build_full(app: &AppState) -> Result<Value, AppError> {
             } else {
                 behemoth_name(server)
             };
-            json!({
-                "id": server.id,
-                "kind": server.kind,
-                "title": instance_title(server, behemoth.as_deref()),
-                "map": map_codename(&server.map),
-                "behemoth": behemoth,
-                "players": server.connected_players.unwrap_or_else(|| counts.get(&server.id).copied().unwrap_or(0)),
-                "maxPlayers": server.max_players.unwrap_or_else(|| default_max_players(server.kind)),
-                "startedAt": server.started_at,
-            })
+            StatusInstance {
+                id: server.id.clone(),
+                kind: kind_of(server.kind),
+                title: instance_title(server, behemoth.as_deref()),
+                map: map_codename(&server.map),
+                behemoth,
+                players: count(
+                    server
+                        .connected_players
+                        .unwrap_or_else(|| counts.get(&server.id).copied().unwrap_or(0)),
+                ),
+                max_players: count(server.max_players.unwrap_or_else(|| default_max_players(server.kind))),
+                started_at: Some(server.started_at.clone()),
+            }
         })
         .collect();
     let players = players
         .into_iter()
-        .map(|(name, place, instance)| json!({"name": name, "where": place, "instance": instance}))
+        .map(|(name, place, instance)| StatusPlayer {
+            name,
+            location: place_of(place),
+            instance,
+        })
         .collect();
     Ok(status_with(app, players, instances, false))
 }
