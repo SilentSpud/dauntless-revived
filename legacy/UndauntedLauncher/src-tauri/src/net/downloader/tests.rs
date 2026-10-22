@@ -524,14 +524,21 @@ async fn cancel_stops_the_job_and_keeps_partial_files() {
         let job = job.clone();
         async move { job.run().await }
     });
-    tokio::time::sleep(Duration::from_millis(120)).await;
-    job.cancel();
-    assert_eq!(run.await.unwrap().unwrap_err().code, DownloadErrorCode::Cancelled);
-    assert!(
+    let has_part = || {
         manifest()
             .iter()
             .any(|f| part_path(&resolve_inside(dir.path(), &f.path).unwrap()).exists())
-    );
+    };
+    // Cancel once a download is under way; a fixed delay can end before the first chunk on a busy runner
+    for _ in 0..500 {
+        if has_part() {
+            break;
+        }
+        tokio::time::sleep(Duration::from_millis(10)).await;
+    }
+    job.cancel();
+    assert_eq!(run.await.unwrap().unwrap_err().code, DownloadErrorCode::Cancelled);
+    assert!(has_part());
     *fake.behaviour.lock().unwrap() = Behaviour::default();
     DownloadJob::new(options(&endpoint, dir.path(), manifest()))
         .unwrap()
