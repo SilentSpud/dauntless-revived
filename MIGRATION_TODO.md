@@ -89,7 +89,8 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
 - [ ] One real Discord status post to a test channel. [T7]
 - [ ] The owner dashboard and Discord status installs: the tasks start, and an upgrade from a Node install leaves
       no Node task behind. [T8]
-- [ ] Each component's security checklist signed off in its cutover. [X9]
+- [ ] Each component's security checklist in `SECURITY_REVIEW.md` ticked and signed in its cutover PR, after a
+      24-hour run of its fuzz targets with no crash. [X9]
 
 ### Tools (Part E)
 

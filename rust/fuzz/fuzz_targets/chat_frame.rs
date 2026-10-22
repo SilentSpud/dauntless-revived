@@ -5,7 +5,9 @@
 
 use libfuzzer_sys::fuzz_target;
 use metagame::chat::nick::{check_nickname, decode_name_part, name_part_of};
-use metagame::chat::xmpp::{Element, Node, escape, has_markup_declaration, log_text, parse_frame, parse_jid, redact_frame};
+use metagame::chat::xmpp::{
+    Element, Node, escape, has_markup_declaration, log_text, parse_frame, parse_jid, redact_frame,
+};
 
 /// Every name, attribute and text in the tree came from the input: none is longer than it (decoding
 /// an entity only shortens), and the tree is no deeper than the input is long. Walked without

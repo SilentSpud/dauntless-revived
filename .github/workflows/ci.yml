@@ -288,6 +288,53 @@ jobs:
           command: check
           arguments: --all-features
 
+  # Every parser of untrusted input, fuzzed for a short time on every push (MIGRATION_PLAN.md X9, D26). The
+  # longer run before a cutover is the one in rust/fuzz/Cargo.toml. A crash keeps its input as an artifact.
+  fuzz:
+    name: Fuzz the untrusted-input parsers
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NIGHTLY: nightly-2026-10-20
+    defaults:
+      run:
+        working-directory: rust/fuzz
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: rust/fuzz
+          key: fuzz
+
+      - name: Install the pinned nightly and cargo-fuzz
+        run: |
+          rustup toolchain install "$NIGHTLY" --profile minimal
+          cargo "+$NIGHTLY" install cargo-fuzz --version 0.13.2 --locked
+
+      - name: Run every target for 45 seconds
+        run: |
+          set -euo pipefail
+          for target in $(cargo "+$NIGHTLY" fuzz list); do
+            echo "::group::$target"
+            mkdir -p "corpus/$target"
+            cargo "+$NIGHTLY" fuzz run "$target" "corpus/$target" -- -max_total_time=45 -max_len=4096
+            echo "::endgroup::"
+          done
+
+      - name: Keep the inputs that crashed
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fuzz-crashes
+          path: rust/fuzz/artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
+
   client-mods:
     name: Client mods manifest
     needs: changes
@@ -910,7 +957,7 @@ jobs:
   # as passed; a failed or cancelled job, or a failed change detection, fails it.
   ci-ok:
     name: CI ok
-    needs: [changes, rust, server-binaries, linux-kit, rust-deny, client-mods, node-packages, launcher, launcher-tauri, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: [changes, rust, server-binaries, linux-kit, rust-deny, fuzz, client-mods, node-packages, launcher, launcher-tauri, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

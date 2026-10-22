@@ -987,6 +987,26 @@ through in the tables above; what still needs a real machine, a live server or a
     - Not run yet: it can only publish from the default branch, so its first run is the beta (L49).
   - **Left in P8:** the clean-VM install, update and uninstall checks; a Tauri-to-Tauri update; a refused bad
     signature; and the distro install checks (all manual or at the beta).
+- X9, security pass, the parts done in this repository:
+  - **Fuzz targets:** `rust/fuzz` has a target for every parser of untrusted input that the row names:
+    - `http_body`: JSON and form bodies, URL decoding, dates;
+    - `auth_token`: session tokens and recovery blobs, which must never verify unsigned;
+    - `chat_frame`;
+    - `gateway_policy`: the request policy, canonical paths, the allowlist helper's and the metagame's address
+      parsing;
+    - `proxy_headers`: no hop-by-hop or `Connection`-named header is forwarded;
+    - `content_range`: ranges stay inside the file, and an accepted manifest has only safe paths;
+    - `launcher_input`: invites, server status, usernames, keys and manifests, built from the launcher's own
+      files as build.rs does;
+    - `bot_input`: the `/key link` input.
+  - **First run:** each ran for a minute, with no crash. That run caught a wrong assumption in a target, not a
+    bug: `/key link` accepts the launcher's whole key alphabet, as Node did.
+  - **CI:** the `fuzz` job runs every target for 45 seconds on each push, with a pinned nightly. It keeps any
+    crashing input as an artifact, and `CI ok` waits for it.
+  - **Checklists:** `SECURITY_REVIEW.md` has one per component (metagame, gateway, allowlist helper, content
+    server, DeployServer, Discord bot, launcher). Each cutover PR ticks and signs its section, after a 24-hour run
+    of its targets.
+  - **Left:** the reviews themselves and the 24-hour runs, at each cutover (`MIGRATION_TODO.md`).
 - X4, shared wire types (done): `crates/protocol` now owns all four contracts its row names.
   - **Invite and server status** were already there.
   - **`protocol::manifest`** (`GameManifest`, `ManifestFile`): the content server serves it, and the launcher
