@@ -45,6 +45,9 @@ stand-ins. Then the things to revisit once the migration is done. Tick an item w
 - [ ] Shadow replay of that corpus against Node and Rust: no unexplained diffs. [M35]
 - [ ] Performance under the same load on the canary and on a Windows host like production. [M36]
 - [ ] The 24-hour fuzz run before cutover. [M33]
+- [ ] A run of `server-release.yml` without `publish`: its archives install on the canary with the Linux kit and
+      on a Windows server with the Windows kit, and the release binaries pass the smoke list on each of the
+      three targets. Publish a prerelease only from the default branch. [M38]
 - [ ] Production cutover in order: the canary, then the first Windows region, then the second. [M42]
 - [ ] Rollback rehearsal on the canary: back to Node, smoke list, restore the backup, forward to Rust, smoke list,
       `metagame db integrity`. [M46]

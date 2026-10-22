@@ -676,7 +676,7 @@ try {
                 if ((& git.exe -C $source status --porcelain 2>$null | Out-String).Trim()) { $commit = "$commit-dirty" }
             } finally { $ErrorActionPreference = $old }
             if (-not $commit) { $commit = 'unknown' }
-        }
+        } elseif ($released = Get-DRReleaseCommit $source) { $commit = $released }
         Write-DROk "source: $sourceKind $source (commit $commit)"
     } elseif (-not $SourceZip) {
         $refUsed = if ($Ref) { $Ref } else { $DRRepo.PinnedRef }

@@ -1,0 +1,307 @@
+# Builds the server release archives (MIGRATION_PLAN.md M38, D14), run by hand (Run workflow). One archive per
+# server platform, each the commit's source with its release binaries, the way the kits install it:
+#  - DauntlessRevivedServer-<version>-windows-x64.zip, -linux-x64.tar.gz and -linux-arm64.tar.gz hold
+#    dauntless-revived-server-<version>/: the source of the commit (git archive), a COMMIT file naming it,
+#    and server-binaries/ with metagame, gateway, allowlist, content, deploy and discord-bot and their
+#    SHA256SUMS (the folder the kits take as -ServerBinaries / --binaries and check)
+#  - SHA256SUMS.txt for the archives and BINARIES-SHA256SUMS.txt for every binary in them, both covered by a
+#    signed build provenance attestation (X6)
+#
+# Without "publish" (the default) nothing is published: the archives are kept as a 7-day artifact of the run,
+# to try on the canary. With it, the run must be on the default branch's newest commit, and it creates the
+# tag server-v<version> and a GitHub release of that version, which is never replaced. Until the cutover (M42)
+# only prereleases are published; the repository variable SERVER_RELEASE_STABLE=true allows full releases.
+# The kits never fetch releases on their own: an operator downloads one. Actions are pinned by commit.
+name: Server release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version, x.y.z or x.y.z-prerelease (the tag is server-v<version>)"
+        required: true
+        type: string
+      publish:
+        description: "Publish the release (otherwise the archives are only kept as a run artifact)"
+        required: false
+        type: boolean
+        default: false
+
+permissions: {}
+
+jobs:
+  prepare:
+    name: Version and release state
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+      prerelease: ${{ steps.plan.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/ci/launcher-version.ts
+            tools/package.json
+          sparse-checkout-cone-mode: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
+
+      - name: Work out the version and whether it may be published
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          REF: ${{ github.ref }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          STABLE_ALLOWED: ${{ vars.SERVER_RELEASE_STABLE }}
+          VERSION: ${{ inputs.version }}
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          # The same version rules as the launcher's: a semantic version without build metadata
+          bun --no-env-file tools/ci/launcher-version.ts valid "$VERSION" ||
+            fail "$VERSION is not a version (x.y.z or x.y.z-prerelease)"
+          prerelease=false
+          case "$VERSION" in *-*) prerelease=true ;; esac
+          tag="server-v$VERSION"
+          if [ "$PUBLISH" = true ]; then
+            [ "$REF" = "refs/heads/$DEFAULT_BRANCH" ] || fail "server releases are published from $DEFAULT_BRANCH only, not $REF"
+            if [ "$prerelease" != true ] && [ "$STABLE_ALLOWED" != true ]; then
+              fail "$VERSION is a full release: the Rust servers publish prereleases until the cutover (set SERVER_RELEASE_STABLE=true then)"
+            fi
+            if out="$(gh api "repos/$GH_REPO/releases/tags/$tag" --jq .html_url 2>&1)"; then
+              fail "$tag is published already ($out): raise the version to publish again"
+            elif ! grep -q 'HTTP 404' <<<"$out"; then
+              fail "could not look up the release $tag: $out"
+            fi
+          fi
+          {
+            echo "version=$VERSION"
+            echo "tag=$tag"
+            echo "prerelease=$prerelease"
+          } >> "$GITHUB_OUTPUT"
+          echo "servers $VERSION, tag $tag, prerelease $prerelease, publish $PUBLISH"
+
+  build:
+    name: Build (${{ matrix.target }})
+    needs: prepare
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+    defaults:
+      run:
+        shell: bash
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned toolchain
+        working-directory: rust
+        run: rustup show active-toolchain || rustup toolchain install
+
+      # No build cache in a release: every file is built from this commit alone
+      - name: Build the release binaries
+        working-directory: rust
+        run: cargo build --release --locked --target "$TARGET" --bins -p metagame -p gateway -p content -p deploy -p discord-bot
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: legacy/UndauntedMetagame/package-lock.json
+
+      - name: Smoke test, the shared HTTP-level tests against the release metagame
+        working-directory: legacy/UndauntedMetagame
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+          node -e "require('fs').rmSync('build',{recursive:true,force:true})"
+          npx tsc -p tsconfig.test.json
+          ext=""; [ "$RUNNER_OS" = Windows ] && ext=".exe"
+          npm run test:rust -- "../../rust/target/$TARGET/release/metagame$ext"
+
+      - name: Collect the binaries and their SHA-256 sums
+        run: |
+          set -euo pipefail
+          ext=""; [ "$RUNNER_OS" = Windows ] && ext=".exe"
+          out="server-binaries/$TARGET"
+          mkdir -p "$out"
+          for bin in metagame gateway allowlist content deploy discord-bot; do
+            cp "rust/target/$TARGET/release/$bin$ext" "$out/"
+          done
+          (cd "$out" && sha256sum -- * > SHA256SUMS && cat SHA256SUMS)
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: server-binaries-${{ matrix.target }}
+          path: server-binaries/${{ matrix.target }}/
+          if-no-files-found: error
+          retention-days: 1
+
+  package:
+    name: Archives
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      COMMIT: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: server-binaries-*
+          path: ${{ runner.temp }}/binaries
+
+      - name: Build the archives and their SHA-256 sums
+        run: bash deploy/release/package-server.sh "$VERSION" "$COMMIT" "$RUNNER_TEMP/binaries" release
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: server-release
+          path: release/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish the release
+    needs: [prepare, package]
+    if: inputs.publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    concurrency:
+      group: server-release
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      VERSION: ${{ needs.prepare.outputs.version }}
+      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+      COMMIT: ${{ github.sha }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/ci/launcher-version.ts
+            tools/package.json
+          sparse-checkout-cone-mode: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: server-release
+          path: release
+
+      - name: Check the release files
+        run: |
+          set -euo pipefail
+          cd release
+          expected="$(printf '%s\n' "DauntlessRevivedServer-$VERSION-windows-x64.zip" \
+            "DauntlessRevivedServer-$VERSION-linux-x64.tar.gz" "DauntlessRevivedServer-$VERSION-linux-arm64.tar.gz" \
+            SHA256SUMS.txt BINARIES-SHA256SUMS.txt | sort)"
+          actual="$(ls -A | sort)"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::these are not the complete release files of servers $VERSION"
+            diff <(echo "$expected") <(echo "$actual") || true
+            exit 1
+          fi
+          sha256sum --check --strict SHA256SUMS.txt
+          [ "$(wc -l < BINARIES-SHA256SUMS.txt)" -eq 18 ] || { echo "::error::BINARIES-SHA256SUMS.txt should list 6 binaries for each of 3 platforms"; exit 1; }
+
+      - name: Check the version is the newest
+        run: |
+          set -euo pipefail
+          gh api --paginate "repos/$GH_REPO/git/matching-refs/tags/server-v" --jq '.[].ref' > tags.txt
+          others=()
+          while read -r ref; do others+=("${ref#refs/tags/server-v}"); done < tags.txt
+          if blocking="$(bun --no-env-file tools/ci/launcher-version.ts newest "$VERSION" "${others[@]}")"; then
+            echo "servers $VERSION are newer than every server-v* tag"
+          else
+            echo "::error::servers $VERSION are not newer than server-v$blocking; raise the version"
+            exit 1
+          fi
+          head="$(gh api "repos/$GH_REPO/git/ref/heads/$DEFAULT_BRANCH" --jq .object.sha)"
+          [ "$head" = "$COMMIT" ] || { echo "::error::$DEFAULT_BRANCH has moved on to ${head:0:12}; run this again on the newer commit"; exit 1; }
+
+      # Signed statements that the archives and every binary in them were built by this workflow from this
+      # commit: gh attestation verify <file> --repo <owner>/<repo>
+      - name: Attest the build provenance of the archives
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: release/SHA256SUMS.txt
+
+      - name: Attest the build provenance of the binaries
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: release/BINARIES-SHA256SUMS.txt
+
+      - name: Create the versioned release
+        run: |
+          set -euo pipefail
+          note=""
+          if [ "$PRERELEASE" = true ]; then
+            note="This is a test version (a prerelease) of the Rust servers, for the canary: production servers stay on their current build."
+          fi
+          cat > notes.md <<EOF
+          Dauntless Revived servers ${VERSION}: the metagame, gateway, allowlist helper, content server, DeployServer
+          and Discord key bot, built from ${COMMIT}. ${note}
+
+          Each archive holds the source of that commit and \`server-binaries/\` for one platform:
+          - Windows Server x64: \`DauntlessRevivedServer-${VERSION}-windows-x64.zip\`
+          - Linux x86_64: \`DauntlessRevivedServer-${VERSION}-linux-x64.tar.gz\`
+          - Linux arm64: \`DauntlessRevivedServer-${VERSION}-linux-arm64.tar.gz\`
+
+          Install or update with the kit inside the archive, which checks every binary against
+          \`server-binaries/SHA256SUMS\`:
+          - Windows (elevated PowerShell, in the extracted folder):
+            \`.\\deploy\\windows-server\\Install-DauntlessServer.ps1 -ServerBinaries .\\server-binaries\`, or
+            \`Update-DauntlessServer.ps1 -SourceDir <folder> -ServerBinaries <folder>\\server-binaries\` for an
+            installed server
+          - Linux: \`sudo deploy/linux-server/install.sh --binaries "\$PWD/server-binaries"\` with your usual options
+
+          Back up first, and see the setup guides for the options and the rollback. Check your download against
+          \`SHA256SUMS.txt\` (the binaries: \`BINARIES-SHA256SUMS.txt\`), or check where it was built with
+          \`gh attestation verify <file> --repo ${GH_REPO}\`. The Windows binaries are not code-signed.
+
+          Free software under the GNU AGPL-3.0; the archive is the corresponding source. No game files are included.
+          EOF
+          gh api -X POST "repos/$GH_REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$COMMIT" --silent
+          # Never marked latest: the repository's latest release stays the launcher, which players download
+          gh release create "$TAG" release/* --verify-tag --title "Servers ${VERSION}" --notes-file notes.md \
+            --prerelease="$PRERELEASE" --latest=false

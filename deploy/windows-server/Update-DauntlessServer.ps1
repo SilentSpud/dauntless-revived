@@ -173,7 +173,7 @@ try {
                 $commit = (& git.exe -C $from rev-parse HEAD 2>$null | Out-String).Trim()
                 if ((& git.exe -C $from status --porcelain 2>$null | Out-String).Trim()) { $commit = "$commit-dirty" }
             } finally { $ErrorActionPreference = $old }
-        }
+        } elseif ($released = Get-DRReleaseCommit $from) { $commit = $released }
     } else {
         $refUsed = if ($Ref) { $Ref } else { $DRRepo.PinnedRef }
         if ($refUsed -notmatch '^[A-Za-z0-9._/-]{1,100}$') { Stop-DR "-Ref '$refUsed' does not look like a branch, tag or commit." }

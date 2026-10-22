@@ -29,7 +29,6 @@ does. "You" means the maintainer: a release, a live server, the canary or a real
 | M35 | Replay the traffic corpus against Node and Rust and triage every diff (also SB1's text check) | The corpus from the live servers (M2 capture, you); the final run waits for M44 |
 | M36 | The same load on Rust on the canary and on a Windows host like production | M1's numbers; the canary |
 | M37 | Several days on the canary with invited players | M35 and M36 passing; the canary |
-| M38 | Server release archives for the kits (binaries with the store images and progression config) and their workflow; the smoke list on every target | The workflow: nothing, it can be written now (publishing waits for M42). The smoke list: a machine per target |
 | M41 | Delete the OpenBSD kit, its CI job and docs | M43 |
 | M42 | Production cutover: the canary, then the first Windows region, then the second | M35–M37 passing, M46 between the canary and the regions; you |
 | M43 | Delete the TS metagame and the traffic corpus | Every server on Rust for one release (M42) |
@@ -38,7 +37,7 @@ does. "You" means the maintainer: a release, a live server, the canary or a real
 | M47 | Rewrite `docs/setup/` and `docs/operations/` (English and Finnish) for the Rust kits | The Part B cutover: until then the guides must stay right for the Node servers; checked by a fresh canary install |
 | X2 | Turn offline mode back on in 0.2.x | M35 and M37 on the canary, a canary soak of the Rust DeployServer, and a 0.2.x release (L49) |
 | X3 | The catch-up lists of the metagame (M44), gateway, content server, DeployServer, bot, the Node helpers in `deploy/` and `tools/` (the launcher's is done) | Each component's cutover |
-| X6 | Remove each npm Dependabot entry with its folder; the `bun` entry for `/rust/launcher/ui`; hashes for server binaries in releases; the false-positive portal and a clean Windows install with Defender and SmartScreen on, per release | The folder deletions (L51, M43, Part C), R7, M38 and the releases |
+| X6 | Remove each npm Dependabot entry with its folder; the `bun` entry for `/rust/launcher/ui`; the false-positive portal and a clean Windows install with Defender and SmartScreen on, per release | The folder deletions (L51, M43, Part C), R7 and the releases |
 | X9 | Review and sign each component's section of `SECURITY_REVIEW.md` after a 24-hour run of its fuzz targets | Each component's cutover PR |
 | R7 | Move the launcher to `rust/launcher/` | L51: the launcher must be Tauri only |
 | R9 | Per-family build steps in `CONTRIBUTING.md`, `.github/CODEOWNERS`, docs links by the new paths | The last moves and deletions (R7, M43, L51, Part C), so the paths are final; the owners are yours to name |
@@ -444,7 +443,7 @@ Order = PR order within each phase. Every row ends with its tests green.
 | M35 | B4 Verify | Shadow traffic (D13) | — | Replay the corpus (M2) against Node and Rust from the same DB snapshot: HTTP from both capture points, and the recorded chat sessions stanza by stanza (order and content of what each client receives); diff status, normalised headers, JSON values and JSON text (SB1); triage every diff | Ship gate: no unexplained diffs | Diff report empty or every entry accepted in review |
 | M36 | B4 Verify | Performance | M1 numbers | Same load on Rust, on the canary and on a Windows host like production (D23); profile (`perf`, `cargo flamegraph`; ETW on Windows), measure the cost of the blocking-pool hop per `store` closure on production queries (the spike's numbers in section 3.4 come from a development PC); move hot queries to raw SQL where it pays; optionally PGO (section 2) | Ship gate: no route slower than Node at p99 | Numbers recorded next to M1 |
 | M37 | B4 Verify | Soak | — | Rust metagame on the canary for several days with invited players | Watch memory, file handles, WebSocket counts | No growth, no panics in the log |
-| M38 | B5 Ship | Binaries | `dist/` + `node_modules` | Release builds for the D14 targets; store images and progression config stay next to the binary | One file per platform, no runtime | Binary passes the smoke list on every target |
+| ~~M38~~ | ~~B5 Ship~~ | ~~Binaries~~ | ~~`dist/` + `node_modules`~~ | ~~Release builds for the D14 targets; store images and progression config stay next to the binary~~ | ~~One file per platform, no runtime~~ | ~~Binary passes the smoke list on every target~~ |
 | ~~M39~~ | ~~B5 Ship~~ | ~~Linux kit~~ | ~~`@NODE@ --env-file … dist/server.js`~~ | ~~`ExecStart=@ROOT@/UndauntedMetagame/metagame --env-file=@CONFIG@/metagame.env`~~ | ~~`deploy/linux-server/install.sh`, `systemd/dauntless-metagame.service`~~ | ~~`install.sh` in a CI container~~ |
 | ~~M40~~ | ~~B5 Ship~~ | ~~Windows kit~~ | ~~Node MSI, `npm ci`, `better_sqlite3.node` check; `Stack.ps1` finds `node.exe` + entry script~~ | ~~Download the release binary (pinned + SHA-256); `Stack.ps1` matches `metagame.exe` by full path~~ | ~~**Process lookup must change or stopping the stack misses the metagame** *(from the Bun analysis)*~~ | ~~`tests/Test-Sandbox.ps1`~~ |
 | M41 | B5 Ship | OpenBSD port removal (D14) | `deploy/openbsd-server/`, the `server-port-openbsd` CI job, the OpenBSD docs pages (`docs/setup/openbsd-server`, `docs/fi/setup/openbsd-server`), README rows | Delete together with the TS services (M43); until then it stays as it is, unmaintained. README and docs point OpenBSD hosts to the Linux kit | Nothing else in the repo uses `deploy/unix-common/` code that only OpenBSD needed; remove what becomes unused | Docs build has no broken links; CI has no OpenBSD job |
@@ -1328,3 +1327,24 @@ through in the tables above; what still needs a real machine, a live server or a
   left are real 0.1.39 profiles on each desktop. L3, and with it P0: the bridge is written (L50); left is the
   clean-VM run. SB1: integer types, `skip_serializing_if` and the JS-compatible JSON writer (`jsjson`) are in;
   the text diff is part of M35. B1 to B3 and steps 2 and 3 of section 5: every row in them is struck.
+- Metagame B5, M38, the rest (done; nothing published): `.github/workflows/server-release.yml`, run by hand
+  with a version. It builds the six binaries for the three D14 targets without a cache, runs the shared
+  HTTP-level tests against each release `metagame`, and packages one archive per platform with
+  `deploy/release/package-server.sh`: `DauntlessRevivedServer-<version>-windows-x64.zip`, `-linux-x64.tar.gz`
+  and `-linux-arm64.tar.gz`. Each holds the commit's source (`git archive`, so the store images, pinned DLLs
+  and kit scripts the services read beside their binaries), a `COMMIT` file, and `server-binaries/` with the
+  binaries and their `SHA256SUMS`: the folder both kits already take (`-ServerBinaries`, `--binaries`) and
+  check. The progression config is built into the binary. `SHA256SUMS.txt` lists the archives and
+  `BINARIES-SHA256SUMS.txt` every binary (X6); both get a provenance attestation.
+  - **Publishing:** without the `publish` input the archives are only a 7-day run artifact. With it, the run
+    must be on the default branch's newest commit, the version newer than every `server-v*` tag, and only
+    prereleases are allowed until the repository variable `SERVER_RELEASE_STABLE` is `true` (M42). A server
+    release is never marked latest, so the repository's latest release stays the launcher.
+  - **Kits:** an install from an extracted archive has no `.git`, so `deploy generate-config` and the Windows
+    installer and updater now read the commit from `COMMIT` (`release_commit`, `Get-DRReleaseCommit`).
+  - **Checked:** the script in an Ubuntu 24.04 container with stand-in binaries. Two runs gave identical
+    archives (sorted, owner 0, the commit's time), and a binary that no longer matched its `SHA256SUMS` was
+    refused. actionlint and shellcheck found nothing above info level. CI's new `server-archives` job packages
+    the archives from every push's binaries, so the script keeps working between releases.
+  - **Left:** the first run, the smoke list of the release binaries on every target, and an archive installed on
+    the canary with each kit (`MIGRATION_TODO.md`).

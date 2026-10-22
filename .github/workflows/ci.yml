@@ -75,6 +75,8 @@ jobs:
               - .github/workflows/**
             rust:
               - rust/**
+              # The server release archives are packaged from the server binaries (server-archives)
+              - deploy/release/**
               # The metagame crate embeds the last Drizzle migration, the vendor data and the Node route table, and tests against them.
               - legacy/UndauntedMetagame/src/drizzle/**
               - legacy/UndauntedMetagame/src/vendor/**
@@ -270,6 +272,36 @@ jobs:
           path: server-binaries/${{ matrix.target }}/
           if-no-files-found: error
           retention-days: 7
+
+  # The server release archives (M38) packaged from those binaries as server-release.yml does, so the packaging
+  # keeps working between releases; nothing is kept or published. Not for pull requests from forks, whose
+  # binaries are not uploaded.
+  server-archives:
+    name: Server release archives
+    needs: server-binaries
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: server-*
+          path: ${{ runner.temp }}/downloaded
+
+      - name: Package the archives
+        run: |
+          set -euo pipefail
+          # CI names the artifacts server-<target>; the release workflow server-binaries-<target>
+          mkdir -p "$RUNNER_TEMP/binaries"
+          for dir in "$RUNNER_TEMP"/downloaded/server-*; do
+            mv "$dir" "$RUNNER_TEMP/binaries/server-binaries-${dir##*/server-}"
+          done
+          bash deploy/release/package-server.sh 0.0.0-ci "$GITHUB_SHA" "$RUNNER_TEMP/binaries" "$RUNNER_TEMP/release"
+          tar -tzf "$RUNNER_TEMP/release/DauntlessRevivedServer-0.0.0-ci-linux-x64.tar.gz" dauntless-revived-server-0.0.0-ci/COMMIT             dauntless-revived-server-0.0.0-ci/server-binaries/SHA256SUMS dauntless-revived-server-0.0.0-ci/deploy/linux-server/install.sh
 
   rust-deny:
     name: Rust licences and advisories
@@ -957,7 +989,7 @@ jobs:
   # as passed; a failed or cancelled job, or a failed change detection, fails it.
   ci-ok:
     name: CI ok
-    needs: [changes, rust, server-binaries, linux-kit, rust-deny, fuzz, client-mods, node-packages, launcher, launcher-tauri, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
+    needs: [changes, rust, server-binaries, server-archives, linux-kit, rust-deny, fuzz, client-mods, node-packages, launcher, launcher-tauri, launcher-linux, server-port-linux, server-port-openbsd, native-regressions, internal-server-dll, server-kit, docs, repo-hygiene]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5

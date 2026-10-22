@@ -165,6 +165,14 @@ fn path_text(path: &Path) -> String {
 }
 
 /// Runs the generator; the line it prints.
+/// The `COMMIT` file a server release archive carries (MIGRATION_PLAN.md M38), for an install that is not a
+/// git checkout: one full commit hash.
+fn release_commit(root: &Path) -> Option<String> {
+    let text = std::fs::read_to_string(root.join("COMMIT")).ok()?;
+    let commit = text.trim();
+    (commit.len() == 40 && commit.bytes().all(|b| b.is_ascii_hexdigit())).then(|| commit.to_ascii_lowercase())
+}
+
 pub fn generate(argv: &[String]) -> Result<String, String> {
     let args = parse_args(argv)?;
     let required = |name: &str| {
@@ -226,6 +234,7 @@ pub fn generate(argv: &[String]) -> Result<String, String> {
         .ok()
         .filter(|o| o.status.success())
         .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_owned())
+        .or_else(|| release_commit(&root))
         .unwrap_or_else(|| "unknown".into());
 
     let meta_file = config.join("metagame.env");
@@ -488,6 +497,29 @@ mod tests {
         argv.extend(extra.iter().map(|s| (*s).to_owned()));
         generate(&argv).unwrap();
         (data, config)
+    }
+
+    #[test]
+    fn a_release_archive_names_its_commit_in_a_file() {
+        let root = tempfile::tempdir().unwrap();
+        assert_eq!(release_commit(root.path()), None);
+        std::fs::write(
+            root.path().join("COMMIT"),
+            "not a commit
+",
+        )
+        .unwrap();
+        assert_eq!(release_commit(root.path()), None);
+        let commit = "0123456789ABCDEF0123456789abcdef01234567";
+        std::fs::write(
+            root.path().join("COMMIT"),
+            format!(
+                "{commit}
+"
+            ),
+        )
+        .unwrap();
+        assert_eq!(release_commit(root.path()), Some(commit.to_ascii_lowercase()));
     }
 
     #[test]

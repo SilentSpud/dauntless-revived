@@ -1155,6 +1155,16 @@ function Get-DRTar {
 
 # A source zip made by Deploy-Remote.ps1 (git archive) or downloaded from GitHub: extracted with
 # tar.exe; returns the source folder in it (Test-DRSource).
+# The commit a server release archive names in its COMMIT file (MIGRATION_PLAN.md M38), for a source folder
+# that is not a git checkout; $null without one.
+function Get-DRReleaseCommit([string]$Dir) {
+    $file = Join-Path $Dir 'COMMIT'
+    if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { return $null }
+    $text = (Get-Content -LiteralPath $file -Raw).Trim().ToLowerInvariant()
+    if ($text -match '^[0-9a-f]{40}$') { return $text }
+    return $null
+}
+
 function Expand-DRSourceZip($Paths, [string]$Zip, [string]$Tag) {
     $unz = Join-Path $Paths.Downloads "source-$Tag"
     if (Test-Path -LiteralPath $unz) { Remove-Item -LiteralPath $unz -Recurse -Force }
