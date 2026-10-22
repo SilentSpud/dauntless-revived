@@ -60,6 +60,11 @@ tower-service = "0.3"
 tauri = { version = "2.12", features = ["isolation"] }
 open = { version = "5.4", features = ["shellexecute-on-windows"] }
 tauri-plugin-dialog = "2.8"
+# Self-update on Windows (NSIS) and the AppImage, with signed bundles (L46, D2). Without `zip`: that is for
+# v1-style archives, and the updater artifacts here are the setup exe and the AppImage themselves.
+tauri-plugin-updater = { version = "2.14", default-features = false, features = ["rustls-tls", "system-proxy"] }
+# The deb and rpm update check (the updater plugin's own HTTP client)
+reqwest = { version = "0.13", default-features = false, features = ["json"] }
 url.workspace = true
 # Offline play (feature `offline`)
 metagame = { path = "../../../rust/services/metagame", optional = true }

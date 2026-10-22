@@ -534,8 +534,9 @@ jobs:
           # New package first, then RELEASES, so the feed never points at a missing file.
           gh release upload "$feed" "new/$pkg" --clobber
           gh release upload "$feed" new/RELEASES --clobber
+          # latest.json is the Tauri launcher's feed (launcher-tauri-release.yml): it stays
           gh release view "$feed" --json assets --jq '.assets[].name' | while read -r asset; do
-            if [ "$asset" != "RELEASES" ] && [ "$asset" != "$pkg" ]; then
+            if [ "$asset" != "RELEASES" ] && [ "$asset" != "$pkg" ] && [ "$asset" != latest.json ]; then
               gh release delete-asset "$feed" "$asset" --yes
             fi
           done

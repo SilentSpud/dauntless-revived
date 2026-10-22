@@ -401,7 +401,7 @@ jobs:
 
 
   # The Tauri launcher (MIGRATION_PLAN.md Part A, L4): the page built for Tauri and a debug app around it,
-  # on the oldest Linux the launcher supports and on Windows. No installer yet (L45, L47).
+  # with its Windows installer and Linux packages, on the oldest Linux the launcher supports and on Windows.
   launcher-tauri:
     name: Tauri launcher (${{ matrix.os }})
     needs: changes
@@ -446,8 +446,12 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Build the app
-        run: npm run tauri -- build --debug --no-bundle --ci
+      # The packages a release makes (L45, L47), unsigned: launcher-tauri-release.yml adds the updater
+      # signatures
+      - name: Build the app and its packages
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then bundles=nsis; else bundles=appimage,deb,rpm; fi
+          npm run tauri -- build --debug --ci --bundles "$bundles"
 
   launcher-linux:
     name: Launcher (Linux x64)

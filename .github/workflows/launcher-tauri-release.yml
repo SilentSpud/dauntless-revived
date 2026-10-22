@@ -1,0 +1,368 @@
+# Publishes a version of the Tauri launcher (MIGRATION_PLAN.md L48), run by hand (Run workflow) on
+# dauntless-revived:
+#  - a versioned GitHub release launcher-v<version> with the Windows installer and portable zip, the Linux
+#    AppImage, deb, rpm and tarball, the updater signatures, SHA256SUMS.txt, and a signed build provenance
+#    attestation for every file
+#  - for a full (not pre-) release, latest.json in the rolling "launcher-updates" release: the Tauri updater's
+#    feed (L46). It sits beside the Squirrel files of the Electron launcher, which stay until 0.3.0 (L50a).
+#
+# Until the cutover (L49, L50) this publishes prereleases only, so installed launchers never see it; the
+# repository variable LAUNCHER_TAURI_STABLE=true allows full releases. launcher-release.yml keeps
+# publishing the Electron launcher until then; the two never run for the same version.
+#
+# The bundles are signed with the updater key (secrets TAURI_SIGNING_PRIVATE_KEY and
+# TAURI_SIGNING_PRIVATE_KEY_PASSWORD; the public key is src-tauri/updater.key.pub). A version is published
+# only if it is newer than every launcher-v* tag, and never replaced. Actions are pinned by commit.
+name: Launcher release (Tauri)
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  prepare:
+    name: Version and release state
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+      prerelease: ${{ steps.plan.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            legacy/UndauntedLauncher/package.json
+            legacy/UndauntedLauncher/src-tauri/Cargo.toml
+            tools/ci/launcher-version.ts
+            tools/package.json
+          sparse-checkout-cone-mode: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
+
+      - name: Work out the version and whether it may be published
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          REF: ${{ github.ref }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          STABLE_ALLOWED: ${{ vars.LAUNCHER_TAURI_STABLE }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          [ "$REF" = "refs/heads/$DEFAULT_BRANCH" ] || fail "launcher releases are published from $DEFAULT_BRANCH only, not $REF"
+          version="$(node -p 'require("./legacy/UndauntedLauncher/package.json").version')"
+          crate="$(sed -n 's/^version = "\(.*\)"$/\1/p' legacy/UndauntedLauncher/src-tauri/Cargo.toml | head -1)"
+          [ "$crate" = "$version" ] || fail "src-tauri/Cargo.toml says $crate, package.json $version"
+          bun --no-env-file tools/ci/launcher-version.ts valid "$version" ||
+            fail "package.json version $version is not a launcher version (x.y.z or x.y.z-prerelease)"
+          prerelease=false
+          case "$version" in *-*) prerelease=true ;; esac
+          if [ "$prerelease" != true ] && [ "$STABLE_ALLOWED" != true ]; then
+            fail "$version is a full release: the Tauri launcher publishes prereleases until the cutover (set LAUNCHER_TAURI_STABLE=true then)"
+          fi
+          tag="launcher-v$version"
+          if out="$(gh api "repos/$GH_REPO/releases/tags/$tag" --jq .html_url 2>&1)"; then
+            fail "$tag is published already ($out): raise the version to publish again"
+          elif ! grep -q 'HTTP 404' <<<"$out"; then
+            fail "could not look up the release $tag: $out"
+          fi
+          {
+            echo "version=$version"
+            echo "tag=$tag"
+            echo "prerelease=$prerelease"
+          } >> "$GITHUB_OUTPUT"
+          echo "Tauri launcher $version, tag $tag, prerelease $prerelease"
+
+  build:
+    name: Build (${{ matrix.os }})
+    needs: prepare
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        os: [windows-2022, ubuntu-22.04]
+    defaults:
+      run:
+        shell: bash
+        working-directory: legacy/UndauntedLauncher
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install the pinned toolchain
+        working-directory: rust
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - name: Install the Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libayatana-appindicator3-dev libdbus-1-dev patchelf
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: legacy/UndauntedLauncher/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Launcher tests
+        working-directory: rust
+        run: cargo test -p launcher --locked
+
+      # No build cache in a release: every file is built from this commit alone
+      - name: Build the signed bundles
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          [ -n "$TAURI_SIGNING_PRIVATE_KEY" ] || { echo "::error::the updater signing key secret is missing"; exit 1; }
+          if [ "$RUNNER_OS" = Windows ]; then bundles=nsis; else bundles=appimage,deb,rpm; fi
+          npm run tauri -- build --ci --bundles "$bundles" --config '{"bundle":{"createUpdaterArtifacts":true}}'
+
+      - name: Collect the release files and their SHA-256 sums
+        run: |
+          set -euo pipefail
+          out="$PWD/release"
+          rm -rf "$out"; mkdir -p "$out"
+          target=../../rust/target/release
+          bundle="$target/bundle"
+          one() { local found; found=("$@"); [ "${#found[@]}" -eq 1 ] && [ -f "${found[0]}" ] || { echo "::error::expected one file: $*"; exit 1; }; echo "${found[0]}"; }
+          portable="$RUNNER_TEMP/portable"
+          rm -rf "$portable"; mkdir -p "$portable"
+          for file in dxgi.dll UndauntedInternalServer.dll THIRD-PARTY-NOTICES.txt; do cp "$target/$file" "$portable/"; done
+          cp -r "$target/client-mods" "$portable/client-mods"
+          if [ "$RUNNER_OS" = Windows ]; then
+            setup="$(one "$bundle"/nsis/*-setup.exe)"
+            cp "$setup" "$out/DauntlessRevivedLauncher-Setup.exe"
+            cp "$setup.sig" "$out/DauntlessRevivedLauncher-Setup.exe.sig"
+            cp "$target/dauntless-revived-launcher.exe" "$portable/"
+            pwsh -NoProfile -Command "Compress-Archive -Path '$portable/*' -DestinationPath '$out/DauntlessRevivedLauncher-$VERSION-win32-x64.zip'"
+            sums=SHA256SUMS.txt
+          else
+            appimage="$(one "$bundle"/appimage/*.AppImage)"
+            cp "$appimage" "$out/DauntlessRevivedLauncher-$VERSION-linux-x86_64.AppImage"
+            cp "$appimage.sig" "$out/DauntlessRevivedLauncher-$VERSION-linux-x86_64.AppImage.sig"
+            cp "$(one "$bundle"/deb/*.deb)" "$out/DauntlessRevivedLauncher-$VERSION-linux-amd64.deb"
+            cp "$(one "$bundle"/rpm/*.rpm)" "$out/DauntlessRevivedLauncher-$VERSION-linux-x86_64.rpm"
+            cp "$target/dauntless-revived-launcher" "$portable/"
+            tar -C "$portable" -czf "$out/DauntlessRevivedLauncher-$VERSION-linux-x64.tar.gz" .
+            sums=SHA256SUMS-LINUX.txt
+          fi
+          (cd "$out" && sha256sum -- * > "../$sums" && mv "../$sums" .)
+          ls -la "$out"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tauri-release-${{ runner.os }}
+          path: legacy/UndauntedLauncher/release/
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish the release
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    concurrency:
+      group: launcher-release
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      VERSION: ${{ needs.prepare.outputs.version }}
+      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+      COMMIT: ${{ github.sha }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/ci/launcher-version.ts
+            tools/package.json
+          sparse-checkout-cone-mode: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: tauri-release-*
+          merge-multiple: true
+          path: release
+
+      - name: Check and combine the release files
+        run: |
+          set -euo pipefail
+          cd release
+          windows="$(printf '%s\n' DauntlessRevivedLauncher-Setup.exe DauntlessRevivedLauncher-Setup.exe.sig \
+            "DauntlessRevivedLauncher-$VERSION-win32-x64.zip" | sort)"
+          linux="$(printf '%s\n' \
+            "DauntlessRevivedLauncher-$VERSION-linux-x86_64.AppImage" \
+            "DauntlessRevivedLauncher-$VERSION-linux-x86_64.AppImage.sig" \
+            "DauntlessRevivedLauncher-$VERSION-linux-amd64.deb" \
+            "DauntlessRevivedLauncher-$VERSION-linux-x86_64.rpm" \
+            "DauntlessRevivedLauncher-$VERSION-linux-x64.tar.gz" | sort)"
+          expected="$(printf '%s\n' "$windows" "$linux" SHA256SUMS.txt SHA256SUMS-LINUX.txt | sort)"
+          actual="$(ls -A | sort)"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::these are not the complete release files of launcher $VERSION"
+            diff <(echo "$expected") <(echo "$actual") || true
+            exit 1
+          fi
+          [ "$(awk 'NF { print $2 }' SHA256SUMS.txt | tr -d '*' | sort)" = "$windows" ] || { echo "::error::Windows checksum list is incomplete"; exit 1; }
+          [ "$(awk 'NF { print $2 }' SHA256SUMS-LINUX.txt | tr -d '*' | sort)" = "$linux" ] || { echo "::error::Linux checksum list is incomplete"; exit 1; }
+          { tr -d '\r' < SHA256SUMS.txt; tr -d '\r' < SHA256SUMS-LINUX.txt; } | sed 's/ \*/  /' | sort -k2,2 > SHA256SUMS.merged
+          mv SHA256SUMS.merged SHA256SUMS.txt
+          rm SHA256SUMS-LINUX.txt
+          sha256sum --check --strict SHA256SUMS.txt
+
+      - name: Check the version is the newest
+        run: |
+          set -euo pipefail
+          gh api --paginate "repos/$GH_REPO/git/matching-refs/tags/launcher-v" --jq '.[].ref' > tags.txt
+          others=()
+          while read -r ref; do others+=("${ref#refs/tags/launcher-v}"); done < tags.txt
+          if blocking="$(bun --no-env-file tools/ci/launcher-version.ts newest "$VERSION" "${others[@]}")"; then
+            echo "launcher $VERSION is newer than every launcher-v* tag"
+          else
+            echo "::error::launcher $VERSION is not newer than launcher-v$blocking; raise the version"
+            exit 1
+          fi
+          head="$(gh api "repos/$GH_REPO/git/ref/heads/$DEFAULT_BRANCH" --jq .object.sha)"
+          [ "$head" = "$COMMIT" ] || { echo "::error::$DEFAULT_BRANCH has moved on to ${head:0:12}; run this again on the newer commit"; exit 1; }
+
+      # A signed statement that these files were built by this workflow from this commit:
+      # gh attestation verify <file> --repo <owner>/<repo>
+      - name: Attest the build provenance of the release files
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: release/SHA256SUMS.txt
+
+      - name: Create the versioned release
+        run: |
+          set -euo pipefail
+          note=""
+          if [ "$PRERELEASE" = true ]; then
+            note="This is a test version (a prerelease) of the new launcher: installed launchers do not update to it."
+          fi
+          cat > notes.md <<EOF
+          Dauntless Revived Launcher ${VERSION} for Windows and Linux. ${note}
+
+          Windows:
+          - Installer: \`DauntlessRevivedLauncher-Setup.exe\`
+          - Portable: \`DauntlessRevivedLauncher-${VERSION}-win32-x64.zip\` (needs the Microsoft Edge WebView2 runtime, which Windows 11 has)
+
+          Linux x86_64 (WebKitGTK 4.1: Ubuntu 22.04+, Debian 12+, Fedora, Arch, openSUSE, SteamOS):
+          - Universal AppImage: \`DauntlessRevivedLauncher-${VERSION}-linux-x86_64.AppImage\`
+          - Debian/Ubuntu/Mint/Pop!_OS: \`DauntlessRevivedLauncher-${VERSION}-linux-amd64.deb\`
+          - Fedora/openSUSE/RHEL-family: \`DauntlessRevivedLauncher-${VERSION}-linux-x86_64.rpm\`
+          - Portable tar.gz: \`DauntlessRevivedLauncher-${VERSION}-linux-x64.tar.gz\`
+
+          - Check your download against \`SHA256SUMS.txt\`, or check where it was built with
+            \`gh attestation verify <file> --repo ${GH_REPO}\`.
+          - The \`.sig\` files are the updater's signatures; installed launchers check them before updating.
+
+          The launcher is not code-signed yet, so Windows SmartScreen may ask you to confirm
+          (More info, then Run anyway).
+
+          Free software under the GNU AGPL-3.0. No game files are included: the launcher downloads
+          them from your host's server and checks every file against the list built into it.
+          EOF
+          gh api -X POST "repos/$GH_REPO/git/refs" -f ref="refs/tags/$TAG" -f sha="$COMMIT" --silent
+          latest=true
+          [ "$PRERELEASE" = true ] && latest=false
+          gh release create "$TAG" release/* --verify-tag --title "Launcher ${VERSION}" --notes-file notes.md \
+            --prerelease="$PRERELEASE" --latest="$latest"
+
+  feed:
+    name: Point the updater feed at this version
+    needs: [prepare, publish]
+    if: needs.prepare.outputs.prerelease != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    concurrency:
+      group: launcher-feed
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ needs.prepare.outputs.tag }}
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            tools/ci/launcher-version.ts
+            tools/package.json
+          sparse-checkout-cone-mode: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: tools/package.json
+
+      # Built from the published release, so the feed offers exactly what the release holds. Only latest.json
+      # is written to launcher-updates; its URLs point at the versioned release.
+      - name: Write latest.json
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          feed=launcher-updates
+          mkdir -p new current
+          gh release download "$TAG" --pattern '*.sig' --dir new --clobber
+          setup_sig="new/DauntlessRevivedLauncher-Setup.exe.sig"
+          appimage_sig="new/DauntlessRevivedLauncher-$VERSION-linux-x86_64.AppImage.sig"
+          [ -f "$setup_sig" ] && [ -f "$appimage_sig" ] || fail "$TAG lacks its updater signatures"
+          base="https://github.com/$GH_REPO/releases/download/$TAG"
+          SETUP_SIG="$(cat "$setup_sig")" APPIMAGE_SIG="$(cat "$appimage_sig")" BASE="$base" node -e '
+            const e = process.env;
+            process.stdout.write(JSON.stringify({
+              version: e.VERSION,
+              notes: `Dauntless Revived Launcher ${e.VERSION}`,
+              pub_date: new Date().toISOString(),
+              platforms: {
+                "windows-x86_64": { signature: e.SETUP_SIG, url: `${e.BASE}/DauntlessRevivedLauncher-Setup.exe` },
+                "linux-x86_64": { signature: e.APPIMAGE_SIG, url: `${e.BASE}/DauntlessRevivedLauncher-${e.VERSION}-linux-x86_64.AppImage` },
+              },
+            }, null, 2));
+          ' > new/latest.json
+          if gh release download "$feed" --pattern latest.json --dir current --clobber 2> feed-error.txt; then
+            offered="$(node -p 'require("./current/latest.json").version')"
+            # Never move installed launchers back to an older version
+            if [ "$(bun --no-env-file tools/ci/launcher-version.ts compare "$offered" "$VERSION")" = 1 ]; then
+              echo "::notice::the feed offers a newer launcher ($offered); left as it is"
+              exit 0
+            fi
+          elif ! grep -qi 'no assets\|not found' feed-error.txt; then
+            fail "could not read the $feed release: $(cat feed-error.txt)"
+          fi
+          gh release view "$feed" > /dev/null 2>&1 || gh release create "$feed" --prerelease --title "Launcher update feed" \
+            --notes "Used by installed launchers to update themselves. Download the launcher from the latest launcher-v* release instead."
+          gh release upload "$feed" new/latest.json --clobber
+          echo "the updater feed offers launcher $VERSION"

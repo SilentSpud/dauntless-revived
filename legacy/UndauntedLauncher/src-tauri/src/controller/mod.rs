@@ -578,6 +578,18 @@ impl Controller {
         out
     }
 
+    /// An update waits to be installed (`setUpdateReady`).
+    pub fn set_update_ready(&self) {
+        self.st().update_ready = true;
+        self.publish();
+    }
+
+    /// `installUpdate`'s condition: an update waits, and nothing would be cut off by the restart.
+    pub fn may_install_update(&self) -> bool {
+        let st = self.st();
+        st.update_ready && st.task.is_none() && !self.game.running()
+    }
+
     pub fn set_notice(&self, code: Option<NoticeCode>) {
         self.st().notice = code;
         self.publish();

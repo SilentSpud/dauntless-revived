@@ -15,6 +15,7 @@ pub mod log;
 pub mod paths;
 pub mod settings;
 pub mod system;
+pub mod updater;
 
 #[cfg(test)]
 mod game_config_tests;

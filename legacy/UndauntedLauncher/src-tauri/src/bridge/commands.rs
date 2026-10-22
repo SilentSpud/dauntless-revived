@@ -249,9 +249,12 @@ pub async fn logout(app: AppHandle) -> ActionResult {
     controller(&app).logout().await
 }
 
-/// The updater is part of packaging (P9); until then no update is ever ready.
+/// Installs the update the player was offered (L46); nothing when none waits or a task or the game runs.
 #[tauri::command]
-pub fn install_update() {}
+pub async fn install_update(app: AppHandle) {
+    let controller = controller(&app);
+    crate::platform::updater::install(app, controller).await;
+}
 
 #[tauri::command]
 pub fn take_invite_link(backend: Backed<'_>) -> Option<String> {

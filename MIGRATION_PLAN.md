@@ -415,6 +415,40 @@ Done so far:
   `tauri.conf.json` as `plugins.updater.pubkey` when the updater plugin is added. The private key and its
   password stay off the repository: the release workflow reads them from the secrets
   `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`.
+- Launcher P8 (L45 to L48, done in code; the first real release is the beta, L49):
+  - **L45, Windows:** `tauri.conf.json` bundles NSIS (`installMode: currentUser`, WebView2 `embedBootstrapper`)
+    with the resources Electron shipped: the two DLLs, `THIRD-PARTY-NOTICES.txt` and `client-mods/`. A local
+    release build made a 13 MiB installer. The portable zip is the exe and its resources (it needs the WebView2
+    runtime, which Windows 11 has).
+  - **L47, Linux:** AppImage, deb (`depends: libwebkit2gtk-4.1-0`) and rpm (`depends: webkit2gtk4.1`), plus a
+    tarball. deb and rpm take `linux/launcher.desktop`, which registers the `dauntless-revived:` scheme; the
+    AppImage registers it at start.
+  - **CI:** the Tauri job now builds the installer on Windows and the three packages on Ubuntu 22.04 (debug,
+    unsigned) on every push.
+  - **L46, updater:**
+    - `tauri-plugin-updater` reads
+      `https://github.com/mixutin/dauntless-revived/releases/download/launcher-updates/latest.json` with the
+      public key in `tauri.conf.json`. The Windows install mode is `passive`.
+    - The plugin goes in without its `zip` feature, which is only for v1 archives and brought `zip` 4.6 with
+      three advisories. rustls gets the aws-lc-rs provider at start.
+    - `platform/updater.rs` checks at start and then hourly in packaged builds, sets `updateReady`, and installs
+      only when the player presses update with no task or game running.
+    - deb and rpm installs use the ported `linux-updater.ts` check (the newest GitHub release, installed through
+      `pkexec`).
+    - Checked in the running debug app: it starts with the plugin and its config, and `install_update` does
+      nothing when no update waits.
+  - **L48, release:** `launcher-tauri-release.yml`, run by hand on the default branch.
+    - It checks that `Cargo.toml` and `package.json` agree on the version, runs the launcher tests, and builds
+      the signed bundles (`createUpdaterArtifacts`, with the key from the secrets).
+    - It names the files as the Electron releases did, plus the `.sig` files, writes `SHA256SUMS.txt`, attests
+      provenance, and creates `launcher-v<version>` if that version is newer than every tag.
+    - It publishes prereleases only until the repository variable `LAUNCHER_TAURI_STABLE` is `true`
+      (cutover). A full release writes `latest.json`, which points at the versioned release's files, into
+      `launcher-updates` and never moves the feed backwards. `launcher-release.yml` (Electron) keeps
+      `latest.json` when it cleans that release.
+    - Not run yet: it can only publish from the default branch, so its first run is the beta (L49).
+  - **Left in P8:** the clean-VM install, update and uninstall checks; a Tauri-to-Tauri update; a refused bad
+    signature; and the distro install checks (all manual or at the beta).
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking

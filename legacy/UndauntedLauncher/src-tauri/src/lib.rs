@@ -47,6 +47,8 @@ pub fn run() -> tauri::Result<()> {
         return Ok(());
     }
     platform::log::install();
+    // The updater's HTTP client (rustls without a built-in provider) uses the same provider as the rest
+    let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
     let paths = Paths::from_system().ok_or_else(|| tauri::Error::UnknownPath)?;
     platform::log::log_to_file(paths.logs_dir());
     let context = tauri::generate_context!();
@@ -56,8 +58,10 @@ pub fn run() -> tauri::Result<()> {
     let backend = Backend::default();
     backend.deliver_invite_link(None, invite_link::invite_from_args(&args));
     tauri::Builder::default()
-        // Called from Rust only: the page has no dialog permission (L36)
+        // Called from Rust only: the page has no dialog or updater permission (L36, L46)
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .manage(Arc::new(platform::updater::Updates::default()))
         .manage(window::CloseGuard::default())
         .manage(platform::art::ArtStore::default())
         // The host's art, from the controller's cache (L37); nothing from the network
@@ -130,6 +134,10 @@ pub fn run() -> tauri::Result<()> {
             );
             app.manage(controller.clone());
             window::create(app.handle())?;
+            // Packaged builds only: a development build has no release to update to
+            if !cfg!(dev) {
+                platform::updater::start(app.handle().clone(), controller.clone());
+            }
             tauri::async_runtime::spawn(async move { controller.init().await });
             Ok(())
         })
