@@ -16,6 +16,19 @@ export interface StoredServer {
   code: string | null; // invite code not used yet
 }
 
+// The project's main server. Adopted when no server is stored yet (a fresh install or a new
+// device), so a returning player can reach Dauntless Revived and sign in with their account key
+// without an invite. fp is the SHA-256 of the server's TLS certificate (DER), 64 lower-case hex.
+export const DEFAULT_SERVER: StoredServer = {
+  mode: "public",
+  host: "82.153.118.176",
+  port: 443,
+  name: "Dauntless Revived",
+  share: null,
+  fp: "9d25e5cfc3462af09ba9d83f815191a8e682401899891563ab01815beec6e988",
+  code: null,
+};
+
 export interface StoredSettings {
   huntRegion?: 'auto' | 'main' | 'ger' | 'us';
   version: 1;

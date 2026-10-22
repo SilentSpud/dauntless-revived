@@ -24,7 +24,7 @@ const EUGAMEHOST_GAME3_URL = "https://www.eugamehost.com/clients/cart.php?a=add&
 const EUGAMEHOST_GAME5_URL = "https://www.eugamehost.com/clients/cart.php?a=add&pid=242&promocode=SIGNUP6MONTH&skipconfig=1";
 const EUGAMEHOST_5800X_URL = "https://www.eugamehost.com/clients/cart.php?a=add&pid=500";
 const DISCORD_URL = "https://discord.gg/dauntlessrevived";
-const PATREON_URL = "https://patreon.com/DauntlessRevived";
+const PATREON_URL = "https://www.patreon.com/cw/RamsgateReborn";
 
 export const FIXED_LINKS: Readonly<Record<FixedTarget, string>> = Object.freeze({
   tailscale_download: TAILSCALE_DOWNLOAD_URL,
@@ -84,7 +84,7 @@ export function isAllowedStaticUrl(url: string): boolean {
       return url === EUGAMEHOST_URL || url === EUGAMEHOST_GAME1_URL || url === EUGAMEHOST_GAME2_URL || url === EUGAMEHOST_GAME3_URL || url === EUGAMEHOST_GAME5_URL || url === EUGAMEHOST_5800X_URL;
     case "discord.gg":
       return url === DISCORD_URL;
-    case "patreon.com":
+    case "www.patreon.com":
       return url === PATREON_URL;
     default:
       return false;

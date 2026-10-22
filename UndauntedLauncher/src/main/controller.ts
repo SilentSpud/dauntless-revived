@@ -91,6 +91,9 @@ export interface Platform {
   offlineSave?: OfflineSaveRuntime;
 
   defaultInstallDir: string;
+  // The project's main server, adopted at init when no server is stored yet (production sets it;
+  // tests leave it unset). See DEFAULT_SERVER in settings.ts.
+  defaultServer?: StoredServer;
   hostPlatform?: NodeJS.Platform;
   appVersion: string;
   packaged: boolean;
@@ -275,6 +278,12 @@ export class Controller {
   }
 
   async init(): Promise<void> {
+    // A fresh install (or a new device) has no server yet: adopt the project's main server so the
+    // player can reach it and sign in with their account key without an invite. Tests leave
+    // defaultServer unset, so their blank-start flow is unchanged.
+    if (this.p.defaultServer && !this.settings.get().server) {
+      await this.settings.update((s) => { s.server = this.p.defaultServer!; });
+    }
     if (this.p.offlineSave) await this.withBusy(() => this.p.offlineSave!.recover());
     await this.refreshKeyFlag();
     await this.inspectInstall();
