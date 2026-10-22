@@ -230,3 +230,48 @@ async fn a_backup_under_constant_writes_is_one_consistent_snapshot() {
         "never overwrites"
     );
 }
+
+#[tokio::test(flavor = "multi_thread")]
+async fn a_read_only_connection_reads_but_refuses_writes() {
+    let (dir, store) = open();
+    store
+        .write(|c| {
+            c.batch_execute("INSERT INTO items (name) VALUES ('a')")
+                .map_err(Error::from)
+        })
+        .await
+        .unwrap();
+    let mut conn = store::open_read_only(&dir.path().join("test.db"), Duration::from_secs(1)).unwrap();
+    assert_eq!(count(&mut conn).unwrap(), 1);
+    let refused = conn.batch_execute("PRAGMA query_only = OFF; INSERT INTO items (name) VALUES ('b')");
+    assert!(refused.is_err(), "mode=ro holds even with query_only turned off");
+    assert_eq!(store.read(count).await.unwrap(), 1);
+    assert!(store::open_read_only(&dir.path().join("missing.db"), Duration::from_secs(1)).is_err());
+    assert!(
+        !dir.path().join("missing.db").exists(),
+        "a read-only open never creates the file"
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn the_schema_version_is_readable_while_a_write_is_held() {
+    let (dir, store) = open();
+    let path = dir.path().join("test.db");
+    let version = store
+        .write(move |_| {
+            // Inside BEGIN IMMEDIATE: the write lock is taken, and the panel still reads its version.
+            let mut conn = store::open_read_only(&path, Duration::from_millis(100))?;
+            store::schema_version(&mut conn)
+        })
+        .await
+        .unwrap();
+    assert_eq!(version.as_deref(), Some("0001"));
+
+    let blank = dir.path().join("blank.db");
+    diesel::SqliteConnection::establish(&blank.to_string_lossy())
+        .unwrap()
+        .batch_execute("CREATE TABLE t (x)")
+        .unwrap();
+    let mut conn = store::open_read_only(&blank, Duration::from_secs(1)).unwrap();
+    assert_eq!(store::schema_version(&mut conn).unwrap(), None);
+}

@@ -28,6 +28,11 @@ pub enum DbCommand {
         db: PathBuf,
         destination: PathBuf,
     },
+    /// The newest applied migration, read through a read-only connection: what the admin panel checks
+    /// before it starts (X8). Never takes the write lock.
+    SchemaVersion {
+        db: PathBuf,
+    },
     /// Adds a one-use invite code.
     AddInvite {
         db: PathBuf,
@@ -76,6 +81,16 @@ pub fn run(command: &DbCommand) -> Result<String, String> {
         DbCommand::Backup { db, destination } => {
             store::backup::backup_file(db, destination, BUSY_TIMEOUT, BACKUP_DEADLINE).map_err(|e| e.to_string())?;
             Ok(format!("db {}", integrity(destination)?))
+        }
+        DbCommand::SchemaVersion { db } => {
+            if !db.is_file() {
+                return Err(format!("no database at {}", db.display()));
+            }
+            let mut conn = store::open_read_only(db, BUSY_TIMEOUT).map_err(|e| e.to_string())?;
+            match store::schema_version(&mut conn).map_err(|e| e.to_string())? {
+                Some(version) => Ok(format!("schema {version}")),
+                None => Err("no Diesel migrations recorded: the Rust metagame has not opened this database yet".into()),
+            }
         }
         DbCommand::AddInvite { db, code } | DbCommand::DelInvite { db, code } => {
             if !valid_invite_code(code) {

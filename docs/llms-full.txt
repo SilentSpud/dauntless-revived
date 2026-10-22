@@ -6725,6 +6725,23 @@ read the server's name and registration mode:
 - Each variant is cached for 5 seconds. The reply carries `Cache-Control: no-store` and varies on the
   key header and `Authorization`.
 
+### Interfaces for an external admin panel
+
+A private admin panel kept outside this repository can rely on these, and they stay stable across
+releases:
+
+- **Writes** go through the admin-key routes above, never straight to the database, so the
+  metagame's own checks apply and the panel never competes with game saves for the write lock.
+- **Browsing** reads the database on the server host through a read-only connection: SQLite's
+  `mode=ro` (for example `file:///…/undaunted.db?mode=ro`), or a copy from the latest backup.
+  A read-only connection is refused any write.
+- **Schema version:** with the Rust metagame, `metagame db schema-version <db>` prints
+  `schema <version>`, the newest applied migration in `__diesel_schema_migrations`. It opens the file
+  read-only and works while the metagame is writing. Check it before the panel starts and regenerate
+  the panel's entities when it changes.
+- **Access** stays on the host: loopback, an SSH tunnel, or the gateway with admin authentication.
+  The admin routes refuse any request that carries a proxy header.
+
 ## Chat (XMPP on 61099)
 
 The game's text chat (Ramsgate and hunt chat, party chat, guild chat and whispers) is XMPP over

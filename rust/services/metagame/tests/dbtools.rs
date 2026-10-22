@@ -159,3 +159,30 @@ fn migrate_creates_the_database_the_settings_name_and_exits() {
     assert!(!ok);
     assert!(err.starts_with("metagame migrate: "), "{err}");
 }
+
+#[test]
+fn schema_version_reads_the_newest_migration_without_writing() {
+    let dir = tempfile::tempdir().unwrap();
+    let db = database(dir.path());
+    let mut conn = SqliteConnection::establish(s(&db)).unwrap();
+    // Hold the write lock, as a game save would: the version is still readable.
+    conn.batch_execute("BEGIN IMMEDIATE").unwrap();
+    let (ok, out, err) = metagame(&["db", "schema-version", s(&db)]);
+    assert!(ok, "{err}");
+    let newest = std::fs::read_dir(concat!(env!("CARGO_MANIFEST_DIR"), "/migrations"))
+        .unwrap()
+        .filter_map(|entry| entry.ok()?.file_name().into_string().ok())
+        .max()
+        .unwrap();
+    let newest: String = newest
+        .chars()
+        .take_while(|c| *c != '_')
+        .filter(char::is_ascii_digit)
+        .collect();
+    assert_eq!(out, format!("schema {newest}"));
+    conn.batch_execute("ROLLBACK").unwrap();
+
+    let (ok, _, err) = metagame(&["db", "schema-version", s(&dir.path().join("missing.db"))]);
+    assert!(!ok);
+    assert!(err.starts_with("metagame db: no database at"), "{err}");
+}

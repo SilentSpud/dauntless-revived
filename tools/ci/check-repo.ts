@@ -12,6 +12,7 @@
 //     AUTH_SIGNING_PRIVKEY_B64 stores one), a Tailscale auth key or a GitHub token;
 //   - the two prebuilt server DLLs in legacy/UndauntedLauncher/assets/ differ from the SHA-256 pins in the launcher
 //     and the Windows Server kit;
+//   - a tracked file still names a folder the migration removed (MIGRATION_PLAN.md R10; REMOVED_FOLDERS);
 //   - legacy/UndauntedLauncher/package.json "version" is not a launcher version (a semantic version without build
 //     metadata; it names the launcher release tag launcher-v<version>; see tools/ci/launcher-version.ts).
 //
@@ -81,6 +82,12 @@ const NAME_RULES: { why: string; test: (p: string, base: string) => boolean }[] 
     { why: "under /BaseGame144/ (the game, ignored)", test: (p) => p.startsWith("basegame144/") || p.startsWith("basegame144.") },
     { why: "in a game folder (Archon/)", test: (p) => /(^|\/)archon\//.test(p) },
 ];
+
+// Folders the migration removed (MIGRATION_PLAN.md R10): each is added once it is gone, and no tracked file may
+// name it again. Folder paths only (the trailing slash), so the DLL file name UndauntedInternalServer.dll stays
+// allowed. The plan lists them on purpose.
+const REMOVED_FOLDERS = ["UndauntedInternalServer/"];
+const REMOVED_FOLDERS_EXEMPT = new Set(["MIGRATION_PLAN.md", "tools/ci/check-repo.ts"]);
 
 // Content shapes. Each regex is global; `confirm` can reject a candidate match.
 const CONTENT_RULES: { id: string; why: string; re: RegExp; confirm?: (match: string) => boolean }[] = [
@@ -221,6 +228,17 @@ function checkData(file: string, data: Buffer, where: string): void {
     }
 }
 
+function checkRemovedFolders(file: string, text: string): void {
+    for (const folder of REMOVED_FOLDERS) {
+        // Not preceded by a name character, so "legacy/X/" and "`X/" match but "NotX/" does not. The folder
+        // names are letters and slashes only, so they need no escaping.
+        const re = new RegExp(`(?<![A-Za-z0-9_.-])${folder}`, "g");
+        for (const match of text.matchAll(re)) {
+            fail(file, `line ${lineOf(text, match.index)} names the removed folder ${folder}`);
+        }
+    }
+}
+
 for (const file of files) {
     checkName(file, "");
 
@@ -236,6 +254,7 @@ for (const file of files) {
     scannedBytes += data.length;
     fileHashes.set(file, sha256(data));
     checkData(file, data, "");
+    if (!REMOVED_FOLDERS_EXEMPT.has(file)) checkRemovedFolders(file, data.toString("latin1"));
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -346,4 +365,4 @@ if (problems.length > 0) {
     console.error("\nSecrets and game files must never be committed (CONTRIBUTING.md, rule 3). If a key was committed, rotate it.");
     process.exit(1);
 }
-console.log("no secrets or game files found; the launcher version is valid");
+console.log("no secrets, game files or removed folders found; the launcher version is valid");

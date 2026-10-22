@@ -765,6 +765,24 @@ rekisteröitynyt, voi silti lukea palvelimen nimen ja rekisteröintitilan:
 - Kumpaakin muunnelmaa pidetään välimuistissa 5 sekuntia. Vastauksessa on `Cache-Control: no-store`,
   ja sen `Vary`-otsake nimeää avainotsakkeen ja `Authorization`-otsakkeen.
 
+### Ulkoisen ylläpitopaneelin rajapinnat {#admin-panel}
+
+Tämän repositorion ulkopuolella pidetty yksityinen ylläpitopaneeli voi luottaa näihin, ja ne pysyvät
+samoina julkaisusta toiseen:
+
+- **Kirjoitukset** kulkevat yllä olevien ylläpitäjäavaimen reittien kautta, eivät suoraan tietokantaan.
+  Näin metagamen omat tarkistukset pätevät, eikä paneeli kilpaile pelin tallennusten kanssa
+  kirjoituslukosta.
+- **Selaaminen** lukee palvelinkoneen tietokantaa vain luku -yhteydellä: SQLiten `mode=ro`
+  (esimerkiksi `file:///…/undaunted.db?mode=ro`) tai uusimman varmuuskopion kopio. Vain luku
+  -yhteys ei saa kirjoittaa mitään.
+- **Skeemaversio:** Rust-metagamen kanssa `metagame db schema-version <db>` tulostaa
+  `schema <versio>`, uusimman taulun `__diesel_schema_migrations` migraation. Se avaa tiedoston vain
+  luku -tilassa ja toimii, vaikka metagame kirjoittaa samaan aikaan. Tarkista se ennen paneelin
+  käynnistystä ja luo paneelin entiteetit uudelleen, kun se muuttuu.
+- **Pääsy** pysyy palvelinkoneella: loopback, SSH-tunneli tai yhdyskäytävä ylläpitäjän
+  tunnistautumisella. Ylläpitäjän reitit hylkäävät jokaisen pyynnön, jossa on välitysotsake.
+
 ## Chat (XMPP portissa 61099) {#chat}
 
 Pelin tekstichat (Ramsgaten ja metsästysten chat, ryhmächat, kiltachat ja kuiskaukset) on XMPP:tä

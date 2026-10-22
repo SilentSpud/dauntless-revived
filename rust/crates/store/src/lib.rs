@@ -13,6 +13,7 @@
 pub mod adopt;
 pub mod backup;
 pub mod drizzle;
+pub mod readonly;
 mod snapshot;
 
 use std::path::{Path, PathBuf};
@@ -25,6 +26,7 @@ use diesel::r2d2::{ConnectionManager, CustomizeConnection, Pool, PooledConnectio
 use diesel::sql_types::Text;
 
 pub use adopt::{DrizzleBaseline, Schema};
+pub use readonly::{open_read_only, schema_version};
 pub use snapshot::schema_snapshot;
 
 /// The connection type every service queries through. A Postgres port would make this a
