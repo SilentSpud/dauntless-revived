@@ -38,7 +38,7 @@ const EXPECTED: Record<FixedTarget, string> = {
   eugamehost_game5: "https://www.eugamehost.com/clients/cart.php?a=add&pid=242&promocode=SIGNUP6MONTH&skipconfig=1",
   eugamehost_5800x: "https://www.eugamehost.com/clients/cart.php?a=add&pid=500",
   discord: "https://discord.gg/dauntlessrevived",
-  patreon: "https://patreon.com/DauntlessRevived",
+  patreon: "https://www.patreon.com/cw/RamsgateReborn",
 };
 
 // A Record, so the compiler fails this file when a link name is added without a test here.
