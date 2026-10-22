@@ -41,6 +41,8 @@ fn on_second_launcher(args: Vec<String>) {
 /// Builds and runs the app until the last window closes; hands over to the launcher already running.
 pub fn run() -> tauri::Result<()> {
     let args: Vec<String> = std::env::args().collect();
+    #[cfg(target_os = "linux")]
+    secure_storage::wait_for_parent();
     let on_args: invite_link::OnArgs = Arc::new(|args| Box::pin(async move { on_second_launcher(args) }));
     if tauri::async_runtime::block_on(invite_link::claim(&invite_link::channel_name(), &args, on_args)) == Claim::Handed
     {
@@ -55,6 +57,10 @@ pub fn run() -> tauri::Result<()> {
     let version = context.package_info().version.to_string();
     platform::log::info(&format!("Dauntless Revived Launcher {version} starting"));
     let encryptors = tauri::async_runtime::block_on(platform::keystore::os::encryptors(&paths.user_data));
+    #[cfg(target_os = "linux")]
+    if !encryptors.0.is_available() && secure_storage::bootstrap(&args, &paths.home) {
+        return Ok(());
+    }
     let backend = Backend::default();
     backend.deliver_invite_link(None, invite_link::invite_from_args(&args));
     tauri::Builder::default()
@@ -157,6 +163,74 @@ pub fn run() -> tauri::Result<()> {
             }
         });
     Ok(())
+}
+
+/// Linux without a Secret Service (`ensureLinuxSecureStorageDependency` in `main.ts`): a packaged launcher
+/// installs gnome-keyring and libsecret through the package manager once, then starts again. Without it, keys
+/// cannot be saved ("unavailable"), as before. `DAUNTLESS_REVIVED_AUTO_INSTALL=0` turns this off.
+#[cfg(target_os = "linux")]
+mod secure_storage {
+    use std::path::Path;
+    use std::time::Duration;
+
+    use crate::platform::linux_runtime::{DependencyKind, current_env, install_plan, run_install};
+    use crate::platform::log;
+
+    const BOOTSTRAPPED: &str = "DAUNTLESS_REVIVED_STORAGE_BOOTSTRAPPED";
+    const PARENT: &str = "DAUNTLESS_REVIVED_PARENT_PID";
+
+    /// A launcher started again after the install waits for the old one to exit, which still holds the
+    /// single-launcher channel; else the new one would hand its arguments to it and stop.
+    pub fn wait_for_parent() {
+        let Some(pid) = std::env::var(PARENT).ok().and_then(|pid| pid.parse::<u32>().ok()) else {
+            return;
+        };
+        for _ in 0..100 {
+            if !Path::new(&format!("/proc/{pid}")).exists() {
+                return;
+            }
+            std::thread::sleep(Duration::from_millis(100));
+        }
+    }
+
+    /// True when the dependencies were installed and a new launcher was started: this one stops.
+    pub fn bootstrap(args: &[String], home: &Path) -> bool {
+        log::warn("secure storage unavailable (no Secret Service)");
+        let env = current_env();
+        if cfg!(dev)
+            || env.get("DAUNTLESS_REVIVED_AUTO_INSTALL").map(String::as_str) == Some("0")
+            || env.get(BOOTSTRAPPED).map(String::as_str) == Some("1")
+        {
+            return false;
+        }
+        let Some(plan) = install_plan(DependencyKind::SecureStorage, &env) else {
+            return false;
+        };
+        log::info(&format!(
+            "installing Linux secure-storage dependencies with {}",
+            plan.name
+        ));
+        if let Err(error) = tauri::async_runtime::block_on(run_install(&plan, &env, home)) {
+            log::error(&format!("secure-storage dependency install failed: {error}"));
+            return false;
+        }
+        let Ok(exe) = std::env::current_exe() else { return false };
+        let started = std::process::Command::new(exe)
+            .args(args.iter().skip(1))
+            .env(BOOTSTRAPPED, "1")
+            .env(PARENT, std::process::id().to_string())
+            .spawn();
+        match started {
+            Ok(_) => {
+                log::info("Linux secure-storage dependencies installed; restarting launcher");
+                true
+            }
+            Err(error) => {
+                log::error(&format!("the launcher could not start again: {error}"));
+                false
+            }
+        }
+    }
 }
 
 /// The controller with this PC's folders, the compiled-in manifest and the app's resources.

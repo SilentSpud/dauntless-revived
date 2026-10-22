@@ -34,6 +34,11 @@ import { systemLanguage, translate } from "./shared/i18n";
 import { APP_ID, SQUIRREL_NAME, UPDATE_FEED_URL } from "./main/constants";
 import { LocalStackManager } from "./main/local-stack";
 import { makeLocalStack } from "./main/local-stack-factory";
+import { BRIDGE_TARGET, runBridge, type BridgeDeps, type BridgeOutcome } from "./main/bridge";
+import { spawn } from "node:child_process";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+import { createWriteStream } from "node:fs";
 
 // Squirrel install / update / uninstall events: create or remove shortcuts, then quit.
 if (started) app.quit();
@@ -142,6 +147,56 @@ async function ensureLinuxSecureStorageDependency(): Promise<boolean> {
     log.error(`secure-storage dependency install failed: ${describeError(e)}`);
     return false;
   }
+}
+
+// ------------------------------------------------------------------ bridge release (L50)
+
+// The real operations of the bridge (src/main/bridge.ts) on a Squirrel install.
+function bridgeDeps(): BridgeDeps {
+  const root = path.resolve(path.dirname(process.execPath), "..");
+  const local = process.env.LOCALAPPDATA ?? path.join(app.getPath("home"), "AppData", "Local");
+  return {
+    squirrelRoot: existsSync(path.join(root, "Update.exe")) ? root : null,
+    tempDir: app.getPath("temp"),
+    // Where the Tauri installer puts the launcher for the current user ($LOCALAPPDATA\<product name>)
+    tauriExe: path.join(local, "Dauntless Revived Launcher", "dauntless-revived-launcher.exe"),
+    pid: process.pid,
+    download: async (url, file) => {
+      const response = await fetch(url, { redirect: "follow" });
+      if (!response.ok || !response.body) throw new Error(`the download answered ${response.status}`);
+      await pipeline(Readable.fromWeb(response.body as import("node:stream/web").ReadableStream), createWriteStream(file));
+    },
+    install: (installer, args) => new Promise((resolve) => {
+      const child = spawn(installer, args, { stdio: "ignore", windowsHide: true });
+      child.once("error", () => resolve(-1));
+      child.once("exit", (code) => resolve(code ?? -1));
+    }),
+    exists: (file) => existsSync(file),
+    startDetached: (script) => {
+      // -EncodedCommand takes the script as UTF-16LE base64: nothing in it is reparsed by a shell
+      const encoded = Buffer.from(script, "utf16le").toString("base64");
+      spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-WindowStyle", "Hidden", "-ExecutionPolicy", "Bypass", "-EncodedCommand", encoded], {
+        detached: true, stdio: "ignore", windowsHide: true,
+      }).unref();
+    },
+    remove: (file) => fsp.rm(file, { force: true }),
+    log: (message) => log.info(message),
+  };
+}
+
+// After a failed move: the launcher keeps working, and the player can get the new one by hand.
+async function offerBridgeDownload(outcome: BridgeOutcome): Promise<void> {
+  if (outcome.kind !== "failed" || !mainWindow) return;
+  const r = await dialog.showMessageBox(mainWindow, {
+    type: "info",
+    title: "Dauntless Revived Launcher",
+    message: "A new Dauntless Revived Launcher is available, but it could not be installed automatically.",
+    detail: "This launcher keeps working. You can download and install the new one from the release page.",
+    buttons: ["Open the download page", "Later"],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (r.response === 0) await shell.openExternal(outcome.page);
 }
 
 // ------------------------------------------------------------------ invite links
@@ -582,12 +637,23 @@ if (!started) {
       if (GAME_MANIFEST) log.info(`game manifest ${GAME_MANIFEST.files.length} files, fingerprint ${GAME_MANIFEST_FINGERPRINT}`);
       else log.error(`compiled-in game manifest is not usable: ${GAME_MANIFEST_PROBLEM}`);
 
+      // The bridge release moves this Squirrel install to the Tauri launcher before anything else starts
+      let bridge: BridgeOutcome = { kind: "off" };
+      if (app.isPackaged && process.platform === "win32" && BRIDGE_TARGET) {
+        bridge = await runBridge(BRIDGE_TARGET, bridgeDeps());
+        if (bridge.kind === "moved") {
+          app.exit(0);
+          return;
+        }
+      }
+
       registerProtocolClient();
       hardenSessions();
       controller = new Controller(makePlatform());
       registerIpc(controller);
       createWindow();
       await controller.init();
+      void offerBridgeDownload(bridge);
 
       if (app.isPackaged && process.platform === "linux") {
         const check = async () => {

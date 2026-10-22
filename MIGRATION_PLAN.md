@@ -449,6 +449,36 @@ Done so far:
     - Not run yet: it can only publish from the default branch, so its first run is the beta (L49).
   - **Left in P8:** the clean-VM install, update and uninstall checks; a Tauri-to-Tauri update; a refused bad
     signature; and the distro install checks (all manual or at the beta).
+- X3, the Electron launcher's catch-up list (before the beta, L49). There is no `rust-port-start` tag, so the list
+  runs from `175f4e9`, where this branch last met upstream (as the first catch-up pass did). It covers
+  `legacy/UndauntedLauncher/src/main*`, `src/preload.ts` and `runtime/`. Upstream (`mixutin/dauntless-revived` at
+  `cfbd821`) has no launcher commit since then; this branch has three:
+  - `7edb3b5` moved the Node projects into `legacy/`: not applicable.
+  - `7e0616f`: the background news and art load is tracked, its errors logged, and shutdown waits for it. Ported:
+    the controller's `in_background` and `shutdown` (L38).
+  - `480f38d` kept the Node database helpers with the offline runtime: not applicable, since X1 replaces them in
+    the Rust launcher.
+
+  A pass over `main.ts` against the Tauri side turned up one function not ported yet,
+  `ensureLinuxSecureStorageDependency`. It is now in `lib.rs` (`secure_storage`): a packaged Linux launcher
+  without a Secret Service installs gnome-keyring and libsecret once, through the package manager and `pkexec`,
+  then starts again, as Electron did (`DAUNTLESS_REVIVED_AUTO_INSTALL=0` turns it off). The relaunched launcher
+  waits for the old one to exit, since the old one holds the single-launcher channel. Rerun this list from
+  `cfbd821` right before the beta.
+- L50, the bridge release's code (not released): `src/main/bridge.ts` in the Electron launcher, off while
+  `BRIDGE_TARGET` is `null`. The 0.1.40 release sets it to the published 0.2.0 version and the SHA-256 of its
+  `DauntlessRevivedLauncher-Setup.exe`.
+  - **On a packaged Squirrel install, before anything else starts,** it downloads that installer from the
+    `launcher-v0.2.0` release and checks the hash. Then it runs the installer silently (`/S`) and checks that
+    `%LOCALAPPDATA%\Dauntless Revived Launcher\dauntless-revived-launcher.exe` exists. Only then does it exit.
+  - **A detached PowerShell script (passed with `-EncodedCommand`) then** waits for the Electron launcher to
+    exit, runs Squirrel's `Update.exe --uninstall -s`, runs the installer once more, since Squirrel's uninstall
+    removes the Start menu shortcut of the same name, and starts the Tauri launcher.
+  - **Fails safe:** a failed download, a different hash or a failed install leaves 0.1.40 as it is, and a dialog
+    offers the release page.
+  - **Unchanged:** userData, the keys (read through the Electron key reader, L27) and the game folder.
+  - **Tests:** `test/bridge.test.ts` (5). Left for L50: set the target in the 0.1.40 release, and try it on a clean
+    VM with a 0.1.39 Squirrel install.
 - M35 tool: `tools/replay.ts` (pure parts in `replay-core.ts`, 9 tests) replays a corpus against the
   Node and Rust metagames, each on its own copy of one database snapshot: the account keys in the copies
   are swapped for replay keys by hash, tokens are signed fresh, a game-server key is added, matchmaking
