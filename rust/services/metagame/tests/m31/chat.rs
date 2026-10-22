@@ -759,7 +759,9 @@ async fn a_player_who_stops_reading_at_most_the_cap_of_unsent_output_is_held_for
 
     let mut round = 0;
     while round < 400 && !ended() {
-        for index in 0..8 {
+        // About 8 KB per message once escaped: four keep the reading player's burst at half the cap, so only
+        // the player who stopped reading can pass it, however slowly the server writes on a busy runner
+        for index in 0..4 {
             fast.send(&format!(
                 r#"<message type="groupchat" to="{room}" id="bl{round}-{index}"><body>{big}</body></message>"#
             ));
