@@ -272,7 +272,9 @@ test("Windows relay accepts the approved process but rejects a real PowerShell e
     assert.equal(checks, 2, "chat's socket is separately authorized");
     const count = seen.length;
     const script = `try { Invoke-WebRequest -UseBasicParsing -Method Post -Uri 'http://127.0.0.1:${guarded.port}/account/api/oauth/token' -Body 'grant_type=exchange_code&exchange_code=fake-key' -TimeoutSec 5 | Out-Null; exit 1 } catch { if ([int]$_.Exception.Response.StatusCode -eq 403) { exit 0 }; exit 2 }`;
-    await promisify(execFile)("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], { windowsHide: true, timeout: 10000 });
+    // Windows PowerShell's first start on a cold runner can take longer than the request itself; the
+    // request has its own 5 s limit, so a hung relay still fails this quickly enough
+    await promisify(execFile)("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], { windowsHide: true, timeout: 60000 });
     assert.equal(seen.length, count, "exporter login never reaches the upstream");
     assert.equal(checks, 3);
   } finally { keepAlive.destroy(); await guarded.stop(); }
