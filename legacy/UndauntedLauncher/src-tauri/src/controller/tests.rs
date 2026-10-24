@@ -782,7 +782,10 @@ async fn a_fresh_install_starts_on_the_default_server_and_a_stored_one_is_kept()
     let first = Harness::with_user(free_port().await, user);
     first.c.init().await;
     assert_eq!(
-        first.c.submit_invite(&public_invite(other_port, &other_fp, "KEEP-CODE"), false).await,
+        first
+            .c
+            .submit_invite(&public_invite(other_port, &other_fp, "KEEP-CODE"), false)
+            .await,
         ok()
     );
     first.c.shutdown().await;

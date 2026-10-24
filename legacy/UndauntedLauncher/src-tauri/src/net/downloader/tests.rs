@@ -529,13 +529,18 @@ async fn cancel_stops_the_job_and_keeps_partial_files() {
             .iter()
             .any(|f| part_path(&resolve_inside(dir.path(), &f.path).unwrap()).exists())
     };
-    // Cancel once a download is under way; a fixed delay can end before the first chunk on a busy runner
-    for _ in 0..500 {
-        if has_part() {
+    // Cancel once the biggest file is under way: its throttled transfer cannot finish before the cancel
+    // lands, so a partial file is left behind. Any other `.part` is a bad signal: the empty file's exists
+    // for a moment before its rename, and the small ones finish in a few ticks. A fixed delay can end
+    // before the first chunk on a busy runner, so wait, within reason.
+    let big = part_path(&resolve_inside(dir.path(), "Archon/Content/Paks/pakchunk0-WindowsNoEditor.pak").unwrap());
+    for _ in 0..3000 {
+        if big.exists() {
             break;
         }
         tokio::time::sleep(Duration::from_millis(10)).await;
     }
+    assert!(big.exists(), "the pak's download never started");
     job.cancel();
     assert_eq!(run.await.unwrap().unwrap_err().code, DownloadErrorCode::Cancelled);
     assert!(has_part());
