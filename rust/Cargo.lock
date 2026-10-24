@@ -2689,7 +2689,7 @@ dependencies = [
 
 [[package]]
 name = "launcher"
-version = "0.1.39"
+version = "0.1.42"
 dependencies = [
  "aes 0.9.3",
  "aes-gcm 0.11.1",

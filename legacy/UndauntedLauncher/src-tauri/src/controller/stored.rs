@@ -12,6 +12,9 @@ use crate::bridge::types::{ExposureMode, GameLanguage, GraphicsPreset, HuntRegio
 use crate::net::http::Endpoint;
 use crate::platform::keystore::{KeySlot, server_id};
 
+// DEFAULT_SERVER: (host, port, name, fingerprint), or None
+include!(concat!(env!("OUT_DIR"), "/default_server.rs"));
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct StoredServer {
     pub mode: ServerMode,
@@ -25,6 +28,23 @@ pub struct StoredServer {
 }
 
 impl StoredServer {
+    /// The project's main server (`DEFAULT_SERVER` in `src/main/settings.ts`), set at build time by
+    /// `DAUNTLESS_REVIVED_DEFAULT_SERVER_*` (see build.rs); None when the build sets none. Adopted when no
+    /// server is stored yet (a fresh install or a new device), so a returning player can reach it and sign
+    /// in with their account key without an invite.
+    pub fn main_server() -> Option<Self> {
+        let (host, port, name, fp) = DEFAULT_SERVER?;
+        Some(Self {
+            mode: ServerMode::Public,
+            host: host.into(),
+            port,
+            name: name.into(),
+            share: None,
+            fp: Some(fp.into()),
+            code: None,
+        })
+    }
+
     pub fn from_invite(invite: &Invite, code: Option<String>) -> Self {
         Self {
             mode: invite.mode,

@@ -276,6 +276,7 @@ fn make_controller(
         language: core::i18n::os_language(),
         system_locale: sys_locale::get_locale().unwrap_or_else(|| "en-US".into()),
         manifest,
+        default_server: controller::stored::StoredServer::main_server(),
         game_config_dir: platform::game_config::default_config_dir(),
         relay_port,
         exe_pin: (EXE_RELATIVE_PATH.into(), PINNED_EXE_SHA256.into()),

@@ -25,7 +25,7 @@ const EUGAMEHOST_GAME5_URL: &str =
     "https://www.eugamehost.com/clients/cart.php?a=add&pid=242&promocode=SIGNUP6MONTH&skipconfig=1";
 const EUGAMEHOST_5800X_URL: &str = "https://www.eugamehost.com/clients/cart.php?a=add&pid=500";
 const DISCORD_URL: &str = "https://discord.gg/dauntlessrevived";
-const PATREON_URL: &str = "https://patreon.com/DauntlessRevived";
+const PATREON_URL: &str = "https://www.patreon.com/cw/RamsgateReborn";
 
 /// The URL of a target that always opens one fixed page; None for the two that come from the server
 /// side (the Tailscale share link of a private invite, the host's own source link).
@@ -90,7 +90,7 @@ pub fn is_allowed_static_url(url: &str) -> bool {
         ]
         .contains(&url),
         Some("discord.gg") => url == DISCORD_URL,
-        Some("patreon.com") => url == PATREON_URL,
+        Some("www.patreon.com") => url == PATREON_URL,
         _ => false,
     }
 }

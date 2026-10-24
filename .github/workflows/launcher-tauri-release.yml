@@ -128,6 +128,11 @@ jobs:
       # No build cache in a release: every file is built from this commit alone
       - name: Build the signed bundles
         env:
+          # The server a fresh install starts on (see default_server in src-tauri/build.rs); unset, none
+          DAUNTLESS_REVIVED_DEFAULT_SERVER_HOST: ${{ vars.LAUNCHER_DEFAULT_SERVER_HOST }}
+          DAUNTLESS_REVIVED_DEFAULT_SERVER_PORT: ${{ vars.LAUNCHER_DEFAULT_SERVER_PORT }}
+          DAUNTLESS_REVIVED_DEFAULT_SERVER_NAME: ${{ vars.LAUNCHER_DEFAULT_SERVER_NAME }}
+          DAUNTLESS_REVIVED_DEFAULT_SERVER_FP: ${{ vars.LAUNCHER_DEFAULT_SERVER_FP }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: |

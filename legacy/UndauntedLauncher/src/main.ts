@@ -16,6 +16,7 @@ import { pathToFileURL } from "node:url";
 import started from "electron-squirrel-startup";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import { Controller, type Platform, type OfflineStackSession } from "./main/controller";
+import { DEFAULT_SERVER } from "./main/settings";
 import { GAME_MANIFEST, GAME_MANIFEST_FINGERPRINT, GAME_MANIFEST_PROBLEM } from "./main/game-manifest";
 import { findRunningClients } from "./main/launch";
 import { LinuxRuntimeMissingError, prepareLinuxGameLaunch } from "./main/linux-runtime";
@@ -540,6 +541,7 @@ function makePlatform(): Platform {
         !!controller?.snapshot().game.running || !!controller?.snapshot().task || controller?.offlineStatus().phase === "stopping",
     }) : undefined,
     manifest: GAME_MANIFEST,
+    defaultServer: DEFAULT_SERVER,
     chooseFolder: async (purpose, defaultPath) => {
       if (!mainWindow) return null;
       const lang = controller?.snapshot().settings.language ?? "en";

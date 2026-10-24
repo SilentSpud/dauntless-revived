@@ -88,6 +88,9 @@ pub struct Config {
     /// The operating system's locale ("es-ES"), for the game language "auto"
     pub system_locale: String,
     pub manifest: Option<GameManifest>,
+    /// The project's main server, adopted at init when no server is stored yet (production sets it;
+    /// tests leave it unset). See `StoredServer::main_server`.
+    pub default_server: Option<StoredServer>,
     pub game_config_dir: PathBuf,
     /// Public mode: where the local relay listens. The game server tells every client to use
     /// 127.0.0.1:61000, so only tests and rehearsals change it.
@@ -397,6 +400,14 @@ impl Controller {
     }
 
     pub async fn init(&self) {
+        // A fresh install (or a new device) has no server yet: adopt the project's main server so the
+        // player can reach it and sign in with their account key without an invite. Tests leave
+        // default_server unset, so their blank-start flow is unchanged.
+        if let Some(server) = &self.c.default_server
+            && self.server().is_none()
+        {
+            self.update_settings(|map| set_server(map, Some(server))).await;
+        }
         self.refresh_key_flag();
         self.inspect_install().await;
         self.publish();

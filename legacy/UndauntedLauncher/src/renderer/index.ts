@@ -594,7 +594,7 @@ function playRegister(snap: Snapshot): HTMLElement[] {
     ),
     card(
       "",
-      linkButton(state.keyFormOpen ? t("reg_have_key_hide") : t("reg_have_key"), () => {
+      button(state.keyFormOpen ? t("reg_have_key_hide") : t("reg_have_key"), () => {
         state.keyFormOpen = !state.keyFormOpen;
         renderPlay();
         if (state.keyFormOpen) keyInput.focus();
@@ -2248,7 +2248,12 @@ function onSnapshot(snap: Snapshot): void {
   const langChanged = snap.settings.language !== state.lang;
   const streamerChanged = snap.settings.streamerMode !== state.snap?.settings.streamerMode;
   const serverChanged = JSON.stringify(snap.server) !== JSON.stringify(state.snap?.server ?? null);
+  // A rejected saved key means a returning player must re-enter their account key. Reveal the
+  // key form immediately (the "I already have an account key" entry), rather than hiding it
+  // behind a link under the "Choose your name" registration form.
+  const keyJustRejected = snap.lastError?.code === "key_rejected" && state.snap?.lastError?.code !== "key_rejected";
   state.snap = snap;
+  if (keyJustRejected) state.keyFormOpen = true;
   state.lang = snap.settings.language;
   if (snap.phase !== "installing") state.task = null;
   if (serverChanged && !snap.server) {

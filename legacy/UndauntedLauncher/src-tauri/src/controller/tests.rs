@@ -386,6 +386,21 @@ impl Harness {
         user: tempfile::TempDir,
         #[cfg(feature = "offline")] offline: Option<super::offline::OfflineSetup>,
     ) -> Self {
+        Self::build_with(
+            relay_port,
+            user,
+            None,
+            #[cfg(feature = "offline")]
+            offline,
+        )
+    }
+
+    fn build_with(
+        relay_port: u16,
+        user: tempfile::TempDir,
+        default_server: Option<StoredServer>,
+        #[cfg(feature = "offline")] offline: Option<super::offline::OfflineSetup>,
+    ) -> Self {
         let install = tempfile::tempdir().unwrap();
         let config = tempfile::tempdir().unwrap();
         let fake = Arc::new(Fake {
@@ -410,6 +425,7 @@ impl Harness {
                 language: Language::En,
                 system_locale: "en-US".into(),
                 manifest: Some(manifest),
+                default_server,
                 game_config_dir: config_dir,
                 relay_port,
                 exe_pin: (EXE.into(), sha(&exe)),
@@ -730,6 +746,57 @@ async fn saved_servers_come_back_with_one_click_keeping_their_account() {
     assert_eq!(hx.c.remove_saved_server(&entry.id).await, ok());
     assert!(hx.c.snapshot().saved_servers.is_empty());
     hx.c.shutdown().await;
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn a_fresh_install_starts_on_the_default_server_and_a_stored_one_is_kept() {
+    let (_meta, port, fp) = gateway(&[]).await;
+    let default = StoredServer {
+        mode: ServerMode::Public,
+        host: "127.0.0.1".into(),
+        port,
+        name: "Dauntless Revived".into(),
+        share: None,
+        fp: Some(fp.clone()),
+        code: None,
+    };
+    let hx = Harness::build_with(
+        free_port().await,
+        tempfile::tempdir().unwrap(),
+        Some(default.clone()),
+        #[cfg(feature = "offline")]
+        None,
+    );
+    hx.c.init().await;
+    let server = hx.c.snapshot().server.expect("the default server is adopted");
+    assert_eq!(
+        (server.host.as_str(), server.fingerprint, server.has_pending_invite),
+        ("127.0.0.1", Some(fp), false)
+    );
+    assert_ne!(hx.c.snapshot().phase, Phase::Join);
+    hx.c.shutdown().await;
+
+    // A server the player already has is never replaced
+    let (_other_meta, other_port, other_fp) = gateway(&["KEEP-CODE"]).await;
+    let user = tempfile::tempdir().unwrap();
+    let first = Harness::with_user(free_port().await, user);
+    first.c.init().await;
+    assert_eq!(
+        first.c.submit_invite(&public_invite(other_port, &other_fp, "KEEP-CODE"), false).await,
+        ok()
+    );
+    first.c.shutdown().await;
+    let Harness { user, .. } = first;
+    let again = Harness::build_with(
+        free_port().await,
+        user,
+        Some(default),
+        #[cfg(feature = "offline")]
+        None,
+    );
+    again.c.init().await;
+    assert_eq!(again.c.snapshot().server.map(|sv| sv.port), Some(other_port));
+    again.c.shutdown().await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
